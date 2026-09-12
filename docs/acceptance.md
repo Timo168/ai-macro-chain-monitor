@@ -13,6 +13,7 @@
 | 更新 | 本机计划任务 LastTaskResult=0；GitHub Actions 每30分钟检查并将数据和修订保存在 data-cache 分支 |
 | 失败与修订 | Python 测试验证错误时保留最后数据/成功日期；变更值追加新修订，不把首次导入当作历史vintage |
 | 构建 | TypeScript 检查、JS 7 项测试、Python 3 项测试与 Pages 构建通过 |
-| UI | 已进行电脑端预览；最终手机与线上交互检查在部署后记录，未把未检查项记为通过 |
+| UI | 已检查 GitHub Pages 线上首页，18 个真实序列、摘要、四组重点图表和子路径链接正常加载。浏览器调试连接随后中断，手机及完整交互复验待完成 |
 
 限制：GitHub schedule 可能排队/延迟；FRED 正式密钥可选；完整旧 ALFRED vintage、NFCI 商业用途授权、实时行情、产业财务/订单和一致预期仍未接入。
+
