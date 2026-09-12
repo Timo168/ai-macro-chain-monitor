@@ -59,3 +59,6 @@ __pycache__/
 /dist-pages/
 /.openai/hosting.json
 !.env.example
+/data/industry/*
+!/data/industry/seed.json
+!/data/industry/oracle-reviewed.json

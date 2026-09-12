@@ -7,3 +7,7 @@ data.storage='github_pages';
 if(process.env.GITHUB_ACTIONS==='true')data.scheduler={...data.scheduler,mode:'github_actions',workflowUrl:'https://github.com/'+process.env.GITHUB_REPOSITORY+'/actions/workflows/deploy.yml'};
 mkdirSync('dist-pages/data',{recursive:true});writeFileSync('dist-pages/data/latest.json',JSON.stringify(data));writeFileSync('dist-pages/.nojekyll','');
 console.log('Pages build includes '+Object.keys(data.series).length+' real source series.');
+const industryPath=existsSync('data/industry/latest.json')?'data/industry/latest.json':'data/industry/seed.json';
+const industry=JSON.parse(readFileSync(industryPath,'utf8'));
+if(process.env.GITHUB_ACTIONS==='true')industry.scheduler={...industry.scheduler,mode:'github_actions'};
+writeFileSync('dist-pages/data/industry.json',JSON.stringify(industry));

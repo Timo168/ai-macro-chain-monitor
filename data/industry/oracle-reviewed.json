@@ -1,0 +1,18 @@
+{
+ "sourceUrl":"https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
+ "sourcePageNumbers":[8,9,10],
+ "sourceName":"Oracle Q1 FY2027 earnings release, official financial tables",
+ "publishedAt":"2026-09-10",
+ "verifiedAt":"2026-09-12",
+ "verificationMethod":"Official PDF retrieved and financial table columns checked through web reader; local direct HTTP currently 403. Retain source citation and reviewed numeric rows; never label a later failed check a successful fetch.",
+ "originalUnit":"USD million",
+ "periods":[[2026,1,"2025-06-01","2025-08-31"],[2026,2,"2025-09-01","2025-11-30"],[2026,3,"2025-12-01","2026-02-28"],[2026,4,"2026-03-01","2026-05-31"],[2027,1,"2026-06-01","2026-08-31"]],
+ "rows":{
+  "capex":[8502,12033,18635,16493,28499],
+  "operating_cash_flow":[8140,2066,7151,14620,23103],
+  "revenue":[14926,16058,17190,19184,19345],
+  "cloud_revenue":[7186,7977,8914,9913,11607],
+  "cloud_infrastructure_revenue":[3347,4079,4888,5787,7388],
+  "net_capex_outlay":[6544,12793,17166,11223,17966]
+ }
+}

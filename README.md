@@ -98,3 +98,8 @@ JS 验证包括 12 组图表各 3 点（36 点）、15 个 FRED 序列各 3 个�
 本地构建 Pages：`npm run build:pages`，产物为 `dist-pages`。部署子路径由 `PAGES_BASE_PATH` 控制，默认 `/ai-macro-chain-monitor/`。页面导航、数据与静态资源均支持这个子路径。
 
 参考：[GitHub Pages 自定义工作流](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)、[定时工作流限制](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)。
+
+
+## AI产业链关键指标
+
+原“AI产业链影响”已升级为独立产业模块，包含五个子页面和可追溯的配置规则。[完整交付、来源、运行和未完成清单](docs/industry/README.md)。入口：`?page=impact`。

@@ -1,0 +1,3361 @@
+[
+  {
+    "id": "cloud-3ae1da02",
+    "targetType": "industry",
+    "targetId": "cloud",
+    "targetName": "AI云计算平台",
+    "level": "neutral_hold",
+    "confidence": "medium",
+    "horizon": "medium",
+    "generatedAt": "2026-09-12T15:57:17.424Z",
+    "dataCutoffAt": "2026-06-30",
+    "positiveEvidence": [
+      {
+        "metricId": "MSFT.capex",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT 现金资本开支：2026-06-30，同比 109.63%，上期增速 84.39%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "MSFT.operating_cash_flow",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT 营业现金流：2026-06-30，同比 30.00%，上期增速 26.01%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "GOOG.capex",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG 现金资本开支：2026-06-30，同比 100.14%，上期增速 107.44%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "GOOG.operating_cash_flow",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG 营业现金流：2026-06-30，同比 40.80%，上期增速 26.67%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "GOOG.cloud_revenue",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG Google Cloud收入：2026-06-30，同比 81.80%，上期增速 63.36%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "META.capex",
+        "observationVersion": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+        "direction": "positive",
+        "explanation": "META 现金资本开支：2026-06-30，同比 82.10%，上期增速 46.80%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "META.operating_cash_flow",
+        "observationVersion": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+        "direction": "positive",
+        "explanation": "META 营业现金流：2026-06-30，同比 24.65%，上期增速 34.13%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "MSFT.cloud_revenue",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT Intelligent Cloud收入（非Azure单项）：2026-06-30，同比 31.55%，上期增速 29.64%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "MSFT.cloud_growth",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT Azure及其他云服务收入增速：2026-06-30，披露同比增速 43.00%，上期增速 40.00%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "AMZN.capex",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN 现金资本开支：2026-06-30，同比 68.44%，上期增速 76.68%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "AMZN.operating_cash_flow",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN 营业现金流：2026-06-30，同比 39.59%，上期增速 52.99%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "AMZN.cloud_revenue",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN AWS收入：2026-06-30，同比 36.79%，上期增速 28.43%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "GOOG.cloud_margin",
+        "observationVersion": "e3554862d7f6292c411a3117249a30ac52f4624ae5253455fe5fe36acd65ada4",
+        "direction": "positive",
+        "explanation": "GOOG 云业务营业利润率：2026-06-30，同比 14.84个百分点，上期增速 15.19个百分点。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "AMZN.cloud_margin",
+        "observationVersion": "6f656af4d8449fb27c6fe84137cd0acabc228917b78d9df47cb3477ca553fa7d",
+        "direction": "positive",
+        "explanation": "AMZN 云业务营业利润率：2026-06-30，同比 6.45个百分点，上期增速 -1.78个百分点。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "ORCL.capex",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 现金资本开支：2026-08-31，同比 235.20%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "ORCL.operating_cash_flow",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 营业现金流：2026-08-31，同比 183.82%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "ORCL.cloud_revenue",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 云业务收入：2026-08-31，同比 61.52%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "WB.natural_gas",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "positive",
+        "explanation": "美国 美国天然气：2026-08-31，同比 -4.81%，上期增速 -9.40%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.industrial",
+        "observationVersion": "26d535a7c12a6ce5940c8c1a65ef48469941c004865634c81621d086c6288c9c",
+        "direction": "positive",
+        "explanation": "VA 弗吉尼亚州工业电价：2026-06-30，同比 -0.85%，上期增速 13.96%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.commercial",
+        "observationVersion": "50f0ae41c3081b0066bc16bfe133fb46565200efc433501c118168144098b1a3",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州商业电价：2026-06-30，同比 -2.06%，上期增速 -1.63%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.industrial",
+        "observationVersion": "25601f07d6374fabfbc6bea00d406814bf8f54033d893b66997c5992955fdc30",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州工业电价：2026-06-30，同比 -4.22%，上期增速 1.29%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.commercial",
+        "observationVersion": "0afb853108c5690653c5ecc12ada95a08fee2cea48cf62507e8717b2abc42bde",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州商业电价：2026-06-30，同比 -3.63%，上期增速 -5.15%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.industrial",
+        "observationVersion": "ed99780ed36aeedc1d936761febd2842cdaa8d98081ee12b70a5a3ac9a23f53b",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州工业电价：2026-06-30，同比 -6.42%，上期增速 -8.61%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "negativeEvidence": [
+      {
+        "metricId": "MSFT.free_cash_flow",
+        "observationVersion": "d375e800d4b448b76f3c5b90111b0a3cdf696120314760139844e3c251816e36",
+        "direction": "negative",
+        "explanation": "MSFT 自由现金流（现金购置口径）：2026-06-30，同比 -23.19%，上期增速 -22.15%。同比收缩。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "GOOG.free_cash_flow",
+        "observationVersion": "53d27de7224838441df75e81c25776f3fca83c7bf3f0642228bd65c4b803713a",
+        "direction": "negative",
+        "explanation": "GOOG 自由现金流（现金购置口径）：2026-06-30，同比 -210.45%，上期增速 -46.63%。同比收缩。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "AMZN.free_cash_flow",
+        "observationVersion": "b12a2f13b73980bdb10a02ebb21a8ac42f46552f5d0d13375961e9841b536040",
+        "direction": "negative",
+        "explanation": "AMZN 自由现金流（现金购置口径）：2026-06-30，同比 -2756.93%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "META.free_cash_flow",
+        "observationVersion": "e343063801bb3b11a3a73b73fd37ec3206f42734fc3dc9b50c54b9e54ed2421b",
+        "direction": "negative",
+        "explanation": "META 自由现金流（现金购置口径）：2026-06-30，同比 -80.65%，上期增速 19.34%。同比收缩。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "WB.copper",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铜：2026-08-31，同比 48.15%，上期增速 38.60%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "WB.aluminum",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铝：2026-08-31，同比 25.18%，上期增速 21.30%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.commercial",
+        "observationVersion": "b9c99f68e3382f1ff7f5b7123e2113508f4b8042ef65cdac0cb3b51f604eec74",
+        "direction": "negative",
+        "explanation": "US 美国全国商业电价：2026-06-30，同比 4.80%，上期增速 4.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.industrial",
+        "observationVersion": "76e6e41eefdf661ce89346be1b096a03c0d50e04bdc664d9bd883fe8bcc77cea",
+        "direction": "negative",
+        "explanation": "US 美国全国工业电价：2026-06-30，同比 3.02%，上期增速 5.12%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.commercial",
+        "observationVersion": "cf790278f0ca4af19277df1792f79020402c99388418695c29f782697f608a98",
+        "direction": "negative",
+        "explanation": "VA 弗吉尼亚州商业电价：2026-06-30，同比 16.54%，上期增速 20.58%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.commercial",
+        "observationVersion": "42cea61d60a28f06665df2d9768b311c0d17bf40a174f02c3ec7b45a22ccd6db",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州商业电价：2026-06-30，同比 2.85%，上期增速 -4.18%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.industrial",
+        "observationVersion": "6f50ea5c3068f573970d48ba95ff0b0dadfcf743d12399e0ab002794f663eb85",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州工业电价：2026-06-30，同比 3.46%，上期增速 -3.95%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.commercial",
+        "observationVersion": "3a31bdba4f75c0e54dc439c8fc29673d59cd684a6cf2be848fb63c7cccc56169",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州商业电价：2026-06-30，同比 21.54%，上期增速 25.25%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.industrial",
+        "observationVersion": "c3a949626f6d4c38326748004c202636a6ba4c0e9e5a864872c39caa65ca8359",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "neutralEvidence": [
+      {
+        "metricId": "MSFT.cloud_margin",
+        "observationVersion": "feb9e13ddb30143af1c93f94ff60cc66ac6b4926e6b7ec23f85f06fd584f6014",
+        "direction": "neutral",
+        "explanation": "MSFT 云业务营业利润率：2026-06-30，同比 -0.04个百分点，上期增速 -1.82个百分点。同比收缩。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      }
+    ],
+    "invalidationConditions": [
+      "关键数据超过有效期或来源、统计口径发生变化时，撤销当前建议并重新计算。",
+      "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
+    ],
+    "watchMetrics": [
+      "ORCL.free_cash_flow",
+      "MSFT.backlog",
+      "AMZN.backlog",
+      "GOOG.backlog",
+      "ORCL.cloud_margin",
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price",
+      "MSFT.capex",
+      "MSFT.operating_cash_flow",
+      "GOOG.capex",
+      "GOOG.operating_cash_flow",
+      "GOOG.cloud_revenue",
+      "META.capex",
+      "META.operating_cash_flow",
+      "MSFT.cloud_revenue",
+      "MSFT.cloud_growth",
+      "AMZN.capex",
+      "AMZN.operating_cash_flow",
+      "AMZN.cloud_revenue",
+      "GOOG.cloud_margin",
+      "AMZN.cloud_margin",
+      "ORCL.capex",
+      "ORCL.operating_cash_flow",
+      "ORCL.cloud_revenue",
+      "WB.natural_gas",
+      "EIA.VA.industrial",
+      "EIA.GA.commercial",
+      "EIA.GA.industrial",
+      "EIA.AZ.commercial",
+      "EIA.AZ.industrial",
+      "MSFT.free_cash_flow",
+      "GOOG.free_cash_flow",
+      "AMZN.free_cash_flow",
+      "META.free_cash_flow",
+      "WB.copper",
+      "WB.aluminum",
+      "EIA.US.commercial",
+      "EIA.US.industrial",
+      "EIA.VA.commercial",
+      "EIA.TX.commercial",
+      "EIA.TX.industrial",
+      "EIA.OH.commercial",
+      "EIA.OH.industrial"
+    ],
+    "ruleVersion": "industry-1.0.1",
+    "previousRecommendationId": "cloud-65479843",
+    "previousLevel": "neutral_hold",
+    "reason": "正面与反向信号并存，尚未形成一致趋势。",
+    "dimensions": [
+      {
+        "id": "investment",
+        "name": "投资投入",
+        "state": "positive",
+        "metricIds": [
+          "MSFT.capex",
+          "GOOG.capex",
+          "META.capex",
+          "AMZN.capex",
+          "ORCL.capex"
+        ]
+      },
+      {
+        "id": "demand",
+        "name": "实际需求",
+        "state": "positive",
+        "metricIds": [
+          "GOOG.cloud_revenue",
+          "MSFT.cloud_revenue",
+          "MSFT.cloud_growth",
+          "AMZN.cloud_revenue",
+          "ORCL.cloud_revenue"
+        ]
+      },
+      {
+        "id": "construction",
+        "name": "建设进度",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "profitability",
+        "name": "盈利兑现",
+        "state": "neutral",
+        "metricIds": [
+          "MSFT.operating_cash_flow",
+          "GOOG.operating_cash_flow",
+          "META.operating_cash_flow",
+          "AMZN.operating_cash_flow",
+          "MSFT.free_cash_flow",
+          "MSFT.cloud_margin",
+          "GOOG.free_cash_flow",
+          "GOOG.cloud_margin",
+          "AMZN.free_cash_flow",
+          "AMZN.cloud_margin",
+          "META.free_cash_flow",
+          "ORCL.operating_cash_flow"
+        ]
+      },
+      {
+        "id": "costs",
+        "name": "成本与约束",
+        "state": "neutral",
+        "metricIds": [
+          "WB.copper",
+          "WB.aluminum",
+          "WB.natural_gas",
+          "EIA.US.commercial",
+          "EIA.US.industrial",
+          "EIA.VA.commercial",
+          "EIA.VA.industrial",
+          "EIA.TX.commercial",
+          "EIA.TX.industrial",
+          "EIA.OH.commercial",
+          "EIA.OH.industrial",
+          "EIA.GA.commercial",
+          "EIA.GA.industrial",
+          "EIA.AZ.commercial",
+          "EIA.AZ.industrial"
+        ]
+      }
+    ],
+    "missingMetrics": [
+      "ORCL.free_cash_flow",
+      "MSFT.backlog",
+      "AMZN.backlog",
+      "GOOG.backlog",
+      "ORCL.cloud_margin",
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price"
+    ],
+    "coverage": 0.8222222222222222,
+    "changeReason": "中性持有 → 中性持有。正面与反向信号并存，尚未形成一致趋势。 数据或有效性版本发生变化。"
+  },
+  {
+    "id": "data_centers-6804fb70",
+    "targetType": "industry",
+    "targetId": "data_centers",
+    "targetName": "数据中心建设",
+    "level": "insufficient_data",
+    "confidence": "low",
+    "horizon": "medium",
+    "generatedAt": "2026-09-12T15:57:17.424Z",
+    "dataCutoffAt": "2026-06-30",
+    "positiveEvidence": [
+      {
+        "metricId": "MSFT.capex",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT 现金资本开支：2026-06-30，同比 109.63%，上期增速 84.39%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "MSFT.operating_cash_flow",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT 营业现金流：2026-06-30，同比 30.00%，上期增速 26.01%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "GOOG.capex",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG 现金资本开支：2026-06-30，同比 100.14%，上期增速 107.44%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "GOOG.operating_cash_flow",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG 营业现金流：2026-06-30，同比 40.80%，上期增速 26.67%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "GOOG.cloud_revenue",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG Google Cloud收入：2026-06-30，同比 81.80%，上期增速 63.36%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "META.capex",
+        "observationVersion": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+        "direction": "positive",
+        "explanation": "META 现金资本开支：2026-06-30，同比 82.10%，上期增速 46.80%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "META.operating_cash_flow",
+        "observationVersion": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+        "direction": "positive",
+        "explanation": "META 营业现金流：2026-06-30，同比 24.65%，上期增速 34.13%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "MSFT.cloud_revenue",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT Intelligent Cloud收入（非Azure单项）：2026-06-30，同比 31.55%，上期增速 29.64%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "MSFT.cloud_growth",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT Azure及其他云服务收入增速：2026-06-30，披露同比增速 43.00%，上期增速 40.00%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "AMZN.capex",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN 现金资本开支：2026-06-30，同比 68.44%，上期增速 76.68%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "AMZN.operating_cash_flow",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN 营业现金流：2026-06-30，同比 39.59%，上期增速 52.99%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "AMZN.cloud_revenue",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN AWS收入：2026-06-30，同比 36.79%，上期增速 28.43%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "GOOG.cloud_margin",
+        "observationVersion": "e3554862d7f6292c411a3117249a30ac52f4624ae5253455fe5fe36acd65ada4",
+        "direction": "positive",
+        "explanation": "GOOG 云业务营业利润率：2026-06-30，同比 14.84个百分点，上期增速 15.19个百分点。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "AMZN.cloud_margin",
+        "observationVersion": "6f656af4d8449fb27c6fe84137cd0acabc228917b78d9df47cb3477ca553fa7d",
+        "direction": "positive",
+        "explanation": "AMZN 云业务营业利润率：2026-06-30，同比 6.45个百分点，上期增速 -1.78个百分点。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "ORCL.capex",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 现金资本开支：2026-08-31，同比 235.20%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "ORCL.operating_cash_flow",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 营业现金流：2026-08-31，同比 183.82%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "ORCL.cloud_revenue",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 云业务收入：2026-08-31，同比 61.52%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "WB.natural_gas",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "positive",
+        "explanation": "美国 美国天然气：2026-08-31，同比 -4.81%，上期增速 -9.40%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.industrial",
+        "observationVersion": "26d535a7c12a6ce5940c8c1a65ef48469941c004865634c81621d086c6288c9c",
+        "direction": "positive",
+        "explanation": "VA 弗吉尼亚州工业电价：2026-06-30，同比 -0.85%，上期增速 13.96%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.commercial",
+        "observationVersion": "50f0ae41c3081b0066bc16bfe133fb46565200efc433501c118168144098b1a3",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州商业电价：2026-06-30，同比 -2.06%，上期增速 -1.63%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.industrial",
+        "observationVersion": "25601f07d6374fabfbc6bea00d406814bf8f54033d893b66997c5992955fdc30",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州工业电价：2026-06-30，同比 -4.22%，上期增速 1.29%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.commercial",
+        "observationVersion": "0afb853108c5690653c5ecc12ada95a08fee2cea48cf62507e8717b2abc42bde",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州商业电价：2026-06-30，同比 -3.63%，上期增速 -5.15%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.industrial",
+        "observationVersion": "ed99780ed36aeedc1d936761febd2842cdaa8d98081ee12b70a5a3ac9a23f53b",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州工业电价：2026-06-30，同比 -6.42%，上期增速 -8.61%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "negativeEvidence": [
+      {
+        "metricId": "MSFT.free_cash_flow",
+        "observationVersion": "d375e800d4b448b76f3c5b90111b0a3cdf696120314760139844e3c251816e36",
+        "direction": "negative",
+        "explanation": "MSFT 自由现金流（现金购置口径）：2026-06-30，同比 -23.19%，上期增速 -22.15%。同比收缩。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "GOOG.free_cash_flow",
+        "observationVersion": "53d27de7224838441df75e81c25776f3fca83c7bf3f0642228bd65c4b803713a",
+        "direction": "negative",
+        "explanation": "GOOG 自由现金流（现金购置口径）：2026-06-30，同比 -210.45%，上期增速 -46.63%。同比收缩。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "AMZN.free_cash_flow",
+        "observationVersion": "b12a2f13b73980bdb10a02ebb21a8ac42f46552f5d0d13375961e9841b536040",
+        "direction": "negative",
+        "explanation": "AMZN 自由现金流（现金购置口径）：2026-06-30，同比 -2756.93%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "META.free_cash_flow",
+        "observationVersion": "e343063801bb3b11a3a73b73fd37ec3206f42734fc3dc9b50c54b9e54ed2421b",
+        "direction": "negative",
+        "explanation": "META 自由现金流（现金购置口径）：2026-06-30，同比 -80.65%，上期增速 19.34%。同比收缩。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "WB.copper",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铜：2026-08-31，同比 48.15%，上期增速 38.60%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "WB.aluminum",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铝：2026-08-31，同比 25.18%，上期增速 21.30%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.commercial",
+        "observationVersion": "b9c99f68e3382f1ff7f5b7123e2113508f4b8042ef65cdac0cb3b51f604eec74",
+        "direction": "negative",
+        "explanation": "US 美国全国商业电价：2026-06-30，同比 4.80%，上期增速 4.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.industrial",
+        "observationVersion": "76e6e41eefdf661ce89346be1b096a03c0d50e04bdc664d9bd883fe8bcc77cea",
+        "direction": "negative",
+        "explanation": "US 美国全国工业电价：2026-06-30，同比 3.02%，上期增速 5.12%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.commercial",
+        "observationVersion": "cf790278f0ca4af19277df1792f79020402c99388418695c29f782697f608a98",
+        "direction": "negative",
+        "explanation": "VA 弗吉尼亚州商业电价：2026-06-30，同比 16.54%，上期增速 20.58%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.commercial",
+        "observationVersion": "42cea61d60a28f06665df2d9768b311c0d17bf40a174f02c3ec7b45a22ccd6db",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州商业电价：2026-06-30，同比 2.85%，上期增速 -4.18%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.industrial",
+        "observationVersion": "6f50ea5c3068f573970d48ba95ff0b0dadfcf743d12399e0ab002794f663eb85",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州工业电价：2026-06-30，同比 3.46%，上期增速 -3.95%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.commercial",
+        "observationVersion": "3a31bdba4f75c0e54dc439c8fc29673d59cd684a6cf2be848fb63c7cccc56169",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州商业电价：2026-06-30，同比 21.54%，上期增速 25.25%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.industrial",
+        "observationVersion": "c3a949626f6d4c38326748004c202636a6ba4c0e9e5a864872c39caa65ca8359",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "neutralEvidence": [
+      {
+        "metricId": "MSFT.cloud_margin",
+        "observationVersion": "feb9e13ddb30143af1c93f94ff60cc66ac6b4926e6b7ec23f85f06fd584f6014",
+        "direction": "neutral",
+        "explanation": "MSFT 云业务营业利润率：2026-06-30，同比 -0.04个百分点，上期增速 -1.82个百分点。同比收缩。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      }
+    ],
+    "invalidationConditions": [
+      "关键数据超过有效期或来源、统计口径发生变化时，撤销当前建议并重新计算。",
+      "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
+    ],
+    "watchMetrics": [
+      "ORCL.free_cash_flow",
+      "MSFT.backlog",
+      "AMZN.backlog",
+      "GOOG.backlog",
+      "ORCL.cloud_margin",
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price",
+      "MSFT.capex",
+      "MSFT.operating_cash_flow",
+      "GOOG.capex",
+      "GOOG.operating_cash_flow",
+      "GOOG.cloud_revenue",
+      "META.capex",
+      "META.operating_cash_flow",
+      "MSFT.cloud_revenue",
+      "MSFT.cloud_growth",
+      "AMZN.capex",
+      "AMZN.operating_cash_flow",
+      "AMZN.cloud_revenue",
+      "GOOG.cloud_margin",
+      "AMZN.cloud_margin",
+      "ORCL.capex",
+      "ORCL.operating_cash_flow",
+      "ORCL.cloud_revenue",
+      "WB.natural_gas",
+      "EIA.VA.industrial",
+      "EIA.GA.commercial",
+      "EIA.GA.industrial",
+      "EIA.AZ.commercial",
+      "EIA.AZ.industrial",
+      "MSFT.free_cash_flow",
+      "GOOG.free_cash_flow",
+      "AMZN.free_cash_flow",
+      "META.free_cash_flow",
+      "WB.copper",
+      "WB.aluminum",
+      "EIA.US.commercial",
+      "EIA.US.industrial",
+      "EIA.VA.commercial",
+      "EIA.TX.commercial",
+      "EIA.TX.industrial",
+      "EIA.OH.commercial",
+      "EIA.OH.industrial"
+    ],
+    "ruleVersion": "industry-1.0.1",
+    "previousRecommendationId": "data_centers-5a7f3961",
+    "previousLevel": "insufficient_data",
+    "reason": "关键证据尚未齐备：建设进度",
+    "dimensions": [
+      {
+        "id": "investment",
+        "name": "投资投入",
+        "state": "positive",
+        "metricIds": [
+          "MSFT.capex",
+          "GOOG.capex",
+          "META.capex",
+          "AMZN.capex",
+          "ORCL.capex"
+        ]
+      },
+      {
+        "id": "demand",
+        "name": "实际需求",
+        "state": "positive",
+        "metricIds": [
+          "GOOG.cloud_revenue",
+          "MSFT.cloud_revenue",
+          "MSFT.cloud_growth",
+          "AMZN.cloud_revenue",
+          "ORCL.cloud_revenue"
+        ]
+      },
+      {
+        "id": "construction",
+        "name": "建设进度",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "profitability",
+        "name": "盈利兑现",
+        "state": "neutral",
+        "metricIds": [
+          "MSFT.operating_cash_flow",
+          "GOOG.operating_cash_flow",
+          "META.operating_cash_flow",
+          "AMZN.operating_cash_flow",
+          "MSFT.free_cash_flow",
+          "MSFT.cloud_margin",
+          "GOOG.free_cash_flow",
+          "GOOG.cloud_margin",
+          "AMZN.free_cash_flow",
+          "AMZN.cloud_margin",
+          "META.free_cash_flow",
+          "ORCL.operating_cash_flow"
+        ]
+      },
+      {
+        "id": "costs",
+        "name": "成本与约束",
+        "state": "neutral",
+        "metricIds": [
+          "WB.copper",
+          "WB.aluminum",
+          "WB.natural_gas",
+          "EIA.US.commercial",
+          "EIA.US.industrial",
+          "EIA.VA.commercial",
+          "EIA.VA.industrial",
+          "EIA.TX.commercial",
+          "EIA.TX.industrial",
+          "EIA.OH.commercial",
+          "EIA.OH.industrial",
+          "EIA.GA.commercial",
+          "EIA.GA.industrial",
+          "EIA.AZ.commercial",
+          "EIA.AZ.industrial"
+        ]
+      }
+    ],
+    "missingMetrics": [
+      "ORCL.free_cash_flow",
+      "MSFT.backlog",
+      "AMZN.backlog",
+      "GOOG.backlog",
+      "ORCL.cloud_margin",
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price"
+    ],
+    "coverage": 0.8222222222222222,
+    "changeReason": "暂不形成建议 → 暂不形成建议。关键证据尚未齐备：建设进度 数据或有效性版本发生变化。"
+  },
+  {
+    "id": "power-88707699",
+    "targetType": "industry",
+    "targetId": "power",
+    "targetName": "电力及配电设备",
+    "level": "insufficient_data",
+    "confidence": "low",
+    "horizon": "medium",
+    "generatedAt": "2026-09-12T15:57:17.424Z",
+    "dataCutoffAt": "2026-06-30",
+    "positiveEvidence": [
+      {
+        "metricId": "MSFT.capex",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT 现金资本开支：2026-06-30，同比 109.63%，上期增速 84.39%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "GOOG.capex",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG 现金资本开支：2026-06-30，同比 100.14%，上期增速 107.44%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "META.capex",
+        "observationVersion": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+        "direction": "positive",
+        "explanation": "META 现金资本开支：2026-06-30，同比 82.10%，上期增速 46.80%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "AMZN.capex",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN 现金资本开支：2026-06-30，同比 68.44%，上期增速 76.68%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "ORCL.capex",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 现金资本开支：2026-08-31，同比 235.20%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "WB.natural_gas",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "positive",
+        "explanation": "美国 美国天然气：2026-08-31，同比 -4.81%，上期增速 -9.40%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.industrial",
+        "observationVersion": "26d535a7c12a6ce5940c8c1a65ef48469941c004865634c81621d086c6288c9c",
+        "direction": "positive",
+        "explanation": "VA 弗吉尼亚州工业电价：2026-06-30，同比 -0.85%，上期增速 13.96%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.commercial",
+        "observationVersion": "50f0ae41c3081b0066bc16bfe133fb46565200efc433501c118168144098b1a3",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州商业电价：2026-06-30，同比 -2.06%，上期增速 -1.63%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.industrial",
+        "observationVersion": "25601f07d6374fabfbc6bea00d406814bf8f54033d893b66997c5992955fdc30",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州工业电价：2026-06-30，同比 -4.22%，上期增速 1.29%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.commercial",
+        "observationVersion": "0afb853108c5690653c5ecc12ada95a08fee2cea48cf62507e8717b2abc42bde",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州商业电价：2026-06-30，同比 -3.63%，上期增速 -5.15%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.industrial",
+        "observationVersion": "ed99780ed36aeedc1d936761febd2842cdaa8d98081ee12b70a5a3ac9a23f53b",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州工业电价：2026-06-30，同比 -6.42%，上期增速 -8.61%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "negativeEvidence": [
+      {
+        "metricId": "WB.copper",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铜：2026-08-31，同比 48.15%，上期增速 38.60%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "WB.aluminum",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铝：2026-08-31，同比 25.18%，上期增速 21.30%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.commercial",
+        "observationVersion": "b9c99f68e3382f1ff7f5b7123e2113508f4b8042ef65cdac0cb3b51f604eec74",
+        "direction": "negative",
+        "explanation": "US 美国全国商业电价：2026-06-30，同比 4.80%，上期增速 4.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.industrial",
+        "observationVersion": "76e6e41eefdf661ce89346be1b096a03c0d50e04bdc664d9bd883fe8bcc77cea",
+        "direction": "negative",
+        "explanation": "US 美国全国工业电价：2026-06-30，同比 3.02%，上期增速 5.12%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.commercial",
+        "observationVersion": "cf790278f0ca4af19277df1792f79020402c99388418695c29f782697f608a98",
+        "direction": "negative",
+        "explanation": "VA 弗吉尼亚州商业电价：2026-06-30，同比 16.54%，上期增速 20.58%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.commercial",
+        "observationVersion": "42cea61d60a28f06665df2d9768b311c0d17bf40a174f02c3ec7b45a22ccd6db",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州商业电价：2026-06-30，同比 2.85%，上期增速 -4.18%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.industrial",
+        "observationVersion": "6f50ea5c3068f573970d48ba95ff0b0dadfcf743d12399e0ab002794f663eb85",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州工业电价：2026-06-30，同比 3.46%，上期增速 -3.95%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.commercial",
+        "observationVersion": "3a31bdba4f75c0e54dc439c8fc29673d59cd684a6cf2be848fb63c7cccc56169",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州商业电价：2026-06-30，同比 21.54%，上期增速 25.25%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.industrial",
+        "observationVersion": "c3a949626f6d4c38326748004c202636a6ba4c0e9e5a864872c39caa65ca8359",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "neutralEvidence": [],
+    "invalidationConditions": [
+      "关键数据超过有效期或来源、统计口径发生变化时，撤销当前建议并重新计算。",
+      "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
+    ],
+    "watchMetrics": [
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price",
+      "VRT.backlog",
+      "ETN.gross_margin",
+      "MSFT.capex",
+      "GOOG.capex",
+      "META.capex",
+      "AMZN.capex",
+      "ORCL.capex",
+      "WB.natural_gas",
+      "EIA.VA.industrial",
+      "EIA.GA.commercial",
+      "EIA.GA.industrial",
+      "EIA.AZ.commercial",
+      "EIA.AZ.industrial",
+      "WB.copper",
+      "WB.aluminum",
+      "EIA.US.commercial",
+      "EIA.US.industrial",
+      "EIA.VA.commercial",
+      "EIA.TX.commercial",
+      "EIA.TX.industrial",
+      "EIA.OH.commercial",
+      "EIA.OH.industrial"
+    ],
+    "ruleVersion": "industry-1.0.1",
+    "previousRecommendationId": "power-be9e19c6",
+    "previousLevel": "insufficient_data",
+    "reason": "关键证据尚未齐备：实际需求、建设进度、盈利兑现",
+    "dimensions": [
+      {
+        "id": "investment",
+        "name": "投资投入",
+        "state": "positive",
+        "metricIds": [
+          "MSFT.capex",
+          "GOOG.capex",
+          "META.capex",
+          "AMZN.capex",
+          "ORCL.capex"
+        ]
+      },
+      {
+        "id": "demand",
+        "name": "实际需求",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "construction",
+        "name": "建设进度",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "profitability",
+        "name": "盈利兑现",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "costs",
+        "name": "成本与约束",
+        "state": "neutral",
+        "metricIds": [
+          "WB.copper",
+          "WB.aluminum",
+          "WB.natural_gas",
+          "EIA.US.commercial",
+          "EIA.US.industrial",
+          "EIA.VA.commercial",
+          "EIA.VA.industrial",
+          "EIA.TX.commercial",
+          "EIA.TX.industrial",
+          "EIA.OH.commercial",
+          "EIA.OH.industrial",
+          "EIA.GA.commercial",
+          "EIA.GA.industrial",
+          "EIA.AZ.commercial",
+          "EIA.AZ.industrial"
+        ]
+      }
+    ],
+    "missingMetrics": [
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price",
+      "VRT.backlog",
+      "ETN.gross_margin"
+    ],
+    "coverage": 0.8,
+    "changeReason": "暂不形成建议 → 暂不形成建议。关键证据尚未齐备：实际需求、建设进度、盈利兑现 数据或有效性版本发生变化。"
+  },
+  {
+    "id": "servers-3a54b50c",
+    "targetType": "industry",
+    "targetId": "servers",
+    "targetName": "AI服务器与网络设备",
+    "level": "insufficient_data",
+    "confidence": "low",
+    "horizon": "medium",
+    "generatedAt": "2026-09-12T15:57:17.424Z",
+    "dataCutoffAt": "2026-06-30",
+    "positiveEvidence": [
+      {
+        "metricId": "MSFT.capex",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT 现金资本开支：2026-06-30，同比 109.63%，上期增速 84.39%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "GOOG.capex",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG 现金资本开支：2026-06-30，同比 100.14%，上期增速 107.44%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "META.capex",
+        "observationVersion": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+        "direction": "positive",
+        "explanation": "META 现金资本开支：2026-06-30，同比 82.10%，上期增速 46.80%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "AMZN.capex",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN 现金资本开支：2026-06-30，同比 68.44%，上期增速 76.68%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "ORCL.capex",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 现金资本开支：2026-08-31，同比 235.20%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "DELL.gross_margin",
+        "observationVersion": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+        "direction": "positive",
+        "explanation": "DELL GAAP毛利率：2026-07-31，同比 2.63个百分点，上期增速 -3.37个百分点。扩张加速。",
+        "periodEnd": "2026-07-31",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "DELL.ai_server_revenue",
+        "observationVersion": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+        "direction": "positive",
+        "explanation": "DELL AI优化服务器收入：2026-07-31，同比 99.82%，上期增速 757.17%。增长放缓。",
+        "periodEnd": "2026-07-31",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "DELL.server_revenue",
+        "observationVersion": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+        "direction": "positive",
+        "explanation": "DELL 传统服务器与网络收入：2026-07-31，同比 122.36%，上期增速 92.45%。扩张加速。",
+        "periodEnd": "2026-07-31",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "WB.natural_gas",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "positive",
+        "explanation": "美国 美国天然气：2026-08-31，同比 -4.81%，上期增速 -9.40%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.industrial",
+        "observationVersion": "26d535a7c12a6ce5940c8c1a65ef48469941c004865634c81621d086c6288c9c",
+        "direction": "positive",
+        "explanation": "VA 弗吉尼亚州工业电价：2026-06-30，同比 -0.85%，上期增速 13.96%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.commercial",
+        "observationVersion": "50f0ae41c3081b0066bc16bfe133fb46565200efc433501c118168144098b1a3",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州商业电价：2026-06-30，同比 -2.06%，上期增速 -1.63%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.industrial",
+        "observationVersion": "25601f07d6374fabfbc6bea00d406814bf8f54033d893b66997c5992955fdc30",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州工业电价：2026-06-30，同比 -4.22%，上期增速 1.29%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.commercial",
+        "observationVersion": "0afb853108c5690653c5ecc12ada95a08fee2cea48cf62507e8717b2abc42bde",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州商业电价：2026-06-30，同比 -3.63%，上期增速 -5.15%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.industrial",
+        "observationVersion": "ed99780ed36aeedc1d936761febd2842cdaa8d98081ee12b70a5a3ac9a23f53b",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州工业电价：2026-06-30，同比 -6.42%，上期增速 -8.61%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "negativeEvidence": [
+      {
+        "metricId": "WB.copper",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铜：2026-08-31，同比 48.15%，上期增速 38.60%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "WB.aluminum",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铝：2026-08-31，同比 25.18%，上期增速 21.30%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.commercial",
+        "observationVersion": "b9c99f68e3382f1ff7f5b7123e2113508f4b8042ef65cdac0cb3b51f604eec74",
+        "direction": "negative",
+        "explanation": "US 美国全国商业电价：2026-06-30，同比 4.80%，上期增速 4.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.industrial",
+        "observationVersion": "76e6e41eefdf661ce89346be1b096a03c0d50e04bdc664d9bd883fe8bcc77cea",
+        "direction": "negative",
+        "explanation": "US 美国全国工业电价：2026-06-30，同比 3.02%，上期增速 5.12%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.commercial",
+        "observationVersion": "cf790278f0ca4af19277df1792f79020402c99388418695c29f782697f608a98",
+        "direction": "negative",
+        "explanation": "VA 弗吉尼亚州商业电价：2026-06-30，同比 16.54%，上期增速 20.58%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.commercial",
+        "observationVersion": "42cea61d60a28f06665df2d9768b311c0d17bf40a174f02c3ec7b45a22ccd6db",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州商业电价：2026-06-30，同比 2.85%，上期增速 -4.18%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.industrial",
+        "observationVersion": "6f50ea5c3068f573970d48ba95ff0b0dadfcf743d12399e0ab002794f663eb85",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州工业电价：2026-06-30，同比 3.46%，上期增速 -3.95%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.commercial",
+        "observationVersion": "3a31bdba4f75c0e54dc439c8fc29673d59cd684a6cf2be848fb63c7cccc56169",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州商业电价：2026-06-30，同比 21.54%，上期增速 25.25%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.industrial",
+        "observationVersion": "c3a949626f6d4c38326748004c202636a6ba4c0e9e5a864872c39caa65ca8359",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "neutralEvidence": [],
+    "invalidationConditions": [
+      "关键数据超过有效期或来源、统计口径发生变化时，撤销当前建议并重新计算。",
+      "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
+    ],
+    "watchMetrics": [
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price",
+      "DELL.backlog",
+      "DELL.inventory_days",
+      "HPE.server_revenue",
+      "MSFT.capex",
+      "GOOG.capex",
+      "META.capex",
+      "AMZN.capex",
+      "ORCL.capex",
+      "DELL.gross_margin",
+      "DELL.ai_server_revenue",
+      "DELL.server_revenue",
+      "WB.natural_gas",
+      "EIA.VA.industrial",
+      "EIA.GA.commercial",
+      "EIA.GA.industrial",
+      "EIA.AZ.commercial",
+      "EIA.AZ.industrial",
+      "WB.copper",
+      "WB.aluminum",
+      "EIA.US.commercial",
+      "EIA.US.industrial",
+      "EIA.VA.commercial",
+      "EIA.TX.commercial",
+      "EIA.TX.industrial",
+      "EIA.OH.commercial",
+      "EIA.OH.industrial"
+    ],
+    "ruleVersion": "industry-1.0.1",
+    "previousRecommendationId": "servers-12b1afa0",
+    "previousLevel": "insufficient_data",
+    "reason": "目前主要由单一公司支持，暂不外推为整个产业的建议。",
+    "dimensions": [
+      {
+        "id": "investment",
+        "name": "投资投入",
+        "state": "positive",
+        "metricIds": [
+          "MSFT.capex",
+          "GOOG.capex",
+          "META.capex",
+          "AMZN.capex",
+          "ORCL.capex"
+        ]
+      },
+      {
+        "id": "demand",
+        "name": "实际需求",
+        "state": "positive",
+        "metricIds": [
+          "DELL.ai_server_revenue",
+          "DELL.server_revenue"
+        ]
+      },
+      {
+        "id": "construction",
+        "name": "建设进度",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "profitability",
+        "name": "盈利兑现",
+        "state": "positive",
+        "metricIds": [
+          "DELL.gross_margin"
+        ]
+      },
+      {
+        "id": "costs",
+        "name": "成本与约束",
+        "state": "neutral",
+        "metricIds": [
+          "WB.copper",
+          "WB.aluminum",
+          "WB.natural_gas",
+          "EIA.US.commercial",
+          "EIA.US.industrial",
+          "EIA.VA.commercial",
+          "EIA.VA.industrial",
+          "EIA.TX.commercial",
+          "EIA.TX.industrial",
+          "EIA.OH.commercial",
+          "EIA.OH.industrial",
+          "EIA.GA.commercial",
+          "EIA.GA.industrial",
+          "EIA.AZ.commercial",
+          "EIA.AZ.industrial"
+        ]
+      }
+    ],
+    "missingMetrics": [
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price",
+      "DELL.backlog",
+      "DELL.inventory_days",
+      "HPE.server_revenue"
+    ],
+    "coverage": 0.7931034482758621,
+    "changeReason": "暂不形成建议 → 暂不形成建议。目前主要由单一公司支持，暂不外推为整个产业的建议。 数据或有效性版本发生变化。"
+  },
+  {
+    "id": "accelerators-a0a2a33c",
+    "targetType": "industry",
+    "targetId": "accelerators",
+    "targetName": "半导体及AI加速器",
+    "level": "gradual_attention",
+    "confidence": "medium",
+    "horizon": "medium",
+    "generatedAt": "2026-09-12T15:57:17.424Z",
+    "dataCutoffAt": "2026-06-27",
+    "positiveEvidence": [
+      {
+        "metricId": "MSFT.capex",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT 现金资本开支：2026-06-30，同比 109.63%，上期增速 84.39%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "GOOG.capex",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG 现金资本开支：2026-06-30，同比 100.14%，上期增速 107.44%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "META.capex",
+        "observationVersion": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+        "direction": "positive",
+        "explanation": "META 现金资本开支：2026-06-30，同比 82.10%，上期增速 46.80%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "NVDA.gross_margin",
+        "observationVersion": "d3bb05b15118b65b9866f38d1230cc918c76292a14ed47b0404dbed28608389a",
+        "direction": "positive",
+        "explanation": "NVDA GAAP毛利率：2026-07-26，同比 2.60个百分点，上期增速 14.40个百分点。增长放缓。",
+        "periodEnd": "2026-07-26",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "NVDA.datacenter_revenue",
+        "observationVersion": "d3bb05b15118b65b9866f38d1230cc918c76292a14ed47b0404dbed28608389a",
+        "direction": "positive",
+        "explanation": "NVDA 数据中心业务收入：2026-07-26，同比 116.55%，上期增速 92.33%。扩张加速。",
+        "periodEnd": "2026-07-26",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "AMZN.capex",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN 现金资本开支：2026-06-30，同比 68.44%，上期增速 76.68%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "ORCL.capex",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 现金资本开支：2026-08-31，同比 235.20%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "AMD.datacenter_revenue",
+        "observationVersion": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+        "direction": "positive",
+        "explanation": "AMD 数据中心业务收入：2026-06-27，同比 107.35%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-06-27",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "AMD.gross_margin",
+        "observationVersion": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+        "direction": "positive",
+        "explanation": "AMD GAAP毛利率：2026-06-27，同比 14.00个百分点，缺少上期增速。数据不足。",
+        "periodEnd": "2026-06-27",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "WB.natural_gas",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "positive",
+        "explanation": "美国 美国天然气：2026-08-31，同比 -4.81%，上期增速 -9.40%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.industrial",
+        "observationVersion": "26d535a7c12a6ce5940c8c1a65ef48469941c004865634c81621d086c6288c9c",
+        "direction": "positive",
+        "explanation": "VA 弗吉尼亚州工业电价：2026-06-30，同比 -0.85%，上期增速 13.96%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.commercial",
+        "observationVersion": "50f0ae41c3081b0066bc16bfe133fb46565200efc433501c118168144098b1a3",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州商业电价：2026-06-30，同比 -2.06%，上期增速 -1.63%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.industrial",
+        "observationVersion": "25601f07d6374fabfbc6bea00d406814bf8f54033d893b66997c5992955fdc30",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州工业电价：2026-06-30，同比 -4.22%，上期增速 1.29%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.commercial",
+        "observationVersion": "0afb853108c5690653c5ecc12ada95a08fee2cea48cf62507e8717b2abc42bde",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州商业电价：2026-06-30，同比 -3.63%，上期增速 -5.15%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.industrial",
+        "observationVersion": "ed99780ed36aeedc1d936761febd2842cdaa8d98081ee12b70a5a3ac9a23f53b",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州工业电价：2026-06-30，同比 -6.42%，上期增速 -8.61%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "negativeEvidence": [
+      {
+        "metricId": "WB.copper",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铜：2026-08-31，同比 48.15%，上期增速 38.60%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "WB.aluminum",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铝：2026-08-31，同比 25.18%，上期增速 21.30%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.commercial",
+        "observationVersion": "b9c99f68e3382f1ff7f5b7123e2113508f4b8042ef65cdac0cb3b51f604eec74",
+        "direction": "negative",
+        "explanation": "US 美国全国商业电价：2026-06-30，同比 4.80%，上期增速 4.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.industrial",
+        "observationVersion": "76e6e41eefdf661ce89346be1b096a03c0d50e04bdc664d9bd883fe8bcc77cea",
+        "direction": "negative",
+        "explanation": "US 美国全国工业电价：2026-06-30，同比 3.02%，上期增速 5.12%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.commercial",
+        "observationVersion": "cf790278f0ca4af19277df1792f79020402c99388418695c29f782697f608a98",
+        "direction": "negative",
+        "explanation": "VA 弗吉尼亚州商业电价：2026-06-30，同比 16.54%，上期增速 20.58%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.commercial",
+        "observationVersion": "42cea61d60a28f06665df2d9768b311c0d17bf40a174f02c3ec7b45a22ccd6db",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州商业电价：2026-06-30，同比 2.85%，上期增速 -4.18%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.industrial",
+        "observationVersion": "6f50ea5c3068f573970d48ba95ff0b0dadfcf743d12399e0ab002794f663eb85",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州工业电价：2026-06-30，同比 3.46%，上期增速 -3.95%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.commercial",
+        "observationVersion": "3a31bdba4f75c0e54dc439c8fc29673d59cd684a6cf2be848fb63c7cccc56169",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州商业电价：2026-06-30，同比 21.54%，上期增速 25.25%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.industrial",
+        "observationVersion": "c3a949626f6d4c38326748004c202636a6ba4c0e9e5a864872c39caa65ca8359",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "neutralEvidence": [],
+    "invalidationConditions": [
+      "关键数据超过有效期或来源、统计口径发生变化时，撤销当前建议并重新计算。",
+      "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
+    ],
+    "watchMetrics": [
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price",
+      "MSFT.capex",
+      "GOOG.capex",
+      "META.capex",
+      "NVDA.gross_margin",
+      "NVDA.datacenter_revenue",
+      "AMZN.capex",
+      "ORCL.capex",
+      "AMD.datacenter_revenue",
+      "AMD.gross_margin",
+      "WB.natural_gas",
+      "EIA.VA.industrial",
+      "EIA.GA.commercial",
+      "EIA.GA.industrial",
+      "EIA.AZ.commercial",
+      "EIA.AZ.industrial",
+      "WB.copper",
+      "WB.aluminum",
+      "EIA.US.commercial",
+      "EIA.US.industrial",
+      "EIA.VA.commercial",
+      "EIA.TX.commercial",
+      "EIA.TX.industrial",
+      "EIA.OH.commercial",
+      "EIA.OH.industrial"
+    ],
+    "ruleVersion": "industry-1.0.1",
+    "previousRecommendationId": "accelerators-21ffb86b",
+    "previousLevel": "gradual_attention",
+    "reason": "至少三个维度为正面，但其他维度或反向证据仍需验证。",
+    "dimensions": [
+      {
+        "id": "investment",
+        "name": "投资投入",
+        "state": "positive",
+        "metricIds": [
+          "MSFT.capex",
+          "GOOG.capex",
+          "META.capex",
+          "AMZN.capex",
+          "ORCL.capex"
+        ]
+      },
+      {
+        "id": "demand",
+        "name": "实际需求",
+        "state": "positive",
+        "metricIds": [
+          "NVDA.datacenter_revenue",
+          "AMD.datacenter_revenue"
+        ]
+      },
+      {
+        "id": "construction",
+        "name": "建设进度",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "profitability",
+        "name": "盈利兑现",
+        "state": "positive",
+        "metricIds": [
+          "NVDA.gross_margin",
+          "AMD.gross_margin"
+        ]
+      },
+      {
+        "id": "costs",
+        "name": "成本与约束",
+        "state": "neutral",
+        "metricIds": [
+          "WB.copper",
+          "WB.aluminum",
+          "WB.natural_gas",
+          "EIA.US.commercial",
+          "EIA.US.industrial",
+          "EIA.VA.commercial",
+          "EIA.VA.industrial",
+          "EIA.TX.commercial",
+          "EIA.TX.industrial",
+          "EIA.OH.commercial",
+          "EIA.OH.industrial",
+          "EIA.GA.commercial",
+          "EIA.GA.industrial",
+          "EIA.AZ.commercial",
+          "EIA.AZ.industrial"
+        ]
+      }
+    ],
+    "missingMetrics": [
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price"
+    ],
+    "coverage": 0.8888888888888888,
+    "changeReason": "分批关注 → 分批关注。至少三个维度为正面，但其他维度或反向证据仍需验证。 数据或有效性版本发生变化。"
+  },
+  {
+    "id": "foundry-ad3e7177",
+    "targetType": "industry",
+    "targetId": "foundry",
+    "targetName": "晶圆代工",
+    "level": "insufficient_data",
+    "confidence": "low",
+    "horizon": "medium",
+    "generatedAt": "2026-09-12T15:57:17.424Z",
+    "dataCutoffAt": "2026-06-30",
+    "positiveEvidence": [
+      {
+        "metricId": "MSFT.capex",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT 现金资本开支：2026-06-30，同比 109.63%，上期增速 84.39%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "GOOG.capex",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG 现金资本开支：2026-06-30，同比 100.14%，上期增速 107.44%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "META.capex",
+        "observationVersion": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+        "direction": "positive",
+        "explanation": "META 现金资本开支：2026-06-30，同比 82.10%，上期增速 46.80%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "AMZN.capex",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN 现金资本开支：2026-06-30，同比 68.44%，上期增速 76.68%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "ORCL.capex",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 现金资本开支：2026-08-31，同比 235.20%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "WB.natural_gas",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "positive",
+        "explanation": "美国 美国天然气：2026-08-31，同比 -4.81%，上期增速 -9.40%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.industrial",
+        "observationVersion": "26d535a7c12a6ce5940c8c1a65ef48469941c004865634c81621d086c6288c9c",
+        "direction": "positive",
+        "explanation": "VA 弗吉尼亚州工业电价：2026-06-30，同比 -0.85%，上期增速 13.96%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.commercial",
+        "observationVersion": "50f0ae41c3081b0066bc16bfe133fb46565200efc433501c118168144098b1a3",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州商业电价：2026-06-30，同比 -2.06%，上期增速 -1.63%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.industrial",
+        "observationVersion": "25601f07d6374fabfbc6bea00d406814bf8f54033d893b66997c5992955fdc30",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州工业电价：2026-06-30，同比 -4.22%，上期增速 1.29%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.commercial",
+        "observationVersion": "0afb853108c5690653c5ecc12ada95a08fee2cea48cf62507e8717b2abc42bde",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州商业电价：2026-06-30，同比 -3.63%，上期增速 -5.15%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.industrial",
+        "observationVersion": "ed99780ed36aeedc1d936761febd2842cdaa8d98081ee12b70a5a3ac9a23f53b",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州工业电价：2026-06-30，同比 -6.42%，上期增速 -8.61%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "negativeEvidence": [
+      {
+        "metricId": "WB.copper",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铜：2026-08-31，同比 48.15%，上期增速 38.60%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "WB.aluminum",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铝：2026-08-31，同比 25.18%，上期增速 21.30%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.commercial",
+        "observationVersion": "b9c99f68e3382f1ff7f5b7123e2113508f4b8042ef65cdac0cb3b51f604eec74",
+        "direction": "negative",
+        "explanation": "US 美国全国商业电价：2026-06-30，同比 4.80%，上期增速 4.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.industrial",
+        "observationVersion": "76e6e41eefdf661ce89346be1b096a03c0d50e04bdc664d9bd883fe8bcc77cea",
+        "direction": "negative",
+        "explanation": "US 美国全国工业电价：2026-06-30，同比 3.02%，上期增速 5.12%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.commercial",
+        "observationVersion": "cf790278f0ca4af19277df1792f79020402c99388418695c29f782697f608a98",
+        "direction": "negative",
+        "explanation": "VA 弗吉尼亚州商业电价：2026-06-30，同比 16.54%，上期增速 20.58%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.commercial",
+        "observationVersion": "42cea61d60a28f06665df2d9768b311c0d17bf40a174f02c3ec7b45a22ccd6db",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州商业电价：2026-06-30，同比 2.85%，上期增速 -4.18%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.industrial",
+        "observationVersion": "6f50ea5c3068f573970d48ba95ff0b0dadfcf743d12399e0ab002794f663eb85",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州工业电价：2026-06-30，同比 3.46%，上期增速 -3.95%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.commercial",
+        "observationVersion": "3a31bdba4f75c0e54dc439c8fc29673d59cd684a6cf2be848fb63c7cccc56169",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州商业电价：2026-06-30，同比 21.54%，上期增速 25.25%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.industrial",
+        "observationVersion": "c3a949626f6d4c38326748004c202636a6ba4c0e9e5a864872c39caa65ca8359",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "neutralEvidence": [],
+    "invalidationConditions": [
+      "关键数据超过有效期或来源、统计口径发生变化时，撤销当前建议并重新计算。",
+      "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
+    ],
+    "watchMetrics": [
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price",
+      "MSFT.capex",
+      "GOOG.capex",
+      "META.capex",
+      "AMZN.capex",
+      "ORCL.capex",
+      "WB.natural_gas",
+      "EIA.VA.industrial",
+      "EIA.GA.commercial",
+      "EIA.GA.industrial",
+      "EIA.AZ.commercial",
+      "EIA.AZ.industrial",
+      "WB.copper",
+      "WB.aluminum",
+      "EIA.US.commercial",
+      "EIA.US.industrial",
+      "EIA.VA.commercial",
+      "EIA.TX.commercial",
+      "EIA.TX.industrial",
+      "EIA.OH.commercial",
+      "EIA.OH.industrial"
+    ],
+    "ruleVersion": "industry-1.0.1",
+    "previousRecommendationId": "foundry-ec2e723a",
+    "previousLevel": "insufficient_data",
+    "reason": "关键证据尚未齐备：实际需求、盈利兑现",
+    "dimensions": [
+      {
+        "id": "investment",
+        "name": "投资投入",
+        "state": "positive",
+        "metricIds": [
+          "MSFT.capex",
+          "GOOG.capex",
+          "META.capex",
+          "AMZN.capex",
+          "ORCL.capex"
+        ]
+      },
+      {
+        "id": "demand",
+        "name": "实际需求",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "construction",
+        "name": "建设进度",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "profitability",
+        "name": "盈利兑现",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "costs",
+        "name": "成本与约束",
+        "state": "neutral",
+        "metricIds": [
+          "WB.copper",
+          "WB.aluminum",
+          "WB.natural_gas",
+          "EIA.US.commercial",
+          "EIA.US.industrial",
+          "EIA.VA.commercial",
+          "EIA.VA.industrial",
+          "EIA.TX.commercial",
+          "EIA.TX.industrial",
+          "EIA.OH.commercial",
+          "EIA.OH.industrial",
+          "EIA.GA.commercial",
+          "EIA.GA.industrial",
+          "EIA.AZ.commercial",
+          "EIA.AZ.industrial"
+        ]
+      }
+    ],
+    "missingMetrics": [
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price"
+    ],
+    "coverage": 0.8695652173913043,
+    "changeReason": "暂不形成建议 → 暂不形成建议。关键证据尚未齐备：实际需求、盈利兑现 数据或有效性版本发生变化。"
+  },
+  {
+    "id": "packaging-4263cf01",
+    "targetType": "industry",
+    "targetId": "packaging",
+    "targetName": "先进封装",
+    "level": "insufficient_data",
+    "confidence": "low",
+    "horizon": "medium",
+    "generatedAt": "2026-09-12T15:57:17.424Z",
+    "dataCutoffAt": "2026-06-30",
+    "positiveEvidence": [
+      {
+        "metricId": "MSFT.capex",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT 现金资本开支：2026-06-30，同比 109.63%，上期增速 84.39%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "GOOG.capex",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG 现金资本开支：2026-06-30，同比 100.14%，上期增速 107.44%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "META.capex",
+        "observationVersion": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+        "direction": "positive",
+        "explanation": "META 现金资本开支：2026-06-30，同比 82.10%，上期增速 46.80%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "AMZN.capex",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN 现金资本开支：2026-06-30，同比 68.44%，上期增速 76.68%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "ORCL.capex",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 现金资本开支：2026-08-31，同比 235.20%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "WB.natural_gas",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "positive",
+        "explanation": "美国 美国天然气：2026-08-31，同比 -4.81%，上期增速 -9.40%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.industrial",
+        "observationVersion": "26d535a7c12a6ce5940c8c1a65ef48469941c004865634c81621d086c6288c9c",
+        "direction": "positive",
+        "explanation": "VA 弗吉尼亚州工业电价：2026-06-30，同比 -0.85%，上期增速 13.96%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.commercial",
+        "observationVersion": "50f0ae41c3081b0066bc16bfe133fb46565200efc433501c118168144098b1a3",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州商业电价：2026-06-30，同比 -2.06%，上期增速 -1.63%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.industrial",
+        "observationVersion": "25601f07d6374fabfbc6bea00d406814bf8f54033d893b66997c5992955fdc30",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州工业电价：2026-06-30，同比 -4.22%，上期增速 1.29%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.commercial",
+        "observationVersion": "0afb853108c5690653c5ecc12ada95a08fee2cea48cf62507e8717b2abc42bde",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州商业电价：2026-06-30，同比 -3.63%，上期增速 -5.15%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.industrial",
+        "observationVersion": "ed99780ed36aeedc1d936761febd2842cdaa8d98081ee12b70a5a3ac9a23f53b",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州工业电价：2026-06-30，同比 -6.42%，上期增速 -8.61%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "negativeEvidence": [
+      {
+        "metricId": "WB.copper",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铜：2026-08-31，同比 48.15%，上期增速 38.60%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "WB.aluminum",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铝：2026-08-31，同比 25.18%，上期增速 21.30%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.commercial",
+        "observationVersion": "b9c99f68e3382f1ff7f5b7123e2113508f4b8042ef65cdac0cb3b51f604eec74",
+        "direction": "negative",
+        "explanation": "US 美国全国商业电价：2026-06-30，同比 4.80%，上期增速 4.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.industrial",
+        "observationVersion": "76e6e41eefdf661ce89346be1b096a03c0d50e04bdc664d9bd883fe8bcc77cea",
+        "direction": "negative",
+        "explanation": "US 美国全国工业电价：2026-06-30，同比 3.02%，上期增速 5.12%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.commercial",
+        "observationVersion": "cf790278f0ca4af19277df1792f79020402c99388418695c29f782697f608a98",
+        "direction": "negative",
+        "explanation": "VA 弗吉尼亚州商业电价：2026-06-30，同比 16.54%，上期增速 20.58%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.commercial",
+        "observationVersion": "42cea61d60a28f06665df2d9768b311c0d17bf40a174f02c3ec7b45a22ccd6db",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州商业电价：2026-06-30，同比 2.85%，上期增速 -4.18%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.industrial",
+        "observationVersion": "6f50ea5c3068f573970d48ba95ff0b0dadfcf743d12399e0ab002794f663eb85",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州工业电价：2026-06-30，同比 3.46%，上期增速 -3.95%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.commercial",
+        "observationVersion": "3a31bdba4f75c0e54dc439c8fc29673d59cd684a6cf2be848fb63c7cccc56169",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州商业电价：2026-06-30，同比 21.54%，上期增速 25.25%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.industrial",
+        "observationVersion": "c3a949626f6d4c38326748004c202636a6ba4c0e9e5a864872c39caa65ca8359",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "neutralEvidence": [],
+    "invalidationConditions": [
+      "关键数据超过有效期或来源、统计口径发生变化时，撤销当前建议并重新计算。",
+      "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
+    ],
+    "watchMetrics": [
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price",
+      "MSFT.capex",
+      "GOOG.capex",
+      "META.capex",
+      "AMZN.capex",
+      "ORCL.capex",
+      "WB.natural_gas",
+      "EIA.VA.industrial",
+      "EIA.GA.commercial",
+      "EIA.GA.industrial",
+      "EIA.AZ.commercial",
+      "EIA.AZ.industrial",
+      "WB.copper",
+      "WB.aluminum",
+      "EIA.US.commercial",
+      "EIA.US.industrial",
+      "EIA.VA.commercial",
+      "EIA.TX.commercial",
+      "EIA.TX.industrial",
+      "EIA.OH.commercial",
+      "EIA.OH.industrial"
+    ],
+    "ruleVersion": "industry-1.0.1",
+    "previousRecommendationId": "packaging-ef1398c8",
+    "previousLevel": "insufficient_data",
+    "reason": "关键证据尚未齐备：实际需求、建设进度、盈利兑现",
+    "dimensions": [
+      {
+        "id": "investment",
+        "name": "投资投入",
+        "state": "positive",
+        "metricIds": [
+          "MSFT.capex",
+          "GOOG.capex",
+          "META.capex",
+          "AMZN.capex",
+          "ORCL.capex"
+        ]
+      },
+      {
+        "id": "demand",
+        "name": "实际需求",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "construction",
+        "name": "建设进度",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "profitability",
+        "name": "盈利兑现",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "costs",
+        "name": "成本与约束",
+        "state": "neutral",
+        "metricIds": [
+          "WB.copper",
+          "WB.aluminum",
+          "WB.natural_gas",
+          "EIA.US.commercial",
+          "EIA.US.industrial",
+          "EIA.VA.commercial",
+          "EIA.VA.industrial",
+          "EIA.TX.commercial",
+          "EIA.TX.industrial",
+          "EIA.OH.commercial",
+          "EIA.OH.industrial",
+          "EIA.GA.commercial",
+          "EIA.GA.industrial",
+          "EIA.AZ.commercial",
+          "EIA.AZ.industrial"
+        ]
+      }
+    ],
+    "missingMetrics": [
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price"
+    ],
+    "coverage": 0.8695652173913043,
+    "changeReason": "暂不形成建议 → 暂不形成建议。关键证据尚未齐备：实际需求、建设进度、盈利兑现 数据或有效性版本发生变化。"
+  },
+  {
+    "id": "memory-653be999",
+    "targetType": "industry",
+    "targetId": "memory",
+    "targetName": "HBM及存储",
+    "level": "insufficient_data",
+    "confidence": "low",
+    "horizon": "medium",
+    "generatedAt": "2026-09-12T15:57:17.424Z",
+    "dataCutoffAt": "2026-06-30",
+    "positiveEvidence": [
+      {
+        "metricId": "MSFT.capex",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT 现金资本开支：2026-06-30，同比 109.63%，上期增速 84.39%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "GOOG.capex",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG 现金资本开支：2026-06-30，同比 100.14%，上期增速 107.44%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "META.capex",
+        "observationVersion": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+        "direction": "positive",
+        "explanation": "META 现金资本开支：2026-06-30，同比 82.10%，上期增速 46.80%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "AMZN.capex",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN 现金资本开支：2026-06-30，同比 68.44%，上期增速 76.68%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "ORCL.capex",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 现金资本开支：2026-08-31，同比 235.20%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "WB.natural_gas",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "positive",
+        "explanation": "美国 美国天然气：2026-08-31，同比 -4.81%，上期增速 -9.40%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.industrial",
+        "observationVersion": "26d535a7c12a6ce5940c8c1a65ef48469941c004865634c81621d086c6288c9c",
+        "direction": "positive",
+        "explanation": "VA 弗吉尼亚州工业电价：2026-06-30，同比 -0.85%，上期增速 13.96%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.commercial",
+        "observationVersion": "50f0ae41c3081b0066bc16bfe133fb46565200efc433501c118168144098b1a3",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州商业电价：2026-06-30，同比 -2.06%，上期增速 -1.63%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.industrial",
+        "observationVersion": "25601f07d6374fabfbc6bea00d406814bf8f54033d893b66997c5992955fdc30",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州工业电价：2026-06-30，同比 -4.22%，上期增速 1.29%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.commercial",
+        "observationVersion": "0afb853108c5690653c5ecc12ada95a08fee2cea48cf62507e8717b2abc42bde",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州商业电价：2026-06-30，同比 -3.63%，上期增速 -5.15%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.industrial",
+        "observationVersion": "ed99780ed36aeedc1d936761febd2842cdaa8d98081ee12b70a5a3ac9a23f53b",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州工业电价：2026-06-30，同比 -6.42%，上期增速 -8.61%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "negativeEvidence": [
+      {
+        "metricId": "WB.copper",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铜：2026-08-31，同比 48.15%，上期增速 38.60%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "WB.aluminum",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铝：2026-08-31，同比 25.18%，上期增速 21.30%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.commercial",
+        "observationVersion": "b9c99f68e3382f1ff7f5b7123e2113508f4b8042ef65cdac0cb3b51f604eec74",
+        "direction": "negative",
+        "explanation": "US 美国全国商业电价：2026-06-30，同比 4.80%，上期增速 4.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.industrial",
+        "observationVersion": "76e6e41eefdf661ce89346be1b096a03c0d50e04bdc664d9bd883fe8bcc77cea",
+        "direction": "negative",
+        "explanation": "US 美国全国工业电价：2026-06-30，同比 3.02%，上期增速 5.12%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.commercial",
+        "observationVersion": "cf790278f0ca4af19277df1792f79020402c99388418695c29f782697f608a98",
+        "direction": "negative",
+        "explanation": "VA 弗吉尼亚州商业电价：2026-06-30，同比 16.54%，上期增速 20.58%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.commercial",
+        "observationVersion": "42cea61d60a28f06665df2d9768b311c0d17bf40a174f02c3ec7b45a22ccd6db",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州商业电价：2026-06-30，同比 2.85%，上期增速 -4.18%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.industrial",
+        "observationVersion": "6f50ea5c3068f573970d48ba95ff0b0dadfcf743d12399e0ab002794f663eb85",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州工业电价：2026-06-30，同比 3.46%，上期增速 -3.95%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.commercial",
+        "observationVersion": "3a31bdba4f75c0e54dc439c8fc29673d59cd684a6cf2be848fb63c7cccc56169",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州商业电价：2026-06-30，同比 21.54%，上期增速 25.25%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.industrial",
+        "observationVersion": "c3a949626f6d4c38326748004c202636a6ba4c0e9e5a864872c39caa65ca8359",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "neutralEvidence": [],
+    "invalidationConditions": [
+      "关键数据超过有效期或来源、统计口径发生变化时，撤销当前建议并重新计算。",
+      "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
+    ],
+    "watchMetrics": [
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price",
+      "MU.inventory_days",
+      "MSFT.capex",
+      "GOOG.capex",
+      "META.capex",
+      "AMZN.capex",
+      "ORCL.capex",
+      "WB.natural_gas",
+      "EIA.VA.industrial",
+      "EIA.GA.commercial",
+      "EIA.GA.industrial",
+      "EIA.AZ.commercial",
+      "EIA.AZ.industrial",
+      "WB.copper",
+      "WB.aluminum",
+      "EIA.US.commercial",
+      "EIA.US.industrial",
+      "EIA.VA.commercial",
+      "EIA.TX.commercial",
+      "EIA.TX.industrial",
+      "EIA.OH.commercial",
+      "EIA.OH.industrial"
+    ],
+    "ruleVersion": "industry-1.0.1",
+    "previousRecommendationId": "memory-d77f65f8",
+    "previousLevel": "insufficient_data",
+    "reason": "关键证据尚未齐备：实际需求、盈利兑现",
+    "dimensions": [
+      {
+        "id": "investment",
+        "name": "投资投入",
+        "state": "positive",
+        "metricIds": [
+          "MSFT.capex",
+          "GOOG.capex",
+          "META.capex",
+          "AMZN.capex",
+          "ORCL.capex"
+        ]
+      },
+      {
+        "id": "demand",
+        "name": "实际需求",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "construction",
+        "name": "建设进度",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "profitability",
+        "name": "盈利兑现",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "costs",
+        "name": "成本与约束",
+        "state": "neutral",
+        "metricIds": [
+          "WB.copper",
+          "WB.aluminum",
+          "WB.natural_gas",
+          "EIA.US.commercial",
+          "EIA.US.industrial",
+          "EIA.VA.commercial",
+          "EIA.VA.industrial",
+          "EIA.TX.commercial",
+          "EIA.TX.industrial",
+          "EIA.OH.commercial",
+          "EIA.OH.industrial",
+          "EIA.GA.commercial",
+          "EIA.GA.industrial",
+          "EIA.AZ.commercial",
+          "EIA.AZ.industrial"
+        ]
+      }
+    ],
+    "missingMetrics": [
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price",
+      "MU.inventory_days"
+    ],
+    "coverage": 0.8333333333333334,
+    "changeReason": "暂不形成建议 → 暂不形成建议。关键证据尚未齐备：实际需求、盈利兑现 数据或有效性版本发生变化。"
+  },
+  {
+    "id": "materials-1dac2c32",
+    "targetType": "industry",
+    "targetId": "materials",
+    "targetName": "铜、铝等上游材料",
+    "level": "insufficient_data",
+    "confidence": "low",
+    "horizon": "medium",
+    "generatedAt": "2026-09-12T15:57:17.424Z",
+    "dataCutoffAt": "2026-06-30",
+    "positiveEvidence": [
+      {
+        "metricId": "WB.natural_gas",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "positive",
+        "explanation": "美国 美国天然气：2026-08-31，同比 -4.81%，上期增速 -9.40%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.industrial",
+        "observationVersion": "26d535a7c12a6ce5940c8c1a65ef48469941c004865634c81621d086c6288c9c",
+        "direction": "positive",
+        "explanation": "VA 弗吉尼亚州工业电价：2026-06-30，同比 -0.85%，上期增速 13.96%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.commercial",
+        "observationVersion": "50f0ae41c3081b0066bc16bfe133fb46565200efc433501c118168144098b1a3",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州商业电价：2026-06-30，同比 -2.06%，上期增速 -1.63%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.industrial",
+        "observationVersion": "25601f07d6374fabfbc6bea00d406814bf8f54033d893b66997c5992955fdc30",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州工业电价：2026-06-30，同比 -4.22%，上期增速 1.29%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.commercial",
+        "observationVersion": "0afb853108c5690653c5ecc12ada95a08fee2cea48cf62507e8717b2abc42bde",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州商业电价：2026-06-30，同比 -3.63%，上期增速 -5.15%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.industrial",
+        "observationVersion": "ed99780ed36aeedc1d936761febd2842cdaa8d98081ee12b70a5a3ac9a23f53b",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州工业电价：2026-06-30，同比 -6.42%，上期增速 -8.61%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "negativeEvidence": [
+      {
+        "metricId": "WB.copper",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铜：2026-08-31，同比 48.15%，上期增速 38.60%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "WB.aluminum",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铝：2026-08-31，同比 25.18%，上期增速 21.30%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.commercial",
+        "observationVersion": "b9c99f68e3382f1ff7f5b7123e2113508f4b8042ef65cdac0cb3b51f604eec74",
+        "direction": "negative",
+        "explanation": "US 美国全国商业电价：2026-06-30，同比 4.80%，上期增速 4.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.industrial",
+        "observationVersion": "76e6e41eefdf661ce89346be1b096a03c0d50e04bdc664d9bd883fe8bcc77cea",
+        "direction": "negative",
+        "explanation": "US 美国全国工业电价：2026-06-30，同比 3.02%，上期增速 5.12%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.commercial",
+        "observationVersion": "cf790278f0ca4af19277df1792f79020402c99388418695c29f782697f608a98",
+        "direction": "negative",
+        "explanation": "VA 弗吉尼亚州商业电价：2026-06-30，同比 16.54%，上期增速 20.58%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.commercial",
+        "observationVersion": "42cea61d60a28f06665df2d9768b311c0d17bf40a174f02c3ec7b45a22ccd6db",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州商业电价：2026-06-30，同比 2.85%，上期增速 -4.18%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.industrial",
+        "observationVersion": "6f50ea5c3068f573970d48ba95ff0b0dadfcf743d12399e0ab002794f663eb85",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州工业电价：2026-06-30，同比 3.46%，上期增速 -3.95%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.commercial",
+        "observationVersion": "3a31bdba4f75c0e54dc439c8fc29673d59cd684a6cf2be848fb63c7cccc56169",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州商业电价：2026-06-30，同比 21.54%，上期增速 25.25%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.industrial",
+        "observationVersion": "c3a949626f6d4c38326748004c202636a6ba4c0e9e5a864872c39caa65ca8359",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "neutralEvidence": [],
+    "invalidationConditions": [
+      "关键数据超过有效期或来源、统计口径发生变化时，撤销当前建议并重新计算。",
+      "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
+    ],
+    "watchMetrics": [
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price",
+      "WB.natural_gas",
+      "EIA.VA.industrial",
+      "EIA.GA.commercial",
+      "EIA.GA.industrial",
+      "EIA.AZ.commercial",
+      "EIA.AZ.industrial",
+      "WB.copper",
+      "WB.aluminum",
+      "EIA.US.commercial",
+      "EIA.US.industrial",
+      "EIA.VA.commercial",
+      "EIA.TX.commercial",
+      "EIA.TX.industrial",
+      "EIA.OH.commercial",
+      "EIA.OH.industrial"
+    ],
+    "ruleVersion": "industry-1.0.1",
+    "previousRecommendationId": "materials-f3521c69",
+    "previousLevel": "insufficient_data",
+    "reason": "关键证据尚未齐备：投资投入、实际需求、盈利兑现",
+    "dimensions": [
+      {
+        "id": "investment",
+        "name": "投资投入",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "demand",
+        "name": "实际需求",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "construction",
+        "name": "建设进度",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "profitability",
+        "name": "盈利兑现",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "costs",
+        "name": "成本与约束",
+        "state": "neutral",
+        "metricIds": [
+          "WB.copper",
+          "WB.aluminum",
+          "WB.natural_gas",
+          "EIA.US.commercial",
+          "EIA.US.industrial",
+          "EIA.VA.commercial",
+          "EIA.VA.industrial",
+          "EIA.TX.commercial",
+          "EIA.TX.industrial",
+          "EIA.OH.commercial",
+          "EIA.OH.industrial",
+          "EIA.GA.commercial",
+          "EIA.GA.industrial",
+          "EIA.AZ.commercial",
+          "EIA.AZ.industrial"
+        ]
+      }
+    ],
+    "missingMetrics": [
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price"
+    ],
+    "coverage": 0.8333333333333334,
+    "changeReason": "暂不形成建议 → 暂不形成建议。关键证据尚未齐备：投资投入、实际需求、盈利兑现 数据或有效性版本发生变化。"
+  },
+  {
+    "id": "overall-d849209a",
+    "targetType": "industry",
+    "targetId": "overall",
+    "targetName": "AI产业链整体",
+    "level": "insufficient_data",
+    "confidence": "low",
+    "horizon": "medium",
+    "generatedAt": "2026-09-12T15:57:17.424Z",
+    "dataCutoffAt": "2026-06-27",
+    "positiveEvidence": [
+      {
+        "metricId": "MSFT.capex",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT 现金资本开支：2026-06-30，同比 109.63%，上期增速 84.39%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "MSFT.operating_cash_flow",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT 营业现金流：2026-06-30，同比 30.00%，上期增速 26.01%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "GOOG.capex",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG 现金资本开支：2026-06-30，同比 100.14%，上期增速 107.44%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "GOOG.operating_cash_flow",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG 营业现金流：2026-06-30，同比 40.80%，上期增速 26.67%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "GOOG.cloud_revenue",
+        "observationVersion": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+        "direction": "positive",
+        "explanation": "GOOG Google Cloud收入：2026-06-30，同比 81.80%，上期增速 63.36%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "META.capex",
+        "observationVersion": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+        "direction": "positive",
+        "explanation": "META 现金资本开支：2026-06-30，同比 82.10%，上期增速 46.80%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "META.operating_cash_flow",
+        "observationVersion": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+        "direction": "positive",
+        "explanation": "META 营业现金流：2026-06-30，同比 24.65%，上期增速 34.13%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "NVDA.gross_margin",
+        "observationVersion": "d3bb05b15118b65b9866f38d1230cc918c76292a14ed47b0404dbed28608389a",
+        "direction": "positive",
+        "explanation": "NVDA GAAP毛利率：2026-07-26，同比 2.60个百分点，上期增速 14.40个百分点。增长放缓。",
+        "periodEnd": "2026-07-26",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "NVDA.datacenter_revenue",
+        "observationVersion": "d3bb05b15118b65b9866f38d1230cc918c76292a14ed47b0404dbed28608389a",
+        "direction": "positive",
+        "explanation": "NVDA 数据中心业务收入：2026-07-26，同比 116.55%，上期增速 92.33%。扩张加速。",
+        "periodEnd": "2026-07-26",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "MSFT.cloud_revenue",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT Intelligent Cloud收入（非Azure单项）：2026-06-30，同比 31.55%，上期增速 29.64%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "MSFT.cloud_growth",
+        "observationVersion": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+        "direction": "positive",
+        "explanation": "MSFT Azure及其他云服务收入增速：2026-06-30，披露同比增速 43.00%，上期增速 40.00%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "AMZN.capex",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN 现金资本开支：2026-06-30，同比 68.44%，上期增速 76.68%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "AMZN.operating_cash_flow",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN 营业现金流：2026-06-30，同比 39.59%，上期增速 52.99%。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "AMZN.cloud_revenue",
+        "observationVersion": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+        "direction": "positive",
+        "explanation": "AMZN AWS收入：2026-06-30，同比 36.79%，上期增速 28.43%。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "GOOG.cloud_margin",
+        "observationVersion": "e3554862d7f6292c411a3117249a30ac52f4624ae5253455fe5fe36acd65ada4",
+        "direction": "positive",
+        "explanation": "GOOG 云业务营业利润率：2026-06-30，同比 14.84个百分点，上期增速 15.19个百分点。增长放缓。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "AMZN.cloud_margin",
+        "observationVersion": "6f656af4d8449fb27c6fe84137cd0acabc228917b78d9df47cb3477ca553fa7d",
+        "direction": "positive",
+        "explanation": "AMZN 云业务营业利润率：2026-06-30，同比 6.45个百分点，上期增速 -1.78个百分点。扩张加速。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "ORCL.capex",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 现金资本开支：2026-08-31，同比 235.20%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "investment"
+      },
+      {
+        "metricId": "ORCL.operating_cash_flow",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 营业现金流：2026-08-31，同比 183.82%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "ORCL.cloud_revenue",
+        "observationVersion": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+        "direction": "positive",
+        "explanation": "ORCL 云业务收入：2026-08-31，同比 61.52%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-08-31",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "DELL.gross_margin",
+        "observationVersion": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+        "direction": "positive",
+        "explanation": "DELL GAAP毛利率：2026-07-31，同比 2.63个百分点，上期增速 -3.37个百分点。扩张加速。",
+        "periodEnd": "2026-07-31",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "DELL.ai_server_revenue",
+        "observationVersion": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+        "direction": "positive",
+        "explanation": "DELL AI优化服务器收入：2026-07-31，同比 99.82%，上期增速 757.17%。增长放缓。",
+        "periodEnd": "2026-07-31",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "DELL.server_revenue",
+        "observationVersion": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+        "direction": "positive",
+        "explanation": "DELL 传统服务器与网络收入：2026-07-31，同比 122.36%，上期增速 92.45%。扩张加速。",
+        "periodEnd": "2026-07-31",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "AMD.datacenter_revenue",
+        "observationVersion": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+        "direction": "positive",
+        "explanation": "AMD 数据中心业务收入：2026-06-27，同比 107.35%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-06-27",
+        "dimension": "demand"
+      },
+      {
+        "metricId": "AMD.gross_margin",
+        "observationVersion": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+        "direction": "positive",
+        "explanation": "AMD GAAP毛利率：2026-06-27，同比 14.00个百分点，缺少上期增速。数据不足。",
+        "periodEnd": "2026-06-27",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "WB.natural_gas",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "positive",
+        "explanation": "美国 美国天然气：2026-08-31，同比 -4.81%，上期增速 -9.40%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.industrial",
+        "observationVersion": "26d535a7c12a6ce5940c8c1a65ef48469941c004865634c81621d086c6288c9c",
+        "direction": "positive",
+        "explanation": "VA 弗吉尼亚州工业电价：2026-06-30，同比 -0.85%，上期增速 13.96%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.commercial",
+        "observationVersion": "50f0ae41c3081b0066bc16bfe133fb46565200efc433501c118168144098b1a3",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州商业电价：2026-06-30，同比 -2.06%，上期增速 -1.63%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.GA.industrial",
+        "observationVersion": "25601f07d6374fabfbc6bea00d406814bf8f54033d893b66997c5992955fdc30",
+        "direction": "positive",
+        "explanation": "GA 佐治亚州工业电价：2026-06-30，同比 -4.22%，上期增速 1.29%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.commercial",
+        "observationVersion": "0afb853108c5690653c5ecc12ada95a08fee2cea48cf62507e8717b2abc42bde",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州商业电价：2026-06-30，同比 -3.63%，上期增速 -5.15%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.AZ.industrial",
+        "observationVersion": "ed99780ed36aeedc1d936761febd2842cdaa8d98081ee12b70a5a3ac9a23f53b",
+        "direction": "positive",
+        "explanation": "AZ 亚利桑那州工业电价：2026-06-30，同比 -6.42%，上期增速 -8.61%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "negativeEvidence": [
+      {
+        "metricId": "MSFT.free_cash_flow",
+        "observationVersion": "d375e800d4b448b76f3c5b90111b0a3cdf696120314760139844e3c251816e36",
+        "direction": "negative",
+        "explanation": "MSFT 自由现金流（现金购置口径）：2026-06-30，同比 -23.19%，上期增速 -22.15%。同比收缩。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "GOOG.free_cash_flow",
+        "observationVersion": "53d27de7224838441df75e81c25776f3fca83c7bf3f0642228bd65c4b803713a",
+        "direction": "negative",
+        "explanation": "GOOG 自由现金流（现金购置口径）：2026-06-30，同比 -210.45%，上期增速 -46.63%。同比收缩。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "AMZN.free_cash_flow",
+        "observationVersion": "b12a2f13b73980bdb10a02ebb21a8ac42f46552f5d0d13375961e9841b536040",
+        "direction": "negative",
+        "explanation": "AMZN 自由现金流（现金购置口径）：2026-06-30，同比 -2756.93%，缺少上期增速。数据不足。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "META.free_cash_flow",
+        "observationVersion": "e343063801bb3b11a3a73b73fd37ec3206f42734fc3dc9b50c54b9e54ed2421b",
+        "direction": "negative",
+        "explanation": "META 自由现金流（现金购置口径）：2026-06-30，同比 -80.65%，上期增速 19.34%。同比收缩。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      },
+      {
+        "metricId": "WB.copper",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铜：2026-08-31，同比 48.15%，上期增速 38.60%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "WB.aluminum",
+        "observationVersion": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+        "direction": "negative",
+        "explanation": "全球 铝：2026-08-31，同比 25.18%，上期增速 21.30%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-08-31",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.commercial",
+        "observationVersion": "b9c99f68e3382f1ff7f5b7123e2113508f4b8042ef65cdac0cb3b51f604eec74",
+        "direction": "negative",
+        "explanation": "US 美国全国商业电价：2026-06-30，同比 4.80%，上期增速 4.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.US.industrial",
+        "observationVersion": "76e6e41eefdf661ce89346be1b096a03c0d50e04bdc664d9bd883fe8bcc77cea",
+        "direction": "negative",
+        "explanation": "US 美国全国工业电价：2026-06-30，同比 3.02%，上期增速 5.12%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.VA.commercial",
+        "observationVersion": "cf790278f0ca4af19277df1792f79020402c99388418695c29f782697f608a98",
+        "direction": "negative",
+        "explanation": "VA 弗吉尼亚州商业电价：2026-06-30，同比 16.54%，上期增速 20.58%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.commercial",
+        "observationVersion": "42cea61d60a28f06665df2d9768b311c0d17bf40a174f02c3ec7b45a22ccd6db",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州商业电价：2026-06-30，同比 2.85%，上期增速 -4.18%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.TX.industrial",
+        "observationVersion": "6f50ea5c3068f573970d48ba95ff0b0dadfcf743d12399e0ab002794f663eb85",
+        "direction": "negative",
+        "explanation": "TX 得克萨斯州工业电价：2026-06-30，同比 3.46%，上期增速 -3.95%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.commercial",
+        "observationVersion": "3a31bdba4f75c0e54dc439c8fc29673d59cd684a6cf2be848fb63c7cccc56169",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州商业电价：2026-06-30，同比 21.54%，上期增速 25.25%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      },
+      {
+        "metricId": "EIA.OH.industrial",
+        "observationVersion": "c3a949626f6d4c38326748004c202636a6ba4c0e9e5a864872c39caa65ca8359",
+        "direction": "negative",
+        "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-06-30",
+        "dimension": "costs"
+      }
+    ],
+    "neutralEvidence": [
+      {
+        "metricId": "MSFT.cloud_margin",
+        "observationVersion": "feb9e13ddb30143af1c93f94ff60cc66ac6b4926e6b7ec23f85f06fd584f6014",
+        "direction": "neutral",
+        "explanation": "MSFT 云业务营业利润率：2026-06-30，同比 -0.04个百分点，上期增速 -1.82个百分点。同比收缩。",
+        "periodEnd": "2026-06-30",
+        "dimension": "profitability"
+      }
+    ],
+    "invalidationConditions": [
+      "关键数据超过有效期或来源、统计口径发生变化时，撤销当前建议并重新计算。",
+      "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
+    ],
+    "watchMetrics": [
+      "ORCL.free_cash_flow",
+      "MSFT.backlog",
+      "AMZN.backlog",
+      "GOOG.backlog",
+      "ORCL.cloud_margin",
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price",
+      "VRT.backlog",
+      "DELL.backlog",
+      "DELL.inventory_days",
+      "MU.inventory_days",
+      "MSFT.capex",
+      "MSFT.operating_cash_flow",
+      "GOOG.capex",
+      "GOOG.operating_cash_flow",
+      "GOOG.cloud_revenue",
+      "META.capex",
+      "META.operating_cash_flow",
+      "NVDA.gross_margin",
+      "NVDA.datacenter_revenue",
+      "MSFT.cloud_revenue",
+      "MSFT.cloud_growth",
+      "AMZN.capex",
+      "AMZN.operating_cash_flow",
+      "AMZN.cloud_revenue",
+      "GOOG.cloud_margin",
+      "AMZN.cloud_margin",
+      "ORCL.capex",
+      "ORCL.operating_cash_flow",
+      "ORCL.cloud_revenue",
+      "DELL.gross_margin",
+      "DELL.ai_server_revenue",
+      "DELL.server_revenue",
+      "AMD.datacenter_revenue",
+      "AMD.gross_margin",
+      "WB.natural_gas",
+      "EIA.VA.industrial",
+      "EIA.GA.commercial",
+      "EIA.GA.industrial",
+      "EIA.AZ.commercial",
+      "EIA.AZ.industrial",
+      "MSFT.free_cash_flow",
+      "GOOG.free_cash_flow",
+      "AMZN.free_cash_flow",
+      "META.free_cash_flow",
+      "WB.copper",
+      "WB.aluminum",
+      "EIA.US.commercial",
+      "EIA.US.industrial",
+      "EIA.VA.commercial",
+      "EIA.TX.commercial",
+      "EIA.TX.industrial",
+      "EIA.OH.commercial",
+      "EIA.OH.industrial"
+    ],
+    "ruleVersion": "industry-1.0.1",
+    "previousRecommendationId": "overall-bf422f36",
+    "previousLevel": "insufficient_data",
+    "reason": "关键证据尚未齐备：建设进度",
+    "dimensions": [
+      {
+        "id": "investment",
+        "name": "投资投入",
+        "state": "positive",
+        "metricIds": [
+          "MSFT.capex",
+          "GOOG.capex",
+          "META.capex",
+          "AMZN.capex",
+          "ORCL.capex"
+        ]
+      },
+      {
+        "id": "demand",
+        "name": "实际需求",
+        "state": "positive",
+        "metricIds": [
+          "GOOG.cloud_revenue",
+          "NVDA.datacenter_revenue",
+          "MSFT.cloud_revenue",
+          "MSFT.cloud_growth",
+          "AMZN.cloud_revenue",
+          "ORCL.cloud_revenue",
+          "DELL.ai_server_revenue",
+          "DELL.server_revenue",
+          "AMD.datacenter_revenue"
+        ]
+      },
+      {
+        "id": "construction",
+        "name": "建设进度",
+        "state": "missing",
+        "metricIds": []
+      },
+      {
+        "id": "profitability",
+        "name": "盈利兑现",
+        "state": "neutral",
+        "metricIds": [
+          "MSFT.operating_cash_flow",
+          "GOOG.operating_cash_flow",
+          "META.operating_cash_flow",
+          "NVDA.gross_margin",
+          "AMZN.operating_cash_flow",
+          "MSFT.free_cash_flow",
+          "MSFT.cloud_margin",
+          "GOOG.free_cash_flow",
+          "GOOG.cloud_margin",
+          "AMZN.free_cash_flow",
+          "AMZN.cloud_margin",
+          "META.free_cash_flow",
+          "ORCL.operating_cash_flow",
+          "DELL.gross_margin",
+          "AMD.gross_margin"
+        ]
+      },
+      {
+        "id": "costs",
+        "name": "成本与约束",
+        "state": "neutral",
+        "metricIds": [
+          "WB.copper",
+          "WB.aluminum",
+          "WB.natural_gas",
+          "EIA.US.commercial",
+          "EIA.US.industrial",
+          "EIA.VA.commercial",
+          "EIA.VA.industrial",
+          "EIA.TX.commercial",
+          "EIA.TX.industrial",
+          "EIA.OH.commercial",
+          "EIA.OH.industrial",
+          "EIA.GA.commercial",
+          "EIA.GA.industrial",
+          "EIA.AZ.commercial",
+          "EIA.AZ.industrial"
+        ]
+      }
+    ],
+    "missingMetrics": [
+      "ORCL.free_cash_flow",
+      "MSFT.backlog",
+      "AMZN.backlog",
+      "GOOG.backlog",
+      "ORCL.cloud_margin",
+      "PROJECT.operational_capacity",
+      "PROJECT.construction_capacity",
+      "POWER.equipment_price",
+      "VRT.backlog",
+      "DELL.backlog",
+      "DELL.inventory_days",
+      "MU.inventory_days"
+    ],
+    "coverage": 0.7857142857142857,
+    "changeReason": "暂不形成建议 → 暂不形成建议。关键证据尚未齐备：建设进度 数据或有效性版本发生变化。"
+  }
+]

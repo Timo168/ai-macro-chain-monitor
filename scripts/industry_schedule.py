@@ -1,0 +1,29 @@
+"""Independent daily industry refresh; browser requests only read the snapshot."""
+import json,subprocess,sys
+from datetime import datetime,timezone,timedelta
+from industry_common import DATA,ROOT,atomic,now
+def run(force=False):
+    # Bootstrap normalized history so a first-run source outage cannot erase the reviewed seed.
+    seed=DATA/'seed.json'
+    if seed.exists():
+        initial=json.loads(seed.read_text(encoding='utf-8'))
+        for name,prefixes in [('companies',['MSFT.','GOOG.','META.','AMZN.','NVDA.']),('oracle',['ORCL.']),('hardware',['DELL.','AMD.','TSM.']),('costs',['WB.','EIA.']),('sia',['SIA.'])]:
+            target=DATA/(name+'.json')
+            if not target.exists():
+                definitions=[d for d in initial['definitions'] if any(d['id'].startswith(p) for p in prefixes) and initial['series'][d['id']]['observations']]
+                atomic(target,{'definitions':definitions,'series':{d['id']:initial['series'][d['id']] for d in definitions}})
+    path=DATA/'scheduler.json'
+    state=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+    current=datetime.now(timezone.utc)
+    last=datetime.fromisoformat(state.get('lastAttemptAt','2000-01-01T00:00:00+00:00'))
+    if force or current-last>=timedelta(hours=24):
+        failures=[]
+        for script in ['industry_collect.py','industry_hardware.py','industry_costs.py','industry_oracle.py','industry_sia.py']:
+            try:
+                result=subprocess.run([sys.executable,str(ROOT/'scripts'/script)],cwd=ROOT,timeout=600)
+                if result.returncode:failures.append(script)
+            except Exception as error:failures.append(script+': '+str(error))
+        atomic(path,{'lastAttemptAt':now(),'failures':failures,'nextCheckAt':(current+timedelta(hours=24)).isoformat()})
+    result=subprocess.run(['node',str(ROOT/'scripts/build-industry.mjs')],cwd=ROOT)
+    if result.returncode:raise RuntimeError('Industry build failed; last successful snapshot retained')
+if __name__=='__main__':run('--force' in sys.argv)
