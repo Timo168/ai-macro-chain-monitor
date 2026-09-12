@@ -1,0 +1,529 @@
+{
+  "checkedAt": "2026-09-12T05:38:27.751Z",
+  "rawSamples": [
+    {
+      "id": "ICSA",
+      "date": "1967-01-07",
+      "value": 208000,
+      "sourceFile": "185cc45bd72b3d58aeef8682a6f9873c7dc0225c94318e79520b95646b0cafa0.csv"
+    },
+    {
+      "id": "ICSA",
+      "date": "1996-11-09",
+      "value": 327000,
+      "sourceFile": "185cc45bd72b3d58aeef8682a6f9873c7dc0225c94318e79520b95646b0cafa0.csv"
+    },
+    {
+      "id": "ICSA",
+      "date": "2026-09-05",
+      "value": 206000,
+      "sourceFile": "185cc45bd72b3d58aeef8682a6f9873c7dc0225c94318e79520b95646b0cafa0.csv"
+    },
+    {
+      "id": "UNRATE",
+      "date": "1948-01-01",
+      "value": 3.4,
+      "sourceFile": "ffe86c903f6944ebc8281e5474a15fc4ceaac61059bc51ec86a7241391d8713d.csv"
+    },
+    {
+      "id": "UNRATE",
+      "date": "1987-04-01",
+      "value": 6.3,
+      "sourceFile": "ffe86c903f6944ebc8281e5474a15fc4ceaac61059bc51ec86a7241391d8713d.csv"
+    },
+    {
+      "id": "UNRATE",
+      "date": "2026-08-01",
+      "value": 4.1,
+      "sourceFile": "ffe86c903f6944ebc8281e5474a15fc4ceaac61059bc51ec86a7241391d8713d.csv"
+    },
+    {
+      "id": "PAYEMS",
+      "date": "1939-01-01",
+      "value": 29923,
+      "sourceFile": "bf5b48d21b9a84a0be71ece7268fad0cccb943cc89d863fdc01490bece8ab020.csv"
+    },
+    {
+      "id": "PAYEMS",
+      "date": "1982-11-01",
+      "value": 88786,
+      "sourceFile": "bf5b48d21b9a84a0be71ece7268fad0cccb943cc89d863fdc01490bece8ab020.csv"
+    },
+    {
+      "id": "PAYEMS",
+      "date": "2026-08-01",
+      "value": 159075,
+      "sourceFile": "bf5b48d21b9a84a0be71ece7268fad0cccb943cc89d863fdc01490bece8ab020.csv"
+    },
+    {
+      "id": "PCEPI",
+      "date": "1959-01-01",
+      "value": 15.164,
+      "sourceFile": "02580549b5894c8d530e35a5ab9a23a15a64d94d6f37b8a077d23c3a66fafcb8.csv"
+    },
+    {
+      "id": "PCEPI",
+      "date": "1992-10-01",
+      "value": 63.938,
+      "sourceFile": "02580549b5894c8d530e35a5ab9a23a15a64d94d6f37b8a077d23c3a66fafcb8.csv"
+    },
+    {
+      "id": "PCEPI",
+      "date": "2026-07-01",
+      "value": 131.659,
+      "sourceFile": "02580549b5894c8d530e35a5ab9a23a15a64d94d6f37b8a077d23c3a66fafcb8.csv"
+    },
+    {
+      "id": "PCEPILFE",
+      "date": "1959-01-01",
+      "value": 15.501,
+      "sourceFile": "c6ea113f08aeccebc272be12abacd286b6641a85ac89d1c3e147c2cd70ce3357.csv"
+    },
+    {
+      "id": "PCEPILFE",
+      "date": "1992-10-01",
+      "value": 64.979,
+      "sourceFile": "c6ea113f08aeccebc272be12abacd286b6641a85ac89d1c3e147c2cd70ce3357.csv"
+    },
+    {
+      "id": "PCEPILFE",
+      "date": "2026-07-01",
+      "value": 130.658,
+      "sourceFile": "c6ea113f08aeccebc272be12abacd286b6641a85ac89d1c3e147c2cd70ce3357.csv"
+    },
+    {
+      "id": "DFEDTARL",
+      "date": "2008-12-16",
+      "value": 0,
+      "sourceFile": "087c47b98af4020ecac1f8ec3ae2595f6b4441fcd6f288cce3e8ee073be3334e.csv"
+    },
+    {
+      "id": "DFEDTARL",
+      "date": "2017-10-29",
+      "value": 1,
+      "sourceFile": "087c47b98af4020ecac1f8ec3ae2595f6b4441fcd6f288cce3e8ee073be3334e.csv"
+    },
+    {
+      "id": "DFEDTARL",
+      "date": "2026-09-10",
+      "value": 3.5,
+      "sourceFile": "087c47b98af4020ecac1f8ec3ae2595f6b4441fcd6f288cce3e8ee073be3334e.csv"
+    },
+    {
+      "id": "DFEDTARU",
+      "date": "2008-12-16",
+      "value": 0.25,
+      "sourceFile": "61857ad0e23c54a9a0250a64f1de035e0aa502934dfd4318326059478bb4e47d.csv"
+    },
+    {
+      "id": "DFEDTARU",
+      "date": "2017-10-29",
+      "value": 1.25,
+      "sourceFile": "61857ad0e23c54a9a0250a64f1de035e0aa502934dfd4318326059478bb4e47d.csv"
+    },
+    {
+      "id": "DFEDTARU",
+      "date": "2026-09-10",
+      "value": 3.75,
+      "sourceFile": "61857ad0e23c54a9a0250a64f1de035e0aa502934dfd4318326059478bb4e47d.csv"
+    },
+    {
+      "id": "DCOILBRENTEU",
+      "date": "1987-05-20",
+      "value": 18.63,
+      "sourceFile": "90b25160f3193d9c1440e8bb45e4fb621f69bb19a4c5736928fdb0c7f2bdc7fb.csv"
+    },
+    {
+      "id": "DCOILBRENTEU",
+      "date": "2006-12-14",
+      "value": 62.85,
+      "sourceFile": "90b25160f3193d9c1440e8bb45e4fb621f69bb19a4c5736928fdb0c7f2bdc7fb.csv"
+    },
+    {
+      "id": "DCOILBRENTEU",
+      "date": "2026-09-09",
+      "value": 109.51,
+      "sourceFile": "90b25160f3193d9c1440e8bb45e4fb621f69bb19a4c5736928fdb0c7f2bdc7fb.csv"
+    },
+    {
+      "id": "NFCI",
+      "date": "1971-01-08",
+      "value": 0.6,
+      "sourceFile": "e0ad23eb72e0ac02d411ea5ed227f48a32a6811ae135a31f782146adca3ef877.csv"
+    },
+    {
+      "id": "NFCI",
+      "date": "1998-11-06",
+      "value": -0.021,
+      "sourceFile": "e0ad23eb72e0ac02d411ea5ed227f48a32a6811ae135a31f782146adca3ef877.csv"
+    },
+    {
+      "id": "NFCI",
+      "date": "2026-09-04",
+      "value": -0.564,
+      "sourceFile": "e0ad23eb72e0ac02d411ea5ed227f48a32a6811ae135a31f782146adca3ef877.csv"
+    },
+    {
+      "id": "CPIAUCNS",
+      "date": "1913-01-01",
+      "value": 9.8,
+      "sourceFile": "f79e3a78837142293449cee4a1a9b1da7be677fb3e989ffb2ef48e8e7cf4cdd7.csv"
+    },
+    {
+      "id": "CPIAUCNS",
+      "date": "1969-10-01",
+      "value": 37.3,
+      "sourceFile": "f79e3a78837142293449cee4a1a9b1da7be677fb3e989ffb2ef48e8e7cf4cdd7.csv"
+    },
+    {
+      "id": "CPIAUCNS",
+      "date": "2026-08-01",
+      "value": 334.98,
+      "sourceFile": "f79e3a78837142293449cee4a1a9b1da7be677fb3e989ffb2ef48e8e7cf4cdd7.csv"
+    },
+    {
+      "id": "CPILFENS",
+      "date": "1957-01-01",
+      "value": 28.5,
+      "sourceFile": "3a4da8cca5d9d347b1f89436d91a732efa2887a3e35f3517e09b0281cb7fa26e.csv"
+    },
+    {
+      "id": "CPILFENS",
+      "date": "1991-10-01",
+      "value": 143.9,
+      "sourceFile": "3a4da8cca5d9d347b1f89436d91a732efa2887a3e35f3517e09b0281cb7fa26e.csv"
+    },
+    {
+      "id": "CPILFENS",
+      "date": "2026-08-01",
+      "value": 338.041,
+      "sourceFile": "3a4da8cca5d9d347b1f89436d91a732efa2887a3e35f3517e09b0281cb7fa26e.csv"
+    },
+    {
+      "id": "CPIAUCSL",
+      "date": "1947-01-01",
+      "value": 21.48,
+      "sourceFile": "f8ecddf53a9a9a74dda92c2c4204e6039466fcb744bc74171b73b5f6aac48119.csv"
+    },
+    {
+      "id": "CPIAUCSL",
+      "date": "1986-10-01",
+      "value": 110.2,
+      "sourceFile": "f8ecddf53a9a9a74dda92c2c4204e6039466fcb744bc74171b73b5f6aac48119.csv"
+    },
+    {
+      "id": "CPIAUCSL",
+      "date": "2026-08-01",
+      "value": 334.131,
+      "sourceFile": "f8ecddf53a9a9a74dda92c2c4204e6039466fcb744bc74171b73b5f6aac48119.csv"
+    },
+    {
+      "id": "CPILFESL",
+      "date": "1957-01-01",
+      "value": 28.5,
+      "sourceFile": "cec76bf4c38dc062c63ccd3b576c21a54709ae3e3bf73ddbccb44e04384c559a.csv"
+    },
+    {
+      "id": "CPILFESL",
+      "date": "1991-10-01",
+      "value": 143.7,
+      "sourceFile": "cec76bf4c38dc062c63ccd3b576c21a54709ae3e3bf73ddbccb44e04384c559a.csv"
+    },
+    {
+      "id": "CPILFESL",
+      "date": "2026-08-01",
+      "value": 337.765,
+      "sourceFile": "cec76bf4c38dc062c63ccd3b576c21a54709ae3e3bf73ddbccb44e04384c559a.csv"
+    },
+    {
+      "id": "DGS10",
+      "date": "1962-01-02",
+      "value": 4.06,
+      "sourceFile": "51cf02cc3952dd14161d22fd7aaba4dc54d1182c87692b034bb0a9d5aa476b4c.csv"
+    },
+    {
+      "id": "DGS10",
+      "date": "1994-05-26",
+      "value": 7.09,
+      "sourceFile": "51cf02cc3952dd14161d22fd7aaba4dc54d1182c87692b034bb0a9d5aa476b4c.csv"
+    },
+    {
+      "id": "DGS10",
+      "date": "2026-09-10",
+      "value": 4.95,
+      "sourceFile": "51cf02cc3952dd14161d22fd7aaba4dc54d1182c87692b034bb0a9d5aa476b4c.csv"
+    },
+    {
+      "id": "DFII10",
+      "date": "2003-01-02",
+      "value": 2.43,
+      "sourceFile": "b88542fcf663d0b94152446b33be3bfdd5ea691c2e95f5c0156ee97d5141b8f7.csv"
+    },
+    {
+      "id": "DFII10",
+      "date": "2014-11-03",
+      "value": 0.43,
+      "sourceFile": "b88542fcf663d0b94152446b33be3bfdd5ea691c2e95f5c0156ee97d5141b8f7.csv"
+    },
+    {
+      "id": "DFII10",
+      "date": "2026-09-10",
+      "value": 2.55,
+      "sourceFile": "b88542fcf663d0b94152446b33be3bfdd5ea691c2e95f5c0156ee97d5141b8f7.csv"
+    }
+  ],
+  "chartSamples": [
+    {
+      "group": "claims",
+      "id": "ICSA",
+      "date": "1967-01-07",
+      "actual": 208,
+      "expected": 208
+    },
+    {
+      "group": "claims",
+      "id": "ICSA",
+      "date": "1996-11-09",
+      "actual": 327,
+      "expected": 327
+    },
+    {
+      "group": "claims",
+      "id": "ICSA",
+      "date": "2026-09-05",
+      "actual": 206,
+      "expected": 206
+    },
+    {
+      "group": "unemployment",
+      "id": "UNRATE",
+      "date": "1948-01-01",
+      "actual": 3.4,
+      "expected": 3.4
+    },
+    {
+      "group": "unemployment",
+      "id": "UNRATE",
+      "date": "1987-04-01",
+      "actual": 6.3,
+      "expected": 6.3
+    },
+    {
+      "group": "unemployment",
+      "id": "UNRATE",
+      "date": "2026-08-01",
+      "actual": 4.1,
+      "expected": 4.1
+    },
+    {
+      "group": "payrolls",
+      "id": "PAYEMS",
+      "date": "1939-02-01",
+      "actual": 177,
+      "expected": 177
+    },
+    {
+      "group": "payrolls",
+      "id": "PAYEMS",
+      "date": "1982-11-01",
+      "actual": -121,
+      "expected": -121
+    },
+    {
+      "group": "payrolls",
+      "id": "PAYEMS",
+      "date": "2026-08-01",
+      "actual": 162,
+      "expected": 162
+    },
+    {
+      "group": "cpi",
+      "id": "CPIAUCNS",
+      "date": "1914-01-01",
+      "actual": 2.0408163265306145,
+      "expected": 2.0408163265306145
+    },
+    {
+      "group": "cpi",
+      "id": "CPIAUCNS",
+      "date": "1970-04-01",
+      "actual": 6.060606060606077,
+      "expected": 6.060606060606077
+    },
+    {
+      "group": "cpi",
+      "id": "CPIAUCNS",
+      "date": "2026-08-01",
+      "actual": 3.3965478924364856,
+      "expected": 3.3965478924364856
+    },
+    {
+      "group": "pce",
+      "id": "PCEPILFE",
+      "date": "1960-01-01",
+      "actual": 2.0708341397329244,
+      "expected": 2.0708341397329244
+    },
+    {
+      "group": "pce",
+      "id": "PCEPILFE",
+      "date": "1993-04-01",
+      "actual": 2.6611408005235093,
+      "expected": 2.6611408005235093
+    },
+    {
+      "group": "pce",
+      "id": "PCEPILFE",
+      "date": "2026-07-01",
+      "actual": 3.3441430040338282,
+      "expected": 3.3441430040338282
+    },
+    {
+      "group": "policy",
+      "id": "DFEDTARL",
+      "date": "2008-12-16",
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "group": "policy",
+      "id": "DFEDTARL",
+      "date": "2017-10-29",
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "group": "policy",
+      "id": "DFEDTARL",
+      "date": "2026-09-10",
+      "actual": 3.5,
+      "expected": 3.5
+    },
+    {
+      "group": "brent",
+      "id": "DCOILBRENTEU",
+      "date": "1987-05-20",
+      "actual": 18.63,
+      "expected": 18.63
+    },
+    {
+      "group": "brent",
+      "id": "DCOILBRENTEU",
+      "date": "2006-12-14",
+      "actual": 62.85,
+      "expected": 62.85
+    },
+    {
+      "group": "brent",
+      "id": "DCOILBRENTEU",
+      "date": "2026-09-09",
+      "actual": 109.51,
+      "expected": 109.51
+    },
+    {
+      "group": "copper",
+      "id": "COPPER",
+      "date": "1960-01-01",
+      "actual": 715,
+      "expected": 715
+    },
+    {
+      "group": "copper",
+      "id": "COPPER",
+      "date": "1993-05-01",
+      "actual": 1795,
+      "expected": 1795
+    },
+    {
+      "group": "copper",
+      "id": "COPPER",
+      "date": "2026-08-01",
+      "actual": 14326,
+      "expected": 14326
+    },
+    {
+      "group": "gold",
+      "id": "GOLD",
+      "date": "1960-01-01",
+      "actual": 35,
+      "expected": 35
+    },
+    {
+      "group": "gold",
+      "id": "GOLD",
+      "date": "1993-05-01",
+      "actual": 367,
+      "expected": 367
+    },
+    {
+      "group": "gold",
+      "id": "GOLD",
+      "date": "2026-08-01",
+      "actual": 4411,
+      "expected": 4411
+    },
+    {
+      "group": "silver",
+      "id": "SILVER",
+      "date": "1960-01-01",
+      "actual": 0.9,
+      "expected": 0.9
+    },
+    {
+      "group": "silver",
+      "id": "SILVER",
+      "date": "1993-05-01",
+      "actual": 4.5,
+      "expected": 4.5
+    },
+    {
+      "group": "silver",
+      "id": "SILVER",
+      "date": "2026-08-01",
+      "actual": 65.4,
+      "expected": 65.4
+    },
+    {
+      "group": "yields",
+      "id": "DFII10",
+      "date": "2003-01-02",
+      "actual": 2.43,
+      "expected": 2.43
+    },
+    {
+      "group": "yields",
+      "id": "DFII10",
+      "date": "2014-11-03",
+      "actual": 0.43,
+      "expected": 0.43
+    },
+    {
+      "group": "yields",
+      "id": "DFII10",
+      "date": "2026-09-10",
+      "actual": 2.55,
+      "expected": 2.55
+    },
+    {
+      "group": "nfci",
+      "id": "NFCI",
+      "date": "1971-01-08",
+      "actual": 0.6,
+      "expected": 0.6
+    },
+    {
+      "group": "nfci",
+      "id": "NFCI",
+      "date": "1998-11-06",
+      "actual": -0.021,
+      "expected": -0.021
+    },
+    {
+      "group": "nfci",
+      "id": "NFCI",
+      "date": "2026-09-04",
+      "actual": -0.564,
+      "expected": -0.564
+    }
+  ]
+}

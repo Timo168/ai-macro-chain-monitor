@@ -1,0 +1,20 @@
+[
+{"id":"ICSA","name":"初请失业金人数","unit":"人","frequency":"weekly","seasonal":"季调","source":"FRED / 美国劳工部","start":"1967-01-07","exportAllowed":true,"release":"https://oui.doleta.gov/unemploy/claims.asp"},
+{"id":"UNRATE","name":"美国失业率","unit":"%","frequency":"monthly","seasonal":"季调","source":"FRED / BLS","start":"1948-01-01","exportAllowed":true,"release":"https://www.bls.gov/schedule/news_release/empsit.htm"},
+{"id":"PAYEMS","name":"非农就业总量","unit":"千人","frequency":"monthly","seasonal":"季调","source":"FRED / BLS","start":"1939-01-01","exportAllowed":true,"release":"https://www.bls.gov/schedule/news_release/empsit.htm"},
+{"id":"CPIAUCNS","name":"CPI 同比基期指数","unit":"1982–84=100","frequency":"monthly","seasonal":"未季调","source":"FRED / BLS","start":"1913-01-01","exportAllowed":true,"release":"https://www.bls.gov/schedule/news_release/cpi.htm"},
+{"id":"CPILFENS","name":"核心 CPI 同比基期指数","unit":"1982–84=100","frequency":"monthly","seasonal":"未季调","source":"FRED / BLS","start":"1957-01-01","exportAllowed":true,"release":"https://www.bls.gov/schedule/news_release/cpi.htm"},
+{"id":"CPIAUCSL","name":"CPI 环比基期指数","unit":"1982–84=100","frequency":"monthly","seasonal":"季调","source":"FRED / BLS","start":"1947-01-01","exportAllowed":true,"release":"https://www.bls.gov/schedule/news_release/cpi.htm"},
+{"id":"CPILFESL","name":"核心 CPI 环比基期指数","unit":"1982–84=100","frequency":"monthly","seasonal":"季调","source":"FRED / BLS","start":"1957-01-01","exportAllowed":true,"release":"https://www.bls.gov/schedule/news_release/cpi.htm"},
+{"id":"PCEPI","name":"总体 PCE 价格指数","unit":"2017=100","frequency":"monthly","seasonal":"季调","source":"FRED / BEA","start":"1959-01-01","exportAllowed":true,"release":"https://www.bea.gov/news/schedule"},
+{"id":"PCEPILFE","name":"核心 PCE 价格指数","unit":"2017=100","frequency":"monthly","seasonal":"季调","source":"FRED / BEA","start":"1959-01-01","exportAllowed":true,"release":"https://www.bea.gov/news/schedule"},
+{"id":"DFEDTARL","name":"联邦基金目标下限","unit":"%","frequency":"daily","seasonal":"未季调","source":"FRED / 美联储","start":"2008-12-16","exportAllowed":true,"release":"https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"},
+{"id":"DFEDTARU","name":"联邦基金目标上限","unit":"%","frequency":"daily","seasonal":"未季调","source":"FRED / 美联储","start":"2008-12-16","exportAllowed":true,"release":"https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"},
+{"id":"DCOILBRENTEU","name":"布伦特原油现货","unit":"美元／桶","frequency":"daily","seasonal":"未季调","source":"FRED / EIA","start":"1987-05-20","exportAllowed":true,"release":"https://www.eia.gov/dnav/pet/pet_pri_spt_s1_d.htm"},
+{"id":"DGS10","name":"十年期名义收益率","unit":"%","frequency":"daily","seasonal":"未季调","source":"FRED / 美联储 H.15","start":"1962-01-02","exportAllowed":true,"release":"https://www.federalreserve.gov/releases/h15/"},
+{"id":"DFII10","name":"十年期实际收益率","unit":"%","frequency":"daily","seasonal":"未季调","source":"FRED / 美联储 H.15","start":"2003-01-02","exportAllowed":true,"release":"https://www.federalreserve.gov/releases/h15/"},
+{"id":"NFCI","name":"芝加哥联储金融条件指数","unit":"指数","frequency":"weekly","seasonal":"未季调","source":"FRED / 芝加哥联储","start":"1971-01-08","exportAllowed":false,"release":"https://www.chicagofed.org/research/data/nfci/current-data","license":"受版权保护；引用注明 Chicago Fed。CSV 导出暂关闭，待目标用途许可核验。"},
+{"id":"COPPER","name":"铜","unit":"美元／公吨","frequency":"monthly","seasonal":"月度均价","source":"世界银行 Pink Sheet","start":"1960-01-01","exportAllowed":true,"release":"https://www.worldbank.org/en/research/commodity-markets","license":"World Bank 数据使用条款；注明 World Bank Pink Sheet。"},
+{"id":"GOLD","name":"黄金","unit":"美元／金衡盎司","frequency":"monthly","seasonal":"月度均价","source":"世界银行 Pink Sheet","start":"1960-01-01","exportAllowed":true,"release":"https://www.worldbank.org/en/research/commodity-markets","license":"World Bank 数据使用条款；2025-06 起为现货日均价的月均，此前为伦敦下午定盘价。"},
+{"id":"SILVER","name":"白银","unit":"美元／金衡盎司","frequency":"monthly","seasonal":"月度均价","source":"世界银行 Pink Sheet","start":"1960-01-01","exportAllowed":true,"release":"https://www.worldbank.org/en/research/commodity-markets","license":"World Bank 数据使用条款；注明 World Bank Pink Sheet。"}
+]

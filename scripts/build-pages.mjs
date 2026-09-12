@@ -1,0 +1,9 @@
+import {spawnSync} from 'node:child_process';
+import {existsSync,readFileSync,mkdirSync,writeFileSync} from 'node:fs';
+const result=spawnSync(process.execPath,['node_modules/vite/bin/vite.js','build','--config','vite.pages.config.ts'],{stdio:'inherit'});if(result.status!==0)process.exit(result.status??1);
+const source=existsSync('data/latest.json')?'data/latest.json':'data/seed.json';const data=JSON.parse(readFileSync(source,'utf8'));
+data.storage='github_pages';
+// Only advertise scheduled operation when it was actually produced by that environment.
+if(process.env.GITHUB_ACTIONS==='true')data.scheduler={...data.scheduler,mode:'github_actions',workflowUrl:'https://github.com/'+process.env.GITHUB_REPOSITORY+'/actions/workflows/deploy.yml'};
+mkdirSync('dist-pages/data',{recursive:true});writeFileSync('dist-pages/data/latest.json',JSON.stringify(data));writeFileSync('dist-pages/.nojekyll','');
+console.log('Pages build includes '+Object.keys(data.series).length+' real source series.');

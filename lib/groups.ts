@@ -1,0 +1,15 @@
+export type Group={id:string;title:string;category:number;series:string[];unit:string;frequency:string;kind?:string;read:string;impact:string;evidence:string;sectors:string[]};
+export const groups:Group[]=[
+{id:'claims',title:'初次申请失业救济人数',category:1,series:['ICSA'],unit:'千人',frequency:'周度',kind:'bar',read:'四周移动平均过滤单周波动。人数持续上升可能意味着裁员压力增加，需结合非农与失业率。',impact:'就业放缓可能缓解政策收紧压力，也可能削弱企业需求与资本开支。',evidence:'通胀趋势、非农就业、云厂商投资计划与企业订单。',sectors:['云服务','服务器','芯片']},
+{id:'unemployment',title:'美国失业率',category:1,series:['UNRATE'],unit:'%',frequency:'月度',read:'失业率衡量劳动力市场整体松紧；变化也可能来自劳动参与率。',impact:'需求转弱可能影响云服务收入和企业 IT 预算。',evidence:'劳动参与率、工资、就业人数与企业支出。',sectors:['云服务','服务器']},
+{id:'payrolls',title:'非农就业月增量',category:1,series:['PAYEMS'],unit:'千人',frequency:'月度',kind:'bar',read:'由非农就业总量做月度差分，并观察三个月均值；历史数据可能修订。',impact:'招聘放缓可能提示需求与资本开支减速，也会影响货币政策背景。',evidence:'后续修订、工资增速、企业订单和资本开支。',sectors:['云服务','服务器','芯片']},
+{id:'cpi',title:'CPI 与核心 CPI',category:1,series:['CPIAUCNS','CPILFENS','CPIAUCSL','CPILFESL'],unit:'%',frequency:'月度',kind:'inflation',read:'同比使用未季调指数，环比使用季调指数；核心 CPI 剔除食品与能源。',impact:'价格压力可能通过利率与投入成本影响企业融资和利润率。',evidence:'PCE、工资、利率路径和企业成本转嫁能力。',sectors:['数据中心','电力设备','云服务']},
+{id:'pce',title:'PCE 与核心 PCE',category:1,series:['PCEPI','PCEPILFE'],unit:'%',frequency:'月度',kind:'inflation',read:'美联储长期 2% 通胀目标对应总体 PCE 年度变化。核心 PCE 用于辅助观察趋势。',impact:'通胀变化可能影响政策路径，进而改变融资成本与估值折现压力。',evidence:'就业、总体 PCE、实际收益率与企业盈利。',sectors:['芯片','云服务','数据中心']},
+{id:'policy',title:'联邦基金目标利率区间',category:1,series:['DFEDTARL','DFEDTARU'],unit:'%',frequency:'日度',kind:'step',read:'上下限构成政策目标区间，阶梯变化表示政策调整；并非实际成交利率。',impact:'政策利率变化可能传导至融资成本，但需求转弱可能抵消资金成本下降的影响。',evidence:'长期收益率、信贷条件和企业借贷利差。',sectors:['数据中心','云服务','电力设备']},
+{id:'brent',title:'布伦特原油现货价格',category:2,series:['DCOILBRENTEU'],unit:'美元／桶',frequency:'日度',read:'这是欧洲布伦特现货日频统计，不是期货分时行情，也不能直接代表数据中心电价。',impact:'原油上涨可能通过能源、运输和通胀预期影响成本与利率环境。',evidence:'区域电价、能源结构、采购合同与供给扰动。',sectors:['数据中心','电力设备','服务器']},
+{id:'copper',title:'铜',category:2,series:['COPPER'],unit:'美元／公吨',frequency:'月度',read:'世界银行月度均价。铜价同时受工业需求、矿山供给与库存影响。',impact:'上涨可能增加配电、线缆及设备材料成本，也可能反映需求增强。',evidence:'供给扰动、订单增长、企业成本转嫁能力。',sectors:['电力设备','数据中心','服务器']},
+{id:'gold',title:'黄金',category:2,series:['GOLD'],unit:'美元／金衡盎司',frequency:'月度',read:'实际利率、美元与避险需求的交叉线索。2025-06 起基准改为现货日均价，此前为伦敦下午定盘价。',impact:'不能单凭黄金价格判断 CPI、AI 硬件成本或 AI 投资需求。',evidence:'实际收益率、美元、避险需求与流动性。',sectors:['芯片','云服务']},
+{id:'silver',title:'白银',category:2,series:['SILVER'],unit:'美元／金衡盎司',frequency:'月度',read:'同时具有贵金属与工业属性；月度均价不展示日内交易机会。',impact:'工业需求和供给可能影响部分电子与电力设备材料成本，实际影响取决于用量。',evidence:'产业用途、库存、采购合同与成本占比。',sectors:['电力设备','芯片']},
+{id:'yields',title:'美国十年期国债收益率',category:3,series:['DFII10','DGS10'],unit:'%',frequency:'日度',read:'名义收益率与通胀保值国债实际收益率同时观察。非交易日缺值不填零。',impact:'实际收益率下降可能减轻长期现金流折现压力，也可能伴随需求恶化。',evidence:'融资环境、信用利差、企业盈利和资本开支。',sectors:['云服务','芯片','数据中心']},
+{id:'nfci',title:'芝加哥联储金融条件指数',category:3,series:['NFCI'],unit:'指数',frequency:'周度',read:'零以上比历史平均更紧，零以下更松。处于宽松水平与最近收紧可以同时成立。',impact:'条件收紧可能提高融资难度，影响资本密集环节的建设与扩张。',evidence:'信贷利差、融资成交、贷款标准与项目回报。',sectors:['数据中心','电力设备','云服务']}
+];
