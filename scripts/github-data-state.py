@@ -2,7 +2,7 @@
 import argparse, pathlib, shutil, subprocess, sqlite3
 ROOT=pathlib.Path(__file__).resolve().parents[1];WORK=ROOT/'.data-work';DATA=ROOT/'data'
 FILES=['latest.json','calendar.json','scheduler.json','observations.sqlite']
-INDUSTRY_FILES=['latest.json','companies.json','hardware.json','oracle.json','costs.json','sia.json','scheduler.json']
+INDUSTRY_FILES=['latest.json','companies.json','hardware.json','oracle.json','costs.json','sia.json','extended.json','reviewed-cache.json','scheduler.json']
 
 def industry_state(source,destination):
     if not source.exists():return

@@ -2100,6 +2100,306 @@
       "sourceUrl": "https://www.semiconductors.org/global-semiconductor-sales-increase-6-4-month-to-month-in-july/",
       "version": "c6216aa4d943ef43bab887bb46c17d2f365f24339f7e0674dc276f98ea15434b",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "POWER.equipment_price",
+      "periodEnd": "1981-06-30",
+      "value": 100,
+      "unit": "指数（1981-06=100）",
+      "currency": null,
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCU335311335311G",
+      "version": "88ebb052350f0b73059079c45ee920f2136f75a34435dc823dea32285a0c2750",
+      "check": "matched exact observation date in BLS/FRED CSV; native index unchanged"
+    },
+    {
+      "metricId": "POWER.equipment_price",
+      "periodEnd": "1997-01-31",
+      "value": 154.5,
+      "unit": "指数（1981-06=100）",
+      "currency": null,
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCU335311335311G",
+      "version": "88ebb052350f0b73059079c45ee920f2136f75a34435dc823dea32285a0c2750",
+      "check": "matched exact observation date in BLS/FRED CSV; native index unchanged"
+    },
+    {
+      "metricId": "POWER.equipment_price",
+      "periodEnd": "2015-05-31",
+      "value": 304.2,
+      "unit": "指数（1981-06=100）",
+      "currency": null,
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCU335311335311G",
+      "version": "88ebb052350f0b73059079c45ee920f2136f75a34435dc823dea32285a0c2750",
+      "check": "matched exact observation date in BLS/FRED CSV; native index unchanged"
+    },
+    {
+      "metricId": "MSFT.backlog",
+      "periodEnd": "2025-06-30",
+      "value": 3680,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
+      "version": "355f34d28fe67c167d96e43509077b3d623a4a159c2adcb62bc552bb368b3390",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "MSFT.backlog",
+      "periodEnd": "2025-12-31",
+      "value": 6250,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
+      "version": "355f34d28fe67c167d96e43509077b3d623a4a159c2adcb62bc552bb368b3390",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "MSFT.backlog",
+      "periodEnd": "2026-06-30",
+      "value": 6780,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
+      "version": "355f34d28fe67c167d96e43509077b3d623a4a159c2adcb62bc552bb368b3390",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "TSM.advanced_node_share",
+      "periodEnd": "2025-06-30",
+      "value": 74,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2025-07/d9d294ed46ca22c560a17eb060373bc35f2d464a/2Q25EarningsRelease.pdf",
+      "version": "14b24d4f735363fff90ef8d50611864d0dc000edfd74489994569b7428e78d40",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "TSM.advanced_node_share",
+      "periodEnd": "2025-12-31",
+      "value": 77,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-01/3e49621566a3ca53bdf8aee2586929b666c17fd6/4Q25EarningsRelease.pdf",
+      "version": "d14b67a858ffa01e6d16d64f81230d4fedfc7815b3a572b5e5feb0b2f2a2fbd9",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "TSM.advanced_node_share",
+      "periodEnd": "2026-06-30",
+      "value": 77,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-07/a80d7933be643644081584087731f73b22ea5a2c/2Q26%20EarningsRelease.pdf",
+      "version": "67c8e14a5786449dc6cbc4e8e0472b8b56c33895e4c8abcdfe4f48ac5f60207e",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "DELL.inventory_days",
+      "periodEnd": "2025-05-02",
+      "value": 34.86581530285776,
+      "unit": "天",
+      "currency": null,
+      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2026-financial",
+      "version": "455fca62f4f1b1ad47939806cea8801e636ff01471b6bf9f7e5c94fca2f00d4f",
+      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+    },
+    {
+      "metricId": "DELL.inventory_days",
+      "periodEnd": "2026-05-01",
+      "value": 32.161661120354964,
+      "unit": "天",
+      "currency": null,
+      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
+      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+    },
+    {
+      "metricId": "DELL.inventory_days",
+      "periodEnd": "2026-07-31",
+      "value": 44.52117605880294,
+      "unit": "天",
+      "currency": null,
+      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
+      "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+    },
+    {
+      "metricId": "HPE.server_revenue",
+      "periodEnd": "2025-07-31",
+      "value": 50,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
+      "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "HPE.server_revenue",
+      "periodEnd": "2026-04-30",
+      "value": 54.54,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
+      "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "HPE.server_revenue",
+      "periodEnd": "2026-07-31",
+      "value": 67.66,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
+      "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "HPE.gross_margin",
+      "periodEnd": "2025-07-31",
+      "value": 29.2,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
+      "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "HPE.gross_margin",
+      "periodEnd": "2026-04-30",
+      "value": 36.5,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
+      "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "HPE.gross_margin",
+      "periodEnd": "2026-07-31",
+      "value": 40.1,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
+      "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "DELL.backlog",
+      "periodEnd": "2025-05-02",
+      "value": 144,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://investors.delltechnologies.com/static-files/a7fdeb66-9194-4027-afa8-a963c1bc1ce9",
+      "version": "f284d14f4a4df7bc3064513069c5da543412d5926968ecb603ea13aeade2d9d4",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "DELL.backlog",
+      "periodEnd": "2026-01-30",
+      "value": 430,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://investors.delltechnologies.com/static-files/9e5d4126-0f17-4ceb-b26c-a2563b8bcbc9",
+      "version": "01ef07d8f1835132fc1bd304216ad6418529d90fbdb2a4b53b2005a7516bc858",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "DELL.backlog",
+      "periodEnd": "2026-05-01",
+      "value": 513,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://investors.delltechnologies.com/static-files/b63ffff9-b729-403b-a231-c6af05667759",
+      "version": "2e2a251d50608284f6e3ca91e1d71cd39152a214e4bafd8b66cdd240d90fc5c2",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "POWER.interconnection",
+      "periodEnd": "2023-12-31",
+      "value": 2600000,
+      "unit": "MW",
+      "currency": null,
+      "sourceUrl": "https://emp.lbl.gov/publications/queued-2024-edition-characteristics",
+      "version": "7a974d3cf507c8d206a32e77991c3c151998e1fe222b9028bc35b176fd2ddf88",
+      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+    },
+    {
+      "metricId": "POWER.interconnection",
+      "periodEnd": "2024-12-31",
+      "value": 2290000,
+      "unit": "MW",
+      "currency": null,
+      "sourceUrl": "https://emp.lbl.gov/publications/queued-2025-edition-characteristics",
+      "version": "b5ed74e1658abb515d948510662c1e8a921d47b411b3e02645c630ae9e95c69d",
+      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+    },
+    {
+      "metricId": "POWER.interconnection",
+      "periodEnd": "2025-12-31",
+      "value": 2061000,
+      "unit": "MW",
+      "currency": null,
+      "sourceUrl": "https://emp.lbl.gov/queues",
+      "version": "d39ffe41f6be630198ae45b2b0ed7c08b6ebc27f391479c5bcfa1279941ebc13",
+      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+    },
+    {
+      "metricId": "GOOG.backlog",
+      "periodEnd": "2025-06-30",
+      "value": 1060,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://abc.xyz/investor/events/event-details/2025/2025-Q2-Earnings-Call/",
+      "version": "2c0db23410edd83ca2a6f1de4517a7d4b9d045348c310ed7432098cedeec1bf3",
+      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+    },
+    {
+      "metricId": "GOOG.backlog",
+      "periodEnd": "2025-09-30",
+      "value": 1550,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://abc.xyz/investor/events/event-details/2025/2025-Q3-Earnings-Call-2025-4OI4Bac_Q9/default.aspx",
+      "version": "419bfa811eb7d4a7db048b8521e31864e19cee708f17391c3e3e360e34bd565a",
+      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+    },
+    {
+      "metricId": "GOOG.backlog",
+      "periodEnd": "2025-12-31",
+      "value": 2400,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://abc.xyz/investor/events/event-details/2026/2025-Q4-Earnings-Call-2026-Dr_C033hS6/default.aspx",
+      "version": "1b86522a3c892d72d926a6aeaaaa089ba5cb107ea4d735dc505d9b68a58ae903",
+      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+    },
+    {
+      "metricId": "ETN.gross_margin",
+      "periodEnd": "2024-12-31",
+      "value": 38.92628205128205,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://www.eaton.com/content/dam/eaton/company/investor-relations/quarterly-earnings/filings/2025/q4/4Q-2025-earnings-complete.pdf",
+      "version": "d27ac35b28c41eabfddb8e10678433b6cc1144b8dd78ed7ee6ae66482bb14164",
+      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+    },
+    {
+      "metricId": "ETN.gross_margin",
+      "periodEnd": "2025-12-31",
+      "value": 36.82494684620836,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://www.eaton.com/content/dam/eaton/company/investor-relations/quarterly-earnings/filings/2025/q4/4Q-2025-earnings-complete.pdf",
+      "version": "8cf0fb31f9f084a2532340215b906578fb804d78e8be0b5188db096034590607",
+      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+    },
+    {
+      "metricId": "ETN.gross_margin",
+      "periodEnd": "2026-03-31",
+      "value": 35.592537914373914,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://www.eaton.com/content/dam/eaton/company/investor-relations/quarterly-earnings/filings/2026/q1/q1-2026-earnings-complete.pdf",
+      "version": "7229b7e25a3944fbf8393aba8490d8c5dd57dfca183c7a7000416fc1e3183605",
+      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
     }
   ]
 }

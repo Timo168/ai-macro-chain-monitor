@@ -1,8 +1,12 @@
 """Independent daily industry refresh; browser requests only read the snapshot."""
 import json,subprocess,sys
 from datetime import datetime,timezone,timedelta
-from industry_common import DATA,ROOT,atomic,now
+from industry_common import DATA,ROOT,atomic,now,persist
 def run(force=False):
+    reviewed=DATA/'public-reviewed.json'
+    if reviewed.exists():
+        # Preserve the original review/fetch timestamps while recording future reviewed revisions.
+        persist(json.loads(reviewed.read_text(encoding='utf-8')),DATA/'reviewed-cache.json')
     # Bootstrap normalized history so a first-run source outage cannot erase the reviewed seed.
     seed=DATA/'seed.json'
     if seed.exists():
@@ -10,20 +14,24 @@ def run(force=False):
         for name,prefixes in [('companies',['MSFT.','GOOG.','META.','AMZN.','NVDA.']),('oracle',['ORCL.']),('hardware',['DELL.','AMD.','TSM.']),('costs',['WB.','EIA.']),('sia',['SIA.'])]:
             target=DATA/(name+'.json')
             if not target.exists():
-                definitions=[d for d in initial['definitions'] if any(d['id'].startswith(p) for p in prefixes) and initial['series'][d['id']]['observations']]
+                definitions=[d for d in initial['definitions'] if not d.get('sourceAdapter') and any(d['id'].startswith(p) for p in prefixes) and initial['series'][d['id']]['observations']]
                 atomic(target,{'definitions':definitions,'series':{d['id']:initial['series'][d['id']] for d in definitions}})
+        target=DATA/'extended.json'
+        if not target.exists():
+            definitions=[d for d in initial['definitions'] if d.get('sourceAdapter')=='extended' and initial['series'][d['id']]['observations']]
+            atomic(target,{'definitions':definitions,'series':{d['id']:initial['series'][d['id']] for d in definitions}})
     path=DATA/'scheduler.json'
     state=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
     current=datetime.now(timezone.utc)
     last=datetime.fromisoformat(state.get('lastAttemptAt','2000-01-01T00:00:00+00:00'))
-    if force or current-last>=timedelta(hours=24):
+    if force or current-last>=timedelta(hours=24) or state.get('collectorVersion')!=2:
         failures=[]
-        for script in ['industry_collect.py','industry_hardware.py','industry_costs.py','industry_oracle.py','industry_sia.py']:
+        for script in ['industry_collect.py','industry_hardware.py','industry_costs.py','industry_oracle.py','industry_sia.py','industry_extended.py']:
             try:
                 result=subprocess.run([sys.executable,str(ROOT/'scripts'/script)],cwd=ROOT,timeout=600)
                 if result.returncode:failures.append(script)
             except Exception as error:failures.append(script+': '+str(error))
-        atomic(path,{'lastAttemptAt':now(),'failures':failures,'nextCheckAt':(current+timedelta(hours=24)).isoformat()})
+        atomic(path,{'collectorVersion':2,'lastAttemptAt':now(),'failures':failures,'nextCheckAt':(current+timedelta(hours=24)).isoformat()})
     result=subprocess.run(['node',str(ROOT/'scripts/build-industry.mjs')],cwd=ROOT)
     if result.returncode:raise RuntimeError('Industry build failed; last successful snapshot retained')
 if __name__=='__main__':run('--force' in sys.argv)
