@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-09-12T05:45:03.620Z",
+  "checkedAt": "2026-09-13T08:46:16.693Z",
   "rawSamples": [
     {
       "id": "ICSA",
@@ -92,60 +92,6 @@
       "sourceFile": "c6ea113f08aeccebc272be12abacd286b6641a85ac89d1c3e147c2cd70ce3357.csv"
     },
     {
-      "id": "DFEDTARL",
-      "date": "2008-12-16",
-      "value": 0,
-      "sourceFile": "087c47b98af4020ecac1f8ec3ae2595f6b4441fcd6f288cce3e8ee073be3334e.csv"
-    },
-    {
-      "id": "DFEDTARL",
-      "date": "2017-10-29",
-      "value": 1,
-      "sourceFile": "087c47b98af4020ecac1f8ec3ae2595f6b4441fcd6f288cce3e8ee073be3334e.csv"
-    },
-    {
-      "id": "DFEDTARL",
-      "date": "2026-09-10",
-      "value": 3.5,
-      "sourceFile": "087c47b98af4020ecac1f8ec3ae2595f6b4441fcd6f288cce3e8ee073be3334e.csv"
-    },
-    {
-      "id": "DFEDTARU",
-      "date": "2008-12-16",
-      "value": 0.25,
-      "sourceFile": "61857ad0e23c54a9a0250a64f1de035e0aa502934dfd4318326059478bb4e47d.csv"
-    },
-    {
-      "id": "DFEDTARU",
-      "date": "2017-10-29",
-      "value": 1.25,
-      "sourceFile": "61857ad0e23c54a9a0250a64f1de035e0aa502934dfd4318326059478bb4e47d.csv"
-    },
-    {
-      "id": "DFEDTARU",
-      "date": "2026-09-10",
-      "value": 3.75,
-      "sourceFile": "61857ad0e23c54a9a0250a64f1de035e0aa502934dfd4318326059478bb4e47d.csv"
-    },
-    {
-      "id": "DCOILBRENTEU",
-      "date": "1987-05-20",
-      "value": 18.63,
-      "sourceFile": "90b25160f3193d9c1440e8bb45e4fb621f69bb19a4c5736928fdb0c7f2bdc7fb.csv"
-    },
-    {
-      "id": "DCOILBRENTEU",
-      "date": "2006-12-14",
-      "value": 62.85,
-      "sourceFile": "90b25160f3193d9c1440e8bb45e4fb621f69bb19a4c5736928fdb0c7f2bdc7fb.csv"
-    },
-    {
-      "id": "DCOILBRENTEU",
-      "date": "2026-09-09",
-      "value": 109.51,
-      "sourceFile": "90b25160f3193d9c1440e8bb45e4fb621f69bb19a4c5736928fdb0c7f2bdc7fb.csv"
-    },
-    {
       "id": "NFCI",
       "date": "1971-01-08",
       "value": 0.6,
@@ -234,6 +180,60 @@
       "date": "2026-08-01",
       "value": 337.765,
       "sourceFile": "cec76bf4c38dc062c63ccd3b576c21a54709ae3e3bf73ddbccb44e04384c559a.csv"
+    },
+    {
+      "id": "DFEDTARL",
+      "date": "2008-12-16",
+      "value": 0,
+      "sourceFile": "a0dbb4b906c74ad251bafacfeec80fe67bdfb2812904f3f168c5365d3352a100.csv"
+    },
+    {
+      "id": "DFEDTARL",
+      "date": "2017-10-30",
+      "value": 1,
+      "sourceFile": "a0dbb4b906c74ad251bafacfeec80fe67bdfb2812904f3f168c5365d3352a100.csv"
+    },
+    {
+      "id": "DFEDTARL",
+      "date": "2026-09-12",
+      "value": 3.5,
+      "sourceFile": "a0dbb4b906c74ad251bafacfeec80fe67bdfb2812904f3f168c5365d3352a100.csv"
+    },
+    {
+      "id": "DFEDTARU",
+      "date": "2008-12-16",
+      "value": 0.25,
+      "sourceFile": "aad18606b350a50c515ff7389a740def8002b9e3c5d2872f49982cc932407875.csv"
+    },
+    {
+      "id": "DFEDTARU",
+      "date": "2017-10-30",
+      "value": 1.25,
+      "sourceFile": "aad18606b350a50c515ff7389a740def8002b9e3c5d2872f49982cc932407875.csv"
+    },
+    {
+      "id": "DFEDTARU",
+      "date": "2026-09-12",
+      "value": 3.75,
+      "sourceFile": "aad18606b350a50c515ff7389a740def8002b9e3c5d2872f49982cc932407875.csv"
+    },
+    {
+      "id": "DCOILBRENTEU",
+      "date": "1987-05-20",
+      "value": 18.63,
+      "sourceFile": "90b25160f3193d9c1440e8bb45e4fb621f69bb19a4c5736928fdb0c7f2bdc7fb.csv"
+    },
+    {
+      "id": "DCOILBRENTEU",
+      "date": "2006-12-14",
+      "value": 62.85,
+      "sourceFile": "90b25160f3193d9c1440e8bb45e4fb621f69bb19a4c5736928fdb0c7f2bdc7fb.csv"
+    },
+    {
+      "id": "DCOILBRENTEU",
+      "date": "2026-09-09",
+      "value": 109.51,
+      "sourceFile": "90b25160f3193d9c1440e8bb45e4fb621f69bb19a4c5736928fdb0c7f2bdc7fb.csv"
     },
     {
       "id": "DGS10",
@@ -388,14 +388,14 @@
     {
       "group": "policy",
       "id": "DFEDTARL",
-      "date": "2017-10-29",
+      "date": "2017-10-30",
       "actual": 1,
       "expected": 1
     },
     {
       "group": "policy",
       "id": "DFEDTARL",
-      "date": "2026-09-10",
+      "date": "2026-09-12",
       "actual": 3.5,
       "expected": 3.5
     },
