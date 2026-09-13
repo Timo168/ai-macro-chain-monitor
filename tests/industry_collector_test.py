@@ -7,6 +7,7 @@ sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[1]/'scripts'))
 import industry_common as common
 from industry_extended import Builder
 from industry_power_load import parse_archive
+from industry_schedule import bootstrap_extended
 
 STATE_SPEC=importlib.util.spec_from_file_location('github_data_state',pathlib.Path(__file__).resolve().parents[1]/'scripts'/'github-data-state.py')
 github_data_state=importlib.util.module_from_spec(STATE_SPEC);STATE_SPEC.loader.exec_module(github_data_state)
@@ -59,6 +60,15 @@ class RevisionTests(unittest.TestCase):
   self.assertEqual(len(rows),1);self.assertEqual(rows[0]['periodEnd'],'2026-03-31')
   self.assertEqual(rows[0]['items']['complete_hour_count'],743)
   self.assertEqual(checks['months']['2026-03']['expectedHours'],743)
+
+ def test_seed_adds_new_extended_metric_to_existing_cache(self):
+  with tempfile.TemporaryDirectory(prefix='industry-bootstrap-') as temp:
+   target=pathlib.Path(temp)/'extended.json'
+   target.write_text(json.dumps({'definitions':[{'id':'OLD','sourceAdapter':'extended'}],'series':{'OLD':{'observations':[{'value':1}]}}}))
+   initial={'definitions':[{'id':'OLD','sourceAdapter':'extended'},{'id':'VRT.backlog','sourceAdapter':'extended'}],'series':{'OLD':{'observations':[{'value':1}]},'VRT.backlog':{'observations':[{'value':150}]}}}
+   bootstrap_extended(initial,target);result=json.loads(target.read_text())
+   self.assertEqual({d['id'] for d in result['definitions']},{'OLD','VRT.backlog'})
+   self.assertEqual(result['series']['VRT.backlog']['observations'][0]['value'],150)
 
  def test_revision_survives_unchanged_source_hash(self):
   with tempfile.TemporaryDirectory(prefix='industry-test-') as temp,patch.object(common,'DATA',pathlib.Path(temp)):

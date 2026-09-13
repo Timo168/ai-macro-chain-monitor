@@ -3,6 +3,14 @@ import json,subprocess,sys
 from datetime import datetime,timezone,timedelta
 from industry_common import DATA,ROOT,atomic,now
 from industry_reviewed import materialize
+def bootstrap_extended(initial,target):
+    definitions=[d for d in initial['definitions'] if d.get('sourceAdapter')=='extended' and initial['series'][d['id']]['observations']]
+    extended=json.loads(target.read_text(encoding='utf-8')) if target.exists() else {'definitions':[],'series':{}}
+    known={d['id'] for d in extended['definitions']}
+    for definition in definitions:
+        if definition['id'] not in known:
+            extended['definitions'].append(definition);extended['series'][definition['id']]=initial['series'][definition['id']]
+    atomic(target,extended)
 def run(force=False):
     reviewed=DATA/'public-reviewed.json'
     if reviewed.exists():materialize()
@@ -16,9 +24,7 @@ def run(force=False):
                 definitions=[d for d in initial['definitions'] if not d.get('sourceAdapter') and any(d['id'].startswith(p) for p in prefixes) and initial['series'][d['id']]['observations']]
                 atomic(target,{'definitions':definitions,'series':{d['id']:initial['series'][d['id']] for d in definitions}})
         target=DATA/'extended.json'
-        if not target.exists():
-            definitions=[d for d in initial['definitions'] if d.get('sourceAdapter')=='extended' and initial['series'][d['id']]['observations']]
-            atomic(target,{'definitions':definitions,'series':{d['id']:initial['series'][d['id']] for d in definitions}})
+        bootstrap_extended(initial,target)
         target=DATA/'power-load.json'
         if not target.exists():
             definitions=[d for d in initial['definitions'] if d.get('sourceAdapter')=='power-load' and initial['series'][d['id']]['observations']]

@@ -111,17 +111,27 @@ def check(d,p,data):
 
 def run():
     data=json.loads((DATA/'latest.json').read_text(encoding='utf-8'));samples=[]
+    prior_path=ROOT/'docs/industry/verification.json'
+    prior=json.loads(prior_path.read_text(encoding='utf-8')) if prior_path.exists() else {'samples':[]}
+    prior_samples={(s['metricId'],s['periodEnd'],s['version']):s for s in prior.get('samples',[]) if s.get('checkMode') in ('automatic_source_replay','previous_verified_source_replay')}
     for d in data['definitions']:
         points=[p for p in data['series'][d['id']]['observations'] if p['value'] is not None]
         if not points:continue
         assert len(points)>=3,d['id']
         assert len({p['periodEnd'] for p in points})==len(points),d['id']
         for p in [points[0],points[len(points)//2],points[-1]]:
-            method=check(d,p,data)
-            samples.append({'metricId':d['id'],'periodEnd':p['periodEnd'],'value':p['value'],'unit':d['unit'],'currency':d.get('currency'),'sourceUrl':p['sourceUrl'],'version':p['version'],'checkMode':'manual_fact_ledger' if d.get('sourceAdapter')=='public-reviewed' else 'automatic_source_replay','check':method})
+            mode='manual_fact_ledger' if d.get('sourceAdapter')=='public-reviewed' else 'automatic_source_replay'
+            try:method=check(d,p,data)
+            except RuntimeError as error:
+                old=prior_samples.get((d['id'],p['periodEnd'],p['version']))
+                if '来源请求失败' not in str(error) or old is None or not math.isclose(old['value'],p['value']):raise
+                mode='previous_verified_source_replay';method='current source retrieval unavailable; identical observation version passed the prior archived-source replay'
+                print('Reused prior source audit for',d['id'],p['periodEnd'],file=sys.stderr)
+            samples.append({'metricId':d['id'],'periodEnd':p['periodEnd'],'value':p['value'],'unit':d['unit'],'currency':d.get('currency'),'sourceUrl':p['sourceUrl'],'version':p['version'],'checkMode':mode,'check':method})
     folder=ROOT/'docs/industry';folder.mkdir(parents=True,exist_ok=True)
     manual=sum(s['checkMode']=='manual_fact_ledger' for s in samples)
-    automatic=len(samples)-manual
-    (folder/'verification.json').write_text(json.dumps({'scope':'3 periods per metric; automatic archived-source replay where supported, plus a separately tracked manual fact ledger for blocked sources; arithmetic only, not a license or causal audit','automaticSamples':automatic,'manualFactLedgerSamples':manual,'samples':samples},ensure_ascii=False,indent=2),encoding='utf-8')
-    print('Verified transformations for',len(samples),'historical samples across',len(samples)//3,'metrics;',manual,'use the manual official-source fact ledger')
+    previous=sum(s['checkMode']=='previous_verified_source_replay' for s in samples);automatic=len(samples)-manual
+    current=automatic-previous
+    (folder/'verification.json').write_text(json.dumps({'scope':'3 periods per metric; current or previously recorded archived-source replay where supported, plus a separately tracked manual fact ledger for blocked sources; identical metric, period, value and version are required to reuse a prior replay; arithmetic only, not a license or causal audit','automaticSamples':automatic,'currentSourceReplaySamples':current,'previousSourceReplaySamples':previous,'manualFactLedgerSamples':manual,'samples':samples},ensure_ascii=False,indent=2),encoding='utf-8')
+    print('Verified transformations for',len(samples),'historical samples across',len(samples)//3,'metrics;',current,'current source replays,',previous,'prior identical-version replays,',manual,'manual fact-ledger samples')
 if __name__=='__main__':run()

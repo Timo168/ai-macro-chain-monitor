@@ -1,6 +1,8 @@
 {
-  "scope": "3 periods per metric; automatic archived-source replay where supported, plus a separately tracked manual fact ledger for blocked sources; arithmetic only, not a license or causal audit",
+  "scope": "3 periods per metric; current or previously recorded archived-source replay where supported, plus a separately tracked manual fact ledger for blocked sources; identical metric, period, value and version are required to reuse a prior replay; arithmetic only, not a license or causal audit",
   "automaticSamples": 234,
+  "currentSourceReplaySamples": 234,
+  "previousSourceReplaySamples": 0,
   "manualFactLedgerSamples": 12,
   "samples": [
     {
