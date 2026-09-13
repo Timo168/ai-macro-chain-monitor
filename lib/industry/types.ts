@@ -13,7 +13,7 @@ export type MetricObservation = {
  fetchedAt:string; sourceUrl:string; version:string; isEstimated:boolean; isRestated:boolean;
  formula?:string; originalItems?:Record<string,number|string>; basis?:string;
 };
-export type MetricSeries = {observations:MetricObservation[]; status:'ready'|'cached'|'fetch_failed'|'pending'|'authorization_required'; fetchedAt?:string; checkedAt?:string; error?:string; nextCheckAt?:string; note?:string};
+export type MetricSeries = {observations:MetricObservation[]; status:'ready'|'reviewed'|'cached'|'fetch_failed'|'pending'|'authorization_required'; fetchedAt?:string; checkedAt?:string; error?:string; nextCheckAt?:string; note?:string};
 export type DataCenterProject = {id:string;name:string;owner:string;operator?:string;country:string;region?:string;city?:string;status:'announced'|'planning'|'approval'|'construction'|'partially_operational'|'operational'|'delayed'|'cancelled'|'unknown';announcedAt?:string;expectedConstructionAt?:string;expectedOperationalAt?:string;investmentValue?:number;investmentCurrency?:string;powerCapacityMw?:number;sourceUrls:string[];lastVerifiedAt:string;isEstimated:boolean;notes?:string};
 export type IndustryEvent = {id:string;entity:string;title:string;date:string;sourceUrl:string;kind:'guidance'|'release'|'project'|'supply';description:string;valueLow?:number;valueHigh?:number;unit?:string;period?:string;fetchedAt:string;isConfirmed:boolean};
 export type EvidenceItem={metricId:string;observationVersion:string;direction:'positive'|'neutral'|'negative';explanation:string;periodEnd?:string;dimension?:string};

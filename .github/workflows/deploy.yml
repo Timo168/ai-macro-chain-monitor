@@ -50,6 +50,7 @@ jobs:
           node --test tests/industry.test.mjs
           python tests/collector_test.py
           python tests/industry_collector_test.py
+          python scripts/audit_industry.py
           npx tsc --noEmit
       - name: Build website
         env:

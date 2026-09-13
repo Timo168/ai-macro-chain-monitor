@@ -25,18 +25,26 @@ def source_bytes(url):
     raw,_,digest=fetch(url)
     return raw,digest
 
+@lru_cache(None)
+def ercot_months(url,year):
+    from industry_power_load import parse_archive
+    rows,_=parse_archive(source_bytes(url)[0],year)
+    return {row['periodEnd']:row for row in rows}
+
 def check(d,p,data):
     items=p.get('originalItems',{});f=d['family'];value=p['value'];id=d['id']
     if d.get('sourceAdapter')=='public-reviewed':
-        review=json.loads((DATA/'public-reviewed.json').read_text(encoding='utf-8'))
-        fact=next(x for x in review['series'][id]['observations'] if x['periodEnd']==p['periodEnd'])
-        assert fact['originalItems']==items
+        ledger=json.loads((DATA/'public-source-facts.json').read_text(encoding='utf-8'))
+        fact=next(x for x in ledger['facts'] if x['metricId']==id and x['periodEnd']==p['periodEnd'])
+        assert fact['sourceUrl']==p['sourceUrl'] and fact['originalItems']==items
+        assert fact.get('publishedAt')==p.get('publishedAt') and fact.get('fiscalPeriod')==p.get('fiscalPeriod')
         if id=='POWER.interconnection':expected=(items['generation_gw']+items['storage_gw'])*1000
         elif id=='GOOG.backlog':expected=items['reported_billion_usd']*10
         elif id=='ETN.gross_margin':expected=(items['net_sales_million']-items['cost_products_million'])/items['net_sales_million']*100
+        elif id=='MU.inventory_days':expected=(items['begin_inventory_million']+items['end_inventory_million'])/2/items['quarter_cost_million']*items['quarter_days']
         else:raise AssertionError('Missing independent reviewed formula for '+id)
         assert math.isclose(value,expected)
-        return 'matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit'
+        return 'matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated'
     if f in ('capex_ratio','free_cash_flow','cloud_margin'):
         a,b={'capex_ratio':('capex','revenue'),'free_cash_flow':('operating_cash_flow','capex'),'cloud_margin':('cloud_profit','cloud_revenue')}[f]
         operands=[next(x['value'] for x in data['series'][d['entity']+'.'+k]['observations'] if x['periodEnd']==p['periodEnd']) for k in (a,b)]
@@ -70,6 +78,16 @@ def check(d,p,data):
         expected=next(x['value'] for x in parse_csv(content) if x['date']==items['source_observation_date'])
         assert value==expected
         return 'matched exact observation date in BLS/FRED CSV; native index unchanged'
+    if id=='VRT.backlog':
+        assert p['isEstimated'] and items['source_measure']=='estimated combined order backlog'
+        assert re.search(r'\$\s*'+re.escape(format(items['reported_billion_usd'],'.12g'))+r'\s*B',raw,re.I),(id,p['periodEnd'],'reported backlog not found')
+        expected=items['reported_billion_usd']*items['conversion_factor_to_100m_usd']
+        assert math.isclose(value,expected) and items['source_precision_billion_usd']==0.1
+        return 'matched official presentation backlog, verified reported precision and billion-to-100-million conversion'
+    if id=='POWER.load':
+        fact=ercot_months(p['sourceUrl'],items['source_year'])[p['periodEnd']]
+        assert fact['periodStart']==p['periodStart'] and fact['items']==items and math.isclose(fact['value'],value)
+        return 'replayed official ERCOT hourly workbook, complete-month checks and monthly peak selection'
     if id.startswith('WB.'):
         expected=dict(parse_wb(raw)[f])[p['periodEnd']];assert math.isclose(value,expected)
         return 'matched dated cell in archived official monthly workbook'
@@ -100,8 +118,10 @@ def run():
         assert len({p['periodEnd'] for p in points})==len(points),d['id']
         for p in [points[0],points[len(points)//2],points[-1]]:
             method=check(d,p,data)
-            samples.append({'metricId':d['id'],'periodEnd':p['periodEnd'],'value':p['value'],'unit':d['unit'],'currency':d.get('currency'),'sourceUrl':p['sourceUrl'],'version':p['version'],'check':method})
+            samples.append({'metricId':d['id'],'periodEnd':p['periodEnd'],'value':p['value'],'unit':d['unit'],'currency':d.get('currency'),'sourceUrl':p['sourceUrl'],'version':p['version'],'checkMode':'manual_fact_ledger' if d.get('sourceAdapter')=='public-reviewed' else 'automatic_source_replay','check':method})
     folder=ROOT/'docs/industry';folder.mkdir(parents=True,exist_ok=True)
-    (folder/'verification.json').write_text(json.dumps({'scope':'3 periods per metric; arithmetic and archived source checks, not a license or causal audit','samples':samples},ensure_ascii=False,indent=2),encoding='utf-8')
-    print('Verified',len(samples),'historical samples across',len(samples)//3,'metrics')
+    manual=sum(s['checkMode']=='manual_fact_ledger' for s in samples)
+    automatic=len(samples)-manual
+    (folder/'verification.json').write_text(json.dumps({'scope':'3 periods per metric; automatic archived-source replay where supported, plus a separately tracked manual fact ledger for blocked sources; arithmetic only, not a license or causal audit','automaticSamples':automatic,'manualFactLedgerSamples':manual,'samples':samples},ensure_ascii=False,indent=2),encoding='utf-8')
+    print('Verified transformations for',len(samples),'historical samples across',len(samples)//3,'metrics;',manual,'use the manual official-source fact ledger')
 if __name__=='__main__':run()

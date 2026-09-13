@@ -63,3 +63,4 @@ __pycache__/
 !/data/industry/seed.json
 !/data/industry/oracle-reviewed.json
 !/data/industry/public-reviewed.json
+!/data/industry/public-source-facts.json

@@ -1,8 +1,8 @@
 """Restore/persist durable collector state on a separate Git branch. No force pushes."""
-import argparse, pathlib, shutil, subprocess, sqlite3
+import argparse, pathlib, shutil, subprocess, sqlite3, tempfile
 ROOT=pathlib.Path(__file__).resolve().parents[1];WORK=ROOT/'.data-work';DATA=ROOT/'data'
 FILES=['latest.json','calendar.json','scheduler.json','observations.sqlite']
-INDUSTRY_FILES=['latest.json','companies.json','hardware.json','oracle.json','costs.json','sia.json','extended.json','reviewed-cache.json','scheduler.json']
+INDUSTRY_FILES=['latest.json','companies.json','hardware.json','oracle.json','costs.json','sia.json','extended.json','power-load.json','reviewed-cache.json','scheduler.json']
 
 def industry_state(source,destination):
     if not source.exists():return
@@ -17,6 +17,42 @@ def industry_state(source,destination):
         finally:backup.close();connection.close()
     # Public state contains extracted facts, never full company report files.
 def git(*args,cwd=ROOT,check=True):return subprocess.run(['git',*args],cwd=cwd,check=check,capture_output=True,text=True)
+
+def sqlite_blob(ref,relative):
+    result=subprocess.run(['git','show',f'{ref}:{relative}'],cwd=WORK,capture_output=True)
+    return result.stdout if result.returncode==0 else None
+
+def merge_observations(local,remote_blob):
+    """Union append-only observation revisions after a concurrent data-branch update."""
+    if not local.exists() or not remote_blob:return
+    with tempfile.NamedTemporaryFile(suffix='.sqlite',delete=False) as handle:
+        handle.write(remote_blob);remote=pathlib.Path(handle.name)
+    connection=sqlite3.connect(local)
+    try:
+        connection.execute('ATTACH DATABASE ? AS remote_state',(str(remote),))
+        local_columns=[row[1] for row in connection.execute('PRAGMA main.table_info(observations)')]
+        remote_columns=[row[1] for row in connection.execute('PRAGMA remote_state.table_info(observations)')]
+        if not local_columns or local_columns!=remote_columns:raise RuntimeError(f'Observation schema mismatch while merging {local.name}')
+        columns=','.join('"'+column.replace('"','""')+'"' for column in local_columns)
+        connection.execute(f'INSERT OR IGNORE INTO main.observations ({columns}) SELECT {columns} FROM remote_state.observations')
+        connection.commit();connection.execute('DETACH DATABASE remote_state')
+    finally:
+        connection.close();remote.unlink(missing_ok=True)
+
+def push_with_retry():
+    first=git('push','origin','HEAD:refs/heads/data-cache',cwd=WORK,check=False)
+    if first.returncode==0:return
+    print(first.stderr.strip() or 'Concurrent data-cache update detected; merging and retrying')
+    git('fetch','origin','data-cache',cwd=WORK)
+    remote_dbs={relative:sqlite_blob('FETCH_HEAD',relative) for relative in ['observations.sqlite','industry/industry.sqlite']}
+    merge=git('merge','--no-edit','--allow-unrelated-histories','-X','ours','FETCH_HEAD',cwd=WORK,check=False)
+    if merge.returncode:raise RuntimeError('Could not merge concurrent data-cache update: '+(merge.stderr or merge.stdout))
+    for relative,blob in remote_dbs.items():merge_observations(WORK/relative,blob)
+    git('add','observations.sqlite','industry/industry.sqlite',cwd=WORK)
+    if git('diff','--cached','--quiet',cwd=WORK,check=False).returncode:
+        git('commit','--amend','--no-edit',cwd=WORK)
+    second=git('push','origin','HEAD:refs/heads/data-cache',cwd=WORK,check=False)
+    if second.returncode:raise RuntimeError('Could not persist data-cache after one merge retry: '+(second.stderr or second.stdout))
 def restore():
     exists=git('ls-remote','--exit-code','--heads','origin','data-cache',check=False)
     if exists.returncode==0:
@@ -45,7 +81,7 @@ def save():
     changed=git('diff','--cached','--quiet',cwd=WORK,check=False).returncode
     if changed:
         git('commit','-m','Update macro observations and preserve revisions',cwd=WORK)
-        git('push','origin','HEAD:refs/heads/data-cache',cwd=WORK)
+        push_with_retry()
         print('Persisted collector state without a force push')
     else:print('No data-state change')
 if __name__=='__main__':

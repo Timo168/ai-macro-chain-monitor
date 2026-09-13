@@ -1,5 +1,7 @@
 {
-  "scope": "3 periods per metric; arithmetic and archived source checks, not a license or causal audit",
+  "scope": "3 periods per metric; automatic archived-source replay where supported, plus a separately tracked manual fact ledger for blocked sources; arithmetic only, not a license or causal audit",
+  "automaticSamples": 234,
+  "manualFactLedgerSamples": 12,
   "samples": [
     {
       "metricId": "MSFT.revenue",
@@ -9,6 +11,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2024-q1/press-release-webcast",
       "version": "11b0104a7b17f6ba0485e57f3a1617b1c022346bdf34cf7c3d069adfb3720bc6",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -19,6 +22,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
       "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -29,6 +33,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
       "version": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -39,6 +44,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2024-q1/press-release-webcast",
       "version": "11b0104a7b17f6ba0485e57f3a1617b1c022346bdf34cf7c3d069adfb3720bc6",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -49,6 +55,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
       "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -59,6 +66,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
       "version": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -69,6 +77,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2024-q1/press-release-webcast",
       "version": "11b0104a7b17f6ba0485e57f3a1617b1c022346bdf34cf7c3d069adfb3720bc6",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -79,6 +88,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
       "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -89,6 +99,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
       "version": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -99,6 +110,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2025/q1/2025q1-alphabet-earnings-release.pdf",
       "version": "0cb10728b1ba3854df33d0c11a8f398673551e5b5eb39183c2bf045efe96e2f4",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -109,6 +121,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -119,6 +132,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -129,6 +143,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2025/q1/2025q1-alphabet-earnings-release.pdf",
       "version": "0cb10728b1ba3854df33d0c11a8f398673551e5b5eb39183c2bf045efe96e2f4",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -139,6 +154,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -149,6 +165,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -159,6 +176,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2025/q1/2025q1-alphabet-earnings-release.pdf",
       "version": "0cb10728b1ba3854df33d0c11a8f398673551e5b5eb39183c2bf045efe96e2f4",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -169,6 +187,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -179,6 +198,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -189,6 +209,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2025/q1/2025q1-alphabet-earnings-release.pdf",
       "version": "0cb10728b1ba3854df33d0c11a8f398673551e5b5eb39183c2bf045efe96e2f4",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -199,6 +220,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -209,6 +231,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -219,6 +242,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2025/q1/2025q1-alphabet-earnings-release.pdf",
       "version": "0cb10728b1ba3854df33d0c11a8f398673551e5b5eb39183c2bf045efe96e2f4",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -229,6 +253,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -239,6 +264,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "65f35a2e9c287112121f736321c7526d603ba8e0dae27acac56c7d7357602aa8",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -249,6 +275,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-First-Quarter-2025-Results-2025.pdf",
       "version": "b30c600e0deec08be07c190afc9123e3c4800781a96db66d710748babd484244",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -259,6 +286,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-Second-Quarter-2026-Results-2026.pdf",
       "version": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -269,6 +297,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-Second-Quarter-2026-Results-2026.pdf",
       "version": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -279,6 +308,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-First-Quarter-2025-Results-2025.pdf",
       "version": "b30c600e0deec08be07c190afc9123e3c4800781a96db66d710748babd484244",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -289,6 +319,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-Second-Quarter-2026-Results-2026.pdf",
       "version": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -299,6 +330,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-Second-Quarter-2026-Results-2026.pdf",
       "version": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -309,6 +341,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-First-Quarter-2025-Results-2025.pdf",
       "version": "b30c600e0deec08be07c190afc9123e3c4800781a96db66d710748babd484244",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -319,6 +352,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-Second-Quarter-2026-Results-2026.pdf",
       "version": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -329,6 +363,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-Second-Quarter-2026-Results-2026.pdf",
       "version": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -339,6 +374,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-First-Quarter-2025-Results-2025.pdf",
       "version": "b30c600e0deec08be07c190afc9123e3c4800781a96db66d710748babd484244",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -349,6 +385,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-Second-Quarter-2026-Results-2026.pdf",
       "version": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -359,6 +396,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-Second-Quarter-2026-Results-2026.pdf",
       "version": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -369,6 +407,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-First-Quarter-2025-Results-2025.pdf",
       "version": "b30c600e0deec08be07c190afc9123e3c4800781a96db66d710748babd484244",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -379,6 +418,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-Second-Quarter-2026-Results-2026.pdf",
       "version": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -389,6 +429,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-Second-Quarter-2026-Results-2026.pdf",
       "version": "1645ff96b913aed1134061336a6064d144eea84a320718035bae14c8cefc6b38",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -399,6 +440,7 @@
       "currency": "USD",
       "sourceUrl": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-first-quarter-fiscal-2026",
       "version": "1a2097419562ab6c6ff52975d7d523b8b24f15141e062f14f53ff5be7b438470",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -409,6 +451,7 @@
       "currency": "USD",
       "sourceUrl": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-third-quarter-fiscal-2026",
       "version": "1f50d115f2200dcc2dcd6d094eadb847b9abf1cd694411eb5c3adfb8732bc129",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -419,6 +462,7 @@
       "currency": "USD",
       "sourceUrl": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-second-quarter-fiscal-2027",
       "version": "d3bb05b15118b65b9866f38d1230cc918c76292a14ed47b0404dbed28608389a",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -429,6 +473,7 @@
       "currency": null,
       "sourceUrl": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-first-quarter-fiscal-2026",
       "version": "1a2097419562ab6c6ff52975d7d523b8b24f15141e062f14f53ff5be7b438470",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -439,6 +484,7 @@
       "currency": null,
       "sourceUrl": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-third-quarter-fiscal-2026",
       "version": "1f50d115f2200dcc2dcd6d094eadb847b9abf1cd694411eb5c3adfb8732bc129",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -449,6 +495,7 @@
       "currency": null,
       "sourceUrl": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-second-quarter-fiscal-2027",
       "version": "d3bb05b15118b65b9866f38d1230cc918c76292a14ed47b0404dbed28608389a",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -459,6 +506,7 @@
       "currency": "USD",
       "sourceUrl": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-first-quarter-fiscal-2026",
       "version": "1a2097419562ab6c6ff52975d7d523b8b24f15141e062f14f53ff5be7b438470",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -469,6 +517,7 @@
       "currency": "USD",
       "sourceUrl": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-third-quarter-fiscal-2026",
       "version": "1f50d115f2200dcc2dcd6d094eadb847b9abf1cd694411eb5c3adfb8732bc129",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -479,6 +528,7 @@
       "currency": "USD",
       "sourceUrl": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-second-quarter-fiscal-2027",
       "version": "d3bb05b15118b65b9866f38d1230cc918c76292a14ed47b0404dbed28608389a",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -489,6 +539,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
       "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -499,6 +550,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
       "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -509,6 +561,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
       "version": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -519,6 +572,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
       "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -529,6 +583,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
       "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -539,6 +594,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
       "version": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -549,6 +605,7 @@
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
       "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -559,6 +616,7 @@
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q3/press-release-webcast",
       "version": "26eef7edc0a3573dc40b8588304536c63cc22ac9b2fc0fca13c602fdcc60dc31",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -569,6 +627,7 @@
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
       "version": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -579,6 +638,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "ad8d84cbcc0a4ce35b803b93e8186c29ea0b06b4455d04fb584ab5ad29c42915",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -589,6 +649,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "ad8d84cbcc0a4ce35b803b93e8186c29ea0b06b4455d04fb584ab5ad29c42915",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -599,6 +660,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q2/earnings-result/AMZN-Q2-2026-Earnings-Release.pdf",
       "version": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -609,6 +671,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "ad8d84cbcc0a4ce35b803b93e8186c29ea0b06b4455d04fb584ab5ad29c42915",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -619,6 +682,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "ad8d84cbcc0a4ce35b803b93e8186c29ea0b06b4455d04fb584ab5ad29c42915",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -629,6 +693,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q2/earnings-result/AMZN-Q2-2026-Earnings-Release.pdf",
       "version": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -639,6 +704,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "ad8d84cbcc0a4ce35b803b93e8186c29ea0b06b4455d04fb584ab5ad29c42915",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -649,6 +715,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "ad8d84cbcc0a4ce35b803b93e8186c29ea0b06b4455d04fb584ab5ad29c42915",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -659,6 +726,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q2/earnings-result/AMZN-Q2-2026-Earnings-Release.pdf",
       "version": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -669,6 +737,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "ad8d84cbcc0a4ce35b803b93e8186c29ea0b06b4455d04fb584ab5ad29c42915",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -679,6 +748,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "ad8d84cbcc0a4ce35b803b93e8186c29ea0b06b4455d04fb584ab5ad29c42915",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -689,6 +759,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q2/earnings-result/AMZN-Q2-2026-Earnings-Release.pdf",
       "version": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -699,6 +770,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "ad8d84cbcc0a4ce35b803b93e8186c29ea0b06b4455d04fb584ab5ad29c42915",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -709,6 +781,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "ad8d84cbcc0a4ce35b803b93e8186c29ea0b06b4455d04fb584ab5ad29c42915",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -719,6 +792,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q2/earnings-result/AMZN-Q2-2026-Earnings-Release.pdf",
       "version": "ea73fa991786fdb5e6e8bcd980f94d1f3bc4ca84f2d138c77a7a99d6b961e3c4",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -729,6 +803,7 @@
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2024-q1/press-release-webcast",
       "version": "e48b930609a17c62d0dcfcb413d9571e5c5f876e7920cd4a0f3c91de01df8857",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -739,6 +814,7 @@
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
       "version": "64e519652ee87a93255985dec44099465f5ff34eeced65cd6c790a795a6e1f0e",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -749,6 +825,7 @@
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
       "version": "b32e32d1be0553961ea6e3c53555d1bc3c870437ea9600e5022793f685e14a03",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -759,6 +836,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2024-q1/press-release-webcast",
       "version": "746d6638c0bfcd7dc1a5802a694b3d2487605dadbb80d96f52bc14eca36eb8b3",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -769,6 +847,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
       "version": "0104826b0fb04e64f9500f8810746baa8196760d172fa6c728bae197c773933e",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -779,6 +858,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
       "version": "d375e800d4b448b76f3c5b90111b0a3cdf696120314760139844e3c251816e36",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -789,6 +869,7 @@
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
       "version": "ae54a9f1200cc787b4dedef96fa8d877c0be9f198b70a34b9776bd425594398d",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -799,6 +880,7 @@
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
       "version": "ae54a9f1200cc787b4dedef96fa8d877c0be9f198b70a34b9776bd425594398d",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -809,6 +891,7 @@
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
       "version": "feb9e13ddb30143af1c93f94ff60cc66ac6b4926e6b7ec23f85f06fd584f6014",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -819,6 +902,7 @@
       "currency": null,
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2025/q1/2025q1-alphabet-earnings-release.pdf",
       "version": "fb35ae81e32ec7a115d4d9b14a2700d945998d987679a2480961d22318c6df50",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -829,6 +913,7 @@
       "currency": null,
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "6cd76454ebfd303ad3a8368ceb377492c3bddb8c4055ac80dfc3a29871a5e491",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -839,6 +924,7 @@
       "currency": null,
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "6cd76454ebfd303ad3a8368ceb377492c3bddb8c4055ac80dfc3a29871a5e491",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -849,6 +935,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2025/q1/2025q1-alphabet-earnings-release.pdf",
       "version": "8ed997be661aca72be5357cec1759a2126bd87260164a77ee557d7c85c170e73",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -859,6 +946,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "53d27de7224838441df75e81c25776f3fca83c7bf3f0642228bd65c4b803713a",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -869,6 +957,7 @@
       "currency": "USD",
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "53d27de7224838441df75e81c25776f3fca83c7bf3f0642228bd65c4b803713a",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -879,6 +968,7 @@
       "currency": null,
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2025/q1/2025q1-alphabet-earnings-release.pdf",
       "version": "851bfd944a20ce61e2e13679dd8c617833266cfdcccd80d179fdc5d5805fd04c",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -889,6 +979,7 @@
       "currency": null,
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "e3554862d7f6292c411a3117249a30ac52f4624ae5253455fe5fe36acd65ada4",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -899,6 +990,7 @@
       "currency": null,
       "sourceUrl": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
       "version": "e3554862d7f6292c411a3117249a30ac52f4624ae5253455fe5fe36acd65ada4",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -909,6 +1001,7 @@
       "currency": null,
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "d60913705aaae87adee5b93c6e6b9739c75fc157c68e1523661df43403734d54",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -919,6 +1012,7 @@
       "currency": null,
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "d60913705aaae87adee5b93c6e6b9739c75fc157c68e1523661df43403734d54",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -929,6 +1023,7 @@
       "currency": null,
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q2/earnings-result/AMZN-Q2-2026-Earnings-Release.pdf",
       "version": "633130c25cc53f66a5b390ce6727ad30ef3e2f862b8383fb0cd41e5bc9082443",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -939,6 +1034,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "d5990890f8fff398a2d61c765a696f4d2f2245d8a48e89ec74a6cc29cd4f86f6",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -949,6 +1045,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "d5990890f8fff398a2d61c765a696f4d2f2245d8a48e89ec74a6cc29cd4f86f6",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -959,6 +1056,7 @@
       "currency": "USD",
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q2/earnings-result/AMZN-Q2-2026-Earnings-Release.pdf",
       "version": "b12a2f13b73980bdb10a02ebb21a8ac42f46552f5d0d13375961e9841b536040",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -969,6 +1067,7 @@
       "currency": null,
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "df81c8467367d33567e207d462f4aad086ffba428b38f2500354deb57845fba5",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -979,6 +1078,7 @@
       "currency": null,
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2025/q4/earnings-result/AMZN-Q4-2025-Earnings-Release.pdf",
       "version": "df81c8467367d33567e207d462f4aad086ffba428b38f2500354deb57845fba5",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -989,6 +1089,7 @@
       "currency": null,
       "sourceUrl": "https://s2.q4cdn.com/299287126/files/doc_earnings/2026/q2/earnings-result/AMZN-Q2-2026-Earnings-Release.pdf",
       "version": "6f656af4d8449fb27c6fe84137cd0acabc228917b78d9df47cb3477ca553fa7d",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -999,6 +1100,7 @@
       "currency": null,
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-First-Quarter-2025-Results-2025.pdf",
       "version": "cdba720c251472776ca8944b3e6ada75f2114cf87feb24cccb8c09b68b7bafee",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -1009,6 +1111,7 @@
       "currency": null,
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-Second-Quarter-2026-Results-2026.pdf",
       "version": "a25870d1dc11feb8020e902a27850a17e433786bcc313c3d2be7a3b042fde6e3",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -1019,6 +1122,7 @@
       "currency": null,
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-Second-Quarter-2026-Results-2026.pdf",
       "version": "a25870d1dc11feb8020e902a27850a17e433786bcc313c3d2be7a3b042fde6e3",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -1029,6 +1133,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-First-Quarter-2025-Results-2025.pdf",
       "version": "6ac56ec8eeaff809db75ee8df27e709553f5d6b3a6da3eb5c7b7d5ebabf8bfab",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -1039,6 +1144,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-Second-Quarter-2026-Results-2026.pdf",
       "version": "e343063801bb3b11a3a73b73fd37ec3206f42734fc3dc9b50c54b9e54ed2421b",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -1049,6 +1155,7 @@
       "currency": "USD",
       "sourceUrl": "https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-Second-Quarter-2026-Results-2026.pdf",
       "version": "e343063801bb3b11a3a73b73fd37ec3206f42734fc3dc9b50c54b9e54ed2421b",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -1059,6 +1166,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1069,6 +1177,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1079,6 +1188,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1089,6 +1199,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1099,6 +1210,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1109,6 +1221,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1119,6 +1232,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1129,6 +1243,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1139,6 +1254,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1149,6 +1265,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1159,6 +1276,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1169,6 +1287,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1179,6 +1298,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1189,6 +1309,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1199,6 +1320,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1209,6 +1331,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1219,6 +1342,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1229,6 +1353,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched separately reviewed official PDF table facts"
     },
     {
@@ -1239,6 +1364,7 @@
       "currency": null,
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -1249,6 +1375,7 @@
       "currency": null,
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -1259,6 +1386,7 @@
       "currency": null,
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -1269,6 +1397,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -1279,6 +1408,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -1289,6 +1419,7 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
+      "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
     {
@@ -1299,6 +1430,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
       "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1309,6 +1441,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
       "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1319,6 +1452,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
       "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1329,6 +1463,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
       "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1339,6 +1474,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
       "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1349,6 +1485,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
       "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1359,6 +1496,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
       "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1369,6 +1507,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
       "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1379,6 +1518,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
       "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1389,6 +1529,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
       "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1399,6 +1540,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
       "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1409,6 +1551,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
       "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1419,6 +1562,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
       "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1429,6 +1573,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
       "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1439,6 +1584,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
       "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1449,6 +1595,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
       "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1459,6 +1606,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
       "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1469,6 +1617,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
       "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1479,6 +1628,7 @@
       "currency": "USD",
       "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
       "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1489,6 +1639,7 @@
       "currency": "USD",
       "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
       "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1499,6 +1650,7 @@
       "currency": "USD",
       "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
       "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1509,6 +1661,7 @@
       "currency": "USD",
       "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
       "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1519,6 +1672,7 @@
       "currency": "USD",
       "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
       "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1529,6 +1683,7 @@
       "currency": "USD",
       "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
       "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1539,6 +1694,7 @@
       "currency": "USD",
       "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
       "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1549,6 +1705,7 @@
       "currency": "USD",
       "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
       "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1559,6 +1716,7 @@
       "currency": "USD",
       "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
       "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1569,6 +1727,7 @@
       "currency": "USD",
       "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
       "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1579,6 +1738,7 @@
       "currency": "USD",
       "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
       "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1589,6 +1749,7 @@
       "currency": "USD",
       "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
       "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1599,6 +1760,7 @@
       "currency": "TWD",
       "sourceUrl": "https://investor.tsmc.com/english/monthly-revenue/2021",
       "version": "fe669453cc5fba8cb7f00629685deffa3f575fccb423ceb082ded79bbf3ad054",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1609,6 +1771,7 @@
       "currency": "TWD",
       "sourceUrl": "https://investor.tsmc.com/english/monthly-revenue/2023",
       "version": "988426fdf7cb0faca69acbcf4e74fb8459ed6c928a441acf5e5be69e34181a72",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1619,6 +1782,7 @@
       "currency": "TWD",
       "sourceUrl": "https://investor.tsmc.com/english/monthly-revenue/2026",
       "version": "c0b9f74332d132697f512641f226db2420d89bc1f761f492f9bca37a01dda4ca",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -1629,6 +1793,7 @@
       "currency": "USD",
       "sourceUrl": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx",
       "version": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+      "checkMode": "automatic_source_replay",
       "check": "matched dated cell in archived official monthly workbook"
     },
     {
@@ -1639,6 +1804,7 @@
       "currency": "USD",
       "sourceUrl": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx",
       "version": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+      "checkMode": "automatic_source_replay",
       "check": "matched dated cell in archived official monthly workbook"
     },
     {
@@ -1649,6 +1815,7 @@
       "currency": "USD",
       "sourceUrl": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx",
       "version": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+      "checkMode": "automatic_source_replay",
       "check": "matched dated cell in archived official monthly workbook"
     },
     {
@@ -1659,6 +1826,7 @@
       "currency": "USD",
       "sourceUrl": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx",
       "version": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+      "checkMode": "automatic_source_replay",
       "check": "matched dated cell in archived official monthly workbook"
     },
     {
@@ -1669,6 +1837,7 @@
       "currency": "USD",
       "sourceUrl": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx",
       "version": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+      "checkMode": "automatic_source_replay",
       "check": "matched dated cell in archived official monthly workbook"
     },
     {
@@ -1679,6 +1848,7 @@
       "currency": "USD",
       "sourceUrl": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx",
       "version": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+      "checkMode": "automatic_source_replay",
       "check": "matched dated cell in archived official monthly workbook"
     },
     {
@@ -1689,6 +1859,7 @@
       "currency": "USD",
       "sourceUrl": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx",
       "version": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+      "checkMode": "automatic_source_replay",
       "check": "matched dated cell in archived official monthly workbook"
     },
     {
@@ -1699,6 +1870,7 @@
       "currency": "USD",
       "sourceUrl": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx",
       "version": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+      "checkMode": "automatic_source_replay",
       "check": "matched dated cell in archived official monthly workbook"
     },
     {
@@ -1709,6 +1881,7 @@
       "currency": "USD",
       "sourceUrl": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx",
       "version": "9fdcfa8a2aed9a1bb545a10c1a5ce036c6a0acd4766f450424ca800b4b5a0225",
+      "checkMode": "automatic_source_replay",
       "check": "matched dated cell in archived official monthly workbook"
     },
     {
@@ -1719,6 +1892,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "366fca2568897f7168168b5a5ada50ca80b1153b21ad378e76c780277920b71a",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1729,6 +1903,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "716c526b06b547bbcc5d63ba9442388331bdecfee4e0a2ec6b39fa003dd6b53a",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1739,6 +1914,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "b9c99f68e3382f1ff7f5b7123e2113508f4b8042ef65cdac0cb3b51f604eec74",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1749,6 +1925,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "54c96fab1eb36aaa6c2f11f802285c93ac3bfcaec0531169095f1f62fa9b45cf",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1759,6 +1936,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "c1b83e2ac01ef53a2e62cb56ec9c4969d3f6c9cd1bc62cdfb1ae81484564106f",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1769,6 +1947,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "76e6e41eefdf661ce89346be1b096a03c0d50e04bdc664d9bd883fe8bcc77cea",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1779,6 +1958,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "488e22efcfcc601e4b23a9edde41a7a36e585b307e94aa9af6fd66e1afb07f2a",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1789,6 +1969,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "72f8bf4409a1040d54ccaf3078ae3d75bc928cbffbd7c3fd39c51e4754c64730",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1799,6 +1980,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "cf790278f0ca4af19277df1792f79020402c99388418695c29f782697f608a98",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1809,6 +1991,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "2a0e58e4bf5021f0aa82a400247cc754394d76e721f925bf472d47b43f59d33c",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1819,6 +2002,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "62b11a85644bb1e9df2f11c549462ce714b152d4dda5161e65ae7b5d9deb9f67",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1829,6 +2013,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "26d535a7c12a6ce5940c8c1a65ef48469941c004865634c81621d086c6288c9c",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1839,6 +2024,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "14078ad26525975aace07901bd65e75e6de18173db6af344b017e8a6f2c96f25",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1849,6 +2035,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "24d37491495646c1f9894a7b84894b8caa2ec75e6b17248ebb4527eff39512a5",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1859,6 +2046,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "42cea61d60a28f06665df2d9768b311c0d17bf40a174f02c3ec7b45a22ccd6db",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1869,6 +2057,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "064f2a1fc25a4a6936b6b60b6f69c645c68d053f400d3b43480c90a6a7b6dbeb",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1879,6 +2068,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "667358d4cbe2cd6e7652610af232881d32df671f47129330b1e5ff99c1d1ba59",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1889,6 +2079,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "6f50ea5c3068f573970d48ba95ff0b0dadfcf743d12399e0ab002794f663eb85",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1899,6 +2090,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "eba18e66e1effe6ab1f7bb1b98e4fff19deeaa52b3a5bf1c7d5a19af64563c93",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1909,6 +2101,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "3bcedcfda3caf35b747b72664a68ddedf35eb30aaf1c5ee6fe96d309a2a8162d",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1919,6 +2112,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "3a31bdba4f75c0e54dc439c8fc29673d59cd684a6cf2be848fb63c7cccc56169",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1929,6 +2123,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "4944942a72b10865f0272ec032536380f817eddd5092aff39ed7ffb031d100dd",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1939,6 +2134,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "ad57140ca893187c9055316e2ff39dee28b0960542403d4fa22db9a0303d2a21",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1949,6 +2145,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "c3a949626f6d4c38326748004c202636a6ba4c0e9e5a864872c39caa65ca8359",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1959,6 +2156,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "4b92d37d2dd4e4ac81b47a5f147fc3ee12fcd87747513c1b2cf8e8c3449dec2f",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1969,6 +2167,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "d0157064d91bba3d6362a8fa6b0dca26c29d229560b35c837d53486e340b38ed",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1979,6 +2178,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "50f0ae41c3081b0066bc16bfe133fb46565200efc433501c118168144098b1a3",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1989,6 +2189,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "e02a94001c4a7c0b296cfeac01030ae72f6fd9a8a72bb55001deeecbde7600bd",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -1999,6 +2200,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "be4de229df0a663e47eec7043afb9999bb8ac276d451fdb22b9cad9e8ed804fe",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -2009,6 +2211,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "25601f07d6374fabfbc6bea00d406814bf8f54033d893b66997c5992955fdc30",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -2019,6 +2222,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "803b6c32be24388fee18ff362feeac23f1df69c020960820b289cde8ca92de13",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -2029,6 +2233,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "948113a3996b2a68dcde3963a17f08773b240bd399546ad48b6338bb612d1756",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -2039,6 +2244,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "0afb853108c5690653c5ecc12ada95a08fee2cea48cf62507e8717b2abc42bde",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -2049,6 +2255,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "a8f9f458a694a7529017033ce1b87d762abfbac433e2de71ff6bfb66f34f587e",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -2059,6 +2266,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "efaa041277318c658257ea8544457a7d6bc06c49c393870049bb4eecd7c2940c",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -2069,6 +2277,7 @@
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
       "version": "ed99780ed36aeedc1d936761febd2842cdaa8d98081ee12b70a5a3ac9a23f53b",
+      "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
     {
@@ -2079,6 +2288,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.semiconductors.org/global-semiconductor-sales-increase-9-2-month-to-month-in-may/",
       "version": "a10e4d9d22f281bfbbb7fd0dd0bd3007a08c4ecc1228673b4546842ec53865c7",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -2089,6 +2299,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.semiconductors.org/global-semiconductor-sales-increase-9-2-month-to-month-in-may/",
       "version": "a10e4d9d22f281bfbbb7fd0dd0bd3007a08c4ecc1228673b4546842ec53865c7",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -2099,66 +2310,7 @@
       "currency": "USD",
       "sourceUrl": "https://www.semiconductors.org/global-semiconductor-sales-increase-6-4-month-to-month-in-july/",
       "version": "c6216aa4d943ef43bab887bb46c17d2f365f24339f7e0674dc276f98ea15434b",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "MSFT.backlog",
-      "periodEnd": "2025-06-30",
-      "value": 3680,
-      "unit": "亿美元",
-      "currency": "USD",
-      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
-      "version": "355f34d28fe67c167d96e43509077b3d623a4a159c2adcb62bc552bb368b3390",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "MSFT.backlog",
-      "periodEnd": "2025-12-31",
-      "value": 6250,
-      "unit": "亿美元",
-      "currency": "USD",
-      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
-      "version": "355f34d28fe67c167d96e43509077b3d623a4a159c2adcb62bc552bb368b3390",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "MSFT.backlog",
-      "periodEnd": "2026-06-30",
-      "value": 6780,
-      "unit": "亿美元",
-      "currency": "USD",
-      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
-      "version": "355f34d28fe67c167d96e43509077b3d623a4a159c2adcb62bc552bb368b3390",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "TSM.advanced_node_share",
-      "periodEnd": "2025-06-30",
-      "value": 74,
-      "unit": "%",
-      "currency": null,
-      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2025-07/d9d294ed46ca22c560a17eb060373bc35f2d464a/2Q25EarningsRelease.pdf",
-      "version": "14b24d4f735363fff90ef8d50611864d0dc000edfd74489994569b7428e78d40",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "TSM.advanced_node_share",
-      "periodEnd": "2025-12-31",
-      "value": 77,
-      "unit": "%",
-      "currency": null,
-      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-01/3e49621566a3ca53bdf8aee2586929b666c17fd6/4Q25EarningsRelease.pdf",
-      "version": "d14b67a858ffa01e6d16d64f81230d4fedfc7815b3a572b5e5feb0b2f2a2fbd9",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "TSM.advanced_node_share",
-      "periodEnd": "2026-06-30",
-      "value": 77,
-      "unit": "%",
-      "currency": null,
-      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-07/a80d7933be643644081584087731f73b22ea5a2c/2Q26%20EarningsRelease.pdf",
-      "version": "67c8e14a5786449dc6cbc4e8e0472b8b56c33895e4c8abcdfe4f48ac5f60207e",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -2169,6 +2321,7 @@
       "currency": null,
       "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=WPU117409",
       "version": "172431a324cf1cf59bad48f16c78f8466bb9e5ab083a7de54b147d133997246f",
+      "checkMode": "automatic_source_replay",
       "check": "matched exact observation date in BLS/FRED CSV; native index unchanged"
     },
     {
@@ -2179,6 +2332,7 @@
       "currency": null,
       "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=WPU117409",
       "version": "63374ff881ccfeddd8897c9d85943a6cc58fb61d9d09d5ffda20519e80d3f10c",
+      "checkMode": "automatic_source_replay",
       "check": "matched exact observation date in BLS/FRED CSV; native index unchanged"
     },
     {
@@ -2189,7 +2343,74 @@
       "currency": null,
       "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=WPU117409",
       "version": "2d42bc2c809b7a2844077b7a8f660ec275844c93fe446ff2a61d93a04739b062",
+      "checkMode": "automatic_source_replay",
       "check": "matched exact observation date in BLS/FRED CSV; native index unchanged"
+    },
+    {
+      "metricId": "MSFT.backlog",
+      "periodEnd": "2025-06-30",
+      "value": 3680,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
+      "version": "355f34d28fe67c167d96e43509077b3d623a4a159c2adcb62bc552bb368b3390",
+      "checkMode": "automatic_source_replay",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "MSFT.backlog",
+      "periodEnd": "2025-12-31",
+      "value": 6250,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
+      "version": "355f34d28fe67c167d96e43509077b3d623a4a159c2adcb62bc552bb368b3390",
+      "checkMode": "automatic_source_replay",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "MSFT.backlog",
+      "periodEnd": "2026-06-30",
+      "value": 6780,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
+      "version": "355f34d28fe67c167d96e43509077b3d623a4a159c2adcb62bc552bb368b3390",
+      "checkMode": "automatic_source_replay",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "TSM.advanced_node_share",
+      "periodEnd": "2025-06-30",
+      "value": 74,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2025-07/d9d294ed46ca22c560a17eb060373bc35f2d464a/2Q25EarningsRelease.pdf",
+      "version": "14b24d4f735363fff90ef8d50611864d0dc000edfd74489994569b7428e78d40",
+      "checkMode": "automatic_source_replay",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "TSM.advanced_node_share",
+      "periodEnd": "2025-12-31",
+      "value": 77,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-01/3e49621566a3ca53bdf8aee2586929b666c17fd6/4Q25EarningsRelease.pdf",
+      "version": "d14b67a858ffa01e6d16d64f81230d4fedfc7815b3a572b5e5feb0b2f2a2fbd9",
+      "checkMode": "automatic_source_replay",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "TSM.advanced_node_share",
+      "periodEnd": "2026-06-30",
+      "value": 77,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-07/a80d7933be643644081584087731f73b22ea5a2c/2Q26%20EarningsRelease.pdf",
+      "version": "67c8e14a5786449dc6cbc4e8e0472b8b56c33895e4c8abcdfe4f48ac5f60207e",
+      "checkMode": "automatic_source_replay",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
       "metricId": "HPE.server_revenue",
@@ -2199,6 +2420,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
       "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -2209,6 +2431,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
       "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -2219,6 +2442,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
       "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -2229,6 +2453,7 @@
       "currency": null,
       "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
       "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -2239,6 +2464,7 @@
       "currency": null,
       "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
       "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -2249,6 +2475,7 @@
       "currency": null,
       "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
       "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -2259,6 +2486,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/static-files/a7fdeb66-9194-4027-afa8-a963c1bc1ce9",
       "version": "f284d14f4a4df7bc3064513069c5da543412d5926968ecb603ea13aeade2d9d4",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -2269,6 +2497,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/static-files/9e5d4126-0f17-4ceb-b26c-a2563b8bcbc9",
       "version": "01ef07d8f1835132fc1bd304216ad6418529d90fbdb2a4b53b2005a7516bc858",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -2279,6 +2508,7 @@
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/static-files/b63ffff9-b729-403b-a231-c6af05667759",
       "version": "2e2a251d50608284f6e3ca91e1d71cd39152a214e4bafd8b66cdd240d90fc5c2",
+      "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
@@ -2289,6 +2519,7 @@
       "currency": null,
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2026-financial",
       "version": "455fca62f4f1b1ad47939806cea8801e636ff01471b6bf9f7e5c94fca2f00d4f",
+      "checkMode": "automatic_source_replay",
       "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
     },
     {
@@ -2299,6 +2530,7 @@
       "currency": null,
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
       "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "checkMode": "automatic_source_replay",
       "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
     },
     {
@@ -2309,7 +2541,41 @@
       "currency": null,
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
       "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+      "checkMode": "automatic_source_replay",
       "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+    },
+    {
+      "metricId": "VRT.backlog",
+      "periodEnd": "2025-03-31",
+      "value": 79,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://s205.q4cdn.com/554782763/files/doc_events/2025/04/1/Vertiv-First-Quarter-2025-Results-Presentation.pdf",
+      "version": "c102d66b9286648ced383d940e99422bef6c94ceea000ac0c66f8fa1ce595825",
+      "checkMode": "automatic_source_replay",
+      "check": "matched official presentation backlog, verified reported precision and billion-to-100-million conversion"
+    },
+    {
+      "metricId": "VRT.backlog",
+      "periodEnd": "2025-09-30",
+      "value": 95,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://s205.q4cdn.com/554782763/files/doc_financials/2025/q3/Vertiv-Third-Quarter-2025-Results-Presentation.pdf",
+      "version": "755b9fb9668e3311516d3ab210d3140bcd80019229cd6ec30c1e1a020a76e28d",
+      "checkMode": "automatic_source_replay",
+      "check": "matched official presentation backlog, verified reported precision and billion-to-100-million conversion"
+    },
+    {
+      "metricId": "VRT.backlog",
+      "periodEnd": "2025-12-31",
+      "value": 150,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://s205.q4cdn.com/554782763/files/doc_financials/2025/q4/Vertiv_Fourth-Quarter-2025-Results-Presentation.pdf",
+      "version": "8cde66c12cb89f5422edd3b9744eb3e2173c9e983f0a675e32508e9ea0e23f45",
+      "checkMode": "automatic_source_replay",
+      "check": "matched official presentation backlog, verified reported precision and billion-to-100-million conversion"
     },
     {
       "metricId": "POWER.interconnection",
@@ -2319,7 +2585,8 @@
       "currency": null,
       "sourceUrl": "https://emp.lbl.gov/publications/queued-2024-edition-characteristics",
       "version": "7a974d3cf507c8d206a32e77991c3c151998e1fe222b9028bc35b176fd2ddf88",
-      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+      "checkMode": "manual_fact_ledger",
+      "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
     },
     {
       "metricId": "POWER.interconnection",
@@ -2329,7 +2596,8 @@
       "currency": null,
       "sourceUrl": "https://emp.lbl.gov/publications/queued-2025-edition-characteristics",
       "version": "b5ed74e1658abb515d948510662c1e8a921d47b411b3e02645c630ae9e95c69d",
-      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+      "checkMode": "manual_fact_ledger",
+      "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
     },
     {
       "metricId": "POWER.interconnection",
@@ -2339,7 +2607,8 @@
       "currency": null,
       "sourceUrl": "https://emp.lbl.gov/queues",
       "version": "d39ffe41f6be630198ae45b2b0ed7c08b6ebc27f391479c5bcfa1279941ebc13",
-      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+      "checkMode": "manual_fact_ledger",
+      "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
     },
     {
       "metricId": "GOOG.backlog",
@@ -2349,7 +2618,8 @@
       "currency": "USD",
       "sourceUrl": "https://abc.xyz/investor/events/event-details/2025/2025-Q2-Earnings-Call/",
       "version": "2c0db23410edd83ca2a6f1de4517a7d4b9d045348c310ed7432098cedeec1bf3",
-      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+      "checkMode": "manual_fact_ledger",
+      "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
     },
     {
       "metricId": "GOOG.backlog",
@@ -2359,7 +2629,8 @@
       "currency": "USD",
       "sourceUrl": "https://abc.xyz/investor/events/event-details/2025/2025-Q3-Earnings-Call-2025-4OI4Bac_Q9/default.aspx",
       "version": "419bfa811eb7d4a7db048b8521e31864e19cee708f17391c3e3e360e34bd565a",
-      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+      "checkMode": "manual_fact_ledger",
+      "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
     },
     {
       "metricId": "GOOG.backlog",
@@ -2369,7 +2640,8 @@
       "currency": "USD",
       "sourceUrl": "https://abc.xyz/investor/events/event-details/2026/2025-Q4-Earnings-Call-2026-Dr_C033hS6/default.aspx",
       "version": "1b86522a3c892d72d926a6aeaaaa089ba5cb107ea4d735dc505d9b68a58ae903",
-      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+      "checkMode": "manual_fact_ledger",
+      "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
     },
     {
       "metricId": "ETN.gross_margin",
@@ -2379,7 +2651,8 @@
       "currency": null,
       "sourceUrl": "https://www.eaton.com/content/dam/eaton/company/investor-relations/quarterly-earnings/filings/2025/q4/4Q-2025-earnings-complete.pdf",
       "version": "d27ac35b28c41eabfddb8e10678433b6cc1144b8dd78ed7ee6ae66482bb14164",
-      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+      "checkMode": "manual_fact_ledger",
+      "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
     },
     {
       "metricId": "ETN.gross_margin",
@@ -2389,7 +2662,8 @@
       "currency": null,
       "sourceUrl": "https://www.eaton.com/content/dam/eaton/company/investor-relations/quarterly-earnings/filings/2025/q4/4Q-2025-earnings-complete.pdf",
       "version": "8cf0fb31f9f084a2532340215b906578fb804d78e8be0b5188db096034590607",
-      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+      "checkMode": "manual_fact_ledger",
+      "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
     },
     {
       "metricId": "ETN.gross_margin",
@@ -2399,7 +2673,41 @@
       "currency": null,
       "sourceUrl": "https://www.eaton.com/content/dam/eaton/company/investor-relations/quarterly-earnings/filings/2026/q1/q1-2026-earnings-complete.pdf",
       "version": "7229b7e25a3944fbf8393aba8490d8c5dd57dfca183c7a7000416fc1e3183605",
-      "check": "matched separately reviewed official source facts and independently recomputed units/formula; not an automated source audit"
+      "checkMode": "manual_fact_ledger",
+      "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
+    },
+    {
+      "metricId": "MU.inventory_days",
+      "periodEnd": "2025-11-27",
+      "value": 125.64282141070535,
+      "unit": "天",
+      "currency": null,
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312525000046/mu-20251127.htm",
+      "version": "42ae83008f155618f73123ba60ba99f15489a73e618ef19fbdb49e03bb666577",
+      "checkMode": "manual_fact_ledger",
+      "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
+    },
+    {
+      "metricId": "MU.inventory_days",
+      "periodEnd": "2026-02-26",
+      "value": 122.76429156429157,
+      "unit": "天",
+      "currency": null,
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312526000006/mu-20260226.htm",
+      "version": "f45c6823c9852074bba33399e4ebbb8d2a8de1f9a3a5989eabc1f70f07408988",
+      "checkMode": "manual_fact_ledger",
+      "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
+    },
+    {
+      "metricId": "MU.inventory_days",
+      "periodEnd": "2026-05-28",
+      "value": 119.67921875,
+      "unit": "天",
+      "currency": null,
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312526000015/mu-20260528.htm",
+      "version": "03b5ae4e1f4ddb7c5f99523149ab0407ec6d448e4e94387d164469845a089ca9",
+      "checkMode": "manual_fact_ledger",
+      "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
     }
   ]
 }
