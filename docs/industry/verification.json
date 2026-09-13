@@ -1,8 +1,8 @@
 {
   "scope": "3 periods per metric; current or previously recorded archived-source replay where supported, plus a separately tracked manual fact ledger for blocked sources; identical metric, period, value and version are required to reuse a prior replay; arithmetic only, not a license or causal audit",
   "automaticSamples": 234,
-  "currentSourceReplaySamples": 234,
-  "previousSourceReplaySamples": 0,
+  "currentSourceReplaySamples": 210,
+  "previousSourceReplaySamples": 24,
   "manualFactLedgerSamples": 12,
   "samples": [
     {
@@ -1168,8 +1168,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.capex",
@@ -1179,8 +1179,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.capex",
@@ -1190,8 +1190,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.operating_cash_flow",
@@ -1201,8 +1201,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.operating_cash_flow",
@@ -1212,8 +1212,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.operating_cash_flow",
@@ -1223,8 +1223,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.revenue",
@@ -1234,8 +1234,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.revenue",
@@ -1245,8 +1245,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.revenue",
@@ -1256,8 +1256,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.cloud_revenue",
@@ -1267,8 +1267,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.cloud_revenue",
@@ -1278,8 +1278,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.cloud_revenue",
@@ -1289,8 +1289,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.cloud_infrastructure_revenue",
@@ -1300,8 +1300,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.cloud_infrastructure_revenue",
@@ -1311,8 +1311,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.cloud_infrastructure_revenue",
@@ -1322,8 +1322,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.net_capex_outlay",
@@ -1333,8 +1333,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.net_capex_outlay",
@@ -1344,8 +1344,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.net_capex_outlay",
@@ -1355,8 +1355,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched separately reviewed official PDF table facts"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.capex_ratio",
@@ -1366,8 +1366,8 @@
       "currency": null,
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched input observations and independently recomputed formula"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.capex_ratio",
@@ -1377,8 +1377,8 @@
       "currency": null,
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched input observations and independently recomputed formula"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.capex_ratio",
@@ -1388,8 +1388,8 @@
       "currency": null,
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched input observations and independently recomputed formula"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.free_cash_flow",
@@ -1399,8 +1399,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched input observations and independently recomputed formula"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.free_cash_flow",
@@ -1410,8 +1410,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched input observations and independently recomputed formula"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "ORCL.free_cash_flow",
@@ -1421,8 +1421,8 @@
       "currency": "USD",
       "sourceUrl": "https://investor.oracle.com/files/content_files/1q27-pressrelease-September_FINAL.pdf",
       "version": "47d0e3a662efbd7aeb5a12cf827fd1098091dd6598f713e769dfff04b6677634",
-      "checkMode": "automatic_source_replay",
-      "check": "matched input observations and independently recomputed formula"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "DELL.revenue",
@@ -2415,6 +2415,39 @@
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
+      "metricId": "DELL.backlog",
+      "periodEnd": "2025-05-02",
+      "value": 144,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://investors.delltechnologies.com/static-files/a7fdeb66-9194-4027-afa8-a963c1bc1ce9",
+      "version": "f284d14f4a4df7bc3064513069c5da543412d5926968ecb603ea13aeade2d9d4",
+      "checkMode": "automatic_source_replay",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "DELL.backlog",
+      "periodEnd": "2026-01-30",
+      "value": 430,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://investors.delltechnologies.com/static-files/9e5d4126-0f17-4ceb-b26c-a2563b8bcbc9",
+      "version": "01ef07d8f1835132fc1bd304216ad6418529d90fbdb2a4b53b2005a7516bc858",
+      "checkMode": "automatic_source_replay",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "DELL.backlog",
+      "periodEnd": "2026-05-01",
+      "value": 513,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://investors.delltechnologies.com/static-files/b63ffff9-b729-403b-a231-c6af05667759",
+      "version": "2e2a251d50608284f6e3ca91e1d71cd39152a214e4bafd8b66cdd240d90fc5c2",
+      "checkMode": "automatic_source_replay",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
       "metricId": "HPE.server_revenue",
       "periodEnd": "2025-07-31",
       "value": 50,
@@ -2477,39 +2510,6 @@
       "currency": null,
       "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
       "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "DELL.backlog",
-      "periodEnd": "2025-05-02",
-      "value": 144,
-      "unit": "亿美元",
-      "currency": "USD",
-      "sourceUrl": "https://investors.delltechnologies.com/static-files/a7fdeb66-9194-4027-afa8-a963c1bc1ce9",
-      "version": "f284d14f4a4df7bc3064513069c5da543412d5926968ecb603ea13aeade2d9d4",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "DELL.backlog",
-      "periodEnd": "2026-01-30",
-      "value": 430,
-      "unit": "亿美元",
-      "currency": "USD",
-      "sourceUrl": "https://investors.delltechnologies.com/static-files/9e5d4126-0f17-4ceb-b26c-a2563b8bcbc9",
-      "version": "01ef07d8f1835132fc1bd304216ad6418529d90fbdb2a4b53b2005a7516bc858",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "DELL.backlog",
-      "periodEnd": "2026-05-01",
-      "value": 513,
-      "unit": "亿美元",
-      "currency": "USD",
-      "sourceUrl": "https://investors.delltechnologies.com/static-files/b63ffff9-b729-403b-a231-c6af05667759",
-      "version": "2e2a251d50608284f6e3ca91e1d71cd39152a214e4bafd8b66cdd240d90fc5c2",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },

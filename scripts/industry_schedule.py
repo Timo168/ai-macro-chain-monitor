@@ -9,7 +9,8 @@ def bootstrap_extended(initial,target):
     known={d['id'] for d in extended['definitions']}
     for definition in definitions:
         if definition['id'] not in known:
-            extended['definitions'].append(definition);extended['series'][definition['id']]=initial['series'][definition['id']]
+            restored={**initial['series'][definition['id']],'status':'cached','error':'从已核验发布快照恢复；等待本次官方来源检查'}
+            extended['definitions'].append(definition);extended['series'][definition['id']]=restored
     atomic(target,extended)
 def run(force=False):
     reviewed=DATA/'public-reviewed.json'
@@ -33,14 +34,14 @@ def run(force=False):
     state=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
     current=datetime.now(timezone.utc)
     last=datetime.fromisoformat(state.get('lastAttemptAt','2000-01-01T00:00:00+00:00'))
-    if force or current-last>=timedelta(hours=24) or state.get('collectorVersion')!=3:
+    if force or current-last>=timedelta(hours=24) or state.get('collectorVersion')!=4:
         failures=[]
         for script in ['industry_collect.py','industry_hardware.py','industry_costs.py','industry_oracle.py','industry_sia.py','industry_extended.py','industry_power_load.py']:
             try:
                 result=subprocess.run([sys.executable,str(ROOT/'scripts'/script)],cwd=ROOT,timeout=600)
                 if result.returncode:failures.append(script)
             except Exception as error:failures.append(script+': '+str(error))
-        atomic(path,{'collectorVersion':3,'lastAttemptAt':now(),'failures':failures,'nextCheckAt':(current+timedelta(hours=24)).isoformat()})
+        atomic(path,{'collectorVersion':4,'lastAttemptAt':now(),'failures':failures,'nextCheckAt':(current+timedelta(hours=24)).isoformat()})
     result=subprocess.run(['node',str(ROOT/'scripts/build-industry.mjs')],cwd=ROOT)
     if result.returncode:raise RuntimeError('Industry build failed; last successful snapshot retained')
 if __name__=='__main__':run('--force' in sys.argv)

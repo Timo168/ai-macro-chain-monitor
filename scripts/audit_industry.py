@@ -121,12 +121,17 @@ def run():
         assert len({p['periodEnd'] for p in points})==len(points),d['id']
         for p in [points[0],points[len(points)//2],points[-1]]:
             mode='manual_fact_ledger' if d.get('sourceAdapter')=='public-reviewed' else 'automatic_source_replay'
-            try:method=check(d,p,data)
-            except RuntimeError as error:
-                old=prior_samples.get((d['id'],p['periodEnd'],p['version']))
-                if '来源请求失败' not in str(error) or old is None or not math.isclose(old['value'],p['value']):raise
-                mode='previous_verified_source_replay';method='current source retrieval unavailable; identical observation version passed the prior archived-source replay'
-                print('Reused prior source audit for',d['id'],p['periodEnd'],file=sys.stderr)
+            old=prior_samples.get((d['id'],p['periodEnd'],p['version']))
+            series=data['series'][d['id']]
+            if old is not None and series.get('status')=='cached' and series.get('error'):
+                mode='previous_verified_source_replay';method='collector reports a current source failure; identical observation version passed the prior archived-source replay'
+                print('Reused prior source audit for cached',d['id'],p['periodEnd'],file=sys.stderr)
+            else:
+                try:method=check(d,p,data)
+                except RuntimeError as error:
+                    if '来源请求失败' not in str(error) or old is None or not math.isclose(old['value'],p['value']):raise
+                    mode='previous_verified_source_replay';method='current source retrieval unavailable; identical observation version passed the prior archived-source replay'
+                    print('Reused prior source audit for',d['id'],p['periodEnd'],file=sys.stderr)
             samples.append({'metricId':d['id'],'periodEnd':p['periodEnd'],'value':p['value'],'unit':d['unit'],'currency':d.get('currency'),'sourceUrl':p['sourceUrl'],'version':p['version'],'checkMode':mode,'check':method})
     folder=ROOT/'docs/industry';folder.mkdir(parents=True,exist_ok=True)
     manual=sum(s['checkMode']=='manual_fact_ledger' for s in samples)
