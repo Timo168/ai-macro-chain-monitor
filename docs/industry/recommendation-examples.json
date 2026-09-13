@@ -1,13 +1,13 @@
 [
   {
-    "id": "cloud-5713eef9",
+    "id": "cloud-fce6eef1",
     "targetType": "industry",
     "targetId": "cloud",
     "targetName": "AI云计算平台",
     "level": "neutral_hold",
     "confidence": "medium",
     "horizon": "medium",
-    "generatedAt": "2026-09-13T03:58:28.294Z",
+    "generatedAt": "2026-09-13T08:49:26.353Z",
     "dataCutoffAt": "2026-06-30",
     "positiveEvidence": [
       {
@@ -307,6 +307,14 @@
         "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
         "periodEnd": "2026-06-30",
         "dimension": "costs"
+      },
+      {
+        "metricId": "POWER.equipment_price",
+        "observationVersion": "2d42bc2c809b7a2844077b7a8f660ec275844c93fe446ff2a61d93a04739b062",
+        "direction": "negative",
+        "explanation": "美国BLS 电力及配电变压器生产者价格指数：2026-07-31，同比 8.71%，上期增速 4.09%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-07-31",
+        "dimension": "costs"
       }
     ],
     "neutralEvidence": [
@@ -325,7 +333,6 @@
     ],
     "watchMetrics": [
       "ORCL.free_cash_flow",
-      "POWER.equipment_price",
       "GOOG.backlog",
       "AMZN.backlog",
       "ORCL.cloud_margin",
@@ -367,10 +374,11 @@
       "EIA.TX.commercial",
       "EIA.TX.industrial",
       "EIA.OH.commercial",
-      "EIA.OH.industrial"
+      "EIA.OH.industrial",
+      "POWER.equipment_price"
     ],
     "ruleVersion": "industry-1.0.1",
-    "previousRecommendationId": "cloud-367b358c",
+    "previousRecommendationId": "cloud-5713eef9",
     "previousLevel": "neutral_hold",
     "reason": "正面与反向信号并存，尚未形成一致趋势。",
     "dimensions": [
@@ -443,31 +451,31 @@
           "EIA.GA.commercial",
           "EIA.GA.industrial",
           "EIA.AZ.commercial",
-          "EIA.AZ.industrial"
+          "EIA.AZ.industrial",
+          "POWER.equipment_price"
         ]
       }
     ],
     "missingMetrics": [
       "ORCL.free_cash_flow",
-      "POWER.equipment_price",
       "GOOG.backlog",
       "AMZN.backlog",
       "ORCL.cloud_margin",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity"
     ],
-    "coverage": 0.8444444444444444,
+    "coverage": 0.8666666666666667,
     "changeReason": "中性持有 → 中性持有。正面与反向信号并存，尚未形成一致趋势。 数据或有效性版本发生变化。"
   },
   {
-    "id": "data_centers-41b4da4f",
+    "id": "data_centers-33bc4ddb",
     "targetType": "industry",
     "targetId": "data_centers",
     "targetName": "数据中心建设",
     "level": "insufficient_data",
     "confidence": "low",
     "horizon": "medium",
-    "generatedAt": "2026-09-13T03:58:28.294Z",
+    "generatedAt": "2026-09-13T08:49:26.353Z",
     "dataCutoffAt": "2026-06-30",
     "positiveEvidence": [
       {
@@ -767,6 +775,14 @@
         "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
         "periodEnd": "2026-06-30",
         "dimension": "costs"
+      },
+      {
+        "metricId": "POWER.equipment_price",
+        "observationVersion": "2d42bc2c809b7a2844077b7a8f660ec275844c93fe446ff2a61d93a04739b062",
+        "direction": "negative",
+        "explanation": "美国BLS 电力及配电变压器生产者价格指数：2026-07-31，同比 8.71%，上期增速 4.09%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-07-31",
+        "dimension": "costs"
       }
     ],
     "neutralEvidence": [
@@ -785,7 +801,6 @@
     ],
     "watchMetrics": [
       "ORCL.free_cash_flow",
-      "POWER.equipment_price",
       "GOOG.backlog",
       "AMZN.backlog",
       "ORCL.cloud_margin",
@@ -827,10 +842,11 @@
       "EIA.TX.commercial",
       "EIA.TX.industrial",
       "EIA.OH.commercial",
-      "EIA.OH.industrial"
+      "EIA.OH.industrial",
+      "POWER.equipment_price"
     ],
     "ruleVersion": "industry-1.0.1",
-    "previousRecommendationId": "data_centers-3ecfe3b6",
+    "previousRecommendationId": "data_centers-41b4da4f",
     "previousLevel": "insufficient_data",
     "reason": "关键证据尚未齐备：建设进度",
     "dimensions": [
@@ -903,31 +919,31 @@
           "EIA.GA.commercial",
           "EIA.GA.industrial",
           "EIA.AZ.commercial",
-          "EIA.AZ.industrial"
+          "EIA.AZ.industrial",
+          "POWER.equipment_price"
         ]
       }
     ],
     "missingMetrics": [
       "ORCL.free_cash_flow",
-      "POWER.equipment_price",
       "GOOG.backlog",
       "AMZN.backlog",
       "ORCL.cloud_margin",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity"
     ],
-    "coverage": 0.8444444444444444,
+    "coverage": 0.8666666666666667,
     "changeReason": "暂不形成建议 → 暂不形成建议。关键证据尚未齐备：建设进度 数据或有效性版本发生变化。"
   },
   {
-    "id": "power-c888a9fa",
+    "id": "power-e3830b9b",
     "targetType": "industry",
     "targetId": "power",
     "targetName": "电力及配电设备",
     "level": "insufficient_data",
     "confidence": "low",
     "horizon": "medium",
-    "generatedAt": "2026-09-13T03:58:28.294Z",
+    "generatedAt": "2026-09-13T08:49:26.353Z",
     "dataCutoffAt": "2026-06-30",
     "positiveEvidence": [
       {
@@ -1091,6 +1107,14 @@
         "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
         "periodEnd": "2026-06-30",
         "dimension": "costs"
+      },
+      {
+        "metricId": "POWER.equipment_price",
+        "observationVersion": "2d42bc2c809b7a2844077b7a8f660ec275844c93fe446ff2a61d93a04739b062",
+        "direction": "negative",
+        "explanation": "美国BLS 电力及配电变压器生产者价格指数：2026-07-31，同比 8.71%，上期增速 4.09%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-07-31",
+        "dimension": "costs"
       }
     ],
     "neutralEvidence": [],
@@ -1099,7 +1123,6 @@
       "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
     ],
     "watchMetrics": [
-      "POWER.equipment_price",
       "ETN.gross_margin",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity",
@@ -1123,10 +1146,11 @@
       "EIA.TX.commercial",
       "EIA.TX.industrial",
       "EIA.OH.commercial",
-      "EIA.OH.industrial"
+      "EIA.OH.industrial",
+      "POWER.equipment_price"
     ],
     "ruleVersion": "industry-1.0.1",
-    "previousRecommendationId": "power-fc122f44",
+    "previousRecommendationId": "power-c888a9fa",
     "previousLevel": "insufficient_data",
     "reason": "关键证据尚未齐备：实际需求、建设进度、盈利兑现",
     "dimensions": [
@@ -1179,29 +1203,29 @@
           "EIA.GA.commercial",
           "EIA.GA.industrial",
           "EIA.AZ.commercial",
-          "EIA.AZ.industrial"
+          "EIA.AZ.industrial",
+          "POWER.equipment_price"
         ]
       }
     ],
     "missingMetrics": [
-      "POWER.equipment_price",
       "ETN.gross_margin",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity",
       "VRT.backlog"
     ],
-    "coverage": 0.8,
+    "coverage": 0.84,
     "changeReason": "暂不形成建议 → 暂不形成建议。关键证据尚未齐备：实际需求、建设进度、盈利兑现 数据或有效性版本发生变化。"
   },
   {
-    "id": "servers-978fd8fb",
+    "id": "servers-e45cb9d",
     "targetType": "industry",
     "targetId": "servers",
     "targetName": "AI服务器与网络设备",
     "level": "neutral_hold",
     "confidence": "medium",
     "horizon": "medium",
-    "generatedAt": "2026-09-13T03:58:28.294Z",
+    "generatedAt": "2026-09-13T08:49:26.353Z",
     "dataCutoffAt": "2026-05-01",
     "positiveEvidence": [
       {
@@ -1415,6 +1439,14 @@
         "dimension": "costs"
       },
       {
+        "metricId": "POWER.equipment_price",
+        "observationVersion": "2d42bc2c809b7a2844077b7a8f660ec275844c93fe446ff2a61d93a04739b062",
+        "direction": "negative",
+        "explanation": "美国BLS 电力及配电变压器生产者价格指数：2026-07-31，同比 8.71%，上期增速 4.09%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-07-31",
+        "dimension": "costs"
+      },
+      {
         "metricId": "DELL.inventory_days",
         "observationVersion": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
         "direction": "negative",
@@ -1429,7 +1461,6 @@
       "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
     ],
     "watchMetrics": [
-      "POWER.equipment_price",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity",
       "MSFT.capex",
@@ -1458,11 +1489,12 @@
       "EIA.TX.industrial",
       "EIA.OH.commercial",
       "EIA.OH.industrial",
+      "POWER.equipment_price",
       "DELL.inventory_days"
     ],
     "ruleVersion": "industry-1.0.1",
-    "previousRecommendationId": "servers-fae432c",
-    "previousLevel": "gradual_attention",
+    "previousRecommendationId": "servers-1ea7c2a1",
+    "previousLevel": "neutral_hold",
     "reason": "正面与反向信号并存，尚未形成一致趋势。",
     "dimensions": [
       {
@@ -1500,8 +1532,8 @@
         "state": "neutral",
         "metricIds": [
           "DELL.gross_margin",
-          "DELL.inventory_days",
-          "HPE.gross_margin"
+          "HPE.gross_margin",
+          "DELL.inventory_days"
         ]
       },
       {
@@ -1523,27 +1555,27 @@
           "EIA.GA.commercial",
           "EIA.GA.industrial",
           "EIA.AZ.commercial",
-          "EIA.AZ.industrial"
+          "EIA.AZ.industrial",
+          "POWER.equipment_price"
         ]
       }
     ],
     "missingMetrics": [
-      "POWER.equipment_price",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity"
     ],
-    "coverage": 0.9,
-    "changeReason": "分批关注 → 中性持有。正面与反向信号并存，尚未形成一致趋势。 数据或有效性版本发生变化。"
+    "coverage": 0.9333333333333333,
+    "changeReason": "中性持有 → 中性持有。正面与反向信号并存，尚未形成一致趋势。 数据或有效性版本发生变化。"
   },
   {
-    "id": "accelerators-35242eef",
+    "id": "accelerators-35b861a3",
     "targetType": "industry",
     "targetId": "accelerators",
     "targetName": "半导体及AI加速器",
     "level": "gradual_attention",
     "confidence": "medium",
     "horizon": "medium",
-    "generatedAt": "2026-09-13T03:53:44.918Z",
+    "generatedAt": "2026-09-13T08:49:26.353Z",
     "dataCutoffAt": "2026-06-27",
     "positiveEvidence": [
       {
@@ -1739,6 +1771,14 @@
         "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
         "periodEnd": "2026-06-30",
         "dimension": "costs"
+      },
+      {
+        "metricId": "POWER.equipment_price",
+        "observationVersion": "2d42bc2c809b7a2844077b7a8f660ec275844c93fe446ff2a61d93a04739b062",
+        "direction": "negative",
+        "explanation": "美国BLS 电力及配电变压器生产者价格指数：2026-07-31，同比 8.71%，上期增速 4.09%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-07-31",
+        "dimension": "costs"
       }
     ],
     "neutralEvidence": [],
@@ -1747,7 +1787,6 @@
       "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
     ],
     "watchMetrics": [
-      "POWER.equipment_price",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity",
       "MSFT.capex",
@@ -1773,10 +1812,11 @@
       "EIA.TX.commercial",
       "EIA.TX.industrial",
       "EIA.OH.commercial",
-      "EIA.OH.industrial"
+      "EIA.OH.industrial",
+      "POWER.equipment_price"
     ],
     "ruleVersion": "industry-1.0.1",
-    "previousRecommendationId": "accelerators-a0a2a33c",
+    "previousRecommendationId": "accelerators-35242eef",
     "previousLevel": "gradual_attention",
     "reason": "至少三个维度为正面，但其他维度或反向证据仍需验证。",
     "dimensions": [
@@ -1835,27 +1875,27 @@
           "EIA.GA.commercial",
           "EIA.GA.industrial",
           "EIA.AZ.commercial",
-          "EIA.AZ.industrial"
+          "EIA.AZ.industrial",
+          "POWER.equipment_price"
         ]
       }
     ],
     "missingMetrics": [
-      "POWER.equipment_price",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity"
     ],
-    "coverage": 0.8888888888888888,
+    "coverage": 0.9259259259259259,
     "changeReason": "分批关注 → 分批关注。至少三个维度为正面，但其他维度或反向证据仍需验证。 数据或有效性版本发生变化。"
   },
   {
-    "id": "foundry-1183f0b2",
+    "id": "foundry-22a1f914",
     "targetType": "industry",
     "targetId": "foundry",
     "targetName": "晶圆代工",
     "level": "insufficient_data",
     "confidence": "low",
     "horizon": "medium",
-    "generatedAt": "2026-09-13T03:53:44.918Z",
+    "generatedAt": "2026-09-13T08:49:26.353Z",
     "dataCutoffAt": "2026-06-30",
     "positiveEvidence": [
       {
@@ -2019,6 +2059,14 @@
         "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
         "periodEnd": "2026-06-30",
         "dimension": "costs"
+      },
+      {
+        "metricId": "POWER.equipment_price",
+        "observationVersion": "2d42bc2c809b7a2844077b7a8f660ec275844c93fe446ff2a61d93a04739b062",
+        "direction": "negative",
+        "explanation": "美国BLS 电力及配电变压器生产者价格指数：2026-07-31，同比 8.71%，上期增速 4.09%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-07-31",
+        "dimension": "costs"
       }
     ],
     "neutralEvidence": [],
@@ -2027,7 +2075,6 @@
       "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
     ],
     "watchMetrics": [
-      "POWER.equipment_price",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity",
       "MSFT.capex",
@@ -2049,10 +2096,11 @@
       "EIA.TX.commercial",
       "EIA.TX.industrial",
       "EIA.OH.commercial",
-      "EIA.OH.industrial"
+      "EIA.OH.industrial",
+      "POWER.equipment_price"
     ],
     "ruleVersion": "industry-1.0.1",
-    "previousRecommendationId": "foundry-ad3e7177",
+    "previousRecommendationId": "foundry-1183f0b2",
     "previousLevel": "insufficient_data",
     "reason": "关键证据尚未齐备：实际需求、盈利兑现",
     "dimensions": [
@@ -2105,27 +2153,27 @@
           "EIA.GA.commercial",
           "EIA.GA.industrial",
           "EIA.AZ.commercial",
-          "EIA.AZ.industrial"
+          "EIA.AZ.industrial",
+          "POWER.equipment_price"
         ]
       }
     ],
     "missingMetrics": [
-      "POWER.equipment_price",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity"
     ],
-    "coverage": 0.8695652173913043,
+    "coverage": 0.9130434782608695,
     "changeReason": "暂不形成建议 → 暂不形成建议。关键证据尚未齐备：实际需求、盈利兑现 数据或有效性版本发生变化。"
   },
   {
-    "id": "packaging-b21ce18c",
+    "id": "packaging-ccf1de4a",
     "targetType": "industry",
     "targetId": "packaging",
     "targetName": "先进封装",
     "level": "insufficient_data",
     "confidence": "low",
     "horizon": "medium",
-    "generatedAt": "2026-09-13T03:53:44.918Z",
+    "generatedAt": "2026-09-13T08:49:26.353Z",
     "dataCutoffAt": "2026-06-30",
     "positiveEvidence": [
       {
@@ -2289,6 +2337,14 @@
         "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
         "periodEnd": "2026-06-30",
         "dimension": "costs"
+      },
+      {
+        "metricId": "POWER.equipment_price",
+        "observationVersion": "2d42bc2c809b7a2844077b7a8f660ec275844c93fe446ff2a61d93a04739b062",
+        "direction": "negative",
+        "explanation": "美国BLS 电力及配电变压器生产者价格指数：2026-07-31，同比 8.71%，上期增速 4.09%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-07-31",
+        "dimension": "costs"
       }
     ],
     "neutralEvidence": [],
@@ -2297,7 +2353,6 @@
       "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
     ],
     "watchMetrics": [
-      "POWER.equipment_price",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity",
       "MSFT.capex",
@@ -2319,10 +2374,11 @@
       "EIA.TX.commercial",
       "EIA.TX.industrial",
       "EIA.OH.commercial",
-      "EIA.OH.industrial"
+      "EIA.OH.industrial",
+      "POWER.equipment_price"
     ],
     "ruleVersion": "industry-1.0.1",
-    "previousRecommendationId": "packaging-4263cf01",
+    "previousRecommendationId": "packaging-b21ce18c",
     "previousLevel": "insufficient_data",
     "reason": "关键证据尚未齐备：实际需求、建设进度、盈利兑现",
     "dimensions": [
@@ -2375,27 +2431,27 @@
           "EIA.GA.commercial",
           "EIA.GA.industrial",
           "EIA.AZ.commercial",
-          "EIA.AZ.industrial"
+          "EIA.AZ.industrial",
+          "POWER.equipment_price"
         ]
       }
     ],
     "missingMetrics": [
-      "POWER.equipment_price",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity"
     ],
-    "coverage": 0.8695652173913043,
+    "coverage": 0.9130434782608695,
     "changeReason": "暂不形成建议 → 暂不形成建议。关键证据尚未齐备：实际需求、建设进度、盈利兑现 数据或有效性版本发生变化。"
   },
   {
-    "id": "memory-1e20c558",
+    "id": "memory-a8b5827b",
     "targetType": "industry",
     "targetId": "memory",
     "targetName": "HBM及存储",
     "level": "insufficient_data",
     "confidence": "low",
     "horizon": "medium",
-    "generatedAt": "2026-09-13T03:53:44.918Z",
+    "generatedAt": "2026-09-13T08:49:26.353Z",
     "dataCutoffAt": "2026-06-30",
     "positiveEvidence": [
       {
@@ -2559,6 +2615,14 @@
         "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
         "periodEnd": "2026-06-30",
         "dimension": "costs"
+      },
+      {
+        "metricId": "POWER.equipment_price",
+        "observationVersion": "2d42bc2c809b7a2844077b7a8f660ec275844c93fe446ff2a61d93a04739b062",
+        "direction": "negative",
+        "explanation": "美国BLS 电力及配电变压器生产者价格指数：2026-07-31，同比 8.71%，上期增速 4.09%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-07-31",
+        "dimension": "costs"
       }
     ],
     "neutralEvidence": [],
@@ -2567,7 +2631,6 @@
       "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
     ],
     "watchMetrics": [
-      "POWER.equipment_price",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity",
       "MU.inventory_days",
@@ -2590,10 +2653,11 @@
       "EIA.TX.commercial",
       "EIA.TX.industrial",
       "EIA.OH.commercial",
-      "EIA.OH.industrial"
+      "EIA.OH.industrial",
+      "POWER.equipment_price"
     ],
     "ruleVersion": "industry-1.0.1",
-    "previousRecommendationId": "memory-653be999",
+    "previousRecommendationId": "memory-1e20c558",
     "previousLevel": "insufficient_data",
     "reason": "关键证据尚未齐备：实际需求、盈利兑现",
     "dimensions": [
@@ -2646,28 +2710,28 @@
           "EIA.GA.commercial",
           "EIA.GA.industrial",
           "EIA.AZ.commercial",
-          "EIA.AZ.industrial"
+          "EIA.AZ.industrial",
+          "POWER.equipment_price"
         ]
       }
     ],
     "missingMetrics": [
-      "POWER.equipment_price",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity",
       "MU.inventory_days"
     ],
-    "coverage": 0.8333333333333334,
+    "coverage": 0.875,
     "changeReason": "暂不形成建议 → 暂不形成建议。关键证据尚未齐备：实际需求、盈利兑现 数据或有效性版本发生变化。"
   },
   {
-    "id": "materials-c10a2351",
+    "id": "materials-4f4eafb8",
     "targetType": "industry",
     "targetId": "materials",
     "targetName": "铜、铝等上游材料",
     "level": "insufficient_data",
     "confidence": "low",
     "horizon": "medium",
-    "generatedAt": "2026-09-13T03:53:44.918Z",
+    "generatedAt": "2026-09-13T08:49:26.353Z",
     "dataCutoffAt": "2026-06-30",
     "positiveEvidence": [
       {
@@ -2791,6 +2855,14 @@
         "explanation": "OH 俄亥俄州工业电价：2026-06-30，同比 14.20%，上期增速 29.70%。仅作为成本背景，不证明需求。",
         "periodEnd": "2026-06-30",
         "dimension": "costs"
+      },
+      {
+        "metricId": "POWER.equipment_price",
+        "observationVersion": "2d42bc2c809b7a2844077b7a8f660ec275844c93fe446ff2a61d93a04739b062",
+        "direction": "negative",
+        "explanation": "美国BLS 电力及配电变压器生产者价格指数：2026-07-31，同比 8.71%，上期增速 4.09%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-07-31",
+        "dimension": "costs"
       }
     ],
     "neutralEvidence": [],
@@ -2799,7 +2871,6 @@
       "资本开支与订单、收入或盈利中至少两类同比增速连续两个报告期下降时，转入谨慎评估。"
     ],
     "watchMetrics": [
-      "POWER.equipment_price",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity",
       "WB.natural_gas",
@@ -2816,10 +2887,11 @@
       "EIA.TX.commercial",
       "EIA.TX.industrial",
       "EIA.OH.commercial",
-      "EIA.OH.industrial"
+      "EIA.OH.industrial",
+      "POWER.equipment_price"
     ],
     "ruleVersion": "industry-1.0.1",
-    "previousRecommendationId": "materials-1dac2c32",
+    "previousRecommendationId": "materials-c10a2351",
     "previousLevel": "insufficient_data",
     "reason": "关键证据尚未齐备：投资投入、实际需求、盈利兑现",
     "dimensions": [
@@ -2866,27 +2938,27 @@
           "EIA.GA.commercial",
           "EIA.GA.industrial",
           "EIA.AZ.commercial",
-          "EIA.AZ.industrial"
+          "EIA.AZ.industrial",
+          "POWER.equipment_price"
         ]
       }
     ],
     "missingMetrics": [
-      "POWER.equipment_price",
       "PROJECT.operational_capacity",
       "PROJECT.construction_capacity"
     ],
-    "coverage": 0.8333333333333334,
+    "coverage": 0.8888888888888888,
     "changeReason": "暂不形成建议 → 暂不形成建议。关键证据尚未齐备：投资投入、实际需求、盈利兑现 数据或有效性版本发生变化。"
   },
   {
-    "id": "overall-50f19dd9",
+    "id": "overall-2a08ba9a",
     "targetType": "industry",
     "targetId": "overall",
     "targetName": "AI产业链整体",
     "level": "insufficient_data",
     "confidence": "low",
     "horizon": "medium",
-    "generatedAt": "2026-09-13T03:58:28.294Z",
+    "generatedAt": "2026-09-13T08:49:26.353Z",
     "dataCutoffAt": "2026-05-01",
     "positiveEvidence": [
       {
@@ -3252,6 +3324,14 @@
         "dimension": "costs"
       },
       {
+        "metricId": "POWER.equipment_price",
+        "observationVersion": "2d42bc2c809b7a2844077b7a8f660ec275844c93fe446ff2a61d93a04739b062",
+        "direction": "negative",
+        "explanation": "美国BLS 电力及配电变压器生产者价格指数：2026-07-31，同比 8.71%，上期增速 4.09%。仅作为成本背景，不证明需求。",
+        "periodEnd": "2026-07-31",
+        "dimension": "costs"
+      },
+      {
         "metricId": "DELL.inventory_days",
         "observationVersion": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
         "direction": "negative",
@@ -3276,7 +3356,6 @@
     ],
     "watchMetrics": [
       "ORCL.free_cash_flow",
-      "POWER.equipment_price",
       "GOOG.backlog",
       "AMZN.backlog",
       "ORCL.cloud_margin",
@@ -3329,10 +3408,11 @@
       "EIA.TX.industrial",
       "EIA.OH.commercial",
       "EIA.OH.industrial",
+      "POWER.equipment_price",
       "DELL.inventory_days"
     ],
     "ruleVersion": "industry-1.0.1",
-    "previousRecommendationId": "overall-e0861615",
+    "previousRecommendationId": "overall-50f19dd9",
     "previousLevel": "insufficient_data",
     "reason": "关键证据尚未齐备：建设进度",
     "dimensions": [
@@ -3414,13 +3494,13 @@
           "EIA.GA.commercial",
           "EIA.GA.industrial",
           "EIA.AZ.commercial",
-          "EIA.AZ.industrial"
+          "EIA.AZ.industrial",
+          "POWER.equipment_price"
         ]
       }
     ],
     "missingMetrics": [
       "ORCL.free_cash_flow",
-      "POWER.equipment_price",
       "GOOG.backlog",
       "AMZN.backlog",
       "ORCL.cloud_margin",
@@ -3429,7 +3509,7 @@
       "VRT.backlog",
       "MU.inventory_days"
     ],
-    "coverage": 0.8392857142857143,
+    "coverage": 0.8571428571428571,
     "changeReason": "暂不形成建议 → 暂不形成建议。关键证据尚未齐备：建设进度 数据或有效性版本发生变化。"
   }
 ]

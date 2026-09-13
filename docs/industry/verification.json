@@ -2102,36 +2102,6 @@
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
-      "metricId": "POWER.equipment_price",
-      "periodEnd": "1981-06-30",
-      "value": 100,
-      "unit": "指数（1981-06=100）",
-      "currency": null,
-      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCU335311335311G",
-      "version": "88ebb052350f0b73059079c45ee920f2136f75a34435dc823dea32285a0c2750",
-      "check": "matched exact observation date in BLS/FRED CSV; native index unchanged"
-    },
-    {
-      "metricId": "POWER.equipment_price",
-      "periodEnd": "1997-01-31",
-      "value": 154.5,
-      "unit": "指数（1981-06=100）",
-      "currency": null,
-      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCU335311335311G",
-      "version": "88ebb052350f0b73059079c45ee920f2136f75a34435dc823dea32285a0c2750",
-      "check": "matched exact observation date in BLS/FRED CSV; native index unchanged"
-    },
-    {
-      "metricId": "POWER.equipment_price",
-      "periodEnd": "2015-05-31",
-      "value": 304.2,
-      "unit": "指数（1981-06=100）",
-      "currency": null,
-      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCU335311335311G",
-      "version": "88ebb052350f0b73059079c45ee920f2136f75a34435dc823dea32285a0c2750",
-      "check": "matched exact observation date in BLS/FRED CSV; native index unchanged"
-    },
-    {
       "metricId": "MSFT.backlog",
       "periodEnd": "2025-06-30",
       "value": 3680,
@@ -2192,34 +2162,34 @@
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
-      "metricId": "DELL.inventory_days",
-      "periodEnd": "2025-05-02",
-      "value": 34.86581530285776,
-      "unit": "天",
+      "metricId": "POWER.equipment_price",
+      "periodEnd": "1999-12-31",
+      "value": 100,
+      "unit": "指数（1999-12=100）",
       "currency": null,
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2026-financial",
-      "version": "455fca62f4f1b1ad47939806cea8801e636ff01471b6bf9f7e5c94fca2f00d4f",
-      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=WPU117409",
+      "version": "172431a324cf1cf59bad48f16c78f8466bb9e5ab083a7de54b147d133997246f",
+      "check": "matched exact observation date in BLS/FRED CSV; native index unchanged"
     },
     {
-      "metricId": "DELL.inventory_days",
-      "periodEnd": "2026-05-01",
-      "value": 32.161661120354964,
-      "unit": "天",
+      "metricId": "POWER.equipment_price",
+      "periodEnd": "2013-04-30",
+      "value": 192.3,
+      "unit": "指数（1999-12=100）",
       "currency": null,
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
-      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
-      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=WPU117409",
+      "version": "63374ff881ccfeddd8897c9d85943a6cc58fb61d9d09d5ffda20519e80d3f10c",
+      "check": "matched exact observation date in BLS/FRED CSV; native index unchanged"
     },
     {
-      "metricId": "DELL.inventory_days",
+      "metricId": "POWER.equipment_price",
       "periodEnd": "2026-07-31",
-      "value": 44.52117605880294,
-      "unit": "天",
+      "value": 381.783,
+      "unit": "指数（1999-12=100）",
       "currency": null,
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
-      "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
-      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=WPU117409",
+      "version": "2d42bc2c809b7a2844077b7a8f660ec275844c93fe446ff2a61d93a04739b062",
+      "check": "matched exact observation date in BLS/FRED CSV; native index unchanged"
     },
     {
       "metricId": "HPE.server_revenue",
@@ -2310,6 +2280,36 @@
       "sourceUrl": "https://investors.delltechnologies.com/static-files/b63ffff9-b729-403b-a231-c6af05667759",
       "version": "2e2a251d50608284f6e3ca91e1d71cd39152a214e4bafd8b66cdd240d90fc5c2",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "DELL.inventory_days",
+      "periodEnd": "2025-05-02",
+      "value": 34.86581530285776,
+      "unit": "天",
+      "currency": null,
+      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2026-financial",
+      "version": "455fca62f4f1b1ad47939806cea8801e636ff01471b6bf9f7e5c94fca2f00d4f",
+      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+    },
+    {
+      "metricId": "DELL.inventory_days",
+      "periodEnd": "2026-05-01",
+      "value": 32.161661120354964,
+      "unit": "天",
+      "currency": null,
+      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
+      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+    },
+    {
+      "metricId": "DELL.inventory_days",
+      "periodEnd": "2026-07-31",
+      "value": 44.52117605880294,
+      "unit": "天",
+      "currency": null,
+      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
+      "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
     },
     {
       "metricId": "POWER.interconnection",

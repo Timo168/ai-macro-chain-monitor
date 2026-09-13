@@ -18,6 +18,12 @@ class RevisionTests(unittest.TestCase):
   self.assertEqual(builder.defs['X']['aggregation'],'none')
   self.assertFalse(builder.defs['X']['recommendationEligible'])
 
+ def test_current_transformer_proxy_never_merges_discontinued_series(self):
+  source=pathlib.Path(__file__).resolve().parents[1]/'scripts'/'industry_extended.py'
+  code=source.read_text(encoding='utf-8')
+  self.assertIn("code='WPU117409'",code)
+  self.assertIn("get('source_series')=='WPU117409'",code)
+
  def test_revision_survives_unchanged_source_hash(self):
   with tempfile.TemporaryDirectory(prefix='industry-test-') as temp,patch.object(common,'DATA',pathlib.Path(temp)):
    path=pathlib.Path(temp)/'cache.json'

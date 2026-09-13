@@ -40,12 +40,12 @@ class Builder:
    self.add('HPE.server_revenue','服务器收入（重述可比口径）','server_revenue','HPE','servers','亿美元',url,stamp,version,end,server[i]/100,{'Server_USD_million':server[i]},method='HPE FY2026组织调整后的Server口径，比较期按公司重述列。含传统与AI服务器，不等于AI服务器销售。百万美元÷100。')
    self.add('HPE.gross_margin','GAAP毛利率','gross_margin','HPE','servers','%',url,stamp,version,end,margins[i],{'reported_percent':margins[i]},method='公司披露GAAP毛利率，比较变化使用百分点。')
  def transformer(self):
-  code='PCU335311335311G';url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+code
+  code='WPU117409';url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+code
   raw,stamp,version=fetch(url)
   for p in parse_csv(raw):
    y,m=map(int,p['date'][:7].split('-'));end=f'{y}-{m:02}-{calendar.monthrange(y,m)[1]}'
    if end>date.today().isoformat():continue
-   self.add('POWER.equipment_price','通用变压器生产者价格指数','equipment_price','美国BLS','power','指数（1981-06=100）',url,stamp,version,end,p['value'],{'source_series':code,'source_observation_date':p['date']},frequency='monthly',kind='proxy',method='BLS/FRED商业、机构及工业用通用变压器，各电压等级；未经季调；1981年6月=100。制造商价格代理，非某项目设备合同报价。')
+   self.add('POWER.equipment_price','电力及配电变压器生产者价格指数','equipment_price','美国BLS','power','指数（1999-12=100）',url,stamp,version,end,p['value'],{'source_series':code,'source_observation_date':p['date']},frequency='monthly',kind='proxy',method='BLS/FRED电力及配电变压器（不含零部件）商品PPI；未经季调；1999年12月=100。制造商价格代理，非某项目设备合同报价。')
  def dell(self):
   reports=[('2025-05-02','FY2026 Q1','a7fdeb66-9194-4027-afa8-a963c1bc1ce9',r'leaving us with a backlog of \$(\d+(?:\.\d+)?) billion'),('2026-01-30','FY2026 Q4','9e5d4126-0f17-4ceb-b26c-a2563b8bcbc9',r'exited with a record \$(\d+(?:\.\d+)?) billion in AI backlog'),('2026-05-01','FY2027 Q1','b63ffff9-b729-403b-a231-c6af05667759',r'exited the quarter with a record \$(\d+(?:\.\d+)?) billion of AI backlog')]
   for end,fiscal,tail,pattern in reports:
@@ -92,7 +92,9 @@ class Builder:
   path=DATA/'extended.json';old=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'definitions':[],'series':{}}
   result={'definitions':list(self.defs.values()),'series':{},'projects':[],'events':[],'generatedAt':now()}
   for id,points in self.points.items():
-   merged={p['periodEnd']:p for p in old['series'].get(id,{}).get('observations',[])};merged.update(points);obs=sorted(merged.values(),key=lambda p:p['periodEnd'])
+   prior=old['series'].get(id,{}).get('observations',[])
+   if id=='POWER.equipment_price':prior=[p for p in prior if p.get('originalItems',{}).get('source_series')=='WPU117409']
+   merged={p['periodEnd']:p for p in prior};merged.update(points);obs=sorted(merged.values(),key=lambda p:p['periodEnd'])
    error=self.errors.get(id) or self.errors.get('PPI' if id.startswith('POWER.') else id.split('.')[0]);result['series'][id]={'observations':obs,'status':'cached' if error else 'ready','fetchedAt':obs[-1]['fetchedAt'],'checkedAt':now(),'error':error}
   for d in old['definitions']:
    if d['id'] not in result['series']:result['definitions'].append(d);result['series'][d['id']]={**old['series'][d['id']],'status':'cached','checkedAt':now(),'error':'来源未返回新数据，保留缓存'}
