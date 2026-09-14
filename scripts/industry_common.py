@@ -1,6 +1,10 @@
 """Provenance and durable revisions shared by industry source adapters."""
 import hashlib,json,os,pathlib,sqlite3,subprocess,urllib.request
 from datetime import datetime,timezone,timedelta
+CREATE_NO_WINDOW=getattr(subprocess,'CREATE_NO_WINDOW',0) if os.name=='nt' else 0
+WINDOWS_STARTUPINFO=None
+if os.name=='nt':
+ WINDOWS_STARTUPINFO=subprocess.STARTUPINFO();WINDOWS_STARTUPINFO.dwFlags|=subprocess.STARTF_USESHOWWINDOW;WINDOWS_STARTUPINFO.wShowWindow=subprocess.SW_HIDE
 ROOT=pathlib.Path(__file__).resolve().parents[1];DATA=ROOT/'data'/'industry';DATA.mkdir(parents=True,exist_ok=True)
 def now():return datetime.now(timezone.utc).isoformat()
 def atomic(path,value):
@@ -12,7 +16,7 @@ def fetch(url,force=False):
  try:
   with urllib.request.urlopen(url,timeout=25) as response:raw=response.read()
  except Exception:
-  proc=subprocess.run(['curl.exe' if os.name=='nt' else 'curl','--fail','--location','--silent','--show-error','--max-time','25',url],capture_output=True)
+  proc=subprocess.run(['curl.exe' if os.name=='nt' else 'curl','--fail','--location','--silent','--show-error','--max-time','25',url],capture_output=True,creationflags=CREATE_NO_WINDOW,startupinfo=WINDOWS_STARTUPINFO)
   if proc.returncode:raise RuntimeError('来源请求失败 HTTP/网络错误；保留上次成功版本')
   raw=proc.stdout
  if len(raw)<100:raise ValueError('来源响应为空或过短')

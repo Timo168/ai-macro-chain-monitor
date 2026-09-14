@@ -1,13 +1,13 @@
 "use client";
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Activity, ArrowUpRight, BarChart3, CircleHelp, Cpu, Database, Globe2, Landmark, Layers3, RefreshCw, Zap, ArrowRight, CalendarDays, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { groups } from '@/lib/groups';
 import { Dataset, metadata, beijing, format, deltaFormat, makeChart, firstValues, sourceLink, colors, frequencyLabel } from '@/lib/data';
-import { metrics, selectRange, monthlyMean, completeMonthlyMean, normalizeCommon } from '@/lib/calculations.mjs';
+import { metrics, selectRange, completeMonthlyMean, normalizeCommon } from '@/lib/calculations.mjs';
 import ChartCard, { RangeButtons } from './chart-card';
 import { useNavigationTools } from './use-navigation-tools';
-import {appBase,dataEndpoint} from '@/lib/runtime';
+import {appBase,dataEndpoint,manifestEndpoint,versionedEndpoint} from '@/lib/runtime';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine } from 'recharts';
 const Industry=lazy(()=>import('./industry/industry'));
 const nav=[['总览',Layers3,'overview'],['美联储与经济',Landmark,'economy'],['能源与原材料',Zap,'materials'],['融资环境',BarChart3,'financing'],['AI产业链关键指标',Cpu,'impact'],['数据说明',Database,'methodology']] as const;
@@ -16,9 +16,9 @@ const subtitles=['追踪资金成本、价格压力与经济需求的变化。',
 const initial:Dataset={generatedAt:'',series:{}};
 export default function Dashboard(){
  const base=appBase();
- const [active,setActive]=useState(0),[range,setRange]=useState('1'),[data,setData]=useState<Dataset>(initial),[refreshing,setRefreshing]=useState(false),[message,setMessage]=useState(''),[error,setError]=useState(false);
- async function refresh(manual=false){setRefreshing(true);try{const r=await fetch(dataEndpoint(),{cache:'no-store'});if(!r.ok)throw Error();const next=await r.json();setData(next as Dataset);setError(false);if(manual)setMessage('已检查后台缓存。观测值仅在来源发布后更新。')}catch{setError(true);setMessage('暂时无法连接后台，保留当前已加载数据。')}finally{setRefreshing(false)}}
- useEffect(()=>{void refresh();const params=new URLSearchParams(location.search);const page=nav.findIndex(n=>n[2]===params.get('page'));if(page>=0)setActive(page);const r=params.get('range');if(r&&['1','3','5','all'].includes(r))setRange(r);const timer=setInterval(()=>void refresh(),300000);const pop=()=>{const p=new URLSearchParams(location.search);setActive(Math.max(0,nav.findIndex(n=>n[2]===p.get('page'))));setRange(p.get('range')??'1')};window.addEventListener('popstate',pop);return()=>{clearInterval(timer);window.removeEventListener('popstate',pop)}},[]);
+ const [active,setActive]=useState(0),[range,setRange]=useState('1'),[data,setData]=useState<Dataset>(initial),[refreshing,setRefreshing]=useState(false),[message,setMessage]=useState(''),[error,setError]=useState(false);const versionRef=useRef('');
+ async function refresh(manual=false){setRefreshing(true);try{let version='';try{const manifest=await fetch(manifestEndpoint(),{cache:'no-store'});if(manifest.ok){const payload=await manifest.json() as {macro?:{version?:string;generatedAt?:string}};version=payload.macro?.version??payload.macro?.generatedAt??'';if(version&&version===versionRef.current){setError(false);if(manual)setMessage('后台缓存没有新版本。');return;}}}catch{}const r=await fetch(versionedEndpoint(dataEndpoint(),version),{cache:'force-cache'});if(!r.ok)throw Error();const next=await r.json() as Dataset;setData(next);versionRef.current=version||next.generatedAt||String(Date.now());setError(false);if(manual)setMessage('已检查后台缓存。观测值仅在来源发布后更新。')}catch{setError(true);setMessage('暂时无法连接后台，保留当前已加载数据。')}finally{setRefreshing(false)}}
+ useEffect(()=>{const read=()=>{const params=new URLSearchParams(location.search);const page=nav.findIndex(n=>n[2]===params.get('page'));if(page>=0)setActive(page);const r=params.get('range');if(r&&['1','3','5','all'].includes(r))setRange(r)};const initial=window.setTimeout(()=>{void refresh();read()},0);const timer=setInterval(()=>{if(!document.hidden)void refresh()},300000);const visible=()=>{if(!document.hidden)void refresh()};window.addEventListener('popstate',read);document.addEventListener('visibilitychange',visible);return()=>{clearTimeout(initial);clearInterval(timer);window.removeEventListener('popstate',read);document.removeEventListener('visibilitychange',visible)}},[]);
  function navigate(page:number,anchor?:string){setActive(page);history.pushState({},'',`${appBase()}?page=${nav[page][2]}&range=${range}${anchor?'#'+anchor:''}`);if(anchor)setTimeout(()=>document.getElementById(anchor)?.scrollIntoView({behavior:'smooth'}),160);else window.scrollTo({top:0,behavior:'smooth'})}
  function changeRange(value:string){setRange(value);history.replaceState({},'',`${appBase()}?page=${nav[active][2]}&range=${value}${location.hash}`)}
  useNavigationTools((page,value)=>{setActive(page);setRange(value);history.pushState({},'',`${appBase()}?page=${nav[page][2]}&range=${value}`)});

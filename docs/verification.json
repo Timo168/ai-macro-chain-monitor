@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-09-14T03:26:26.154Z",
+  "checkedAt": "2026-09-14T16:18:40.373Z",
   "rawSamples": [
     {
       "id": "ICSA",
@@ -182,42 +182,6 @@
       "sourceFile": "cec76bf4c38dc062c63ccd3b576c21a54709ae3e3bf73ddbccb44e04384c559a.csv"
     },
     {
-      "id": "DGS10",
-      "date": "1962-01-02",
-      "value": 4.06,
-      "sourceFile": "51cf02cc3952dd14161d22fd7aaba4dc54d1182c87692b034bb0a9d5aa476b4c.csv"
-    },
-    {
-      "id": "DGS10",
-      "date": "1994-05-26",
-      "value": 7.09,
-      "sourceFile": "51cf02cc3952dd14161d22fd7aaba4dc54d1182c87692b034bb0a9d5aa476b4c.csv"
-    },
-    {
-      "id": "DGS10",
-      "date": "2026-09-10",
-      "value": 4.95,
-      "sourceFile": "51cf02cc3952dd14161d22fd7aaba4dc54d1182c87692b034bb0a9d5aa476b4c.csv"
-    },
-    {
-      "id": "DFII10",
-      "date": "2003-01-02",
-      "value": 2.43,
-      "sourceFile": "b88542fcf663d0b94152446b33be3bfdd5ea691c2e95f5c0156ee97d5141b8f7.csv"
-    },
-    {
-      "id": "DFII10",
-      "date": "2014-11-03",
-      "value": 0.43,
-      "sourceFile": "b88542fcf663d0b94152446b33be3bfdd5ea691c2e95f5c0156ee97d5141b8f7.csv"
-    },
-    {
-      "id": "DFII10",
-      "date": "2026-09-10",
-      "value": 2.55,
-      "sourceFile": "b88542fcf663d0b94152446b33be3bfdd5ea691c2e95f5c0156ee97d5141b8f7.csv"
-    },
-    {
       "id": "DFEDTARL",
       "date": "2008-12-16",
       "value": 0,
@@ -270,6 +234,42 @@
       "date": "2026-09-09",
       "value": 109.51,
       "sourceFile": "90b25160f3193d9c1440e8bb45e4fb621f69bb19a4c5736928fdb0c7f2bdc7fb.csv"
+    },
+    {
+      "id": "DGS10",
+      "date": "1962-01-02",
+      "value": 4.06,
+      "sourceFile": "51cf02cc3952dd14161d22fd7aaba4dc54d1182c87692b034bb0a9d5aa476b4c.csv"
+    },
+    {
+      "id": "DGS10",
+      "date": "1994-05-26",
+      "value": 7.09,
+      "sourceFile": "51cf02cc3952dd14161d22fd7aaba4dc54d1182c87692b034bb0a9d5aa476b4c.csv"
+    },
+    {
+      "id": "DGS10",
+      "date": "2026-09-10",
+      "value": 4.95,
+      "sourceFile": "51cf02cc3952dd14161d22fd7aaba4dc54d1182c87692b034bb0a9d5aa476b4c.csv"
+    },
+    {
+      "id": "DFII10",
+      "date": "2003-01-02",
+      "value": 2.43,
+      "sourceFile": "b88542fcf663d0b94152446b33be3bfdd5ea691c2e95f5c0156ee97d5141b8f7.csv"
+    },
+    {
+      "id": "DFII10",
+      "date": "2014-11-03",
+      "value": 0.43,
+      "sourceFile": "b88542fcf663d0b94152446b33be3bfdd5ea691c2e95f5c0156ee97d5141b8f7.csv"
+    },
+    {
+      "id": "DFII10",
+      "date": "2026-09-10",
+      "value": 2.55,
+      "sourceFile": "b88542fcf663d0b94152446b33be3bfdd5ea691c2e95f5c0156ee97d5141b8f7.csv"
     }
   ],
   "chartSamples": [

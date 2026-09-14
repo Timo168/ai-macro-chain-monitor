@@ -6,9 +6,13 @@ DATA=ROOT/'data'; DATA.mkdir(exist_ok=True)
 REGISTRY=json.loads((ROOT/'lib/indicators.json').read_text(encoding='utf-8'))
 WB_PAGE='https://www.worldbank.org/en/research/commodity-markets'
 WB_FALLBACK='https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx'
+CREATE_NO_WINDOW=getattr(subprocess,'CREATE_NO_WINDOW',0) if os.name=='nt' else 0
+WINDOWS_STARTUPINFO=None
+if os.name=='nt':
+    WINDOWS_STARTUPINFO=subprocess.STARTUPINFO();WINDOWS_STARTUPINFO.dwFlags|=subprocess.STARTF_USESHOWWINDOW;WINDOWS_STARTUPINFO.wShowWindow=subprocess.SW_HIDE
 def now(): return datetime.now(timezone.utc).isoformat()
 def download(url):
-    result=subprocess.run(['curl.exe' if os.name=='nt' else 'curl','--fail','--location','--silent','--show-error','--max-time','65','--retry','2',url],capture_output=True)
+    result=subprocess.run(['curl.exe' if os.name=='nt' else 'curl','--fail','--location','--silent','--show-error','--max-time','65','--retry','2',url],capture_output=True,creationflags=CREATE_NO_WINDOW,startupinfo=WINDOWS_STARTUPINFO)
     if result.returncode: raise RuntimeError('Source fetch failed: '+result.stderr.decode(errors='replace')[-180:])
     return result.stdout
 def parse_csv(raw):

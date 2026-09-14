@@ -50,6 +50,8 @@ Get-ScheduledTaskInfo -TaskName 'AI-Macro-Observatory-Data-Sync'
 
 移除任务：`./scripts/remove-scheduler.ps1`。手动检查一次：`python scripts/schedule.py`；强制采集：`python scripts/schedule.py --force`。
 
+Windows 的计划任务会优先使用 `pythonw.exe`，采集中的 `curl`、Python 和 Node 子进程也会静默运行；定时更新不会弹出黑色命令窗口。手动在终端执行上述命令时，输出仍会留在当前终端，便于排查问题。
+
 1. FRED 官方 HTML 发布日历；PCE 优先使用 BEA 官方 JSON。按 `America/Chicago` 或来源 ISO 偏移解析，UTC 存储，北京时间展示，自动处理夏令时。
 2. 月度日历回看 62 天、周度 21 天，保存上次到期事件。发布后按 15/30/60/120 分钟重试；超过 48 小时仍缺新观测，继续每日追赶。失败时保留日历缓存。
 3. 日频收益率按发布窗口及每日兜底同步；布伦特遵循来源实际发布批次，仍保留日频观测。目标区间按每日生效数据检查，不把每日数据日历当作 FOMC 会议日历。

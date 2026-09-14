@@ -3,12 +3,15 @@ import { useEffect, useMemo, useState } from 'react';
 import { ResponsiveContainer, ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Brush, ReferenceLine, ReferenceDot } from 'recharts';
 import { ArrowDownToLine, ArrowUpRight, ChartColumn, ChartLine, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { type Dataset, type Point, colors, makeChart, firstValues, format, deltaFormat, beijing, metadata, sourceLink } from '@/lib/data';
+import { type Dataset, colors, makeChart, firstValues, format, deltaFormat, beijing, metadata, sourceLink } from '@/lib/data';
 import type { Group } from '@/lib/groups';
 import { metrics, selectRange } from '@/lib/calculations.mjs';
 export function RangeButtons({value,onChange,available=['1','3','5','all']}:{value:string;onChange:(value:string)=>void;available?:string[]}){return <div className="range-selector">{[['1','近一年'],['3','三年'],['5','五年'],['all','全部']].map(([id,label])=><Button key={id} variant="ghost" aria-pressed={value===id} className={value===id?'selected':''} disabled={!available.includes(id)} onClick={()=>onChange(id)}>{label}</Button>)}</div>}
 export default function ChartCard({group,data,range:globalRange,compact=false}:{group:Group;data:Dataset;range:string;compact?:boolean}){
  const [range,setRange]=useState(globalRange),[mode,setMode]=useState('yoy'),[style,setStyle]=useState(group.kind==='bar'?'bar':'line'),[hidden,setHidden]=useState<number[]>([]),[zoom,setZoom]=useState<{startIndex?:number;endIndex?:number}|null>(null),[details,setDetails]=useState(false);
+ // The page-level range is an explicit external control. Reset the local brush
+ // in the same commit so the selected period and chart window never disagree.
+ // eslint-disable-next-line react-hooks/set-state-in-effect
  useEffect(()=>{setRange(globalRange);setZoom(null)},[globalRange]);
  const chart=useMemo(()=>makeChart(group,data,mode),[group,data,mode]);
  const hasValue=(r:Record<string,unknown>)=>Object.entries(r).some(([key,v])=>key!=='date'&&v!==null);

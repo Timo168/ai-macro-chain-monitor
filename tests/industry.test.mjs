@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {metricStats,chartRows,generateRecommendations} from '../lib/industry/engine.mjs';
+import {metricStats,chartRows,generateRecommendations,historyCompleteness,ruleReachability} from '../lib/industry/engine.mjs';
 const def={id:'MSFT.gross_margin',entity:'MSFT',family:'gross_margin',unit:'%',frequency:'quarterly',normalUpdateDelayDays:65,recommendationEligible:true,valueType:'reported'};
 const p=(periodEnd,value)=>({periodEnd,value,version:periodEnd,sourceUrl:'https://example.com',isEstimated:false});
 test('margin changes use percentage points even with negative bases',()=>{
@@ -29,4 +29,25 @@ test('demo and missing critical evidence never create allocation recommendations
 test('same data preserve recommendation identity and first generated timestamp',()=>{
  const data={definitions:[],series:{}};const prior=generateRecommendations(data,'2026-09-11');const next=generateRecommendations(data,'2026-09-12',prior);
  assert.equal(next[0].id,prior[0].id);assert.equal(next[0].generatedAt,prior[0].generatedAt);
+});
+test('historical gaps stay visible as missing observations',()=>{
+ const rows=[p('2025-06-30',10),p('2025-12-31',12),p('2026-06-30',14)];
+ const status=historyCompleteness(def,rows);
+ assert.equal(status.observedPeriods,3);assert.equal(status.expectedPeriods,5);assert.deepEqual(status.missingPeriods,['2025-09-01','2026-03-01']);
+});
+test('recommendation coverage is based on required dimensions, not repeated cost series',()=>{
+ const cost=(id,family)=>({id,entity:'US',family,unit:'美元',frequency:'monthly',normalUpdateDelayDays:65,recommendationEligible:true,valueType:'official'});
+ const definitions=[cost('electricity','electricity'),cost('equipment','equipment_price'),cost('copper','copper'),cost('aluminum','aluminum')];
+ const observations=[p('2025-08-31',100),p('2026-08-31',110)];
+ const data={definitions,series:Object.fromEntries(definitions.map(d=>[d.id,{status:'ready',observations}]))};
+ const recommendation=generateRecommendations(data,'2026-09-12').find(r=>r.targetId==='data_centers');
+ assert.equal(recommendation.coverage,.25);assert.equal(recommendation.availableDimensionCount,1);
+});
+test('single-entity industries are not structurally blocked when independent dimensions exist',()=>{
+ const definition=(id,entity,family,unit='%')=>({id,entity,family,unit,frequency:'quarterly',normalUpdateDelayDays:65,recommendationEligible:true,valueType:'reported'});
+ const definitions=[definition('MSFT.capex','MSFT','capex','亿美元'),definition('TSM.revenue','TSM','datacenter_revenue','亿新台币'),definition('TSM.margin','TSM','gross_margin'),{...definition('TSM.power','台湾','electricity','美元'),frequency:'monthly'}];
+ const quarterly=[p('2025-06-30',100),p('2026-06-30',110)];const monthly=[p('2025-06-30',100),p('2026-06-30',90)];
+ const data={definitions,series:{'MSFT.capex':{status:'ready',observations:quarterly},'TSM.revenue':{status:'ready',observations:quarterly},'TSM.margin':{status:'ready',observations:[p('2025-06-30',50),p('2026-06-30',55)]},'TSM.power':{status:'ready',observations:monthly}}};
+ assert.deepEqual(ruleReachability(definitions).find(r=>r.targetId==='foundry').unavailableDimensions,[]);
+ assert.notEqual(generateRecommendations(data,'2026-09-12').find(r=>r.targetId==='foundry').level,'insufficient_data');
 });
