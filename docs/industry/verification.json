@@ -1,8 +1,8 @@
 {
   "scope": "3 periods per metric; current or previously recorded archived-source replay where supported, plus a separately tracked manual fact ledger for blocked sources; identical metric, period, value and version are required to reuse a prior replay; arithmetic only, not a license or causal audit",
-  "automaticSamples": 234,
-  "currentSourceReplaySamples": 210,
-  "previousSourceReplaySamples": 24,
+  "automaticSamples": 237,
+  "currentSourceReplaySamples": 201,
+  "previousSourceReplaySamples": 36,
   "manualFactLedgerSamples": 12,
   "samples": [
     {
@@ -12,7 +12,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2024-q1/press-release-webcast",
-      "version": "11b0104a7b17f6ba0485e57f3a1617b1c022346bdf34cf7c3d069adfb3720bc6",
+      "version": "3ac56d5ea28679925e8825d2c52b2044a6e240952060075c9e92d161acfa8543",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -23,7 +23,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
-      "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "version": "64e0488983f895b65253866887d551c90594c9ae8faf6b4f4497453b590da7b5",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -34,7 +34,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
-      "version": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+      "version": "77d790f8e8be35c73c023f0ff18bbba8dd65ac058a2475ca6808b44559ffdd35",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -45,7 +45,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2024-q1/press-release-webcast",
-      "version": "11b0104a7b17f6ba0485e57f3a1617b1c022346bdf34cf7c3d069adfb3720bc6",
+      "version": "3ac56d5ea28679925e8825d2c52b2044a6e240952060075c9e92d161acfa8543",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -56,7 +56,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
-      "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "version": "64e0488983f895b65253866887d551c90594c9ae8faf6b4f4497453b590da7b5",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -67,7 +67,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
-      "version": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+      "version": "77d790f8e8be35c73c023f0ff18bbba8dd65ac058a2475ca6808b44559ffdd35",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -78,7 +78,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2024-q1/press-release-webcast",
-      "version": "11b0104a7b17f6ba0485e57f3a1617b1c022346bdf34cf7c3d069adfb3720bc6",
+      "version": "3ac56d5ea28679925e8825d2c52b2044a6e240952060075c9e92d161acfa8543",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -89,7 +89,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
-      "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "version": "64e0488983f895b65253866887d551c90594c9ae8faf6b4f4497453b590da7b5",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -100,7 +100,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
-      "version": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+      "version": "77d790f8e8be35c73c023f0ff18bbba8dd65ac058a2475ca6808b44559ffdd35",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -540,7 +540,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
-      "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "version": "64e0488983f895b65253866887d551c90594c9ae8faf6b4f4497453b590da7b5",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -551,7 +551,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
-      "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "version": "64e0488983f895b65253866887d551c90594c9ae8faf6b4f4497453b590da7b5",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -562,7 +562,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
-      "version": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+      "version": "77d790f8e8be35c73c023f0ff18bbba8dd65ac058a2475ca6808b44559ffdd35",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -573,7 +573,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
-      "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "version": "64e0488983f895b65253866887d551c90594c9ae8faf6b4f4497453b590da7b5",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -584,7 +584,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
-      "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "version": "64e0488983f895b65253866887d551c90594c9ae8faf6b4f4497453b590da7b5",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -595,7 +595,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
-      "version": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+      "version": "77d790f8e8be35c73c023f0ff18bbba8dd65ac058a2475ca6808b44559ffdd35",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -606,7 +606,7 @@
       "unit": "%",
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
-      "version": "cdf8e0c3eb8308085c5d112575a0a12839329eb53a84155753be5390722d4a24",
+      "version": "64e0488983f895b65253866887d551c90594c9ae8faf6b4f4497453b590da7b5",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -617,7 +617,7 @@
       "unit": "%",
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q3/press-release-webcast",
-      "version": "26eef7edc0a3573dc40b8588304536c63cc22ac9b2fc0fca13c602fdcc60dc31",
+      "version": "6a7ca34854009e433d3fc9e94f2495cec83ce50b0d82fd0352b1f3c3dea13fd2",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -628,7 +628,7 @@
       "unit": "%",
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
-      "version": "1c7688ad654ce28f16152e3dcb36ae6e14f827f754d16a8b8900a88c8196864d",
+      "version": "77d790f8e8be35c73c023f0ff18bbba8dd65ac058a2475ca6808b44559ffdd35",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -804,7 +804,7 @@
       "unit": "%",
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2024-q1/press-release-webcast",
-      "version": "e48b930609a17c62d0dcfcb413d9571e5c5f876e7920cd4a0f3c91de01df8857",
+      "version": "eb71bad04f4ffa076c50488f68a57008f181ba12fd3ca786ec72ec1aab1946a5",
       "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
@@ -815,7 +815,7 @@
       "unit": "%",
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
-      "version": "64e519652ee87a93255985dec44099465f5ff34eeced65cd6c790a795a6e1f0e",
+      "version": "1b9f606646e5817dd84f4bf2c31d3fa6e4c02ac241ee8cb9ad6cf6d9150278ed",
       "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
@@ -826,7 +826,7 @@
       "unit": "%",
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
-      "version": "b32e32d1be0553961ea6e3c53555d1bc3c870437ea9600e5022793f685e14a03",
+      "version": "33a7272bf30a0b401e62524f896b582b3bab3817f60c5c7714879f6b49b10af4",
       "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
@@ -837,7 +837,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2024-q1/press-release-webcast",
-      "version": "746d6638c0bfcd7dc1a5802a694b3d2487605dadbb80d96f52bc14eca36eb8b3",
+      "version": "f9c949e4b4d0ad4520c610e5b7e66d687a35df19508575a91c4ed26a3cbe9038",
       "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
@@ -848,7 +848,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
-      "version": "0104826b0fb04e64f9500f8810746baa8196760d172fa6c728bae197c773933e",
+      "version": "371befa4ebf46f38e886f40932b26d2b16abf19f8e7b67949e69c7b73e36a4af",
       "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
@@ -859,7 +859,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
-      "version": "d375e800d4b448b76f3c5b90111b0a3cdf696120314760139844e3c251816e36",
+      "version": "23d74fd2ce9adec19756d276d38fb33104a1f00a1301791aca390fbc3d2b1fbc",
       "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
@@ -870,7 +870,7 @@
       "unit": "%",
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
-      "version": "ae54a9f1200cc787b4dedef96fa8d877c0be9f198b70a34b9776bd425594398d",
+      "version": "ca7dd9ee9ebe23030234f6cb68726cc99a19d2ee23007d410e9e1650b2c588b2",
       "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
@@ -881,7 +881,7 @@
       "unit": "%",
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q1/press-release-webcast",
-      "version": "ae54a9f1200cc787b4dedef96fa8d877c0be9f198b70a34b9776bd425594398d",
+      "version": "ca7dd9ee9ebe23030234f6cb68726cc99a19d2ee23007d410e9e1650b2c588b2",
       "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
@@ -892,7 +892,7 @@
       "unit": "%",
       "currency": null,
       "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
-      "version": "feb9e13ddb30143af1c93f94ff60cc66ac6b4926e6b7ec23f85f06fd584f6014",
+      "version": "590af4df774a36b671c29bbd3955510342a9aac105fe87780ef5092f0dde9999",
       "checkMode": "automatic_source_replay",
       "check": "matched input observations and independently recomputed formula"
     },
@@ -1431,7 +1431,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
-      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "version": "989dc1af5ab962f087e618323abf86a95eca9ef43ebdac493b5db466efeb5ee0",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -1442,7 +1442,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
-      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "version": "989dc1af5ab962f087e618323abf86a95eca9ef43ebdac493b5db466efeb5ee0",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -1464,7 +1464,7 @@
       "unit": "%",
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
-      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "version": "989dc1af5ab962f087e618323abf86a95eca9ef43ebdac493b5db466efeb5ee0",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -1475,7 +1475,7 @@
       "unit": "%",
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
-      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "version": "989dc1af5ab962f087e618323abf86a95eca9ef43ebdac493b5db466efeb5ee0",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -1497,7 +1497,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
-      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "version": "989dc1af5ab962f087e618323abf86a95eca9ef43ebdac493b5db466efeb5ee0",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -1508,7 +1508,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
-      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "version": "989dc1af5ab962f087e618323abf86a95eca9ef43ebdac493b5db466efeb5ee0",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -1530,7 +1530,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
-      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "version": "989dc1af5ab962f087e618323abf86a95eca9ef43ebdac493b5db466efeb5ee0",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -1541,7 +1541,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
-      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "version": "989dc1af5ab962f087e618323abf86a95eca9ef43ebdac493b5db466efeb5ee0",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -1563,7 +1563,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
-      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "version": "989dc1af5ab962f087e618323abf86a95eca9ef43ebdac493b5db466efeb5ee0",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -1574,7 +1574,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
-      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "version": "989dc1af5ab962f087e618323abf86a95eca9ef43ebdac493b5db466efeb5ee0",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -1607,7 +1607,7 @@
       "unit": "亿美元",
       "currency": "USD",
       "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
-      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "version": "989dc1af5ab962f087e618323abf86a95eca9ef43ebdac493b5db466efeb5ee0",
       "checkMode": "automatic_source_replay",
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
@@ -1762,8 +1762,8 @@
       "currency": "TWD",
       "sourceUrl": "https://investor.tsmc.com/english/monthly-revenue/2021",
       "version": "fe669453cc5fba8cb7f00629685deffa3f575fccb423ceb082ded79bbf3ad054",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "TSM.revenue",
@@ -1773,8 +1773,8 @@
       "currency": "TWD",
       "sourceUrl": "https://investor.tsmc.com/english/monthly-revenue/2023",
       "version": "988426fdf7cb0faca69acbcf4e74fb8459ed6c928a441acf5e5be69e34181a72",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "TSM.revenue",
@@ -1784,8 +1784,8 @@
       "currency": "TWD",
       "sourceUrl": "https://investor.tsmc.com/english/monthly-revenue/2026",
       "version": "c0b9f74332d132697f512641f226db2420d89bc1f761f492f9bca37a01dda4ca",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "WB.copper",
@@ -1893,7 +1893,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "366fca2568897f7168168b5a5ada50ca80b1153b21ad378e76c780277920b71a",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -1904,7 +1904,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "716c526b06b547bbcc5d63ba9442388331bdecfee4e0a2ec6b39fa003dd6b53a",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -1915,7 +1915,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "b9c99f68e3382f1ff7f5b7123e2113508f4b8042ef65cdac0cb3b51f604eec74",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -1926,7 +1926,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "54c96fab1eb36aaa6c2f11f802285c93ac3bfcaec0531169095f1f62fa9b45cf",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -1937,7 +1937,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "c1b83e2ac01ef53a2e62cb56ec9c4969d3f6c9cd1bc62cdfb1ae81484564106f",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -1948,7 +1948,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "76e6e41eefdf661ce89346be1b096a03c0d50e04bdc664d9bd883fe8bcc77cea",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -1959,7 +1959,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "488e22efcfcc601e4b23a9edde41a7a36e585b307e94aa9af6fd66e1afb07f2a",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -1970,7 +1970,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "72f8bf4409a1040d54ccaf3078ae3d75bc928cbffbd7c3fd39c51e4754c64730",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -1981,7 +1981,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "cf790278f0ca4af19277df1792f79020402c99388418695c29f782697f608a98",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -1992,7 +1992,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "2a0e58e4bf5021f0aa82a400247cc754394d76e721f925bf472d47b43f59d33c",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2003,7 +2003,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "62b11a85644bb1e9df2f11c549462ce714b152d4dda5161e65ae7b5d9deb9f67",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2014,7 +2014,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "26d535a7c12a6ce5940c8c1a65ef48469941c004865634c81621d086c6288c9c",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2025,7 +2025,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "14078ad26525975aace07901bd65e75e6de18173db6af344b017e8a6f2c96f25",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2036,7 +2036,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "24d37491495646c1f9894a7b84894b8caa2ec75e6b17248ebb4527eff39512a5",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2047,7 +2047,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "42cea61d60a28f06665df2d9768b311c0d17bf40a174f02c3ec7b45a22ccd6db",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2058,7 +2058,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "064f2a1fc25a4a6936b6b60b6f69c645c68d053f400d3b43480c90a6a7b6dbeb",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2069,7 +2069,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "667358d4cbe2cd6e7652610af232881d32df671f47129330b1e5ff99c1d1ba59",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2080,7 +2080,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "6f50ea5c3068f573970d48ba95ff0b0dadfcf743d12399e0ab002794f663eb85",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2091,7 +2091,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "eba18e66e1effe6ab1f7bb1b98e4fff19deeaa52b3a5bf1c7d5a19af64563c93",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2102,7 +2102,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "3bcedcfda3caf35b747b72664a68ddedf35eb30aaf1c5ee6fe96d309a2a8162d",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2113,7 +2113,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "3a31bdba4f75c0e54dc439c8fc29673d59cd684a6cf2be848fb63c7cccc56169",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2124,7 +2124,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "4944942a72b10865f0272ec032536380f817eddd5092aff39ed7ffb031d100dd",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2135,7 +2135,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "ad57140ca893187c9055316e2ff39dee28b0960542403d4fa22db9a0303d2a21",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2146,7 +2146,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "c3a949626f6d4c38326748004c202636a6ba4c0e9e5a864872c39caa65ca8359",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2157,7 +2157,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "4b92d37d2dd4e4ac81b47a5f147fc3ee12fcd87747513c1b2cf8e8c3449dec2f",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2168,7 +2168,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "d0157064d91bba3d6362a8fa6b0dca26c29d229560b35c837d53486e340b38ed",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2179,7 +2179,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "50f0ae41c3081b0066bc16bfe133fb46565200efc433501c118168144098b1a3",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2190,7 +2190,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "e02a94001c4a7c0b296cfeac01030ae72f6fd9a8a72bb55001deeecbde7600bd",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2201,7 +2201,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "be4de229df0a663e47eec7043afb9999bb8ac276d451fdb22b9cad9e8ed804fe",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2212,7 +2212,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "25601f07d6374fabfbc6bea00d406814bf8f54033d893b66997c5992955fdc30",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2223,7 +2223,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "803b6c32be24388fee18ff362feeac23f1df69c020960820b289cde8ca92de13",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2234,7 +2234,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "948113a3996b2a68dcde3963a17f08773b240bd399546ad48b6338bb612d1756",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2245,7 +2245,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "0afb853108c5690653c5ecc12ada95a08fee2cea48cf62507e8717b2abc42bde",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2256,7 +2256,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "a8f9f458a694a7529017033ce1b87d762abfbac433e2de71ff6bfb66f34f587e",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2267,7 +2267,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "efaa041277318c658257ea8544457a7d6bc06c49c393870049bb4eecd7c2940c",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2278,7 +2278,7 @@
       "unit": "美分/kWh",
       "currency": null,
       "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
-      "version": "ed99780ed36aeedc1d936761febd2842cdaa8d98081ee12b70a5a3ac9a23f53b",
+      "version": "8e259b44e419049c1ebdef5a95107fcde45ae669a8da670b6c12b8c1e39713e6",
       "checkMode": "automatic_source_replay",
       "check": "matched official state workbook; national series recomputed from 51 regions"
     },
@@ -2290,8 +2290,8 @@
       "currency": "USD",
       "sourceUrl": "https://www.semiconductors.org/global-semiconductor-sales-increase-9-2-month-to-month-in-may/",
       "version": "a10e4d9d22f281bfbbb7fd0dd0bd3007a08c4ecc1228673b4546842ec53865c7",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "SIA.semiconductor_sales",
@@ -2301,8 +2301,8 @@
       "currency": "USD",
       "sourceUrl": "https://www.semiconductors.org/global-semiconductor-sales-increase-9-2-month-to-month-in-may/",
       "version": "a10e4d9d22f281bfbbb7fd0dd0bd3007a08c4ecc1228673b4546842ec53865c7",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "SIA.semiconductor_sales",
@@ -2312,8 +2312,8 @@
       "currency": "USD",
       "sourceUrl": "https://www.semiconductors.org/global-semiconductor-sales-increase-6-4-month-to-month-in-july/",
       "version": "c6216aa4d943ef43bab887bb46c17d2f365f24339f7e0674dc276f98ea15434b",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "POWER.equipment_price",
@@ -2347,105 +2347,6 @@
       "version": "2d42bc2c809b7a2844077b7a8f660ec275844c93fe446ff2a61d93a04739b062",
       "checkMode": "automatic_source_replay",
       "check": "matched exact observation date in BLS/FRED CSV; native index unchanged"
-    },
-    {
-      "metricId": "MSFT.backlog",
-      "periodEnd": "2025-06-30",
-      "value": 3680,
-      "unit": "亿美元",
-      "currency": "USD",
-      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
-      "version": "355f34d28fe67c167d96e43509077b3d623a4a159c2adcb62bc552bb368b3390",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "MSFT.backlog",
-      "periodEnd": "2025-12-31",
-      "value": 6250,
-      "unit": "亿美元",
-      "currency": "USD",
-      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
-      "version": "355f34d28fe67c167d96e43509077b3d623a4a159c2adcb62bc552bb368b3390",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "MSFT.backlog",
-      "periodEnd": "2026-06-30",
-      "value": 6780,
-      "unit": "亿美元",
-      "currency": "USD",
-      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
-      "version": "355f34d28fe67c167d96e43509077b3d623a4a159c2adcb62bc552bb368b3390",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "TSM.advanced_node_share",
-      "periodEnd": "2025-06-30",
-      "value": 74,
-      "unit": "%",
-      "currency": null,
-      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2025-07/d9d294ed46ca22c560a17eb060373bc35f2d464a/2Q25EarningsRelease.pdf",
-      "version": "14b24d4f735363fff90ef8d50611864d0dc000edfd74489994569b7428e78d40",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "TSM.advanced_node_share",
-      "periodEnd": "2025-12-31",
-      "value": 77,
-      "unit": "%",
-      "currency": null,
-      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-01/3e49621566a3ca53bdf8aee2586929b666c17fd6/4Q25EarningsRelease.pdf",
-      "version": "d14b67a858ffa01e6d16d64f81230d4fedfc7815b3a572b5e5feb0b2f2a2fbd9",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "TSM.advanced_node_share",
-      "periodEnd": "2026-06-30",
-      "value": 77,
-      "unit": "%",
-      "currency": null,
-      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-07/a80d7933be643644081584087731f73b22ea5a2c/2Q26%20EarningsRelease.pdf",
-      "version": "67c8e14a5786449dc6cbc4e8e0472b8b56c33895e4c8abcdfe4f48ac5f60207e",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "DELL.backlog",
-      "periodEnd": "2025-05-02",
-      "value": 144,
-      "unit": "亿美元",
-      "currency": "USD",
-      "sourceUrl": "https://investors.delltechnologies.com/static-files/a7fdeb66-9194-4027-afa8-a963c1bc1ce9",
-      "version": "f284d14f4a4df7bc3064513069c5da543412d5926968ecb603ea13aeade2d9d4",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "DELL.backlog",
-      "periodEnd": "2026-01-30",
-      "value": 430,
-      "unit": "亿美元",
-      "currency": "USD",
-      "sourceUrl": "https://investors.delltechnologies.com/static-files/9e5d4126-0f17-4ceb-b26c-a2563b8bcbc9",
-      "version": "01ef07d8f1835132fc1bd304216ad6418529d90fbdb2a4b53b2005a7516bc858",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
-    },
-    {
-      "metricId": "DELL.backlog",
-      "periodEnd": "2026-05-01",
-      "value": 513,
-      "unit": "亿美元",
-      "currency": "USD",
-      "sourceUrl": "https://investors.delltechnologies.com/static-files/b63ffff9-b729-403b-a231-c6af05667759",
-      "version": "2e2a251d50608284f6e3ca91e1d71cd39152a214e4bafd8b66cdd240d90fc5c2",
-      "checkMode": "automatic_source_replay",
-      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
       "metricId": "HPE.server_revenue",
@@ -2514,37 +2415,37 @@
       "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
-      "metricId": "DELL.inventory_days",
-      "periodEnd": "2025-05-02",
-      "value": 34.86581530285776,
-      "unit": "天",
-      "currency": null,
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2026-financial",
-      "version": "455fca62f4f1b1ad47939806cea8801e636ff01471b6bf9f7e5c94fca2f00d4f",
+      "metricId": "MSFT.backlog",
+      "periodEnd": "2025-06-30",
+      "value": 3680,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
+      "version": "c2d1b3fc1bb0ac7318d78e61f9d90ceda59b1b2bc13e55830f0dcd9ee6bdb01c",
       "checkMode": "automatic_source_replay",
-      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
-      "metricId": "DELL.inventory_days",
-      "periodEnd": "2026-05-01",
-      "value": 32.161661120354964,
-      "unit": "天",
-      "currency": null,
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
-      "version": "003f73caa7ff5d6ee432005f182da640478b242e6472707a37d1b4dd2ad281a9",
+      "metricId": "MSFT.backlog",
+      "periodEnd": "2025-12-31",
+      "value": 6250,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
+      "version": "c2d1b3fc1bb0ac7318d78e61f9d90ceda59b1b2bc13e55830f0dcd9ee6bdb01c",
       "checkMode": "automatic_source_replay",
-      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
-      "metricId": "DELL.inventory_days",
-      "periodEnd": "2026-07-31",
-      "value": 44.52117605880294,
-      "unit": "天",
-      "currency": null,
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
-      "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+      "metricId": "MSFT.backlog",
+      "periodEnd": "2026-06-30",
+      "value": 6780,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/metrics",
+      "version": "c2d1b3fc1bb0ac7318d78e61f9d90ceda59b1b2bc13e55830f0dcd9ee6bdb01c",
       "checkMode": "automatic_source_replay",
-      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
     },
     {
       "metricId": "VRT.backlog",
@@ -2578,6 +2479,138 @@
       "version": "8cde66c12cb89f5422edd3b9744eb3e2173c9e983f0a675e32508e9ea0e23f45",
       "checkMode": "automatic_source_replay",
       "check": "matched official presentation backlog, verified reported precision and billion-to-100-million conversion"
+    },
+    {
+      "metricId": "DELL.backlog",
+      "periodEnd": "2025-05-02",
+      "value": 144,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://investors.delltechnologies.com/static-files/a7fdeb66-9194-4027-afa8-a963c1bc1ce9",
+      "version": "f284d14f4a4df7bc3064513069c5da543412d5926968ecb603ea13aeade2d9d4",
+      "checkMode": "automatic_source_replay",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "DELL.backlog",
+      "periodEnd": "2026-01-30",
+      "value": 430,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://investors.delltechnologies.com/static-files/9e5d4126-0f17-4ceb-b26c-a2563b8bcbc9",
+      "version": "01ef07d8f1835132fc1bd304216ad6418529d90fbdb2a4b53b2005a7516bc858",
+      "checkMode": "automatic_source_replay",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "DELL.backlog",
+      "periodEnd": "2026-05-01",
+      "value": 513,
+      "unit": "亿美元",
+      "currency": "USD",
+      "sourceUrl": "https://investors.delltechnologies.com/static-files/b63ffff9-b729-403b-a231-c6af05667759",
+      "version": "2e2a251d50608284f6e3ca91e1d71cd39152a214e4bafd8b66cdd240d90fc5c2",
+      "checkMode": "automatic_source_replay",
+      "check": "raw numeric operands present in official report; unit/formula independently recomputed"
+    },
+    {
+      "metricId": "DELL.inventory_days",
+      "periodEnd": "2025-05-02",
+      "value": 34.86581530285776,
+      "unit": "天",
+      "currency": null,
+      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2026-financial",
+      "version": "455fca62f4f1b1ad47939806cea8801e636ff01471b6bf9f7e5c94fca2f00d4f",
+      "checkMode": "automatic_source_replay",
+      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+    },
+    {
+      "metricId": "DELL.inventory_days",
+      "periodEnd": "2026-05-01",
+      "value": 32.161661120354964,
+      "unit": "天",
+      "currency": null,
+      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2027-financial",
+      "version": "b1925d839118fa22a4897850620c467656b0f5df47cc5711a774194429df6688",
+      "checkMode": "automatic_source_replay",
+      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+    },
+    {
+      "metricId": "DELL.inventory_days",
+      "periodEnd": "2026-07-31",
+      "value": 44.52117605880294,
+      "unit": "天",
+      "currency": null,
+      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
+      "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
+      "checkMode": "automatic_source_replay",
+      "check": "matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days"
+    },
+    {
+      "metricId": "TSM.advanced_node_share",
+      "periodEnd": "2025-06-30",
+      "value": 74,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2025-07/d9d294ed46ca22c560a17eb060373bc35f2d464a/2Q25EarningsRelease.pdf",
+      "version": "14b24d4f735363fff90ef8d50611864d0dc000edfd74489994569b7428e78d40",
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
+    },
+    {
+      "metricId": "TSM.advanced_node_share",
+      "periodEnd": "2025-12-31",
+      "value": 77,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-01/3e49621566a3ca53bdf8aee2586929b666c17fd6/4Q25EarningsRelease.pdf",
+      "version": "d14b67a858ffa01e6d16d64f81230d4fedfc7815b3a572b5e5feb0b2f2a2fbd9",
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
+    },
+    {
+      "metricId": "TSM.advanced_node_share",
+      "periodEnd": "2026-06-30",
+      "value": 77,
+      "unit": "%",
+      "currency": null,
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-07/a80d7933be643644081584087731f73b22ea5a2c/2Q26%20EarningsRelease.pdf",
+      "version": "67c8e14a5786449dc6cbc4e8e0472b8b56c33895e4c8abcdfe4f48ac5f60207e",
+      "checkMode": "previous_verified_source_replay",
+      "check": "collector reports a current source failure; identical observation version passed the prior archived-source replay"
+    },
+    {
+      "metricId": "POWER.load",
+      "periodEnd": "2023-01-31",
+      "value": 65631.970941,
+      "unit": "MW",
+      "currency": null,
+      "sourceUrl": "https://www.ercot.com/files/docs/2023/02/09/Native_Load_2023.zip",
+      "version": "34e7067d3273f56be42ce469e23747cff0db736d668519070ad63674c3ddecd4",
+      "checkMode": "previous_verified_source_replay",
+      "check": "current source retrieval unavailable; identical observation version passed the prior archived-source replay"
+    },
+    {
+      "metricId": "POWER.load",
+      "periodEnd": "2024-11-30",
+      "value": 60169.923833,
+      "unit": "MW",
+      "currency": null,
+      "sourceUrl": "https://www.ercot.com/files/docs/2024/02/06/Native_Load_2024.zip",
+      "version": "fe6dacd721ae66bdef63f9d755c4219ab6bc06361ef2044627fb45424c427198",
+      "checkMode": "previous_verified_source_replay",
+      "check": "current source retrieval unavailable; identical observation version passed the prior archived-source replay"
+    },
+    {
+      "metricId": "POWER.load",
+      "periodEnd": "2026-08-31",
+      "value": 90816.856518,
+      "unit": "MW",
+      "currency": null,
+      "sourceUrl": "https://www.ercot.com/files/docs/2026/02/10/Native_Load_2026.zip",
+      "version": "f93f640f9c8bc527728b625afbf1ab0f402cd73cd7608c605c67b6aa3b16d01c",
+      "checkMode": "previous_verified_source_replay",
+      "check": "current source retrieval unavailable; identical observation version passed the prior archived-source replay"
     },
     {
       "metricId": "POWER.interconnection",
@@ -2685,7 +2718,7 @@
       "unit": "天",
       "currency": null,
       "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312525000046/mu-20251127.htm",
-      "version": "42ae83008f155618f73123ba60ba99f15489a73e618ef19fbdb49e03bb666577",
+      "version": "5f256636f97e103c0b7416d478e932e2575ab6440257a86ed9c60a5147c05e28",
       "checkMode": "manual_fact_ledger",
       "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
     },
@@ -2696,7 +2729,7 @@
       "unit": "天",
       "currency": null,
       "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312526000006/mu-20260226.htm",
-      "version": "f45c6823c9852074bba33399e4ebbb8d2a8de1f9a3a5989eabc1f70f07408988",
+      "version": "e3911f658a4009a784c6975121a6a16c017e0a1a6003427689fa5a0e83934c83",
       "checkMode": "manual_fact_ledger",
       "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
     },
@@ -2707,7 +2740,7 @@
       "unit": "天",
       "currency": null,
       "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312526000015/mu-20260528.htm",
-      "version": "03b5ae4e1f4ddb7c5f99523149ab0407ec6d448e4e94387d164469845a089ca9",
+      "version": "0d82c7c00fc671e48b814cf21807dd88b019729495eacd868341de7a12972c95",
       "checkMode": "manual_fact_ledger",
       "check": "matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated"
     }
