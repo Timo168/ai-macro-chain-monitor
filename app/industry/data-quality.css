@@ -1,0 +1,5 @@
+.industry-quality-list{display:grid;gap:8px;list-style:none;margin:14px 0 0;padding:0}
+.industry-quality-list li{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:8px 10px;background:#f8faf9;border:1px solid #e5ece9;border-radius:5px;font-size:11px}
+.industry-quality-list strong{color:#56716d;font-weight:550}
+.industry-quality-list span{color:#87969a;text-align:right}
+@media(max-width:680px){.industry-quality-list li{display:block}.industry-quality-list span{display:block;margin-top:4px;text-align:left}}
