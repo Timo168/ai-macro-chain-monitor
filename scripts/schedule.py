@@ -5,6 +5,7 @@ from urllib.parse import urlencode, urljoin
 from zoneinfo import ZoneInfo
 from calendar_provider import CalendarParser
 from collect import ROOT, DATA, REGISTRY, collect, download
+from policy_rates import collect_policy_rates
 CT=ZoneInfo('America/Chicago')
 RIDS={10:['CPIAUCNS','CPILFENS','CPIAUCSL','CPILFESL'],50:['UNRATE','PAYEMS'],54:['PCEPI','PCEPILFE'],180:['ICSA'],221:['NFCI'],18:['DGS10','DFII10'],212:['DCOILBRENTEU']}
 def atomic(path,data):
@@ -63,6 +64,12 @@ def run(force=False):
     if lock.exists() and time.time()-lock.stat().st_mtime<1800:print('Another collector is running');return
     lock.write_text(str(os.getpid()))
     try:
+        # BIS policy rates are a supplementary series. A first-fetch outage must
+        # not prevent the existing macro collection from running.
+        try:
+            collect_policy_rates()
+        except Exception as exc:
+            print('POLICY_RATES FAILED; will use packaged fallback:', str(exc)[-160:], flush=True)
         cal=calendar(now);path=DATA/'scheduler.json';state=json.loads(path.read_text()) if path.exists() else {'attempts':{}}
         cached=json.loads((DATA/'latest.json').read_text(encoding='utf-8'));selected=[];pending={}
         for item in REGISTRY:

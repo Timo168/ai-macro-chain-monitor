@@ -4,4 +4,5 @@ export function dataEndpoint(){return typeof window!=='undefined'?window.__MACRO
 export function manifestEndpoint(){return appBase()==='/'?'/api/manifest':appBase()+'data/manifest.json'}
 export function industryEndpoint(){return appBase()==='/'?'/api/industry':appBase()+'data/industry.json'}
 export function industryHistoryEndpoint(){return appBase()==='/'?'/api/industry/history':appBase()+'data/industry-history.json'}
+export function policyRatesEndpoint(){return appBase()==='/'?'/api/policy-rates':appBase()+'data/policy-rates.json'}
 export function versionedEndpoint(endpoint:string,version?:string){return version?`${endpoint}${endpoint.includes('?')?'&':'?'}v=${encodeURIComponent(version)}`:endpoint}

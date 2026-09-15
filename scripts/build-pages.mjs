@@ -15,4 +15,7 @@ const history=industry.recommendationHistory??[];
 writeFileSync('dist-pages/data/industry.json',JSON.stringify({...industry,recommendationHistory:[]}));
 writeFileSync('dist-pages/data/industry-history.json',JSON.stringify(history));
 const version=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0,16);
-writeFileSync('dist-pages/data/manifest.json',JSON.stringify({generatedAt:new Date().toISOString(),macro:{version:version(data),generatedAt:data.generatedAt},industry:{version:version(industry),generatedAt:industry.generatedAt}}));
+const policyPath=existsSync('data/policy-rates.json')?'data/policy-rates.json':'data/policy-rates.seed.json';
+const policyRates=JSON.parse(readFileSync(policyPath,'utf8'));
+writeFileSync('dist-pages/data/policy-rates.json',JSON.stringify(policyRates));
+writeFileSync('dist-pages/data/manifest.json',JSON.stringify({generatedAt:new Date().toISOString(),macro:{version:version(data),generatedAt:data.generatedAt},industry:{version:version(industry),generatedAt:industry.generatedAt},policyRates:{version:version(policyRates),generatedAt:policyRates.generatedAt}}));

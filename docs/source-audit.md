@@ -81,6 +81,13 @@ FRED 的 [series/release](https://fred.stlouisfed.org/docs/api/fred/series_relea
 
 ## 历史修订、状态与尚未完成事项
 
+### 主要央行政策利率横向对比
+
+- 数据源为 [BIS Central bank policy rates](https://data.bis.org/topics/CBPOL)。它收集各国央行报送的主要政策工具，月度数据为每月最后一个营业日的期末值，单位为年利率百分比。
+- 横向图表当前覆盖美国、日本、韩国、欧元区、英国和加拿大，统一提供最长 10 年的月度历史；每次下载保存原始 CSV 的 SHA-256 版本，页面缓存保留最近一次成功数据。
+- BIS 对目标区间通常展示中点。美国线因此是联邦基金目标区间中点，不能误读为有效联邦基金利率；各国的政策工具也可能在长期历史中发生变更，图表下方必须保留该口径说明。
+- BIS 通常按周更新，本项目每天最多检查一次；获取失败时保留上次成功数据并标明缓存状态。实际决议仍应回到页面中的各央行官网日程与公告核对。
+
 - 公共 CSV 是目前最新修订版本，不提供过去每次 vintage。今后每次下载应保存原文件哈希、抓取时间、来源更新时间（如可得）和发生改变的观测值；未变不重复插入修订。
 - 初次导入旧年月观测时，`knownAt` 只能是本次首次获取时间，不能假造当年的原始发布值。完整旧 vintage 回填需[ALFRED/FRED vintagedates](https://fred.stlouisfed.org/docs/api/fred/series_vintagedates.html)及 observations 的 realtime 参数；当前没有 API key，未验证该回填实际请求。
 - 原始数据应分别保存 observationDate、sourcePublishedAt（可能为空）、fetchedAt、sourceLastUpdatedAt、revision/hash。FRED 系列 last_updated 是系列更新，不能当作每个观测首次发布日期。
