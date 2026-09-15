@@ -21,7 +21,21 @@ export type PolicyRatesDataset={
  series:PolicyRateSeries[];
 };
 
-export const policyRateColors=['#167c68','#466fb1','#a66b37','#8d5a9a','#bf5967','#3f8c9a'];
+const policyRateColorsByBank:Record<string,string>={
+ fed:'#167c68',
+ boj:'#466fb1',
+ bok:'#8d5a9a',
+ ecb:'#a66b37',
+ boe:'#bf5967',
+ // Use a warm orange-red so Canada stays distinct from the Fed's green in every selection.
+ boc:'#df5a2a',
+};
+
+const fallbackPolicyRateColors=['#167c68','#466fb1','#8d5a9a','#a66b37','#bf5967','#df5a2a'];
+
+export function policyRateColor(bankId:string,index=0){
+ return policyRateColorsByBank[bankId]??fallbackPolicyRateColors[index%fallbackPolicyRateColors.length];
+}
 
 export function policyRateChange(series:PolicyRateSeries){
  const latest=series.observations.at(-1);
