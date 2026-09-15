@@ -7,7 +7,7 @@ export type Dataset={generatedAt:string;series:Record<string,Series>;storage?:st
 export const metadata=Object.fromEntries(registry.map(s=>[s.id,s]));
 export const colors=['#178a75','#d8a958','#6282bb','#b27b9e'];
 export const frequencyLabel:Record<string,string>={daily:'日度',weekly:'周度',monthly:'月度'};
-export function sourceLink(id:string){return ['COPPER','GOLD','SILVER'].includes(id)?'https://www.worldbank.org/en/research/commodity-markets':'https://fred.stlouisfed.org/series/'+id}
+export function sourceLink(id:string){return ['NATGAS_US','COAL_AUS','COPPER','ALUMINUM','IRON_ORE','NICKEL','GOLD','SILVER'].includes(id)?'https://www.worldbank.org/en/research/commodity-markets':'https://fred.stlouisfed.org/series/'+id}
 export function format(value:number|null|undefined,digits=2){return value==null||!Number.isFinite(value)?'—':value.toLocaleString('zh-CN',{maximumFractionDigits:digits,minimumFractionDigits:digits})}
 export function deltaFormat(value:number|null|undefined,digits=2){if(value==null)return '—';if(value!==0&&Math.abs(value)<Math.pow(10,-digits))return '<'+Math.pow(10,-digits).toFixed(digits);return format(Math.abs(value),digits)}
 export function beijing(date?:string|null){if(!date)return '来源未提供';return new Intl.DateTimeFormat('zh-CN',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(date))}

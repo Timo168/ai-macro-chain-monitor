@@ -7,7 +7,7 @@ from datetime import datetime
 class CollectorTests(unittest.TestCase):
     def test_world_bank_three_points_each(self):
         payload=json.loads((collect.DATA/'latest.json').read_text(encoding='utf-8'))
-        for key in ['COPPER','GOLD','SILVER']:
+        for key in collect.WB_IDS:
             s=payload['series'][key];archive=next((collect.DATA/'versions'/key).glob(s['revision'].split('_')[-1]+'*.xlsx'))
             points=collect.parse_wb(archive.read_bytes())[key]
             for i in [0,len(points)//2,len(points)-1]:self.assertEqual(points[i],s['observations'][i])

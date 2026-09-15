@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-09-14T16:18:40.373Z",
+  "checkedAt": "2026-09-15T07:29:17.254Z",
   "rawSamples": [
     {
       "id": "ICSA",
@@ -182,40 +182,76 @@
       "sourceFile": "cec76bf4c38dc062c63ccd3b576c21a54709ae3e3bf73ddbccb44e04384c559a.csv"
     },
     {
+      "id": "DGS10",
+      "date": "1962-01-02",
+      "value": 4.06,
+      "sourceFile": "94c1e5b98460d7de645be32f3211853c3d749724ecb12cac33bc84623ea759b4.csv"
+    },
+    {
+      "id": "DGS10",
+      "date": "1994-05-26",
+      "value": 7.09,
+      "sourceFile": "94c1e5b98460d7de645be32f3211853c3d749724ecb12cac33bc84623ea759b4.csv"
+    },
+    {
+      "id": "DGS10",
+      "date": "2026-09-11",
+      "value": 4.96,
+      "sourceFile": "94c1e5b98460d7de645be32f3211853c3d749724ecb12cac33bc84623ea759b4.csv"
+    },
+    {
+      "id": "DFII10",
+      "date": "2003-01-02",
+      "value": 2.43,
+      "sourceFile": "8a678cb5155bafa8d97b3a05cc16c1960acf047591a8b04405c210945d6bb3ba.csv"
+    },
+    {
+      "id": "DFII10",
+      "date": "2014-11-04",
+      "value": 0.43,
+      "sourceFile": "8a678cb5155bafa8d97b3a05cc16c1960acf047591a8b04405c210945d6bb3ba.csv"
+    },
+    {
+      "id": "DFII10",
+      "date": "2026-09-11",
+      "value": 2.6,
+      "sourceFile": "8a678cb5155bafa8d97b3a05cc16c1960acf047591a8b04405c210945d6bb3ba.csv"
+    },
+    {
       "id": "DFEDTARL",
       "date": "2008-12-16",
       "value": 0,
-      "sourceFile": "1a5d2f632be14814846de202090b68d7d5d539f9b1c9eda6f0d204b05bd3fd9f.csv"
+      "sourceFile": "70254af24553b73598a16b3a9182d13414dc2f2d63c2b06ee4d416ac3f87a7f7.csv"
     },
     {
       "id": "DFEDTARL",
-      "date": "2017-10-30",
+      "date": "2017-10-31",
       "value": 1,
-      "sourceFile": "1a5d2f632be14814846de202090b68d7d5d539f9b1c9eda6f0d204b05bd3fd9f.csv"
+      "sourceFile": "70254af24553b73598a16b3a9182d13414dc2f2d63c2b06ee4d416ac3f87a7f7.csv"
     },
     {
       "id": "DFEDTARL",
-      "date": "2026-09-13",
+      "date": "2026-09-14",
       "value": 3.5,
-      "sourceFile": "1a5d2f632be14814846de202090b68d7d5d539f9b1c9eda6f0d204b05bd3fd9f.csv"
+      "sourceFile": "70254af24553b73598a16b3a9182d13414dc2f2d63c2b06ee4d416ac3f87a7f7.csv"
     },
     {
       "id": "DFEDTARU",
       "date": "2008-12-16",
       "value": 0.25,
-      "sourceFile": "458eb262d62f9f4e50a52989373f877a46bf55cda34c4baa030175eb95115f3a.csv"
+      "sourceFile": "e9a6845de6e7a4d6f71457c8fcb61bf419c89340dcd044fbcf08e28b5c64cb2a.csv"
     },
     {
       "id": "DFEDTARU",
-      "date": "2017-10-30",
+      "date": "2017-10-31",
       "value": 1.25,
-      "sourceFile": "458eb262d62f9f4e50a52989373f877a46bf55cda34c4baa030175eb95115f3a.csv"
+      "sourceFile": "e9a6845de6e7a4d6f71457c8fcb61bf419c89340dcd044fbcf08e28b5c64cb2a.csv"
     },
     {
       "id": "DFEDTARU",
-      "date": "2026-09-13",
+      "date": "2026-09-14",
       "value": 3.75,
-      "sourceFile": "458eb262d62f9f4e50a52989373f877a46bf55cda34c4baa030175eb95115f3a.csv"
+      "sourceFile": "e9a6845de6e7a4d6f71457c8fcb61bf419c89340dcd044fbcf08e28b5c64cb2a.csv"
     },
     {
       "id": "DCOILBRENTEU",
@@ -234,42 +270,6 @@
       "date": "2026-09-09",
       "value": 109.51,
       "sourceFile": "90b25160f3193d9c1440e8bb45e4fb621f69bb19a4c5736928fdb0c7f2bdc7fb.csv"
-    },
-    {
-      "id": "DGS10",
-      "date": "1962-01-02",
-      "value": 4.06,
-      "sourceFile": "51cf02cc3952dd14161d22fd7aaba4dc54d1182c87692b034bb0a9d5aa476b4c.csv"
-    },
-    {
-      "id": "DGS10",
-      "date": "1994-05-26",
-      "value": 7.09,
-      "sourceFile": "51cf02cc3952dd14161d22fd7aaba4dc54d1182c87692b034bb0a9d5aa476b4c.csv"
-    },
-    {
-      "id": "DGS10",
-      "date": "2026-09-10",
-      "value": 4.95,
-      "sourceFile": "51cf02cc3952dd14161d22fd7aaba4dc54d1182c87692b034bb0a9d5aa476b4c.csv"
-    },
-    {
-      "id": "DFII10",
-      "date": "2003-01-02",
-      "value": 2.43,
-      "sourceFile": "b88542fcf663d0b94152446b33be3bfdd5ea691c2e95f5c0156ee97d5141b8f7.csv"
-    },
-    {
-      "id": "DFII10",
-      "date": "2014-11-03",
-      "value": 0.43,
-      "sourceFile": "b88542fcf663d0b94152446b33be3bfdd5ea691c2e95f5c0156ee97d5141b8f7.csv"
-    },
-    {
-      "id": "DFII10",
-      "date": "2026-09-10",
-      "value": 2.55,
-      "sourceFile": "b88542fcf663d0b94152446b33be3bfdd5ea691c2e95f5c0156ee97d5141b8f7.csv"
     }
   ],
   "chartSamples": [
@@ -388,14 +388,14 @@
     {
       "group": "policy",
       "id": "DFEDTARL",
-      "date": "2017-10-30",
+      "date": "2017-10-31",
       "actual": 1,
       "expected": 1
     },
     {
       "group": "policy",
       "id": "DFEDTARL",
-      "date": "2026-09-13",
+      "date": "2026-09-14",
       "actual": 3.5,
       "expected": 3.5
     },
@@ -421,6 +421,48 @@
       "expected": 109.51
     },
     {
+      "group": "natural-gas-us",
+      "id": "NATGAS_US",
+      "date": "1960-01-01",
+      "actual": 0.14,
+      "expected": 0.14
+    },
+    {
+      "group": "natural-gas-us",
+      "id": "NATGAS_US",
+      "date": "1993-05-01",
+      "actual": 2.17,
+      "expected": 2.17
+    },
+    {
+      "group": "natural-gas-us",
+      "id": "NATGAS_US",
+      "date": "2026-08-01",
+      "actual": 2.77,
+      "expected": 2.77
+    },
+    {
+      "group": "coal-aus",
+      "id": "COAL_AUS",
+      "date": "1970-01-01",
+      "actual": 7.8,
+      "expected": 7.8
+    },
+    {
+      "group": "coal-aus",
+      "id": "COAL_AUS",
+      "date": "1998-05-01",
+      "actual": 30.3,
+      "expected": 30.3
+    },
+    {
+      "group": "coal-aus",
+      "id": "COAL_AUS",
+      "date": "2026-08-01",
+      "actual": 135.2,
+      "expected": 135.2
+    },
+    {
       "group": "copper",
       "id": "COPPER",
       "date": "1960-01-01",
@@ -440,6 +482,69 @@
       "date": "2026-08-01",
       "actual": 14326,
       "expected": 14326
+    },
+    {
+      "group": "aluminum",
+      "id": "ALUMINUM",
+      "date": "1960-01-01",
+      "actual": 511,
+      "expected": 511
+    },
+    {
+      "group": "aluminum",
+      "id": "ALUMINUM",
+      "date": "1993-05-01",
+      "actual": 1124,
+      "expected": 1124
+    },
+    {
+      "group": "aluminum",
+      "id": "ALUMINUM",
+      "date": "2026-08-01",
+      "actual": 3251,
+      "expected": 3251
+    },
+    {
+      "group": "iron-ore",
+      "id": "IRON_ORE",
+      "date": "1960-01-01",
+      "actual": 11.4,
+      "expected": 11.4
+    },
+    {
+      "group": "iron-ore",
+      "id": "IRON_ORE",
+      "date": "1993-05-01",
+      "actual": 29.1,
+      "expected": 29.1
+    },
+    {
+      "group": "iron-ore",
+      "id": "IRON_ORE",
+      "date": "2026-08-01",
+      "actual": 96.3,
+      "expected": 96.3
+    },
+    {
+      "group": "nickel",
+      "id": "NICKEL",
+      "date": "1960-01-01",
+      "actual": 1631,
+      "expected": 1631
+    },
+    {
+      "group": "nickel",
+      "id": "NICKEL",
+      "date": "1993-05-01",
+      "actual": 5763,
+      "expected": 5763
+    },
+    {
+      "group": "nickel",
+      "id": "NICKEL",
+      "date": "2026-08-01",
+      "actual": 16751,
+      "expected": 16751
     },
     {
       "group": "gold",
@@ -493,16 +598,16 @@
     {
       "group": "yields",
       "id": "DFII10",
-      "date": "2014-11-03",
+      "date": "2014-11-04",
       "actual": 0.43,
       "expected": 0.43
     },
     {
       "group": "yields",
       "id": "DFII10",
-      "date": "2026-09-10",
-      "actual": 2.55,
-      "expected": 2.55
+      "date": "2026-09-11",
+      "actual": 2.6,
+      "expected": 2.6
     },
     {
       "group": "nfci",

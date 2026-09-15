@@ -6,6 +6,17 @@ DATA=ROOT/'data'; DATA.mkdir(exist_ok=True)
 REGISTRY=json.loads((ROOT/'lib/indicators.json').read_text(encoding='utf-8'))
 WB_PAGE='https://www.worldbank.org/en/research/commodity-markets'
 WB_FALLBACK='https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx'
+WB_COLUMNS=[
+    ('NATGAS_US','Natural gas, US','mmbtu'),
+    ('COAL_AUS','Coal, Australian','mt'),
+    ('COPPER','Copper','mt'),
+    ('ALUMINUM','Aluminum','mt'),
+    ('IRON_ORE','Iron ore, cfr spot','dmtu'),
+    ('NICKEL','Nickel','mt'),
+    ('GOLD','Gold','troy oz'),
+    ('SILVER','Silver','troy oz'),
+]
+WB_IDS=tuple(key for key,_,_ in WB_COLUMNS)
 CREATE_NO_WINDOW=getattr(subprocess,'CREATE_NO_WINDOW',0) if os.name=='nt' else 0
 WINDOWS_STARTUPINFO=None
 if os.name=='nt':
@@ -33,10 +44,10 @@ def parse_wb(raw):
     book=load_workbook(io.BytesIO(raw),read_only=True,data_only=True)
     rows=list(book['Monthly Prices'].values)
     header_index=next(i for i,row in enumerate(rows[:12]) if 'Copper' in row and 'Gold' in row and 'Silver' in row)
-    columns={key:rows[header_index].index(name) for key,name in [('COPPER','Copper'),('GOLD','Gold'),('SILVER','Silver')]}
+    columns={key:rows[header_index].index(name) for key,name,_ in WB_COLUMNS}
     units=rows[header_index+1]
-    for key,col in columns.items():
-        expected='mt' if key=='COPPER' else 'troy oz'
+    for key,_,expected in WB_COLUMNS:
+        col=columns[key]
         if expected not in str(units[col]).lower(): raise ValueError('Unexpected commodity unit')
     result={key:[] for key in columns}
     for row in rows[header_index+2:]:
@@ -55,7 +66,7 @@ CREATE TABLE IF NOT EXISTS runs(id INTEGER PRIMARY KEY,started_at TEXT,finished_
     return conn
 def save(conn,key,points,raw,source_url,started):
     digest=hashlib.sha256(raw).hexdigest(); version=DATA/'versions'/key;version.mkdir(parents=True,exist_ok=True)
-    path=version/(digest+('.xlsx' if key in ('COPPER','GOLD','SILVER') else '.csv'))
+    path=version/(digest+('.xlsx' if key in WB_IDS else '.csv'))
     if not path.exists():path.write_bytes(raw)
     old=conn.execute('SELECT payload FROM snapshots WHERE series_id=?',(key,)).fetchone()
     old_payload=json.loads(old[0]) if old else {}; old_points={p['date']:p['value'] for p in old_payload.get('observations',[])}
@@ -71,7 +82,7 @@ def collect(import_dir=None, selected=None):
         key=config['id'];ts=now()
         if selected is not None and key not in selected: continue
         try:
-            if key in ('COPPER','GOLD','SILVER'):
+            if key in WB_IDS:
                 if wb is None:
                     if import_dir: wb_raw=(pathlib.Path(import_dir)/'pink-sheet-monthly.xlsx').read_bytes()
                     else:
@@ -97,7 +108,7 @@ def collect(import_dir=None, selected=None):
             previous=conn.execute('SELECT payload FROM snapshots WHERE series_id=?',(key,)).fetchone()
             if previous and json.loads(previous[0]).get('observations') and points[-1]['date']<json.loads(previous[0])['observations'][-1]['date']:raise ValueError('Source latest observation regressed')
             if import_dir:
-                source_file=pathlib.Path(import_dir)/('pink-sheet-monthly.xlsx' if key in ('COPPER','GOLD','SILVER') else key+'.csv')
+                source_file=pathlib.Path(import_dir)/('pink-sheet-monthly.xlsx' if key in WB_IDS else key+'.csv')
                 ts=datetime.fromtimestamp(source_file.stat().st_mtime,timezone.utc).isoformat()
             save(conn,key,points,raw,url,ts);print(key,'OK',points[-1]['date'],flush=True)
         except Exception as exc:
