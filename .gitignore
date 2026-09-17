@@ -46,6 +46,7 @@ next-env.d.ts
 /work/
 /data/latest.json
 /data/policy-rates.json
+/data/policy-decisions.json
 /data/calendar.json
 /data/scheduler.json
 /data/*.sqlite*

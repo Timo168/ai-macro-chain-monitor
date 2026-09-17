@@ -1,11 +1,21 @@
 """Run by Task Scheduler every 15 min. Calendar-driven selection, bounded retries."""
-import argparse, concurrent.futures, json, os, pathlib, re, time
+import argparse, concurrent.futures, json, os, pathlib, re, sys, time
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlencode, urljoin
 from zoneinfo import ZoneInfo
 from calendar_provider import CalendarParser
 from collect import ROOT, DATA, REGISTRY, WB_IDS, collect, download
+from policy_decisions import collect_policy_decisions
 from policy_rates import collect_policy_rates
+
+def configure_headless_log():
+    """Give pythonw scheduled runs an audit trail without opening a console."""
+    if sys.stdout is not None:
+        return
+    log_dir=ROOT/'.logs';log_dir.mkdir(exist_ok=True)
+    stream=open(log_dir/'scheduler.log','a',encoding='utf-8',buffering=1)
+    sys.stdout=stream;sys.stderr=stream
+configure_headless_log()
 CT=ZoneInfo('America/Chicago')
 RIDS={10:['CPIAUCNS','CPILFENS','CPIAUCSL','CPILFESL'],50:['UNRATE','PAYEMS'],54:['PCEPI','PCEPILFE'],180:['ICSA'],221:['NFCI'],18:['DGS10','DFII10'],212:['DCOILBRENTEU']}
 def atomic(path,data):
@@ -64,6 +74,12 @@ def run(force=False):
     if lock.exists() and time.time()-lock.stat().st_mtime<1800:print('Another collector is running');return
     lock.write_text(str(os.getpid()))
     try:
+        # Official decision feed is independent of the monthly BIS comparison
+        # history and intentionally runs on every scheduler pass.
+        try:
+            collect_policy_decisions()
+        except Exception as exc:
+            print('POLICY_DECISIONS FAILED; will retain prior decision cache:', str(exc)[-160:], flush=True)
         # BIS policy rates are a supplementary series. A first-fetch outage must
         # not prevent the existing macro collection from running.
         try:

@@ -1,0 +1,38 @@
+import pathlib
+import sys
+import unittest
+from datetime import date
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / 'scripts'))
+from policy_decisions import find_latest_fed_statement, parse_effective_date, parse_fed_statement, parse_rate_token
+
+
+class PolicyDecisionParserTest(unittest.TestCase):
+    def test_parses_fractional_target_range_and_raise(self):
+        raw = b'''<html><body><p>The Committee decided to raise the target range for the federal funds rate by 1/4 percentage point to 3-3/4 to 4 percent.</p></body></html>'''
+        decision = parse_fed_statement(raw, 'https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm', date(2026, 9, 16))
+        self.assertEqual(decision['action'], 'raise')
+        self.assertEqual(decision['lower'], 3.75)
+        self.assertEqual(decision['upper'], 4.0)
+        self.assertEqual(decision['changeBps'], 25.0)
+
+    def test_parses_effective_date_and_filters_future_or_wrong_feed_items(self):
+        rss = b'''<rss><channel>
+          <item><title>Other release</title><link>https://www.federalreserve.gov/newsevents/pressreleases/monetary20260915a.htm</link></item>
+          <item><title>Federal Reserve issues FOMC statement</title><link>https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm</link><pubDate>Wed, 16 Sep 2026 18:00:00 GMT</pubDate></item>
+          <item><title>Federal Reserve issues FOMC statement</title><link>https://www.federalreserve.gov/newsevents/pressreleases/monetary20271020a.htm</link></item>
+        </channel></rss>'''
+        statement_date, link, announced_at = find_latest_fed_statement(rss, date(2026, 9, 17))
+        self.assertEqual(statement_date.isoformat(), '2026-09-16')
+        self.assertEqual(link, 'https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm')
+        self.assertEqual(announced_at, '2026-09-16T18:00:00+00:00')
+        effective = parse_effective_date(b'<p>Effective September 17, 2026, the interest rate will change.</p>')
+        self.assertEqual(effective, '2026-09-17')
+
+    def test_parses_fractional_values(self):
+        self.assertEqual(parse_rate_token('3-3/4'), 3.75)
+        self.assertEqual(parse_rate_token('1/4'), 0.25)
+
+
+if __name__ == '__main__':
+    unittest.main()

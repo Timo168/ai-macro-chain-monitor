@@ -1,15 +1,16 @@
 # AI 产业链宏观观察台
 
-七个中文视图、17 组图表、23 个真实历史序列。使用 React 19 / Vinext / Recharts，支持电脑和手机。不使用演示行情、投资评分或未经核验的市场预期。
+七个中文视图、17 组图表、23 个真实历史序列。使用 React 19 / Vite / Recharts，支持电脑和手机。不使用演示行情、投资评分或未经核验的市场预期。
 
 ## 当前运行方式
 
 - 本地网站：http://localhost:5173/ 。网站后台读取 `data/latest.json`，浏览器不直接请求数据源。
-- 本机 Windows 计划任务 `AI-Macro-Observatory-Data-Sync` 已安装，每 15 分钟检查官方发布日历。关闭网页或网站进程不影响采集；电脑需运行并联网，休眠后恢复时补检查。
+- 本机 Windows 计划任务 `AI-Macro-Observatory-Data-Sync` 已安装，每 15 分钟检查官方发布日历和官方利率决议。关闭网页或网站进程不影响采集；电脑需运行并联网，休眠后恢复时补检查。
 - `data/observations.sqlite` 保存观测值、来源发布时间（不可得时为 null）、获取时间与修订版本；`data/versions/<series>/<sha256>.*` 保留原始文件。
-- GitHub Pages 网站使用 `.github/workflows/deploy.yml`：约每 30 分钟在 GitHub Actions 运行采集器，按官方日历检查后发布页面与数据。与网页、个人电脑运行状态无关。`data-cache` 分支持久保存 SQLite、原始文件、日历与调度状态，每次运行先恢复再保存，使用普通提交而非强推。
+- GitHub Pages 网站使用 `.github/workflows/deploy.yml`：约每 15 分钟在 GitHub Actions 运行采集器，按官方日历检查后发布页面与数据。与网页、个人电脑运行状态无关。`data-cache` 分支持久保存 SQLite、原始文件、日历与调度状态，每次运行先恢复再保存，使用普通提交而非强推。
+- 政策利率页分开保存两种口径：BIS 的各国**月度期末**历史用于横向折线图；美联储官方 RSS、FOMC 声明及实施说明用于“最新官方决议”卡片。决议日不会被伪装成月初或月末的跨国比较点。
 - GitHub 定时工作流可能延迟，不能承诺准点或实时；公开仓库长期无活动时 GitHub 可能暂停定时工作流，可在 Actions 重新启用。页面展示最后成功采集时间。来源失败保留旧数据并标注状态。
-- 另保留 Vinext 本地开发入口。单独部署 Vinext 产物而未接入采集器时只提供标注的 seed 快照；正式 GitHub Pages 流程会随每次数据检查重新发布。
+- 本机 `5173` 使用 Vite 客户端预览并读取本地原子缓存；正式 GitHub Pages 流程会随每次数据检查重新发布。
 
 ## 启动
 
@@ -50,7 +51,7 @@ Get-ScheduledTaskInfo -TaskName 'AI-Macro-Observatory-Data-Sync'
 
 移除任务：`./scripts/remove-scheduler.ps1`。手动检查一次：`python scripts/schedule.py`；强制采集：`python scripts/schedule.py --force`。
 
-Windows 的计划任务会优先使用 `pythonw.exe`，采集中的 `curl`、Python 和 Node 子进程也会静默运行；定时更新不会弹出黑色命令窗口。手动在终端执行上述命令时，输出仍会留在当前终端，便于排查问题。
+Windows 的计划任务只使用 `pythonw.exe`；找不到它时安装会停止，而不会回退到会弹窗的 `python.exe`。任务隐藏运行、不等待电脑空闲，采集中的 `curl`、Python 和 Node 子进程也会静默运行；定时更新不会弹出黑色命令窗口。无窗口任务的运行记录写入 `.logs/scheduler.log`。手动在终端执行上述命令时，输出仍会留在当前终端，便于排查问题。
 
 1. FRED 官方 HTML 发布日历；PCE 优先使用 BEA 官方 JSON。按 `America/Chicago` 或来源 ISO 偏移解析，UTC 存储，北京时间展示，自动处理夏令时。
 2. 月度日历回看 62 天、周度 21 天，保存上次到期事件。发布后按 15/30/60/120 分钟重试；超过 48 小时仍缺新观测，继续每日追赶。失败时保留日历缓存。
@@ -58,6 +59,7 @@ Windows 的计划任务会优先使用 `pythonw.exe`，采集中的 `curl`、Pyt
 4. 世界银行文件每日检查新哈希；所有序列每周复核历史修订。月度指标不会因为数日不变就被标异常。
 5. 来源失败保留最后成功数据和获取时间，另记检查状态。尚未发布、等待上游、来源延迟、抓取失败且缓存、未配置分别处理。
 6. 网页“检查更新”只读缓存，不制造新观测。`data/scheduler.json` 为任务状态，`data/calendar.json` 为官方日历缓存；SQLite 的 `runs` 表记录采集结果。
+7. 美联储官方决议通过其货币政策 RSS 发现后，读取 FOMC 声明和实施说明，保存公布日、目标区间、生效日、变动基点、原文哈希与来源链接。每 15 分钟检查一次；抓取失败时保留上次成功决议并标注缓存。GitHub Pages 仍需等待下一次工作流和部署完成，因此这是准实时更新，不承诺秒级显示。
 
 ## 计算与图表
 

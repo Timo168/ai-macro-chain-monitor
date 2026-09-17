@@ -4,14 +4,14 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    - cron: '7,37 * * * *'
+    - cron: '7,22,37,52 * * * *'
 permissions:
   contents: write
   pages: write
   id-token: write
 concurrency:
   group: macro-data-and-pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,7 +37,7 @@ jobs:
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           MACRO_SCHEDULER: github_actions
-          MACRO_CHECK_MINUTES: '30'
+          MACRO_CHECK_MINUTES: '15'
         run: |
           if [ ! -f data/observations.sqlite ]; then python scripts/collect.py; fi
           python scripts/schedule.py

@@ -18,4 +18,7 @@ const version=value=>createHash('sha256').update(JSON.stringify(value)).digest('
 const policyPath=existsSync('data/policy-rates.json')?'data/policy-rates.json':'data/policy-rates.seed.json';
 const policyRates=JSON.parse(readFileSync(policyPath,'utf8'));
 writeFileSync('dist-pages/data/policy-rates.json',JSON.stringify(policyRates));
-writeFileSync('dist-pages/data/manifest.json',JSON.stringify({generatedAt:new Date().toISOString(),macro:{version:version(data),generatedAt:data.generatedAt},industry:{version:version(industry),generatedAt:industry.generatedAt},policyRates:{version:version(policyRates),generatedAt:policyRates.generatedAt}}));
+const policyDecisionsPath=existsSync('data/policy-decisions.json')?'data/policy-decisions.json':'data/policy-decisions.seed.json';
+const policyDecisions=JSON.parse(readFileSync(policyDecisionsPath,'utf8'));
+writeFileSync('dist-pages/data/policy-decisions.json',JSON.stringify(policyDecisions));
+writeFileSync('dist-pages/data/manifest.json',JSON.stringify({generatedAt:new Date().toISOString(),macro:{version:version(data),generatedAt:data.generatedAt},industry:{version:version(industry),generatedAt:industry.generatedAt},policyRates:{version:version(policyRates),generatedAt:policyRates.generatedAt},policyDecisions:{version:version(policyDecisions),generatedAt:policyDecisions.generatedAt}}));

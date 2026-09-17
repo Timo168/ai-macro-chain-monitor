@@ -1,0 +1,13 @@
+{
+  "generatedAt": "2026-01-01T00:00:00+00:00",
+  "checkedAt": "2026-01-01T00:00:00+00:00",
+  "status": "unavailable",
+  "source": {
+    "name": "美国联邦储备委员会官方货币政策 RSS 与声明",
+    "url": "https://www.federalreserve.gov/feeds/press_monetary.xml",
+    "frequency": "决议公布后每 15 分钟检查",
+    "unit": "联邦基金目标利率区间，%"
+  },
+  "decisions": [],
+  "error": "等待后台同步官方决议。"
+}
