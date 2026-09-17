@@ -2,7 +2,7 @@
 
 import {useEffect,useMemo,useState} from 'react';
 import {Bell,CalendarDays,Check,Download,ExternalLink,Info,Clock3} from 'lucide-react';
-import {ResponsiveContainer,LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip,ReferenceDot,ReferenceLine} from 'recharts';
+import {ResponsiveContainer,LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip,ReferenceLine} from 'recharts';
 import {Button} from '@/components/ui/button';
 import {policyBanks,policyCalendar,policyCalendarSourceCheckedAt,type PolicyCalendarEvent} from '@/lib/policy-calendar';
 import {policyRateColor,policyRateChange,type PolicyRatesDataset} from '@/lib/policy-rates';
@@ -26,9 +26,21 @@ const escapeIcs=(value:string)=>value.replaceAll('\\','\\\\').replaceAll(',','\\
 const policyFlagCodeById:Record<string,string>={fed:'us',boj:'jp',bok:'kr',ecb:'eu',boe:'gb',boc:'ca',rba:'au',rbnz:'nz',snb:'ch',pboc:'cn',cbr:'ru',rbi:'in',bcb:'br',sarb:'za'};
 const policyBankById:Map<string,(typeof policyBanks)[number]>=new Map(policyBanks.map(bank=>[bank.id,bank]));
 
-function PolicyRateTooltip({active,payload,label}:{active?:boolean;payload?:Array<{dataKey?:string|number;value?:number|string|null;color?:string}>;label?:number|string}){
+function PolicyRateTooltip({active,payload,label,fedDecision}:{active?:boolean;payload?:Array<{dataKey?:string|number;value?:number|string|null;color?:string}>;label?:number|string;fedDecision?:PolicyDecision|null}){
  if(!active||!payload?.length||label==null)return null;
+ const decisionPoint=payload.find(point=>point.dataKey==='fedDecisionMidpoint'&&point.value!=null);
+ if(decisionPoint&&fedDecision)return <div className="policy-rate-tooltip policy-decision-tooltip" role="status">
+  <strong>美联储官方决议 {fedDecision.announcementDate}</strong>
+  <p>决议日观测 · 非月末数据</p>
+  <ul><li>
+   <i style={{background:policyRateColor('fed')}} aria-hidden="true"/>
+   <span>美联储</span>
+   <img src={`https://flagcdn.com/${policyFlagCodeById.fed}.svg`} alt="" width={20} height={15} loading="eager" onError={event=>{event.currentTarget.style.display='none';}}/>
+   <b>{rateRange(fedDecision)}</b>
+  </li></ul>
+ </div>;
  const rates=payload.flatMap(point=>{
+  if(point.value==null)return [];
   const id=String(point.dataKey??'');
   const value=typeof point.value==='number'?point.value:Number(point.value);
   const bank=policyBankById.get(id);
@@ -43,6 +55,19 @@ function PolicyRateTooltip({active,payload,label}:{active?:boolean;payload?:Arra
    {policyFlagCodeById[rate.id]&&<img src={`https://flagcdn.com/${policyFlagCodeById[rate.id]}.svg`} alt="" width={20} height={15} loading="eager" onError={event=>{event.currentTarget.style.display='none';}}/>}
    <b>{rateNumber(rate.value)}</b>
   </li>)}</ul>
+ </div>;
+}
+
+function FedDecisionHover({decision}:{decision:PolicyDecision}){
+ return <div className="policy-rate-tooltip policy-decision-tooltip policy-decision-hover" role="status">
+  <strong>美联储官方决议 {decision.announcementDate}</strong>
+  <p>决议日观测 · 非月末数据</p>
+  <ul><li>
+   <i style={{background:policyRateColor('fed')}} aria-hidden="true"/>
+   <span>美联储</span>
+   <img src={`https://flagcdn.com/${policyFlagCodeById.fed}.svg`} alt="" width={20} height={15} loading="eager" onError={event=>{event.currentTarget.style.display='none';}}/>
+   <b>{rateRange(decision)}</b>
+  </li></ul>
  </div>;
 }
 
@@ -73,6 +98,7 @@ function RateComparison({following}:{following:string[]}){
  const [decisionDataset,setDecisionDataset]=useState<PolicyDecisionsDataset|null>(null);
  const [loadError,setLoadError]=useState('');
  const [range,setRange]=useState<'1'|'3'|'5'|'10'>('5');
+ const [fedDecisionHovered,setFedDecisionHovered]=useState(false);
 
  useEffect(()=>{
   let cancelled=false;
@@ -140,6 +166,11 @@ function RateComparison({following}:{following:string[]}){
   if(!latestFedDecision||!fedHistory||!rows[0])return null;
   return latestFedDecision.announcementDate>=rows[0].date&&isDecisionAheadOfMonthlyHistory(latestFedDecision,fedHistory.latestObservationDate)?latestFedDecision:null;
  },[latestFedDecision,rows,visible]);
+ const chartRows=useMemo(()=>{
+  if(!chartFedDecision)return rows;
+  const decisionDate=chartFedDecision.announcementDate;
+  return [...rows,{date:decisionDate,timestamp:toUtc(decisionDate),fedDecisionMidpoint:chartFedDecision.midpoint}].sort((first,second)=>first.timestamp-second.timestamp);
+ },[chartFedDecision,rows]);
 
  return <section className="policy-rates" aria-label="主要央行政策利率横向对比">
   <div className="policy-section-heading">
@@ -167,15 +198,15 @@ function RateComparison({following}:{following:string[]}){
    })}{!visible.length&&<div className="policy-empty">请在“我的关注范围”至少选择一家央行，以显示政策利率。</div>}</div>
    {rows.length&&visible.length?<>
     {chartFedDecision&&<div className="policy-chart-decision-disclosure"><i aria-hidden="true"/><span><strong>图中绿色虚线与圆点：</strong>美联储 {chartFedDecision.announcementDate} 官方决议，圆点按目标区间中点定位，完整区间为 {rateRange(chartFedDecision)}；这是决议日标记，不是月末观测。</span></div>}
-    <div className="policy-rate-chart"><ResponsiveContainer width="100%" height="100%"><LineChart data={rows} margin={{top:15,right:12,bottom:0,left:-22}} accessibilityLayer>
+    <div className="policy-rate-chart"><ResponsiveContainer width="100%" height="100%"><LineChart data={chartRows} margin={{top:15,right:12,bottom:0,left:-22}} accessibilityLayer>
      <CartesianGrid vertical={false} stroke="#e4ece9" strokeDasharray="3 4"/>
      <XAxis type="number" dataKey="timestamp" scale="time" domain={['dataMin','dataMax']} tickFormatter={formatChartMonth} minTickGap={46} tickLine={false} axisLine={false} tick={{fontSize:11,fill:'#819096'}}/>
      <YAxis tickFormatter={(value:number)=>`${value}%`} domain={['auto','auto']} tickLine={false} axisLine={false} tick={{fontSize:11,fill:'#819096'}} width={58}/>
-     <Tooltip content={<PolicyRateTooltip/>}/>
+     <Tooltip content={<PolicyRateTooltip fedDecision={chartFedDecision}/>}/>
      <ReferenceLine y={0} stroke="#adbdb9" strokeDasharray="4 4"/>
-     {chartFedDecision&&<><ReferenceLine x={toUtc(chartFedDecision.announcementDate)} stroke={policyRateColor('fed')} strokeDasharray="4 3" strokeWidth={1.5} ifOverflow="extendDomain" zIndex={10}/><ReferenceDot x={toUtc(chartFedDecision.announcementDate)} y={chartFedDecision.midpoint} r={5} fill="#fff" stroke={policyRateColor('fed')} strokeWidth={2.5} ifOverflow="extendDomain"/></>}
-     {visible.map((series,index)=><Line key={series.id} type="stepAfter" dataKey={series.id} name={series.name} stroke={policyRateColor(series.id,index)} strokeWidth={2} dot={false} connectNulls={false} isAnimationActive={false}/>)}
-    </LineChart></ResponsiveContainer></div>
+     {chartFedDecision&&<><ReferenceLine x={toUtc(chartFedDecision.announcementDate)} stroke={policyRateColor('fed')} strokeDasharray="4 3" strokeWidth={1.5} ifOverflow="extendDomain" zIndex={10}/><ReferenceLine x={toUtc(chartFedDecision.announcementDate)} stroke="transparent" strokeWidth={18} ifOverflow="extendDomain" onMouseEnter={()=>setFedDecisionHovered(true)} onMouseLeave={()=>setFedDecisionHovered(false)} onClick={()=>setFedDecisionHovered(true)}/><Line dataKey="fedDecisionMidpoint" name="美联储官方决议" stroke={policyRateColor('fed')} strokeWidth={0} dot={(dot:{cx?:number;cy?:number})=>dot.cx!=null&&dot.cy!=null?<g onMouseEnter={()=>setFedDecisionHovered(true)} onMouseLeave={()=>setFedDecisionHovered(false)} onClick={()=>setFedDecisionHovered(true)} style={{cursor:'pointer'}}><circle cx={dot.cx} cy={dot.cy} r={14} fill="transparent"/><circle cx={dot.cx} cy={dot.cy} r={7} fill="#fff" stroke={policyRateColor('fed')} strokeWidth={2.5}/></g>:null} activeDot={false} connectNulls={false} isAnimationActive={false}/></>}
+    {visible.map((series,index)=><Line key={series.id} type="stepAfter" dataKey={series.id} name={series.name} stroke={policyRateColor(series.id,index)} strokeWidth={2} dot={false} connectNulls={false} isAnimationActive={false}/>)}
+    </LineChart></ResponsiveContainer>{chartFedDecision&&fedDecisionHovered&&<FedDecisionHover decision={chartFedDecision}/>}</div>
     <div className="policy-rate-legend">{visible.map((series,index)=><span key={series.id}><i style={{background:policyRateColor(series.id,index)}}/>{series.name}</span>)}<em>鼠标悬停查看月末值；上方显示已发布的即时官方决议</em></div>
    </>:<div className="policy-empty">所选央行还没有足够的同频历史数据。</div>}
    <div className="policy-rate-note">
