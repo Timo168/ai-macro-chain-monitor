@@ -2,14 +2,15 @@
 
 import {useEffect,useMemo,useState} from 'react';
 import {Bell,CalendarDays,Check,Download,ExternalLink,Info,Clock3} from 'lucide-react';
-import {ResponsiveContainer,LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip,ReferenceLine} from 'recharts';
+import {ResponsiveContainer,LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip,ReferenceDot,ReferenceLine} from 'recharts';
 import {Button} from '@/components/ui/button';
 import {policyBanks,policyCalendar,policyCalendarSourceCheckedAt,type PolicyCalendarEvent} from '@/lib/policy-calendar';
 import {policyRateColor,policyRateChange,type PolicyRatesDataset} from '@/lib/policy-rates';
-import {policyDecisionChange,type PolicyDecision,type PolicyDecisionsDataset} from '@/lib/policy-decisions';
+import {isDecisionAheadOfMonthlyHistory,policyDecisionChange,type PolicyDecision,type PolicyDecisionsDataset} from '@/lib/policy-decisions';
 import {manifestEndpoint,policyDecisionsEndpoint,policyRatesEndpoint,versionedEndpoint} from '@/lib/runtime';
 import './policy-calendar.css';
 import './policy-realtime.css';
+import './policy-chart-overlay.css';
 
 const storageKey='ai-macro-policy-calendar-following';
 const dateFormatter=new Intl.DateTimeFormat('zh-CN',{month:'long',day:'numeric',weekday:'short',timeZone:'UTC'});
@@ -17,6 +18,8 @@ const beijingFormatter=new Intl.DateTimeFormat('zh-CN',{month:'numeric',day:'num
 const toUtc=(date:string)=>Date.parse(date+'T00:00:00Z');
 const formatDate=(date:string)=>dateFormatter.format(new Date(date+'T00:00:00Z'));
 const formatBeijing=(value:string|undefined|null)=>value?`北京时间 ${beijingFormatter.format(new Date(value))}`:'北京时间待源数据提供';
+const formatChartDate=(value:number|string)=>new Date(Number(value)).toISOString().slice(0,10);
+const formatChartMonth=(value:number|string)=>formatChartDate(value).slice(2,7).replace('-','/');
 const daysTo=(date:string,now=new Date())=>Math.round((toUtc(date)-Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()))/86400000);
 const escapeIcs=(value:string)=>value.replaceAll('\\','\\\\').replaceAll(',','\\,').replaceAll(';','\\;').replaceAll('\n','\\n');
 
@@ -96,6 +99,7 @@ function RateComparison({following}:{following:string[]}){
   return [...next.values()].sort((first,second)=>second.announcementDate.localeCompare(first.announcementDate));
  },[decisionDataset,following]);
  const decisionsByBank=useMemo(()=>new Map(latestDecisions.map(decision=>[decision.bankId,decision])),[latestDecisions]);
+ const latestFedDecision=useMemo(()=>latestDecisions.find(decision=>decision.bankId==='fed')??null,[latestDecisions]);
  const rows=useMemo(()=>{
   if(!visible.length)return [];
   const all=visible.flatMap(series=>series.observations.map(point=>point.date));
@@ -106,8 +110,13 @@ function RateComparison({following}:{following:string[]}){
   const floor=from.toISOString().slice(0,10);
   const dates=[...new Set(all.filter(date=>date>=floor))].sort();
   const maps=new Map(visible.map(series=>[series.id,new Map(series.observations.map(point=>[point.date,point.value]))]));
-  return dates.map(date=>({date,...Object.fromEntries(visible.map(series=>[series.id,maps.get(series.id)?.get(date)??null]))}));
+  return dates.map(date=>({date,timestamp:toUtc(date),...Object.fromEntries(visible.map(series=>[series.id,maps.get(series.id)?.get(date)??null]))}));
  },[visible,range]);
+ const chartFedDecision=useMemo(()=>{
+  const fedHistory=visible.find(series=>series.id==='fed');
+  if(!latestFedDecision||!fedHistory||!rows[0])return null;
+  return latestFedDecision.announcementDate>=rows[0].date&&isDecisionAheadOfMonthlyHistory(latestFedDecision,fedHistory.latestObservationDate)?latestFedDecision:null;
+ },[latestFedDecision,rows,visible]);
 
  return <section className="policy-rates" aria-label="主要央行政策利率横向对比">
   <div className="policy-section-heading">
@@ -134,12 +143,14 @@ function RateComparison({following}:{following:string[]}){
     </article>;
    })}{!visible.length&&<div className="policy-empty">请在“我的关注范围”至少选择一家央行，以显示政策利率。</div>}</div>
    {rows.length&&visible.length?<>
+    {chartFedDecision&&<div className="policy-chart-decision-disclosure"><i aria-hidden="true"/><span><strong>图中绿色虚线与圆点：</strong>美联储 {chartFedDecision.announcementDate} 官方决议，圆点按目标区间中点定位，完整区间为 {rateRange(chartFedDecision)}；这是决议日标记，不是月末观测。</span></div>}
     <div className="policy-rate-chart"><ResponsiveContainer width="100%" height="100%"><LineChart data={rows} margin={{top:15,right:12,bottom:0,left:-22}} accessibilityLayer>
      <CartesianGrid vertical={false} stroke="#e4ece9" strokeDasharray="3 4"/>
-     <XAxis dataKey="date" tickFormatter={(value:string)=>value.slice(2,7).replace('-','/')} minTickGap={46} tickLine={false} axisLine={false} tick={{fontSize:11,fill:'#819096'}}/>
+     <XAxis type="number" dataKey="timestamp" scale="time" domain={['dataMin','dataMax']} tickFormatter={formatChartMonth} minTickGap={46} tickLine={false} axisLine={false} tick={{fontSize:11,fill:'#819096'}}/>
      <YAxis tickFormatter={(value:number)=>`${value}%`} domain={['auto','auto']} tickLine={false} axisLine={false} tick={{fontSize:11,fill:'#819096'}} width={58}/>
-     <Tooltip labelFormatter={value=>`${String(value).slice(0,7)} · 月末`} formatter={(value,name)=>[rateNumber(typeof value==='number'?value:undefined),name]}/>
+     <Tooltip labelFormatter={value=>{const date=formatChartDate(value);return date===chartFedDecision?.announcementDate?`美联储官方决议 ${date}（非月末观测）`:`${date.slice(0,7)} · 月末`;}} formatter={(value,name)=>[rateNumber(typeof value==='number'?value:undefined),name]}/>
      <ReferenceLine y={0} stroke="#adbdb9" strokeDasharray="4 4"/>
+     {chartFedDecision&&<><ReferenceLine x={toUtc(chartFedDecision.announcementDate)} stroke={policyRateColor('fed')} strokeDasharray="4 3" strokeWidth={1.5} ifOverflow="extendDomain" zIndex={10}/><ReferenceDot x={toUtc(chartFedDecision.announcementDate)} y={chartFedDecision.midpoint} r={5} fill="#fff" stroke={policyRateColor('fed')} strokeWidth={2.5} ifOverflow="extendDomain"/></>}
      {visible.map((series,index)=><Line key={series.id} type="stepAfter" dataKey={series.id} name={series.name} stroke={policyRateColor(series.id,index)} strokeWidth={2} dot={false} connectNulls={false} isAnimationActive={false}/>)}
     </LineChart></ResponsiveContainer></div>
     <div className="policy-rate-legend">{visible.map((series,index)=><span key={series.id}><i style={{background:policyRateColor(series.id,index)}}/>{series.name}</span>)}<em>鼠标悬停查看月末值；上方显示已发布的即时官方决议</em></div>

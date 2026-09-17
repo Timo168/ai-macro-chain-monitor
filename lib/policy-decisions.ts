@@ -29,3 +29,9 @@ export function policyDecisionChange(decision:PolicyDecision){
  if(decision.action==='maintain'||decision.changeBps===0)return '维持不变';
  return `${decision.action==='raise'?'上调':'下调'} ${Math.abs(decision.changeBps).toFixed(0)}bp`;
 }
+
+export function isDecisionAheadOfMonthlyHistory(decision:PolicyDecision,latestObservationDate:string){
+ const effectivePeriod=(decision.effectiveDate||decision.announcementDate).slice(0,7);
+ const latestPeriod=latestObservationDate.slice(0,7);
+ return effectivePeriod>latestPeriod;
+}
