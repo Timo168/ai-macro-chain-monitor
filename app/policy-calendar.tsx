@@ -23,7 +23,7 @@ const formatChartDate=(value:number|string)=>new Date(Number(value)).toISOString
 const formatChartMonth=(value:number|string)=>formatChartDate(value).slice(2,7).replace('-','/');
 const daysTo=(date:string,now=new Date())=>Math.round((toUtc(date)-Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()))/86400000);
 const escapeIcs=(value:string)=>value.replaceAll('\\','\\\\').replaceAll(',','\\,').replaceAll(';','\\;').replaceAll('\n','\\n');
-const policyFlagById:Record<string,string>={fed:'🇺🇸',boj:'🇯🇵',bok:'🇰🇷',ecb:'🇪🇺',boe:'🇬🇧',boc:'🇨🇦',rba:'🇦🇺',rbnz:'🇳🇿',snb:'🇨🇭',pboc:'🇨🇳',cbr:'🇷🇺',rbi:'🇮🇳',bcb:'🇧🇷',sarb:'🇿🇦'};
+const policyFlagCodeById:Record<string,string>={fed:'us',boj:'jp',bok:'kr',ecb:'eu',boe:'gb',boc:'ca',rba:'au',rbnz:'nz',snb:'ch',pboc:'cn',cbr:'ru',rbi:'in',bcb:'br',sarb:'za'};
 const policyBankById:Map<string,(typeof policyBanks)[number]>=new Map(policyBanks.map(bank=>[bank.id,bank]));
 
 function PolicyRateTooltip({active,payload,label}:{active?:boolean;payload?:Array<{dataKey?:string|number;value?:number|string|null;color?:string}>;label?:number|string}){
@@ -39,7 +39,8 @@ function PolicyRateTooltip({active,payload,label}:{active?:boolean;payload?:Arra
   <strong>{formatChartDate(label).slice(0,7)} · 月末</strong>
   <ul>{rates.map(rate=><li key={rate.id}>
    <i style={{background:rate.color}} aria-hidden="true"/>
-   <span>{rate.bank.name} {policyFlagById[rate.id]??'🌐'}</span>
+   <span>{rate.bank.name}</span>
+   {policyFlagCodeById[rate.id]&&<img src={`https://flagcdn.com/${policyFlagCodeById[rate.id]}.svg`} alt="" width={20} height={15} loading="eager" onError={event=>{event.currentTarget.style.display='none';}}/>}
    <b>{rateNumber(rate.value)}</b>
   </li>)}</ul>
  </div>;
