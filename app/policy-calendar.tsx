@@ -13,6 +13,7 @@ import './policy-realtime.css';
 import './policy-chart-overlay.css';
 
 const storageKey='ai-macro-policy-calendar-following';
+const legacyDefaultPolicyBanks=['fed','boj','bok','ecb','boe','boc'];
 const dateFormatter=new Intl.DateTimeFormat('zh-CN',{month:'long',day:'numeric',weekday:'short',timeZone:'UTC'});
 const beijingFormatter=new Intl.DateTimeFormat('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Shanghai'});
 const toUtc=(date:string)=>Date.parse(date+'T00:00:00Z');
@@ -170,7 +171,9 @@ export default function PolicyCalendar(){
   try{
    const saved=localStorage.getItem(storageKey);
    const parsed=saved?JSON.parse(saved):null;
-   return Array.isArray(parsed)?parsed.filter((id):id is string=>typeof id==='string'):policyBanks.map(bank=>bank.id);
+   if(!Array.isArray(parsed))return policyBanks.map(bank=>bank.id);
+   const valid=parsed.filter((id):id is string=>typeof id==='string'&&policyBanks.some(bank=>bank.id===id));
+   return legacyDefaultPolicyBanks.every(id=>valid.includes(id))?policyBanks.map(bank=>bank.id):valid;
   }catch{return policyBanks.map(bank=>bank.id);}
  });
  useEffect(()=>{try{localStorage.setItem(storageKey,JSON.stringify(following));}catch{}},[following]);
@@ -197,6 +200,6 @@ export default function PolicyCalendar(){
   <section className="policy-follow"><div><h3>我的关注范围</h3><p>选择需要跟踪的央行。选择结果仅保存在当前浏览器，并同时控制下方利率对比图；下载的 iCalendar 文件会在决议日前一天提醒。</p></div><div className="policy-bank-list">{policyBanks.map(bank=>{const selected=following.includes(bank.id);return <button key={bank.id} className={selected?'selected':''} aria-pressed={selected} onClick={()=>toggle(bank.id)}><span>{selected?<Check size={14}/>:<span className="policy-unchecked"/>}</span><strong>{bank.name}</strong><small>{bank.country} · {bank.shortName}</small></button>;})}</div></section>
   <RateComparison following={following}/>
   <section className="policy-timeline"><div className="policy-section-heading"><div><h3>未来决议日</h3><p>“决议日”是公告日或两日会议的最后一天；不把会议开始日误写成利率决定时间。</p></div><span>{upcoming.length} 项已确认日程</span></div>{grouped.length?grouped.map(([month,events])=><div className="policy-month" key={month}><h4>{new Intl.DateTimeFormat('zh-CN',{year:'numeric',month:'long',timeZone:'UTC'}).format(new Date(month+'-01T00:00:00Z'))}</h4>{events.map(event=><article key={event.id} className={daysTo(event.decisionDate,now)<=7?'soon':''}><div className="policy-date"><strong>{event.decisionDate.slice(8)}</strong><span>{new Intl.DateTimeFormat('zh-CN',{weekday:'short',timeZone:'UTC'}).format(new Date(event.decisionDate+'T00:00:00Z'))}</span></div><div className="policy-event"><div><span>{event.country}</span><h5>{event.bank}</h5></div><p>{event.title}</p><small>{event.startDate===event.decisionDate?'当日决议':`${formatDate(event.startDate)} 开会 · ${formatDate(event.decisionDate)} 决议`} · {event.timezone}</small></div><div className="policy-actions"><b>{reminderLabel(daysTo(event.decisionDate,now))}</b><button onClick={()=>downloadCalendar([event])}><CalendarDays size={14}/>添加提醒</button><a href={event.sourceUrl} target="_blank" rel="noreferrer" aria-label={`打开${event.bank}官方日程`}><ExternalLink size={15}/></a></div></article>)}</div>):<div className="policy-empty">没有已选央行的未来决议日。可在上方重新选择关注范围。</div>}</section>
-  <section className="policy-notes"><Info size={18}/><div><strong>使用方式与范围</strong><p>下载 `.ics` 后导入手机、Google、Apple 或 Outlook 日历，提醒由你的日历应用在决议日前一天触发。这里追踪的是已公布日程，不能替代决议声明；实际升息、降息或维持不变，须在公告发布后结合原文确认。</p><p>2027 年已纳入美联储、日本银行、英格兰银行和加拿大银行已公布日程；欧洲央行与韩国银行将待其官网发布后加入。中国人民银行的 LPR 按惯例在每月 20 日发布，遇节假日顺延；它不是预先固定的议息会议日，因此本页暂不将其伪装成确定会议提醒。</p><small>日程最近核对：{policyCalendarSourceCheckedAt} · {policyBanks.length} 家央行 · 每项均链接原始官网。</small></div></section>
+  <section className="policy-notes"><Info size={18}/><div><strong>使用方式与范围</strong><p>下载 `.ics` 后导入手机、Google、Apple 或 Outlook 日历，提醒由你的日历应用在决议日前一天触发。这里追踪的是已公布日程，不能替代决议声明；实际升息、降息或维持不变，须在公告发布后结合原文确认。</p><p>2027 年已纳入美联储、日本银行、英格兰银行和加拿大银行已公布日程；欧洲央行与韩国银行将待其官网发布后加入。中国人民银行的 LPR 按惯例在每月 20 日发布、遇节假日顺延，并非预先固定的议息会议；印度储备银行的下一期 MPC 日程尚未在当前官方核对范围内。因此两者可在利率图中比较，但不会被伪装成确定的会议提醒。</p><small>日程最近核对：{policyCalendarSourceCheckedAt} · {policyBanks.length} 家央行 · 每项均链接原始官网。</small></div></section>
  </section>;
 }

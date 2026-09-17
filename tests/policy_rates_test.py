@@ -11,18 +11,18 @@ class PolicyRatesParserTest(unittest.TestCase):
         header = 'FREQ,REF_AREA,UNIT_MEASURE,TITLE,TIME_PERIOD,OBS_VALUE\n'
         rows = []
         months=[f'{year}-{month:02d}' for year in [2022,2023] for month in range(1,13)]
-        for area, value in [('US', '4.5'), ('JP', '0.5'), ('KR', '3.5'), ('XM', '3.75'), ('GB', '5.25'), ('CA', '4.75')]:
+        for area, value in [('US', '4.5'), ('JP', '0.5'), ('KR', '3.5'), ('XM', '3.75'), ('GB', '5.25'), ('CA', '4.75'), ('AU', '4.35'), ('NZ', '2.5'), ('CH', '0'), ('CN', '3'), ('RU', '14'), ('IN', '5.25'), ('BR', '14'), ('ZA', '7')]:
             for month in months:
                 rows.append(f'M,{area},368,Policy {area},{month},{value}')
         series = parse_policy_rates((header + '\n'.join(rows)).encode())
-        self.assertEqual([item['sourceArea'] for item in series], ['US', 'JP', 'KR', 'XM', 'GB', 'CA'])
+        self.assertEqual([item['sourceArea'] for item in series], ['US', 'JP', 'KR', 'XM', 'GB', 'CA', 'AU', 'NZ', 'CH', 'CN', 'RU', 'IN', 'BR', 'ZA'])
         self.assertEqual(series[0]['latestObservationDate'], '2023-12-01')
         self.assertEqual(series[0]['latestValue'], 4.5)
 
     def test_rejects_duplicate_months(self):
         header = 'FREQ,REF_AREA,UNIT_MEASURE,TITLE,TIME_PERIOD,OBS_VALUE\n'
         rows = []
-        for area in ['US', 'JP', 'KR', 'XM', 'GB', 'CA']:
+        for area in ['US', 'JP', 'KR', 'XM', 'GB', 'CA', 'AU', 'NZ', 'CH', 'CN', 'RU', 'IN', 'BR', 'ZA']:
             rows.extend([f'M,{area},368,Policy {area},2023-01,1.0'] * 24)
         with self.assertRaisesRegex(ValueError, 'duplicate'):
             parse_policy_rates((header + '\n'.join(rows)).encode())

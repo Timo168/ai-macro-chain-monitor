@@ -18,7 +18,7 @@ from collect import DATA, download
 SOURCE_URL = 'https://data.bis.org/topics/CBPOL'
 # Ten years covers the selectable comparison windows while keeping BIS's
 # metadata-heavy CSV request bounded for unattended scheduled runs.
-API_URL = 'https://stats.bis.org/api/v1/data/WS_CBPOL/M.US+JP+KR+XM+GB+CA?startPeriod=2016-01&format=csvfile'
+API_URL = 'https://stats.bis.org/api/v1/data/WS_CBPOL/M.US+JP+KR+XM+GB+CA+AU+NZ+CH+CN+RU+IN+BR+ZA?startPeriod=2016-01&format=csvfile'
 SERIES = {
     'US': {'id': 'fed', 'name': '美联储', 'country': '美国', 'shortName': 'FOMC', 'sourceUrl': 'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'},
     'JP': {'id': 'boj', 'name': '日本银行', 'country': '日本', 'shortName': 'BOJ', 'sourceUrl': 'https://www.boj.or.jp/en/mopo/mpmsche_minu/'},
@@ -26,6 +26,14 @@ SERIES = {
     'XM': {'id': 'ecb', 'name': '欧洲央行', 'country': '欧元区', 'shortName': 'ECB', 'sourceUrl': 'https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html'},
     'GB': {'id': 'boe', 'name': '英格兰银行', 'country': '英国', 'shortName': 'BoE', 'sourceUrl': 'https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates'},
     'CA': {'id': 'boc', 'name': '加拿大银行', 'country': '加拿大', 'shortName': 'BoC', 'sourceUrl': 'https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/'},
+    'AU': {'id': 'rba', 'name': '澳大利亚储备银行', 'country': '澳大利亚', 'shortName': 'RBA', 'sourceUrl': 'https://www.rba.gov.au/monetary-policy/int-rate-decisions/'},
+    'NZ': {'id': 'rbnz', 'name': '新西兰储备银行', 'country': '新西兰', 'shortName': 'RBNZ', 'sourceUrl': 'https://www.rbnz.govt.nz/monetary-policy/monetary-policy-decisions'},
+    'CH': {'id': 'snb', 'name': '瑞士国家银行', 'country': '瑞士', 'shortName': 'SNB', 'sourceUrl': 'https://www.snb.ch/en/the-snb/mandates-goals/monetary-policy/decisions'},
+    'CN': {'id': 'pboc', 'name': '中国人民银行', 'country': '中国', 'shortName': 'PBoC', 'sourceUrl': 'https://www.pbc.gov.cn/'},
+    'RU': {'id': 'cbr', 'name': '俄罗斯银行', 'country': '俄罗斯', 'shortName': 'CBR', 'sourceUrl': 'https://cbr.ru/eng/hd_base/KeyRate/'},
+    'IN': {'id': 'rbi', 'name': '印度储备银行', 'country': '印度', 'shortName': 'RBI', 'sourceUrl': 'https://www.rbi.org.in/Scripts/Annualpolicy.aspx'},
+    'BR': {'id': 'bcb', 'name': '巴西中央银行', 'country': '巴西', 'shortName': 'BCB', 'sourceUrl': 'https://www.bcb.gov.br/en/monetarypolicy/committee'},
+    'ZA': {'id': 'sarb', 'name': '南非储备银行', 'country': '南非', 'shortName': 'SARB', 'sourceUrl': 'https://www.resbank.co.za/en/home/what-we-do/monetary-policy/monetary-policy-committee'},
 }
 
 
@@ -81,7 +89,9 @@ def collect_policy_rates(force=False, import_file=None):
     path = DATA / 'policy-rates.json'
     prior = json.loads(path.read_text(encoding='utf-8')) if path.exists() else None
     checked_at = utc_now()
-    if not force and prior and prior.get('checkedAt'):
+    expected_ids = {meta['id'] for meta in SERIES.values()}
+    prior_ids = {item.get('id') for item in (prior or {}).get('series', [])}
+    if not force and prior and prior.get('checkedAt') and prior_ids == expected_ids and prior.get('source', {}).get('apiUrl') == API_URL:
         previous = datetime.fromisoformat(prior['checkedAt'])
         if datetime.now(timezone.utc) - previous < timedelta(hours=20):
             return prior
