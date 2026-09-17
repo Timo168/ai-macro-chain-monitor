@@ -23,6 +23,27 @@ const formatChartDate=(value:number|string)=>new Date(Number(value)).toISOString
 const formatChartMonth=(value:number|string)=>formatChartDate(value).slice(2,7).replace('-','/');
 const daysTo=(date:string,now=new Date())=>Math.round((toUtc(date)-Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()))/86400000);
 const escapeIcs=(value:string)=>value.replaceAll('\\','\\\\').replaceAll(',','\\,').replaceAll(';','\\;').replaceAll('\n','\\n');
+const policyFlagById:Record<string,string>={fed:'🇺🇸',boj:'🇯🇵',bok:'🇰🇷',ecb:'🇪🇺',boe:'🇬🇧',boc:'🇨🇦',rba:'🇦🇺',rbnz:'🇳🇿',snb:'🇨🇭',pboc:'🇨🇳',cbr:'🇷🇺',rbi:'🇮🇳',bcb:'🇧🇷',sarb:'🇿🇦'};
+const policyBankById:Map<string,(typeof policyBanks)[number]>=new Map(policyBanks.map(bank=>[bank.id,bank]));
+
+function PolicyRateTooltip({active,payload,label}:{active?:boolean;payload?:Array<{dataKey?:string|number;value?:number|string|null;color?:string}>;label?:number|string}){
+ if(!active||!payload?.length||label==null)return null;
+ const rates=payload.flatMap(point=>{
+  const id=String(point.dataKey??'');
+  const value=typeof point.value==='number'?point.value:Number(point.value);
+  const bank=policyBankById.get(id);
+  return bank&&Number.isFinite(value)?[{id,value,bank,color:point.color??policyRateColor(id)}]:[];
+ }).sort((first,second)=>second.value-first.value||first.bank.name.localeCompare(second.bank.name,'zh-CN'));
+ if(!rates.length)return null;
+ return <div className="policy-rate-tooltip" role="status">
+  <strong>{formatChartDate(label).slice(0,7)} · 月末</strong>
+  <ul>{rates.map(rate=><li key={rate.id}>
+   <i style={{background:rate.color}} aria-hidden="true"/>
+   <span>{rate.bank.name} {policyFlagById[rate.id]??'🌐'}</span>
+   <b>{rateNumber(rate.value)}</b>
+  </li>)}</ul>
+ </div>;
+}
 
 function reminderLabel(days:number){if(days<0)return '已过';if(days===0)return '今天决议';if(days===1)return '明天决议';return `${days} 天后决议`;}
 function makeIcs(events:PolicyCalendarEvent[]){
@@ -149,7 +170,7 @@ function RateComparison({following}:{following:string[]}){
      <CartesianGrid vertical={false} stroke="#e4ece9" strokeDasharray="3 4"/>
      <XAxis type="number" dataKey="timestamp" scale="time" domain={['dataMin','dataMax']} tickFormatter={formatChartMonth} minTickGap={46} tickLine={false} axisLine={false} tick={{fontSize:11,fill:'#819096'}}/>
      <YAxis tickFormatter={(value:number)=>`${value}%`} domain={['auto','auto']} tickLine={false} axisLine={false} tick={{fontSize:11,fill:'#819096'}} width={58}/>
-     <Tooltip labelFormatter={value=>{const date=formatChartDate(value);return date===chartFedDecision?.announcementDate?`美联储官方决议 ${date}（非月末观测）`:`${date.slice(0,7)} · 月末`;}} formatter={(value,name)=>[rateNumber(typeof value==='number'?value:undefined),name]}/>
+     <Tooltip content={<PolicyRateTooltip/>}/>
      <ReferenceLine y={0} stroke="#adbdb9" strokeDasharray="4 4"/>
      {chartFedDecision&&<><ReferenceLine x={toUtc(chartFedDecision.announcementDate)} stroke={policyRateColor('fed')} strokeDasharray="4 3" strokeWidth={1.5} ifOverflow="extendDomain" zIndex={10}/><ReferenceDot x={toUtc(chartFedDecision.announcementDate)} y={chartFedDecision.midpoint} r={5} fill="#fff" stroke={policyRateColor('fed')} strokeWidth={2.5} ifOverflow="extendDomain"/></>}
      {visible.map((series,index)=><Line key={series.id} type="stepAfter" dataKey={series.id} name={series.name} stroke={policyRateColor(series.id,index)} strokeWidth={2} dot={false} connectNulls={false} isAnimationActive={false}/>)}
