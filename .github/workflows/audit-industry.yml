@@ -1,0 +1,29 @@
+name: Audit industry data sources
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '18 2 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: industry-source-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: scripts/requirements.txt
+      - name: Install collector dependencies
+        run: python -m pip install -r scripts/requirements.txt
+      - name: Replay public industry sources
+        run: python scripts/audit_industry.py
