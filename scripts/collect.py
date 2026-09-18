@@ -1,5 +1,5 @@
 """Official-source collector. SQLite is authoritative; JSON is an atomic display cache."""
-import argparse, csv, hashlib, io, json, os, pathlib, re, sqlite3, subprocess, time, urllib.request
+import argparse, calendar, csv, hashlib, io, json, os, pathlib, re, sqlite3, subprocess, time, urllib.request
 from datetime import datetime, timezone
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 DATA=ROOT/'data'; DATA.mkdir(exist_ok=True)
@@ -17,6 +17,8 @@ WB_COLUMNS=[
     ('SILVER','Silver','troy oz'),
 ]
 WB_IDS=tuple(key for key,_,_ in WB_COLUMNS)
+EIA_RETAIL_URL='https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx'
+EIA_US_COMMERCIAL='EIA_US_COMMERCIAL'
 CREATE_NO_WINDOW=getattr(subprocess,'CREATE_NO_WINDOW',0) if os.name=='nt' else 0
 WINDOWS_STARTUPINFO=None
 if os.name=='nt':
@@ -57,6 +59,23 @@ def parse_wb(raw):
             val=row[col]; result[key].append({'date':date,'value':float(val) if isinstance(val,(int,float)) else None})
     if any(len(rows)<13 for rows in result.values()): raise ValueError('Commodity history too short')
     return result
+def parse_eia_us_commercial(raw):
+    from openpyxl import load_workbook
+    rows=list(load_workbook(io.BytesIO(raw),read_only=True,data_only=True)['Monthly-States'].values)
+    if rows[1][8]!='Revenue' or rows[1][9]!='Sales' or rows[2][8]!='Thousand Dollars' or rows[2][9]!='Megawatthours':raise ValueError('Unexpected EIA-861M commercial-electricity columns')
+    grouped={}
+    for row in rows[3:]:
+        if not isinstance(row[0],(int,float)) or not isinstance(row[1],(int,float)) or not isinstance(row[2],str) or len(row[2])!=2:continue
+        revenue,sales=row[8],row[9]
+        if not isinstance(revenue,(int,float)) or not isinstance(sales,(int,float)) or sales<=0:continue
+        grouped.setdefault((int(row[0]),int(row[1])),[]).append((row[2],float(revenue),float(sales)))
+    points=[]
+    for (year,month),states in sorted(grouped.items()):
+        if len({state for state,_,_ in states})!=51:continue
+        revenue=sum(value for _,value,_ in states);sales=sum(value for _,_,value in states)
+        points.append({'date':f'{year}-{month:02}-{calendar.monthrange(year,month)[1]}','value':100*revenue/sales})
+    if len(points)<13:raise ValueError('EIA-861M history too short or incomplete')
+    return points
 def connect():
     conn=sqlite3.connect(DATA/'observations.sqlite');conn.execute('PRAGMA journal_mode=WAL')
     conn.executescript('''CREATE TABLE IF NOT EXISTS observations(series_id TEXT, observation_date TEXT,value REAL,source_published_at TEXT,fetched_at TEXT,revision TEXT, PRIMARY KEY(series_id,observation_date,revision));
@@ -66,7 +85,7 @@ CREATE TABLE IF NOT EXISTS runs(id INTEGER PRIMARY KEY,started_at TEXT,finished_
     return conn
 def save(conn,key,points,raw,source_url,started):
     digest=hashlib.sha256(raw).hexdigest(); version=DATA/'versions'/key;version.mkdir(parents=True,exist_ok=True)
-    path=version/(digest+('.xlsx' if key in WB_IDS else '.csv'))
+    path=version/(digest+('.xlsx' if key in WB_IDS or key==EIA_US_COMMERCIAL else '.csv'))
     if not path.exists():path.write_bytes(raw)
     old=conn.execute('SELECT payload FROM snapshots WHERE series_id=?',(key,)).fetchone()
     old_payload=json.loads(old[0]) if old else {}; old_points={p['date']:p['value'] for p in old_payload.get('observations',[])}
@@ -93,6 +112,8 @@ def collect(import_dir=None, selected=None):
                         wb_raw=download(wb_url)
                     wb=parse_wb(wb_raw)
                 raw=wb_raw;points=wb[key];url=wb_url
+            elif key==EIA_US_COMMERCIAL:
+                raw=download(EIA_RETAIL_URL);points=parse_eia_us_commercial(raw);url=EIA_RETAIL_URL
             else:
                 url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+key
                 if import_dir:raw=(pathlib.Path(import_dir)/(key+'.csv')).read_bytes();points=parse_csv(raw)
@@ -108,7 +129,7 @@ def collect(import_dir=None, selected=None):
             previous=conn.execute('SELECT payload FROM snapshots WHERE series_id=?',(key,)).fetchone()
             if previous and json.loads(previous[0]).get('observations') and points[-1]['date']<json.loads(previous[0])['observations'][-1]['date']:raise ValueError('Source latest observation regressed')
             if import_dir:
-                source_file=pathlib.Path(import_dir)/('pink-sheet-monthly.xlsx' if key in WB_IDS else key+'.csv')
+                source_file=pathlib.Path(import_dir)/('pink-sheet-monthly.xlsx' if key in WB_IDS else 'eia-861m.xlsx' if key==EIA_US_COMMERCIAL else key+'.csv')
                 ts=datetime.fromtimestamp(source_file.stat().st_mtime,timezone.utc).isoformat()
             save(conn,key,points,raw,url,ts);print(key,'OK',points[-1]['date'],flush=True)
         except Exception as exc:
