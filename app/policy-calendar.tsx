@@ -1,7 +1,7 @@
 "use client";
 
-import {Fragment,useEffect,useMemo,useState} from 'react';
-import {Bell,CalendarDays,Check,Download,ExternalLink,Info,Clock3} from 'lucide-react';
+import {Fragment,useCallback,useEffect,useMemo,useState} from 'react';
+import {Bell,CalendarDays,Check,Download,ExternalLink,Info,Clock3,RefreshCw} from 'lucide-react';
 import {ResponsiveContainer,LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip,ReferenceLine} from 'recharts';
 import {Button} from '@/components/ui/button';
 import {policyBanks,policyCalendar,policyCalendarSourceCheckedAt,type PolicyCalendarEvent} from '@/lib/policy-calendar';
@@ -96,49 +96,53 @@ function downloadCalendar(events:PolicyCalendarEvent[]){
 function rateNumber(value:number|undefined){return value==null?'—':`${value.toFixed(2).replace(/\.00$/,'')}%`;}
 function rateRange(decision:PolicyDecision){return decision.lower===decision.upper?rateNumber(decision.lower):`${decision.lower.toFixed(2)}%–${decision.upper.toFixed(2)}%`;}
 
-function RateComparison({following}:{following:string[]}){
+function RateComparison({following,refreshRequest,onRefreshState}:{following:string[];refreshRequest:number;onRefreshState:(refreshing:boolean)=>void}){
  const [dataset,setDataset]=useState<PolicyRatesDataset|null>(null);
  const [decisionDataset,setDecisionDataset]=useState<PolicyDecisionsDataset|null>(null);
  const [loadError,setLoadError]=useState('');
  const [range,setRange]=useState<'1'|'3'|'5'|'10'>('5');
  const [hoveredDecision,setHoveredDecision]=useState<PolicyDecision|null>(null);
+ const [refreshMessage,setRefreshMessage]=useState('');
+
+ const load=useCallback(async(manual=false)=>{
+  if(manual){onRefreshState(true);setRefreshMessage('');}
+  try{
+   let rateVersion='';
+   let decisionVersion='';
+   try{
+    const manifestResponse=await fetch(manifestEndpoint(),{cache:'no-store'});
+    if(manifestResponse.ok){
+     const manifest=await manifestResponse.json() as {policyRates?:{version?:string};policyDecisions?:{version?:string}};
+     rateVersion=manifest.policyRates?.version??'';
+     decisionVersion=manifest.policyDecisions?.version??'';
+    }
+   }catch{}
+   const rateResponse=await fetch(versionedEndpoint(policyRatesEndpoint(),rateVersion),{cache:'no-store'});
+   if(!rateResponse.ok)throw new Error('政策利率数据暂不可用');
+   const ratePayload=await rateResponse.json() as PolicyRatesDataset;
+   if(!ratePayload.series?.length)throw new Error('政策利率数据尚未准备完成');
+   let decisionPayload:PolicyDecisionsDataset|null=null;
+   try{
+    const decisionResponse=await fetch(versionedEndpoint(policyDecisionsEndpoint(),decisionVersion),{cache:'no-store'});
+    if(decisionResponse.ok)decisionPayload=await decisionResponse.json() as PolicyDecisionsDataset;
+   }catch{}
+   setDataset(ratePayload);
+   setDecisionDataset(decisionPayload);
+   setLoadError('');
+   if(manual)setRefreshMessage('已检查后台缓存；新决议会在官方来源发布并完成核验后显示。');
+  }catch{
+   setLoadError('暂时无法读取政策利率缓存，请稍后重试。');
+   if(manual)setRefreshMessage('暂时无法连接后台，保留当前已加载数据。');
+  }finally{if(manual)onRefreshState(false);}
+ },[onRefreshState]);
 
  useEffect(()=>{
   let cancelled=false;
-  async function load(){
-   try{
-    let rateVersion='';
-    let decisionVersion='';
-    try{
-     const manifestResponse=await fetch(manifestEndpoint(),{cache:'no-store'});
-     if(manifestResponse.ok){
-      const manifest=await manifestResponse.json() as {policyRates?:{version?:string};policyDecisions?:{version?:string}};
-      rateVersion=manifest.policyRates?.version??'';
-      decisionVersion=manifest.policyDecisions?.version??'';
-     }
-    }catch{}
-    const rateResponse=await fetch(versionedEndpoint(policyRatesEndpoint(),rateVersion),{cache:'no-store'});
-    if(!rateResponse.ok)throw new Error('政策利率数据暂不可用');
-    const ratePayload=await rateResponse.json() as PolicyRatesDataset;
-    if(!ratePayload.series?.length)throw new Error('政策利率数据尚未准备完成');
-    let decisionPayload:PolicyDecisionsDataset|null=null;
-    try{
-     const decisionResponse=await fetch(versionedEndpoint(policyDecisionsEndpoint(),decisionVersion),{cache:'no-store'});
-     if(decisionResponse.ok)decisionPayload=await decisionResponse.json() as PolicyDecisionsDataset;
-    }catch{}
-    if(!cancelled){
-     setDataset(ratePayload);
-     setDecisionDataset(decisionPayload);
-     setLoadError('');
-    }
-   }catch{
-    if(!cancelled)setLoadError('暂时无法读取政策利率缓存，请稍后重试。');
-   }
-  }
-  void load();
+  void load().catch(()=>{if(!cancelled)setLoadError('暂时无法读取政策利率缓存，请稍后重试。');});
   const timer=window.setInterval(()=>void load(),60_000);
   return()=>{cancelled=true;window.clearInterval(timer);};
- },[]);
+ },[load]);
+ useEffect(()=>{if(refreshRequest>0)void load(true);},[load,refreshRequest]);
 
  const visible=useMemo(()=>dataset?.series.filter(series=>following.includes(series.id))??[],[dataset,following]);
  const latestDecisions=useMemo(()=>{
@@ -182,6 +186,7 @@ function RateComparison({following}:{following:string[]}){
  },[chartDecisions,rows]);
 
  return <section className="policy-rates" aria-label="主要央行政策利率横向对比">
+  {refreshMessage&&<div className="policy-refresh-notice" role="status">{refreshMessage}<button type="button" onClick={()=>setRefreshMessage('')} aria-label="关闭提示">×</button></div>}
   <div className="policy-section-heading">
    <div><h3>政策利率横向对比</h3><p>折线统一为月度期末、年利率。各国决策日期不同，因此横向比较的是同一月末的政策水平；最新官方决议单独列出，不混入月末历史。</p></div>
    <div className="policy-rate-controls" aria-label="政策利率图表时间范围">{([['1','1年'],['3','3年'],['5','5年'],['10','10年']] as const).map(([value,label])=><button key={value} aria-pressed={range===value} onClick={()=>setRange(value)}>{label}</button>)}</div>
@@ -239,6 +244,8 @@ export default function PolicyCalendar(){
    return legacyDefaultPolicyBanks.every(id=>valid.includes(id))?policyBanks.map(bank=>bank.id):valid;
   }catch{return policyBanks.map(bank=>bank.id);}
  });
+ const [refreshRequest,setRefreshRequest]=useState(0);
+ const [refreshing,setRefreshing]=useState(false);
  useEffect(()=>{try{localStorage.setItem(storageKey,JSON.stringify(following));}catch{}},[following]);
  const now=new Date();
  const visible=policyCalendar.filter(event=>following.includes(event.bankId));
@@ -255,13 +262,13 @@ export default function PolicyCalendar(){
  })();
  function toggle(id:string){setFollowing(current=>current.includes(id)?current.filter(item=>item!==id):[...current,id]);}
  return <section className="policy-calendar" aria-label="主要央行利率日历">
-  <div className="policy-hero"><div><div className="policy-eyebrow">POLICY WATCH</div><h2>主要央行利率日历</h2><p>先关注会议与决议日，再阅读声明、预测和实际利率变化。日程来自各央行官网，发布时间以原始来源为准。</p></div><Button onClick={()=>downloadCalendar(upcoming)} disabled={!upcoming.length}><Download size={15}/>下载关注央行的提醒</Button></div>
+  <div className="policy-hero"><div><div className="policy-eyebrow">POLICY WATCH</div><h2>主要央行利率日历</h2><p>先关注会议与决议日，再阅读声明、预测和实际利率变化。日程来自各央行官网，发布时间以原始来源为准。</p></div><div className="policy-hero-actions"><Button variant="outline" onClick={()=>setRefreshRequest(request=>request+1)} disabled={refreshing}><RefreshCw size={15} className={refreshing?'spinning':''}/>{refreshing?'检查中':'检查更新'}</Button><Button onClick={()=>downloadCalendar(upcoming)} disabled={!upcoming.length}><Download size={15}/>下载关注央行的提醒</Button></div></div>
   <div className="policy-top-grid">
    <section className="policy-next"><div className="policy-card-label"><Bell size={16}/>下一次利率决议</div>{next?<><strong>{next.bank} · {next.country}</strong><div className="policy-next-date">{formatDate(next.decisionDate)}</div><p>{next.title}</p><div className="policy-meta"><span>{reminderLabel(daysTo(next.decisionDate,now))}</span><span>{next.timezone}</span></div><a href={next.sourceUrl} target="_blank" rel="noreferrer">查看央行原始日程 <ExternalLink size={13}/></a></>:<p>当前关注范围内暂无已确认的未来日程。</p>}</section>
    <section className="policy-alerts"><div className="policy-card-label"><Clock3 size={16}/>未来 7 天</div>{nextSeven.length?<ul>{nextSeven.map(event=><li key={event.id}><span>{formatDate(event.decisionDate)}</span><strong>{event.bank}</strong><small>{event.title}</small></li>)}</ul>:<div className="policy-empty">未来七天没有已确认的利率决议。日程临时调整时，以央行公告为准。</div>}</section>
   </div>
   <section className="policy-follow"><div><h3>我的关注范围</h3><p>选择需要跟踪的央行。选择结果仅保存在当前浏览器，并同时控制下方利率对比图；下载的 iCalendar 文件会在决议日前一天提醒。</p></div><div className="policy-bank-list">{policyBanks.map(bank=>{const selected=following.includes(bank.id);return <button key={bank.id} className={selected?'selected':''} aria-pressed={selected} onClick={()=>toggle(bank.id)}><span>{selected?<Check size={14}/>:<span className="policy-unchecked"/>}</span><strong>{bank.name}</strong><small>{bank.country} · {bank.shortName}</small></button>;})}</div></section>
-  <RateComparison following={following}/>
+  <RateComparison following={following} refreshRequest={refreshRequest} onRefreshState={setRefreshing}/>
   <section className="policy-timeline"><div className="policy-section-heading"><div><h3>未来决议日</h3><p>“决议日”是公告日或两日会议的最后一天；不把会议开始日误写成利率决定时间。</p></div><span>{upcoming.length} 项已确认日程</span></div>{grouped.length?grouped.map(([month,events])=><div className="policy-month" key={month}><h4>{new Intl.DateTimeFormat('zh-CN',{year:'numeric',month:'long',timeZone:'UTC'}).format(new Date(month+'-01T00:00:00Z'))}</h4>{events.map(event=><article key={event.id} className={daysTo(event.decisionDate,now)<=7?'soon':''}><div className="policy-date"><strong>{event.decisionDate.slice(8)}</strong><span>{new Intl.DateTimeFormat('zh-CN',{weekday:'short',timeZone:'UTC'}).format(new Date(event.decisionDate+'T00:00:00Z'))}</span></div><div className="policy-event"><div><span>{event.country}</span><h5>{event.bank}</h5></div><p>{event.title}</p><small>{event.startDate===event.decisionDate?'当日决议':`${formatDate(event.startDate)} 开会 · ${formatDate(event.decisionDate)} 决议`} · {event.timezone}</small></div><div className="policy-actions"><b>{reminderLabel(daysTo(event.decisionDate,now))}</b><button onClick={()=>downloadCalendar([event])}><CalendarDays size={14}/>添加提醒</button><a href={event.sourceUrl} target="_blank" rel="noreferrer" aria-label={`打开${event.bank}官方日程`}><ExternalLink size={15}/></a></div></article>)}</div>):<div className="policy-empty">没有已选央行的未来决议日。可在上方重新选择关注范围。</div>}</section>
   <section className="policy-notes"><Info size={18}/><div><strong>使用方式与范围</strong><p>下载 `.ics` 后导入手机、Google、Apple 或 Outlook 日历，提醒由你的日历应用在决议日前一天触发。这里追踪的是已公布日程，不能替代决议声明；实际升息、降息或维持不变，须在公告发布后结合原文确认。</p><p><strong>即时决议：</strong>当前每 15 分钟读取美联储与日本银行官方来源；其余央行仍使用 BIS 月末比较数据，不能被描述为决议时点的实时价格。中国人民银行的 LPR 按惯例在每月 20 日发布、遇节假日顺延，并非预先固定的议息会议；印度储备银行的下一期 MPC 日程尚未在当前官方核对范围内。因此两者可在利率图中比较，但不会被伪装成确定的会议提醒。</p><p>2027 年已纳入美联储、日本银行、英格兰银行和加拿大银行已公布日程；欧洲央行与韩国银行将待其官网发布后加入。</p><small>日程最近核对：{policyCalendarSourceCheckedAt} · {policyBanks.length} 家央行 · 每项均链接原始官网。</small></div></section>
  </section>;
