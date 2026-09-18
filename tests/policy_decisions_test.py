@@ -4,7 +4,7 @@ import unittest
 from datetime import date
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / 'scripts'))
-from policy_decisions import find_latest_fed_statement, parse_effective_date, parse_fed_statement, parse_rate_token
+from policy_decisions import find_latest_boj_guideline, find_latest_fed_statement, parse_boj_verified_guideline, parse_effective_date, parse_fed_statement, parse_rate_token
 
 
 class PolicyDecisionParserTest(unittest.TestCase):
@@ -32,6 +32,14 @@ class PolicyDecisionParserTest(unittest.TestCase):
     def test_parses_fractional_values(self):
         self.assertEqual(parse_rate_token('3-3/4'), 3.75)
         self.assertEqual(parse_rate_token('1/4'), 0.25)
+
+    def test_finds_and_verifies_boj_guideline(self):
+        index = b'''<table><tr><td>Sept. 18, 2026</td><td><a href="/en/mopo/mpmdeci/mpr_2026/k260918a.pdf">Change in the Guideline for Money Market Operations</a></td></tr></table>'''
+        published, url = find_latest_boj_guideline(index, date(2026, 9, 18))
+        self.assertEqual(published.isoformat(), '2026-09-18')
+        self.assertEqual(url, 'https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2026/k260918a.pdf')
+        with self.assertRaises(ValueError):
+            parse_boj_verified_guideline(b'not the official scan', url, published)
 
 
 if __name__ == '__main__':

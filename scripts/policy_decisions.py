@@ -16,12 +16,30 @@ from html import unescape
 from urllib.parse import urljoin, urlparse
 from xml.etree import ElementTree
 
+from bs4 import BeautifulSoup
+
 from collect import DATA, download
 
 FED_RSS_URL = 'https://www.federalreserve.gov/feeds/press_monetary.xml'
 FED_BASE_URL = 'https://www.federalreserve.gov'
 FED_HOSTS = {'federalreserve.gov', 'www.federalreserve.gov'}
 FED_STATEMENT_PATH = re.compile(r'/newsevents/pressreleases/monetary(?P<date>\d{8})a\.htm(?:\?.*)?$', re.I)
+BOJ_STATEMENTS_URL = 'https://www.boj.or.jp/en/mopo/mpmdeci/state_2026/index.htm'
+BOJ_BASE_URL = 'https://www.boj.or.jp'
+BOJ_DATE_PATTERN = re.compile(r'(?P<month>[A-Z][a-z]+)\.\s*(?P<day>\d{1,2}),\s*(?P<year>\d{4})')
+# BOJ publishes the decision documents as scanned PDFs. The entries below are
+# only accepted when the official PDF hash matches; a new unrecognised scan is
+# retained as a source failure rather than inferring a rate from a headline.
+BOJ_VERIFIED_GUIDELINES = {
+    'https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2026/k260918a.pdf': {
+        'sha256': '71ed633ee13d464695076f2bf35c8a85fc79ddf06bdcbb921ac33004a229805b',
+        'announcementDate': '2026-09-18',
+        'effectiveDate': '2026-09-24',
+        'rate': 1.25,
+        'changeBps': 25.0,
+        'action': 'raise',
+    },
+}
 ACTION_PATTERN = re.compile(r'\bdecided to\s+(?P<action>raise|lower|maintain)\b', re.I)
 RANGE_PATTERN = re.compile(
     r'target range for the federal funds rate(?:\s+by\s+[\d¼½¾\s/.-]+?\s+(?:percentage point|basis points))?\s+(?:to|at)\s+(?P<lower>[\d¼½¾\s/.-]+?)\s+to\s+(?P<upper>[\d¼½¾\s/.-]+?)\s+percent',
@@ -41,14 +59,14 @@ def atomic_write(path: pathlib.Path, payload: dict):
     os.replace(temporary, path)
 
 
-def archive_raw(label: str, extension: str, raw: bytes):
+def archive_raw(label: str, extension: str, raw: bytes, source: str = 'FED_POLICY'):
     digest = hashlib.sha256(raw).hexdigest()
-    archive = DATA / 'versions' / 'FED_POLICY'
+    archive = DATA / 'versions' / source
     archive.mkdir(parents=True, exist_ok=True)
     path = archive / f'{label}-{digest}.{extension}'
     if not path.exists():
         path.write_bytes(raw)
-    return digest, f'data/versions/FED_POLICY/{path.name}'
+    return digest, f'data/versions/{source}/{path.name}'
 
 
 def element_text(element, name: str):
@@ -152,16 +170,90 @@ def parse_effective_date(raw: bytes):
     return datetime.strptime(match.group('date'), '%B %d, %Y').date().isoformat()
 
 
+def find_latest_boj_guideline(raw: bytes, today: date | None = None):
+    """Find the latest official BOJ money-market guideline document."""
+    today = today or datetime.now(timezone.utc).date()
+    soup = BeautifulSoup(raw, 'html.parser')
+    candidates = []
+    for row in soup.select('tr'):
+        cells = row.find_all('td')
+        if len(cells) < 2:
+            continue
+        link = cells[1].find('a', href=True)
+        title = link.get_text(' ', strip=True) if link else ''
+        if not title.startswith('Change in the Guideline for Money Market Operations'):
+            continue
+        match = BOJ_DATE_PATTERN.search(cells[0].get_text(' ', strip=True))
+        if not match:
+            continue
+        month = 'Sep' if match.group('month') == 'Sept' else match.group('month')
+        published = datetime.strptime(f"{month} {match.group('day')} {match.group('year')}", '%b %d %Y').date()
+        if published <= today:
+            candidates.append((published, urljoin(BOJ_BASE_URL, link['href'])))
+    if not candidates:
+        raise ValueError('No current official BOJ money-market guideline found')
+    return max(candidates, key=lambda candidate: candidate[0])
+
+
+def parse_boj_verified_guideline(raw: bytes, statement_url: str, announcement_date: date):
+    """Return a decision only for an official BOJ scan with a verified hash."""
+    verified = BOJ_VERIFIED_GUIDELINES.get(statement_url)
+    if not verified:
+        raise ValueError('BOJ guideline scan is new and has no verified rate mapping')
+    digest = hashlib.sha256(raw).hexdigest()
+    if digest != verified['sha256']:
+        raise ValueError('BOJ guideline PDF hash differs from the verified official document')
+    if announcement_date.isoformat() != verified['announcementDate']:
+        raise ValueError('BOJ guideline date differs from the verified official document')
+    rate = verified['rate']
+    return {
+        'bankId': 'boj',
+        'bank': '日本银行',
+        'country': '日本',
+        'announcementDate': verified['announcementDate'],
+        'effectiveDate': verified['effectiveDate'],
+        'lower': rate,
+        'upper': rate,
+        'midpoint': rate,
+        'action': verified['action'],
+        'changeBps': verified['changeBps'],
+        'statementUrl': statement_url,
+        'sourceName': '日本银行《货币市场操作方针变更》官方文件',
+    }
+
+
+def collect_boj_decision():
+    index = download(BOJ_STATEMENTS_URL)
+    announcement_date, statement_url = find_latest_boj_guideline(index)
+    statement = download(statement_url)
+    decision = parse_boj_verified_guideline(statement, statement_url, announcement_date)
+    checked_at = utc_now()
+    index_hash, index_path = archive_raw('index', 'html', index, 'BOJ_POLICY')
+    statement_hash, statement_path = archive_raw(announcement_date.isoformat() + '-guideline', 'pdf', statement, 'BOJ_POLICY')
+    decision['announcedAt'] = None
+    decision['fetchedAt'] = checked_at
+    decision['archive'] = {
+        'indexSha256': index_hash,
+        'indexPath': index_path,
+        'statementSha256': statement_hash,
+        'statementPath': statement_path,
+    }
+    return decision
+
+
 def collect_policy_decisions():
     path = DATA / 'policy-decisions.json'
     prior = json.loads(path.read_text(encoding='utf-8')) if path.exists() else None
     checked_at = utc_now()
     source = {
-        'name': '美国联邦储备委员会官方货币政策 RSS 与声明',
+        'name': '央行官方决议文件与公告',
         'url': FED_RSS_URL,
         'frequency': '决议公布后每 15 分钟检查',
-        'unit': '联邦基金目标利率区间，%',
+        'unit': '各央行政策利率，%',
     }
+    prior_decisions = {item.get('bankId'): item for item in (prior or {}).get('decisions', []) if item.get('bankId')}
+    errors = []
+    updated = []
     try:
         feed = download(FED_RSS_URL)
         announcement_date, statement_url, announced_at = find_latest_fed_statement(feed)
@@ -184,26 +276,32 @@ def collect_policy_decisions():
             'implementationSha256': implementation_hash,
             'implementationPath': implementation_path,
         }
-        prior_decisions = {item.get('bankId'): item for item in (prior or {}).get('decisions', []) if item.get('bankId')}
         prior_decisions['fed'] = decision
+        updated.append('FED')
+    except Exception as exc:
+        errors.append(f'FED: {exc}')
+    try:
+        decision = collect_boj_decision()
+        prior_decisions['boj'] = decision
+        updated.append('BOJ')
+    except Exception as exc:
+        errors.append(f'BOJ: {exc}')
+    if updated:
         payload = {
             'generatedAt': checked_at,
             'checkedAt': checked_at,
             'status': 'ready',
             'source': source,
             'decisions': [prior_decisions[key] for key in sorted(prior_decisions)],
+            **({'error': '; '.join(errors)} if errors else {}),
         }
-        atomic_write(path, payload)
-        print(f"POLICY_DECISIONS OK FED {decision['announcementDate']} {decision['lower']:.2f}-{decision['upper']:.2f}", flush=True)
-        return payload
-    except Exception as exc:
-        if prior:
-            payload = {**prior, 'checkedAt': checked_at, 'status': 'cached', 'error': str(exc)}
-        else:
-            payload = {'generatedAt': checked_at, 'checkedAt': checked_at, 'status': 'fetch_failed', 'source': source, 'decisions': [], 'error': str(exc)}
-        atomic_write(path, payload)
-        print('POLICY_DECISIONS FAILED; retained cache when available', flush=True)
-        return payload
+    elif prior:
+        payload = {**prior, 'checkedAt': checked_at, 'status': 'cached', 'error': '; '.join(errors)}
+    else:
+        payload = {'generatedAt': checked_at, 'checkedAt': checked_at, 'status': 'fetch_failed', 'source': source, 'decisions': [], 'error': '; '.join(errors)}
+    atomic_write(path, payload)
+    print(f"POLICY_DECISIONS {'OK' if updated else 'FAILED'} {' '.join(updated)}", flush=True)
+    return payload
 
 
 if __name__ == '__main__':
