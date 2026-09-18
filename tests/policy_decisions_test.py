@@ -4,7 +4,7 @@ import unittest
 from datetime import date
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / 'scripts'))
-from policy_decisions import find_latest_boj_guideline, find_latest_fed_statement, parse_boj_verified_guideline, parse_effective_date, parse_fed_statement, parse_rate_token
+from policy_decisions import OFFICIAL_DECISION_SOURCES, find_latest_boj_guideline, find_latest_fed_statement, parse_boj_verified_guideline, parse_effective_date, parse_fed_statement, parse_rate_token
 
 
 class PolicyDecisionParserTest(unittest.TestCase):
@@ -40,6 +40,13 @@ class PolicyDecisionParserTest(unittest.TestCase):
         self.assertEqual(url, 'https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2026/k260918a.pdf')
         with self.assertRaises(ValueError):
             parse_boj_verified_guideline(b'not the official scan', url, published)
+
+    def test_configures_all_followed_central_banks_for_official_source_checks(self):
+        identifiers = [source['bankId'] for source in OFFICIAL_DECISION_SOURCES]
+        self.assertEqual(len(identifiers), 14)
+        self.assertEqual(len(set(identifiers)), 14)
+        self.assertEqual(set(identifiers), {'fed','boj','bok','ecb','boe','boc','rba','rbnz','snb','pboc','cbr','rbi','bcb','sarb'})
+        self.assertTrue(all(source['url'].startswith('https://') for source in OFFICIAL_DECISION_SOURCES))
 
 
 if __name__ == '__main__':

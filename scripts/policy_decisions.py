@@ -10,6 +10,7 @@ import json
 import os
 import pathlib
 import re
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timezone
 from email.utils import parsedate_to_datetime
 from html import unescape
@@ -40,6 +41,22 @@ BOJ_VERIFIED_GUIDELINES = {
         'action': 'raise',
     },
 }
+OFFICIAL_DECISION_SOURCES = (
+    {'bankId': 'fed', 'bank': '美联储', 'country': '美国', 'url': FED_RSS_URL},
+    {'bankId': 'boj', 'bank': '日本银行', 'country': '日本', 'url': BOJ_STATEMENTS_URL},
+    {'bankId': 'bok', 'bank': '韩国银行', 'country': '韩国', 'url': 'https://www.bok.or.kr/eng/main/contents.do?menuNo=400020'},
+    {'bankId': 'ecb', 'bank': '欧洲央行', 'country': '欧元区', 'url': 'https://www.ecb.europa.eu/press/press_conference/html/index.en.html'},
+    {'bankId': 'boe', 'bank': '英格兰银行', 'country': '英国', 'url': 'https://www.bankofengland.co.uk/boeapps/database/Bank-Rate.asp'},
+    {'bankId': 'boc', 'bank': '加拿大银行', 'country': '加拿大', 'url': 'https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/'},
+    {'bankId': 'rba', 'bank': '澳大利亚储备银行', 'country': '澳大利亚', 'url': 'https://www.rba.gov.au/monetary-policy/int-rate-decisions/'},
+    {'bankId': 'rbnz', 'bank': '新西兰储备银行', 'country': '新西兰', 'url': 'https://www.rbnz.govt.nz/monetary-policy/monetary-policy-decisions'},
+    {'bankId': 'snb', 'bank': '瑞士国家银行', 'country': '瑞士', 'url': 'https://www.snb.ch/en/the-snb/mandates-goals/monetary-policy/decisions'},
+    {'bankId': 'pboc', 'bank': '中国人民银行', 'country': '中国', 'url': 'https://www.pbc.gov.cn/'},
+    {'bankId': 'cbr', 'bank': '俄罗斯银行', 'country': '俄罗斯', 'url': 'https://cbr.ru/eng/hd_base/KeyRate/'},
+    {'bankId': 'rbi', 'bank': '印度储备银行', 'country': '印度', 'url': 'https://www.rbi.org.in/Scripts/Annualpolicy.aspx'},
+    {'bankId': 'bcb', 'bank': '巴西中央银行', 'country': '巴西', 'url': 'https://www.bcb.gov.br/en/monetarypolicy/copomstatements/cronologicos'},
+    {'bankId': 'sarb', 'bank': '南非储备银行', 'country': '南非', 'url': 'https://www.resbank.co.za/en/home/what-we-do/monetary-policy/monetary-policy-committee'},
+)
 ACTION_PATTERN = re.compile(r'\bdecided to\s+(?P<action>raise|lower|maintain)\b', re.I)
 RANGE_PATTERN = re.compile(
     r'target range for the federal funds rate(?:\s+by\s+[\d¼½¾\s/.-]+?\s+(?:percentage point|basis points))?\s+(?:to|at)\s+(?P<lower>[\d¼½¾\s/.-]+?)\s+to\s+(?P<upper>[\d¼½¾\s/.-]+?)\s+percent',
@@ -241,6 +258,33 @@ def collect_boj_decision():
     return decision
 
 
+def check_official_source(source, checked_at, verified_ids):
+    """Check a configured official source without inventing an unparsed rate."""
+    result = {
+        'bankId': source['bankId'], 'bank': source['bank'], 'country': source['country'],
+        'sourceUrl': source['url'], 'checkedAt': checked_at,
+        'status': 'ready', 'decisionStatus': 'verified' if source['bankId'] in verified_ids else 'source_checked',
+    }
+    try:
+        raw = download(source['url'])
+        if not raw:
+            raise ValueError('Official source returned no content')
+    except Exception as exc:
+        result['status'] = 'fetch_failed'
+        result['error'] = str(exc)[-220:]
+    return result
+
+
+def check_all_official_sources(checked_at, verified_ids):
+    """Check all configured official pages concurrently within the 15-minute run."""
+    results = []
+    with ThreadPoolExecutor(max_workers=6) as executor:
+        pending = [executor.submit(check_official_source, source, checked_at, verified_ids) for source in OFFICIAL_DECISION_SOURCES]
+        for future in as_completed(pending):
+            results.append(future.result())
+    return sorted(results, key=lambda item: item['bankId'])
+
+
 def collect_policy_decisions():
     path = DATA / 'policy-decisions.json'
     prior = json.loads(path.read_text(encoding='utf-8')) if path.exists() else None
@@ -286,6 +330,10 @@ def collect_policy_decisions():
         updated.append('BOJ')
     except Exception as exc:
         errors.append(f'BOJ: {exc}')
+    checks = check_all_official_sources(checked_at, set(prior_decisions))
+    failed_checks = [item for item in checks if item['status'] == 'fetch_failed']
+    if failed_checks:
+        errors.extend(f"{item['bankId'].upper()} source: {item['error']}" for item in failed_checks)
     if updated:
         payload = {
             'generatedAt': checked_at,
@@ -293,12 +341,13 @@ def collect_policy_decisions():
             'status': 'ready',
             'source': source,
             'decisions': [prior_decisions[key] for key in sorted(prior_decisions)],
+            'checks': checks,
             **({'error': '; '.join(errors)} if errors else {}),
         }
     elif prior:
-        payload = {**prior, 'checkedAt': checked_at, 'status': 'cached', 'error': '; '.join(errors)}
+        payload = {**prior, 'checkedAt': checked_at, 'status': 'cached', 'checks': checks, 'error': '; '.join(errors)}
     else:
-        payload = {'generatedAt': checked_at, 'checkedAt': checked_at, 'status': 'fetch_failed', 'source': source, 'decisions': [], 'error': '; '.join(errors)}
+        payload = {'generatedAt': checked_at, 'checkedAt': checked_at, 'status': 'fetch_failed', 'source': source, 'decisions': [], 'checks': checks, 'error': '; '.join(errors)}
     atomic_write(path, payload)
     print(f"POLICY_DECISIONS {'OK' if updated else 'FAILED'} {' '.join(updated)}", flush=True)
     return payload

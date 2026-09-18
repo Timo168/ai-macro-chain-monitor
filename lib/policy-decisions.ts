@@ -23,6 +23,18 @@ export type PolicyDecisionsDataset={
  error?:string;
  source:{name:string;url:string;frequency:string;unit:string};
  decisions:PolicyDecision[];
+ checks?:PolicyDecisionSourceCheck[];
+};
+
+export type PolicyDecisionSourceCheck={
+ bankId:string;
+ bank:string;
+ country:string;
+ sourceUrl:string;
+ checkedAt:string;
+ status:'ready'|'fetch_failed';
+ decisionStatus:'verified'|'source_checked';
+ error?:string;
 };
 
 export function policyDecisionChange(decision:PolicyDecision){
