@@ -92,9 +92,11 @@ def run(force=False):
             key=item['id'];s=cached['series'].get(key,{});last=s.get('observations',[]);last_date=next((p['date'] for p in reversed(last) if p['value'] is not None),'')
             checked=datetime.fromisoformat(s.get('checkedAt') or '2000-01-01T00:00:00+00:00')
             if force or not last:selected.append(key);continue
-            if key in (*WB_IDS,'DFEDTARL','DFEDTARU'):
+            # World Bank commodity files and EIA-861M electricity data publish
+            # outside the FRED release calendar, so they are checked daily.
+            if key in (*WB_IDS,'EIA_US_COMMERCIAL','DFEDTARL','DFEDTARU'):
                 if now-checked>=timedelta(hours=24):selected.append(key)
-                pending[key]={'state':'waiting_release','nextCheckAt':(checked+timedelta(hours=24)).isoformat(),'calendarSource':'daily_file_check' if key in WB_IDS else 'daily_effective_rate_check'};continue
+                pending[key]={'state':'waiting_release','nextCheckAt':(checked+timedelta(hours=24)).isoformat(),'calendarSource':'daily_file_check' if key in (*WB_IDS,'EIA_US_COMMERCIAL') else 'daily_effective_rate_check'};continue
             rid=next(r for r,keys in RIDS.items() if key in keys);entry=next((e for e in cal['fred'] if e['releaseId']==rid),{})
             times=sorted(datetime.fromisoformat(e['scheduledAt']) for e in entry.get('events',[]));past=[t for t in times if t<=now];future=[t for t in times if t>now];due=past[-1] if past else None
             state.setdefault('lastDue',{})
