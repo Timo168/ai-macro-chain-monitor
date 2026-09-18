@@ -22,6 +22,7 @@ from bs4 import BeautifulSoup
 from collect import DATA, download
 
 FED_RSS_URL = 'https://www.federalreserve.gov/feeds/press_monetary.xml'
+BOE_RSS_URL = 'https://www.bankofengland.co.uk/rss/news'
 FED_BASE_URL = 'https://www.federalreserve.gov'
 FED_HOSTS = {'federalreserve.gov', 'www.federalreserve.gov'}
 FED_STATEMENT_PATH = re.compile(r'/newsevents/pressreleases/monetary(?P<date>\d{8})a\.htm(?:\?.*)?$', re.I)
@@ -46,7 +47,7 @@ OFFICIAL_DECISION_SOURCES = (
     {'bankId': 'boj', 'bank': '日本银行', 'country': '日本', 'url': BOJ_STATEMENTS_URL},
     {'bankId': 'bok', 'bank': '韩国银行', 'country': '韩国', 'url': 'https://www.bok.or.kr/eng/main/contents.do?menuNo=400020'},
     {'bankId': 'ecb', 'bank': '欧洲央行', 'country': '欧元区', 'url': 'https://www.ecb.europa.eu/press/press_conference/html/index.en.html'},
-    {'bankId': 'boe', 'bank': '英格兰银行', 'country': '英国', 'url': 'https://www.bankofengland.co.uk/boeapps/database/Bank-Rate.asp'},
+    {'bankId': 'boe', 'bank': '英格兰银行', 'country': '英国', 'url': BOE_RSS_URL},
     {'bankId': 'boc', 'bank': '加拿大银行', 'country': '加拿大', 'url': 'https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/'},
     {'bankId': 'rba', 'bank': '澳大利亚储备银行', 'country': '澳大利亚', 'url': 'https://www.rba.gov.au/monetary-policy/int-rate-decisions/'},
     {'bankId': 'rbnz', 'bank': '新西兰储备银行', 'country': '新西兰', 'url': 'https://www.rbnz.govt.nz/monetary-policy/monetary-policy-decisions'},
@@ -64,6 +65,13 @@ RANGE_PATTERN = re.compile(
 )
 CHANGE_PATTERN = re.compile(r'\bby\s+(?P<amount>[\d¼½¾\s/.-]+?)\s+(?P<unit>percentage point|basis points)\b', re.I)
 EFFECTIVE_PATTERN = re.compile(r'\beffective\s+(?P<date>[A-Z][a-z]+\s+\d{1,2},\s+\d{4})', re.I)
+BOE_TITLE_PATTERN = re.compile(r'Bank [Rr]ate\s+(?P<action>maintained|increased|reduced)\s+(?:at|to)\s+(?P<rate>\d+(?:\.\d+)?)%', re.I)
+ECB_DECISION_DATE_PATTERN = re.compile(r'PREVIOUS\s+.*?\s+(?P<date>\d{1,2}\s+[A-Z][a-z]+\s+20\d{2})\s+NEXT', re.I)
+ECB_EFFECTIVE_DATE_PATTERN = re.compile(r'With effect from:\s*(?P<date>\d{1,2}\s+[A-Z][a-z]+\s+20\d{2})', re.I)
+ECB_DEPOSIT_PATTERN = re.compile(r'Deposit facility\s+(?P<rate>\d+(?:\.\d+)?)\s*%', re.I)
+BOC_ROW_PATTERN = re.compile(r'(?P<date>[A-Z][a-z]+\s+\d{1,2},\s+20\d{2})\s+(?P<rate>\d+(?:\.\d+)?)\s+(?P<change>---|[+-]\d+(?:\.\d+)?)')
+RBA_DATE_PATTERN = re.compile(r'(?P<day>\d{1,2})\s+(?P<month>[A-Z][a-z]+)\s+(?P<year>20\d{2})')
+RBA_DECISION_PATTERN = re.compile(r'Board decided to\s+(?P<action>leave|increase|reduce).*?(?:unchanged at|to)\s+(?P<rate>\d+(?:\.\d+)?)\s+per cent', re.I)
 
 
 def utc_now():
@@ -185,6 +193,140 @@ def parse_effective_date(raw: bytes):
     if not match:
         raise ValueError('Fed implementation note omitted a parseable effective date')
     return datetime.strptime(match.group('date'), '%B %d, %Y').date().isoformat()
+
+
+def parse_boe_statement(raw: bytes, statement_url: str, announcement_date: date):
+    text = html_text(raw)
+    match = BOE_TITLE_PATTERN.search(text)
+    if not match:
+        raise ValueError('BoE statement omitted a parseable Bank Rate result')
+    action = {'maintained': 'maintain', 'increased': 'raise', 'reduced': 'lower'}[match.group('action').lower()]
+    rate = float(match.group('rate'))
+    return {'bankId': 'boe', 'bank': '英格兰银行', 'country': '英国', 'announcementDate': announcement_date.isoformat(), 'effectiveDate': announcement_date.isoformat(), 'lower': rate, 'upper': rate, 'midpoint': rate, 'action': action, 'changeBps': 0.0, 'statementUrl': statement_url, 'sourceName': '英格兰银行货币政策摘要与会议纪要'}
+
+
+def find_latest_boe_statement(raw: bytes, today: date | None = None):
+    today = today or datetime.now(timezone.utc).date()
+    root = ElementTree.fromstring(raw)
+    candidates = []
+    for item in root.iter():
+        if item.tag.rsplit('}', 1)[-1] != 'item':
+            continue
+        title = element_text(item, 'title')
+        link = element_text(item, 'link')
+        if not BOE_TITLE_PATTERN.search(title) or '/monetary-policy-summary-and-minutes/' not in link:
+            continue
+        published = element_text(item, 'pubDate')
+        if not published:
+            continue
+        announced = parsedate_to_datetime(published).astimezone(timezone.utc)
+        if announced.date() <= today:
+            candidates.append((announced.date(), link, announced.isoformat()))
+    if not candidates:
+        raise ValueError('No current BoE monetary-policy summary found in official RSS')
+    return max(candidates, key=lambda candidate: candidate[0])
+
+
+def parse_ecb_current_decision(raw: bytes, statement_url: str):
+    text = html_text(raw)
+    date_match = ECB_DECISION_DATE_PATTERN.search(text)
+    effective_match = ECB_EFFECTIVE_DATE_PATTERN.search(text)
+    rate_match = ECB_DEPOSIT_PATTERN.search(text)
+    if not date_match or not effective_match or not rate_match:
+        raise ValueError('ECB current-decision page omitted a parseable date or deposit rate')
+    announcement_date = datetime.strptime(date_match.group('date'), '%d %B %Y').date().isoformat()
+    effective_date = datetime.strptime(effective_match.group('date'), '%d %B %Y').date().isoformat()
+    rate = float(rate_match.group('rate'))
+    return {'bankId': 'ecb', 'bank': '欧洲央行', 'country': '欧元区', 'announcementDate': announcement_date, 'effectiveDate': effective_date, 'lower': rate, 'upper': rate, 'midpoint': rate, 'action': 'maintain', 'changeBps': 0.0, 'statementUrl': statement_url, 'sourceName': '欧洲央行最新货币政策决议页（存款便利利率）'}
+
+
+def parse_boc_current_decision(raw: bytes, statement_url: str):
+    rows = BOC_ROW_PATTERN.findall(html_text(raw))
+    if len(rows) < 2:
+        raise ValueError('Bank of Canada current-rate page omitted recent decision rows')
+    latest_date, latest_rate, _ = rows[0]
+    _, prior_rate, _ = rows[1]
+    rate, prior = float(latest_rate), float(prior_rate)
+    difference = rate - prior
+    return {'bankId': 'boc', 'bank': '加拿大银行', 'country': '加拿大', 'announcementDate': datetime.strptime(latest_date, '%B %d, %Y').date().isoformat(), 'effectiveDate': None, 'lower': rate, 'upper': rate, 'midpoint': rate, 'action': 'raise' if difference > 0 else 'lower' if difference < 0 else 'maintain', 'changeBps': difference * 100, 'statementUrl': statement_url, 'sourceName': '加拿大银行政策利率官方页面'}
+
+
+def find_latest_rba_statement(raw: bytes, today: date | None = None):
+    today = today or datetime.now(timezone.utc).date()
+    soup = BeautifulSoup(raw, 'html.parser')
+    candidates = []
+    for link in soup.find_all('a', href=True):
+        match = RBA_DATE_PATTERN.fullmatch(link.get_text(' ', strip=True))
+        if not match or '/media-releases/' not in link['href']:
+            continue
+        published = datetime.strptime(f"{match.group('day')} {match.group('month')} {match.group('year')}", '%d %B %Y').date()
+        if published <= today:
+            candidates.append((published, urljoin('https://www.rba.gov.au', link['href'])))
+    if not candidates:
+        raise ValueError('No current RBA monetary-policy statement found')
+    return max(candidates, key=lambda candidate: candidate[0])
+
+
+def parse_rba_statement(raw: bytes, statement_url: str, announcement_date: date):
+    match = RBA_DECISION_PATTERN.search(html_text(raw))
+    if not match:
+        raise ValueError('RBA statement omitted a parseable cash-rate result')
+    action = {'leave': 'maintain', 'increase': 'raise', 'reduce': 'lower'}[match.group('action').lower()]
+    rate = float(match.group('rate'))
+    return {'bankId': 'rba', 'bank': '澳大利亚储备银行', 'country': '澳大利亚', 'announcementDate': announcement_date.isoformat(), 'effectiveDate': announcement_date.isoformat(), 'lower': rate, 'upper': rate, 'midpoint': rate, 'action': action, 'changeBps': 0.0, 'statementUrl': statement_url, 'sourceName': '澳大利亚储备银行货币政策委员会声明'}
+
+
+def latest_monthly_rate(bank_id: str):
+    path = DATA / 'policy-rates.json'
+    if not path.exists():
+        return None
+    payload = json.loads(path.read_text(encoding='utf-8'))
+    series = next((item for item in payload.get('series', []) if item.get('id') == bank_id), None)
+    return float(series['latestValue']) if series and series.get('latestValue') is not None else None
+
+
+def finalize_single_rate_decision(decision, raw: bytes, checked_at: str, source: str):
+    """Attach audit fields and infer a change only against the prior official rate."""
+    baseline = latest_monthly_rate(decision['bankId'])
+    if baseline is not None and decision['action'] == 'maintain' and abs(decision['midpoint'] - baseline) > 1e-9:
+        difference = decision['midpoint'] - baseline
+        decision['action'] = 'raise' if difference > 0 else 'lower'
+        decision['changeBps'] = difference * 100
+    digest, path = archive_raw(decision['announcementDate'] + '-statement', 'html', raw, source)
+    decision['announcedAt'] = None
+    decision['fetchedAt'] = checked_at
+    decision['archive'] = {'statementSha256': digest, 'statementPath': path}
+    return decision
+
+
+def collect_boe_decision(checked_at: str):
+    feed = download(BOE_RSS_URL)
+    announcement_date, statement_url, announced_at = find_latest_boe_statement(feed)
+    statement = download(statement_url)
+    decision = parse_boe_statement(statement, statement_url, announcement_date)
+    decision = finalize_single_rate_decision(decision, statement, checked_at, 'BOE_POLICY')
+    decision['announcedAt'] = announced_at
+    return decision
+
+
+def collect_ecb_decision(checked_at: str):
+    source_url = next(source['url'] for source in OFFICIAL_DECISION_SOURCES if source['bankId'] == 'ecb')
+    raw = download(source_url)
+    return finalize_single_rate_decision(parse_ecb_current_decision(raw, source_url), raw, checked_at, 'ECB_POLICY')
+
+
+def collect_boc_decision(checked_at: str):
+    source_url = next(source['url'] for source in OFFICIAL_DECISION_SOURCES if source['bankId'] == 'boc')
+    raw = download(source_url)
+    return finalize_single_rate_decision(parse_boc_current_decision(raw, source_url), raw, checked_at, 'BOC_POLICY')
+
+
+def collect_rba_decision(checked_at: str):
+    source_url = next(source['url'] for source in OFFICIAL_DECISION_SOURCES if source['bankId'] == 'rba')
+    index = download(source_url)
+    announcement_date, statement_url = find_latest_rba_statement(index)
+    statement = download(statement_url)
+    return finalize_single_rate_decision(parse_rba_statement(statement, statement_url, announcement_date), statement, checked_at, 'RBA_POLICY')
 
 
 def find_latest_boj_guideline(raw: bytes, today: date | None = None):
@@ -330,6 +472,13 @@ def collect_policy_decisions():
         updated.append('BOJ')
     except Exception as exc:
         errors.append(f'BOJ: {exc}')
+    for code, collector in [('BOE', collect_boe_decision), ('ECB', collect_ecb_decision), ('BOC', collect_boc_decision), ('RBA', collect_rba_decision)]:
+        try:
+            decision = collector(checked_at)
+            prior_decisions[decision['bankId']] = decision
+            updated.append(code)
+        except Exception as exc:
+            errors.append(f'{code}: {exc}')
     checks = check_all_official_sources(checked_at, set(prior_decisions))
     failed_checks = [item for item in checks if item['status'] == 'fetch_failed']
     if failed_checks:

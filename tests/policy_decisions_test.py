@@ -4,7 +4,7 @@ import unittest
 from datetime import date
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / 'scripts'))
-from policy_decisions import OFFICIAL_DECISION_SOURCES, find_latest_boj_guideline, find_latest_fed_statement, parse_boj_verified_guideline, parse_effective_date, parse_fed_statement, parse_rate_token
+from policy_decisions import OFFICIAL_DECISION_SOURCES, find_latest_boj_guideline, find_latest_boe_statement, find_latest_fed_statement, find_latest_rba_statement, parse_boc_current_decision, parse_boe_statement, parse_boj_verified_guideline, parse_ecb_current_decision, parse_effective_date, parse_fed_statement, parse_rate_token, parse_rba_statement
 
 
 class PolicyDecisionParserTest(unittest.TestCase):
@@ -47,6 +47,20 @@ class PolicyDecisionParserTest(unittest.TestCase):
         self.assertEqual(len(set(identifiers)), 14)
         self.assertEqual(set(identifiers), {'fed','boj','bok','ecb','boe','boc','rba','rbnz','snb','pboc','cbr','rbi','bcb','sarb'})
         self.assertTrue(all(source['url'].startswith('https://') for source in OFFICIAL_DECISION_SOURCES))
+
+    def test_parses_boe_ecb_boc_and_rba_official_decisions(self):
+        boe_rss = b'''<rss><channel><item><title>Bank rate maintained at 3.75% - September 2026 Monetary Policy Summary and Minutes</title><link>https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/september-2026</link><pubDate>Thu, 17 Sep 2026 12:00:00 +0100</pubDate></item></channel></rss>'''
+        announced, boe_url, _ = find_latest_boe_statement(boe_rss, date(2026, 9, 18))
+        boe = parse_boe_statement(b'<h1>Bank rate maintained at 3.75%</h1>', boe_url, announced)
+        self.assertEqual((boe['announcementDate'], boe['midpoint'], boe['action']), ('2026-09-17', 3.75, 'maintain'))
+        ecb = parse_ecb_current_decision(b'<p>PREVIOUS 23 July 2026 10 September 2026 NEXT</p><p>With effect from: 16 September 2026</p><p>Deposit facility 2.50 %</p>', 'https://www.ecb.europa.eu/current')
+        self.assertEqual((ecb['announcementDate'], ecb['effectiveDate'], ecb['midpoint']), ('2026-09-10', '2026-09-16', 2.5))
+        boc = parse_boc_current_decision(b'<p>September 2, 2026 2.25 --- July 15, 2026 2.25 ---</p>', 'https://www.bankofcanada.ca/current')
+        self.assertEqual((boc['announcementDate'], boc['midpoint'], boc['action']), ('2026-09-02', 2.25, 'maintain'))
+        rba_index = b'<a href="/media-releases/2026/mr-26-19.html">11 August 2026</a>'
+        rba_date, rba_url = find_latest_rba_statement(rba_index, date(2026, 9, 18))
+        rba = parse_rba_statement(b'<p>The Board decided to leave the cash rate target unchanged at 4.35 per cent.</p>', rba_url, rba_date)
+        self.assertEqual((rba['announcementDate'], rba['midpoint'], rba['action']), ('2026-08-11', 4.35, 'maintain'))
 
 
 if __name__ == '__main__':
