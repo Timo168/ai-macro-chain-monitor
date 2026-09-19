@@ -13,7 +13,7 @@ import './data-quality.css';
 const tabs=[['overview','产业总览'],['metrics','指标看板'],['companies','公司对比'],['conclusions','投资结论'],['sources','数据说明']];
 const categories=[['capex','云厂商资本开支'],['cloud','云业务需求'],['projects','数据中心建设'],['power','电力与基础设施'],['servers','服务器与网络设备'],['semiconductor','半导体需求'],['costs','上游成本']];
 const labels:Record<string,string>={reported:'已披露',calculated:'已计算',guidance:'公司指引',official:'官方数据',project_announcement:'公告数据',third_party:'第三方估计',proxy:'代理指标',demo:'演示数据'};
-const statusLabels:Record<string,string>={ready:'最近抓取成功',reviewed:'官方核验导入',cached:'展示缓存',fetch_failed:'获取失败',pending:'待接入',authorization_required:'待授权数据源',no_observation:'暂无已发布观测'};
+const statusLabels:Record<string,string>={ready:'最近抓取成功',reviewed:'官方核验导入',cached:'展示缓存',fetch_failed:'获取失败',pending:'待接入',not_configured:'未配置来源',authorization_required:'待授权数据源',no_observation:'暂无已发布观测'};
 const statusText=(series?:MetricSeries)=>series?.status==='cached'&&series.error?'获取失败 · 展示缓存':statusLabels[series?.status??'pending'];
 const freq:Record<string,string>={daily:'日度',monthly:'月度',quarterly:'季度',annual:'年度',event:'事件'};
 const color=['#167c68','#5b80b2','#c39848','#9e7cb0','#d38067','#6b9b9d'];
