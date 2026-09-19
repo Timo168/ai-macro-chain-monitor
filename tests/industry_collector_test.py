@@ -8,11 +8,21 @@ import industry_common as common
 from industry_extended import Builder
 from industry_power_load import parse_archive
 from industry_schedule import bootstrap_extended
+from industry_projects import parse_source
 
 STATE_SPEC=importlib.util.spec_from_file_location('github_data_state',pathlib.Path(__file__).resolve().parents[1]/'scripts'/'github-data-state.py')
 github_data_state=importlib.util.module_from_spec(STATE_SPEC);STATE_SPEC.loader.exec_module(github_data_state)
 
 class RevisionTests(unittest.TestCase):
+ def test_doe_project_pages_keep_explicit_status_and_capacity_boundaries(self):
+  stamp='2026-09-19T00:00:00+00:00'
+  portsmouth=parse_source({'id':'DOE.US.PORTSMOUTH','publishedAt':'2026-03-24','url':'https://www.energy.gov/em/articles/partnership-ensures-affordable-energy-powers-ai-future-portsmouth-site'},b'<p>Groundbreaking for a 10-gigawatt artificial intelligence data center.</p>',stamp,'port')
+  self.assertEqual(portsmouth[0]['status'],'construction');self.assertEqual(portsmouth[0]['powerCapacityMw'],10000)
+  savannah=parse_source({'id':'DOE.US.SAVANNAH','publishedAt':'2026-07-20','url':'https://www.energy.gov/nnsa/articles/nnsa-selects-amentum-ai-data-center-and-energy-project-savannah-river-site'},b'<p>Selection to enter negotiations for a 1-gigawatt data center.</p>',stamp,'sav')
+  self.assertEqual(savannah[0]['status'],'planning');self.assertEqual(savannah[0]['powerCapacityMw'],1000)
+  inl=parse_source({'id':'DOE.US.INL.RFA','publishedAt':'2025-09-08','url':'https://www.energy.gov/ne/articles/energy-department-seeks-proposals-ai-data-centers-energy-projects-idaho-national'},b'<p>DOE seeks proposals for AI data centers.</p>',stamp,'inl')
+  self.assertEqual(inl[0]['status'],'announced');self.assertIsNone(inl[0]['powerCapacityMw'])
+
  def test_public_reviewed_projects_do_not_masquerade_as_operational(self):
   data=json.loads((common.DATA/'public-reviewed.json').read_text(encoding='utf-8'))
   self.assertEqual(len({p['id'] for p in data['projects']}),len(data['projects']))

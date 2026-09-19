@@ -9,7 +9,7 @@ const out=folder+'/latest.json';
 const prior=existsSync(out)?JSON.parse(readFileSync(out,'utf8')):null;
 const seedPath=folder+'/seed.json';
 const seed=existsSync(seedPath)?JSON.parse(readFileSync(seedPath,'utf8')):null;
-const sourceFiles=['companies.json','oracle.json','hardware.json','costs.json','sia.json','extended.json','power-load.json',existsSync(folder+'/reviewed-cache.json')?'reviewed-cache.json':'public-reviewed.json'];
+const sourceFiles=['companies.json','oracle.json','hardware.json','costs.json','sia.json','extended.json','power-load.json','projects.json',existsSync(folder+'/reviewed-cache.json')?'reviewed-cache.json':'public-reviewed.json'];
 const hasValue=point=>typeof point?.value==='number'&&Number.isFinite(point.value);
 const observed=series=>(series?.observations??[]).filter(hasValue);
 
@@ -30,7 +30,7 @@ export function preserveLastKnownGood(candidate,previous){
  return {...candidate,observations,lastSuccessfulAt:candidate.fetchedAt??previous.lastSuccessfulAt??previous.fetchedAt,note:recovered?[candidate.note,'来源本次返回的历史范围较短，已保留之前核验的观测。'].filter(Boolean).join(' '):candidate.note};
 }
 
-const merged={schemaVersion:'1',generatedAt:now,definitions:[],series:{},projects:[],events:[],recommendations:[],recommendationHistory:prior?.recommendationHistory??[],scheduler:{mode:process.env.GITHUB_ACTIONS?'github_actions':'local',lastRunAt:now}};
+const merged={schemaVersion:'1',generatedAt:now,definitions:[],series:{},projects:[],events:[],sources:[],recommendations:[],recommendationHistory:prior?.recommendationHistory??[],scheduler:{mode:process.env.GITHUB_ACTIONS?'github_actions':'local',lastRunAt:now}};
 for(const file of sourceFiles){
  const path=folder+'/'+file;
  if(!existsSync(path))continue;
@@ -42,12 +42,14 @@ for(const file of sourceFiles){
  }
  merged.projects.push(...(payload.projects??[]));
  merged.events.push(...(payload.events??[]));
+ for(const source of payload.sources??[])merged.sources.push(source);
 }
 for(const definition of pendingMetrics)if(!merged.definitions.some(existing=>existing.id===definition.id)){
  merged.definitions.push(definition);
  merged.series[definition.id]={observations:[],status:definition.valueType==='third_party'?'authorization_required':'pending',note:definition.note};
 }
 merged.projects=[...new Map(merged.projects.map(project=>[project.id,project])).values()];
+merged.sources=[...new Map(merged.sources.map(source=>[source.id,source])).values()];
 merged.verification={recommendationRuleReachability:ruleReachability(merged.definitions)};
 merged.recommendations=generateRecommendations(merged,merged.generatedAt,prior?.recommendations??[]);
 for(const recommendation of merged.recommendations){

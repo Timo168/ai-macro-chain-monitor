@@ -2,7 +2,7 @@
 import argparse, pathlib, shutil, subprocess, sqlite3, tempfile
 ROOT=pathlib.Path(__file__).resolve().parents[1];WORK=ROOT/'.data-work';DATA=ROOT/'data'
 FILES=['latest.json','calendar.json','scheduler.json','observations.sqlite','policy-rates.json','policy-decisions.json']
-INDUSTRY_FILES=['latest.json','companies.json','hardware.json','oracle.json','costs.json','sia.json','extended.json','power-load.json','reviewed-cache.json','scheduler.json']
+INDUSTRY_FILES=['latest.json','companies.json','hardware.json','oracle.json','costs.json','sia.json','extended.json','power-load.json','projects.json','reviewed-cache.json','scheduler.json']
 
 def industry_state(source,destination):
     if not source.exists():return

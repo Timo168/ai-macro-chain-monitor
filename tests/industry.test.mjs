@@ -51,3 +51,13 @@ test('single-entity industries are not structurally blocked when independent dim
  assert.deepEqual(ruleReachability(definitions).find(r=>r.targetId==='foundry').unavailableDimensions,[]);
  assert.notEqual(generateRecommendations(data,'2026-09-12').find(r=>r.targetId==='foundry').level,'insufficient_data');
 });
+test('project construction snapshots stay evidence-limited without a false trend',()=>{
+ const projectDef={id:'PROJECT.construction_capacity',entity:'DOE/项目级公开样本',family:'construction_capacity',unit:'MW',frequency:'quarterly',normalUpdateDelayDays:90,recommendationEligible:true,valueType:'project_announcement'};
+ const single=metricStats(projectDef,[p('2026-09-19',12000)],'2026-09-19');
+ assert.equal(single.yoy,null);
+ const historical=metricStats(projectDef,[p('2025-09-20',8000),p('2026-09-19',12000)],'2026-09-19');
+ assert.equal(historical.yoy,50);
+ const noObservation={...projectDef,id:'PROJECT.operational_capacity'};
+ const data={definitions:[noObservation],series:{[noObservation.id]:{status:'no_observation',observations:[]}}};
+ assert.ok(generateRecommendations(data,'2026-09-19').every(r=>r.level==='insufficient_data'));
+});
