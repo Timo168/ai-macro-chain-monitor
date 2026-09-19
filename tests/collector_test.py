@@ -5,6 +5,11 @@ import collect
 from schedule import expected_date
 from datetime import datetime
 class CollectorTests(unittest.TestCase):
+    def test_market_chart_uses_trading_dates_and_keeps_missing_close(self):
+        timestamps=[1799712000+86400*i for i in range(13)]
+        raw=json.dumps({'chart':{'result':[{'timestamp':timestamps,'indicators':{'quote':[{'close':[6.7]+[None]+[6.8]*11}]}}],'error':None}}).encode()
+        points=collect.parse_market_chart(raw)
+        self.assertEqual(len(points),13);self.assertEqual(points[0]['value'],6.7);self.assertIsNone(points[1]['value'])
     def test_world_bank_three_points_each(self):
         payload=json.loads((collect.DATA/'latest.json').read_text(encoding='utf-8'))
         for key in collect.WB_IDS:

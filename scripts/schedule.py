@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 from urllib.parse import urlencode, urljoin
 from zoneinfo import ZoneInfo
 from calendar_provider import CalendarParser
-from collect import ROOT, DATA, REGISTRY, WB_IDS, collect, download
+from collect import ROOT, DATA, REGISTRY, WB_IDS, MARKET_IDS, collect, download
 from policy_decisions import collect_policy_decisions
 from policy_rates import collect_policy_rates
 
@@ -92,6 +92,11 @@ def run(force=False):
             key=item['id'];s=cached['series'].get(key,{});last=s.get('observations',[]);last_date=next((p['date'] for p in reversed(last) if p['value'] is not None),'')
             checked=datetime.fromisoformat(s.get('checkedAt') or '2000-01-01T00:00:00+00:00')
             if force or not last:selected.append(key);continue
+            # Market-reference quotes are checked on every 15-minute scheduler
+            # pass. They remain separate from the official monthly price series.
+            if key in MARKET_IDS:
+                selected.append(key)
+                pending[key]={'state':'market_sync','nextCheckAt':(now+timedelta(minutes=int(os.environ.get('MACRO_CHECK_MINUTES','15')))).isoformat(),'calendarSource':'daily_market_reference'};continue
             # World Bank commodity files and EIA-861M electricity data publish
             # outside the FRED release calendar, so they are checked daily.
             if key in (*WB_IDS,'EIA_US_COMMERCIAL','DFEDTARL','DFEDTARU'):

@@ -1,6 +1,7 @@
 """Official-source collector. SQLite is authoritative; JSON is an atomic display cache."""
 import argparse, calendar, csv, hashlib, io, json, os, pathlib, re, sqlite3, subprocess, time, urllib.request
 from datetime import datetime, timezone
+from urllib.parse import quote
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 DATA=ROOT/'data'; DATA.mkdir(exist_ok=True)
 REGISTRY=json.loads((ROOT/'lib/indicators.json').read_text(encoding='utf-8'))
@@ -19,6 +20,16 @@ WB_COLUMNS=[
 WB_IDS=tuple(key for key,_,_ in WB_COLUMNS)
 EIA_RETAIL_URL='https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx'
 EIA_US_COMMERCIAL='EIA_US_COMMERCIAL'
+# Daily market references supplement the World Bank monthly physical-price
+# history. They remain separate series because contract basis and units differ.
+MARKET_QUOTES={
+    'MKT_COPPER':('HG=F','https://finance.yahoo.com/quote/HG%3DF/history/'),
+    'MKT_ALUMINUM':('ALI=F','https://finance.yahoo.com/quote/ALI%3DF/history/'),
+    'MKT_IRON_ORE':('TIO=F','https://finance.yahoo.com/quote/TIO%3DF/history/'),
+    'MKT_GOLD':('GC=F','https://finance.yahoo.com/quote/GC%3DF/history/'),
+    'MKT_SILVER':('SI=F','https://finance.yahoo.com/quote/SI%3DF/history/'),
+}
+MARKET_IDS=tuple(MARKET_QUOTES)
 CREATE_NO_WINDOW=getattr(subprocess,'CREATE_NO_WINDOW',0) if os.name=='nt' else 0
 WINDOWS_STARTUPINFO=None
 if os.name=='nt':
@@ -28,6 +39,13 @@ def download(url):
     result=subprocess.run(['curl.exe' if os.name=='nt' else 'curl','--fail','--location','--silent','--show-error','--max-time','65','--retry','2',url],capture_output=True,creationflags=CREATE_NO_WINDOW,startupinfo=WINDOWS_STARTUPINFO)
     if result.returncode: raise RuntimeError('Source fetch failed: '+result.stderr.decode(errors='replace')[-180:])
     return result.stdout
+def download_market(url):
+    """Use an in-process request for market references; Yahoo rejects curl clients."""
+    request=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (compatible; AI-Macro-Chain-Monitor/1.0)'})
+    try:
+        with urllib.request.urlopen(request,timeout=65) as response:return response.read()
+    except Exception as exc:
+        raise RuntimeError('Market reference fetch failed: '+str(exc)[-180:])
 def parse_csv(raw):
     rows=list(csv.reader(io.StringIO(raw.decode('utf-8-sig'))))
     if not rows or rows[0][0] not in ('observation_date','DATE'): raise ValueError('Unexpected CSV header')
@@ -76,6 +94,19 @@ def parse_eia_us_commercial(raw):
         points.append({'date':f'{year}-{month:02}-{calendar.monthrange(year,month)[1]}','value':100*revenue/sales})
     if len(points)<13:raise ValueError('EIA-861M history too short or incomplete')
     return points
+def parse_market_chart(raw):
+    payload=json.loads(raw)
+    chart=payload.get('chart',{});results=chart.get('result') or []
+    if chart.get('error') or not results:raise ValueError('Yahoo Finance market chart unavailable')
+    result=results[0];timestamps=result.get('timestamp') or [];closes=(result.get('indicators',{}).get('quote') or [{}])[0].get('close') or []
+    if len(timestamps)!=len(closes) or not timestamps:raise ValueError('Yahoo Finance market chart has no usable close values')
+    points=[];seen=set()
+    for stamp,value in zip(timestamps,closes):
+        date=datetime.fromtimestamp(stamp,timezone.utc).date().isoformat()
+        if date in seen:continue
+        seen.add(date);points.append({'date':date,'value':float(value) if isinstance(value,(int,float)) else None})
+    if len(points)<13:raise ValueError('Yahoo Finance market history too short')
+    return points
 def connect():
     conn=sqlite3.connect(DATA/'observations.sqlite');conn.execute('PRAGMA journal_mode=WAL')
     conn.executescript('''CREATE TABLE IF NOT EXISTS observations(series_id TEXT, observation_date TEXT,value REAL,source_published_at TEXT,fetched_at TEXT,revision TEXT, PRIMARY KEY(series_id,observation_date,revision));
@@ -85,7 +116,7 @@ CREATE TABLE IF NOT EXISTS runs(id INTEGER PRIMARY KEY,started_at TEXT,finished_
     return conn
 def save(conn,key,points,raw,source_url,started):
     digest=hashlib.sha256(raw).hexdigest(); version=DATA/'versions'/key;version.mkdir(parents=True,exist_ok=True)
-    path=version/(digest+('.xlsx' if key in WB_IDS or key==EIA_US_COMMERCIAL else '.csv'))
+    path=version/(digest+('.xlsx' if key in WB_IDS or key==EIA_US_COMMERCIAL else '.json' if key in MARKET_IDS else '.csv'))
     if not path.exists():path.write_bytes(raw)
     old=conn.execute('SELECT payload FROM snapshots WHERE series_id=?',(key,)).fetchone()
     old_payload=json.loads(old[0]) if old else {}; old_points={p['date']:p['value'] for p in old_payload.get('observations',[])}
@@ -114,6 +145,10 @@ def collect(import_dir=None, selected=None):
                 raw=wb_raw;points=wb[key];url=wb_url
             elif key==EIA_US_COMMERCIAL:
                 raw=download(EIA_RETAIL_URL);points=parse_eia_us_commercial(raw);url=EIA_RETAIL_URL
+            elif key in MARKET_IDS:
+                symbol,url=MARKET_QUOTES[key]
+                raw=download_market('https://query2.finance.yahoo.com/v8/finance/chart/'+quote(symbol,safe='')+'?range=5y&interval=1d')
+                points=parse_market_chart(raw)
             else:
                 url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+key
                 if import_dir:raw=(pathlib.Path(import_dir)/(key+'.csv')).read_bytes();points=parse_csv(raw)

@@ -2,4 +2,6 @@
 .mineral-view-switch button{height:27px;padding:0 9px;font-size:10px;color:#71868d}
 .mineral-view-switch button[aria-pressed=true]{background:#fff;color:#167b64;box-shadow:0 1px 3px #214b3012}
 .mineral-view-switch button:disabled{opacity:.48}
+.mineral-selector label.unavailable{opacity:.48;cursor:not-allowed}
+.mineral-selector label small{margin-left:4px;font-size:9px;color:#9aa7ac}
 @media(max-width:800px){.mineral-view-switch{width:100%;overflow:auto}}
