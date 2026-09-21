@@ -8,7 +8,7 @@ import industry_common as common
 from industry_extended import Builder
 from industry_power_load import parse_archive
 from industry_schedule import bootstrap_extended
-from industry_projects import parse_source, merge_project_history, retain_snapshots
+from industry_projects import parse_source, merge_project_history, retain_snapshots, restore_verified_baseline
 
 STATE_SPEC=importlib.util.spec_from_file_location('github_data_state',pathlib.Path(__file__).resolve().parents[1]/'scripts'/'github-data-state.py')
 github_data_state=importlib.util.module_from_spec(STATE_SPEC);STATE_SPEC.loader.exec_module(github_data_state)
@@ -33,6 +33,13 @@ class RevisionTests(unittest.TestCase):
   changed={'periodEnd':'2026-09-21','value':13000,'version':'changed','originalItems':{'projectIds':'A,B,C'}}
   self.assertEqual(retain_snapshots([first],repeat),[first])
   self.assertEqual(retain_snapshots([first],changed),[first,changed])
+
+ def test_project_baseline_survives_a_transient_source_fetch_failure(self):
+  stale={'id':'DOE-US-SC-SAVANNAH-AI','status':'planning','powerCapacityMw':1000}
+  restored=restore_verified_baseline(stale)
+  self.assertEqual(restored['stateCode'],'SC')
+  self.assertEqual(restored['statusHistory'][0]['date'],'2026-07-20')
+  self.assertEqual(restored['statusHistory'][0]['status'],'planning')
 
  def test_public_reviewed_projects_do_not_masquerade_as_operational(self):
   data=json.loads((common.DATA/'public-reviewed.json').read_text(encoding='utf-8'))

@@ -39,6 +39,26 @@ SOURCES = [
     },
 ]
 
+# These are the first, already-verified facts from the same official pages in
+# SOURCES.  Keeping them separately lets a transient page-fetch failure retain
+# the project lifecycle that was known before the failure.  The source status
+# still reports ``fetch_failed``; this is historical evidence, not a newly
+# inferred observation.
+PROJECT_BASELINES = {
+    "DOE-US-OH-PORTSMOUTH-AI": {
+        "stateCode": "OH",
+        "statusHistory": [{"date": "2026-03-24", "status": "construction", "sourceUrl": SOURCES[0]["url"], "capacityMw": 10000, "note": "DOE公告确认奠基和规划容量。"}],
+    },
+    "DOE-US-SC-SAVANNAH-AI": {
+        "stateCode": "SC",
+        "statusHistory": [{"date": "2026-07-20", "status": "planning", "sourceUrl": SOURCES[1]["url"], "capacityMw": 1000, "note": "DOE/NNSA公布进入谈判的选择结果。"}],
+    },
+    "DOE-US-ID-INL-AI-RFA": {
+        "stateCode": "ID",
+        "statusHistory": [{"date": "2025-09-08", "status": "announced", "sourceUrl": SOURCES[2]["url"], "note": "DOE开始征集建设和供能方案。"}],
+    },
+}
+
 
 def page_text(raw: bytes) -> str:
     return BeautifulSoup(raw, "html.parser").get_text(" ", strip=True)
@@ -147,6 +167,25 @@ def merge_project_history(previous, candidate):
     return candidate
 
 
+def restore_verified_baseline(project):
+    """Backfill verified lifecycle metadata when an older cache lacks it.
+
+    This only fills the initial fact hard-coded from an official source above.
+    It never changes a project's current status or creates a capacity point.
+    """
+    baseline = PROJECT_BASELINES.get(project.get("id"))
+    if not baseline:
+        return project
+    project.setdefault("stateCode", baseline["stateCode"])
+    existing = list(project.get("statusHistory", []))
+    for event in baseline["statusHistory"]:
+        key = (event.get("date"), event.get("status"), event.get("capacityMw"), event.get("sourceUrl"))
+        if not any((old.get("date"), old.get("status"), old.get("capacityMw"), old.get("sourceUrl")) == key for old in existing):
+            existing.append(event)
+    project["statusHistory"] = sorted(existing, key=lambda event: (event.get("date", ""), event.get("status", "")))
+    return project
+
+
 def capacity_signature(projects, statuses):
     facts = [
         {"id": project["id"], "status": project.get("status"), "capacityMw": project.get("powerCapacityMw"), "sources": project.get("sourceUrls", [])}
@@ -224,7 +263,7 @@ def build():
         except Exception as error:
             sources.append({"id": spec["id"], "name": spec["name"], "url": spec["url"], "status": "fetch_failed", "checkedAt": checked_at, "error": str(error), "note": "保留该来源的最近成功项目；若无历史版本则不显示容量。"})
 
-    projects = list(projects_by_id.values())
+    projects = [restore_verified_baseline(project) for project in projects_by_id.values()]
     construction = [p for p in projects if p.get("status") == "construction" and isinstance(p.get("powerCapacityMw"), (int, float))]
     operational = [p for p in projects if p.get("status") in ("operational", "partially_operational") and isinstance(p.get("powerCapacityMw"), (int, float))]
     snapshot_date = datetime.now(timezone.utc).date().isoformat()
