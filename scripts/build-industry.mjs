@@ -38,7 +38,10 @@ for(const file of sourceFiles){
  for(const definition of payload.definitions??[])if(!merged.definitions.some(existing=>existing.id===definition.id))merged.definitions.push(definition);
  for(const [id,series] of Object.entries(payload.series??{})){
   const previous=prior?.series?.[id]?.observations?.some(hasValue)?prior.series[id]:seed?.series?.[id];
-  merged.series[id]=preserveLastKnownGood(series,previous);
+  const definition=(payload.definitions??[]).find(item=>item.id===id);
+  // Event streams are complete state histories supplied by their adapter. Do
+  // not re-add superseded check-time snapshots from an older website cache.
+  merged.series[id]=definition?.frequency==='event'?series:preserveLastKnownGood(series,previous);
  }
  merged.projects.push(...(payload.projects??[]));
  merged.events.push(...(payload.events??[]));

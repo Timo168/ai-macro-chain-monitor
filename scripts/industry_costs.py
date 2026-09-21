@@ -24,7 +24,7 @@ def parse_eia(raw):
    y,m=int(row[0]),int(row[1]);end=f'{y}-{m:02}-{calendar.monthrange(y,m)[1]}'
    for sector,revenue,sales in [('commercial',8,9),('industrial',12,13)]:
     national.setdefault((end,sector),[]).append((row[2],row[revenue],row[sales]))
-  if not isinstance(row[0],(int,float)) or row[2] not in ('US','VA','TX','OH','GA','AZ'):continue
+  if not isinstance(row[0],(int,float)) or row[2] not in ('US','VA','TX','OH','GA','AZ','SC','ID','IN','LA'):continue
   y,m=int(row[0]),int(row[1]);end=f'{y}-{m:02}-{calendar.monthrange(y,m)[1]}'
   for sector,col in [('commercial',11),('industrial',15)]:
    key=str(row[2])+'.'+sector;v=row[col];result.setdefault(key,[]).append((end,float(v) if isinstance(v,(int,float)) and v>0 else None,str(row[3]),{'price_cents_kwh':v}))
@@ -48,7 +48,7 @@ def run():
   else:result['series'][id]={**old['series'].get(id,{'observations':[]}),'status':'cached' if old['series'].get(id,{}).get('observations') else 'fetch_failed','checkedAt':now(),'error':error}
  try:raw,stamp,version=fetch(EIA);electricity=parse_eia(raw);error=None
  except Exception as e:electricity={};error=str(e)
- regions={'US':'美国全国','VA':'弗吉尼亚州','TX':'得克萨斯州','OH':'俄亥俄州','GA':'佐治亚州','AZ':'亚利桑那州'}
+ regions={'US':'美国全国','VA':'弗吉尼亚州','TX':'得克萨斯州','OH':'俄亥俄州','GA':'佐治亚州','AZ':'亚利桑那州','SC':'南卡罗来纳州','ID':'爱达荷州','IN':'印第安纳州','LA':'路易斯安那州'}
  for region,name in regions.items():
   for sector,label in [('commercial','商业'),('industrial','工业')]:
    key=region+'.'+sector;id='EIA.'+key;d=definition(id,name+label+'电价',name+' '+sector+' retail electricity price','power','electricity',region,'EIA-861M','https://www.eia.gov/electricity/data/state/','美分/kWh','official','终端零售收入/售电量的平均价格；商业/工业分别统计，非批发电价、非数据中心实际合同价格。月度初值可修订。',frequency='monthly');result['definitions'].append(d)

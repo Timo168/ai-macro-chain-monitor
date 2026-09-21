@@ -57,11 +57,13 @@ def parse_source(spec, raw: bytes, fetched_at: str, digest: str):
             "owner": "SB Energy / SoftBank（DOE Portsmouth Site）",
             "country": "美国",
             "region": "Ohio",
+            "stateCode": "OH",
             "city": "Piketon / Portsmouth Site",
             "status": "construction",
             "announcedAt": spec["publishedAt"],
             "powerCapacityMw": 10000,
             "sourceUrls": [spec["url"]],
+            "statusHistory": [{"date": spec["publishedAt"], "status": "construction", "sourceUrl": spec["url"], "capacityMw": 10000, "note": "DOE公告确认奠基和规划容量。"}],
             "lastVerifiedAt": fetched_at,
             "isEstimated": False,
             "notes": "DOE公告称已举行奠基并规划10GW AI数据中心；该数值是数据中心规划容量，不是已投运容量，也不等同于配套发电容量。",
@@ -75,11 +77,13 @@ def parse_source(spec, raw: bytes, fetched_at: str, digest: str):
             "owner": "Amentum / DOE-NNSA Savannah River Site",
             "country": "美国",
             "region": "South Carolina",
+            "stateCode": "SC",
             "city": "Savannah River Site",
             "status": "planning",
             "announcedAt": spec["publishedAt"],
             "powerCapacityMw": 1000,
             "sourceUrls": [spec["url"]],
+            "statusHistory": [{"date": spec["publishedAt"], "status": "planning", "sourceUrl": spec["url"], "capacityMw": 1000, "note": "DOE/NNSA公布进入谈判的选择结果。"}],
             "lastVerifiedAt": fetched_at,
             "isEstimated": False,
             "notes": "DOE/NNSA公布的是进入谈判的选择结果；1GW为数据中心规划容量，约2GW为现场发电设想，未计入在建容量，也不是最终租约或投运确认。",
@@ -93,11 +97,13 @@ def parse_source(spec, raw: bytes, fetched_at: str, digest: str):
             "owner": "美国能源部 / Idaho National Laboratory",
             "country": "美国",
             "region": "Idaho",
+            "stateCode": "ID",
             "city": "Idaho National Laboratory",
             "status": "announced",
             "announcedAt": spec["publishedAt"],
             "powerCapacityMw": None,
             "sourceUrls": [spec["url"]],
+            "statusHistory": [{"date": spec["publishedAt"], "status": "announced", "sourceUrl": spec["url"], "note": "DOE开始征集建设和供能方案。"}],
             "lastVerifiedAt": fetched_at,
             "isEstimated": False,
             "notes": "DOE征集建设和供能方案；公告未披露项目容量，因此保留未发布，不填零，也不计入在建容量。",
@@ -118,6 +124,55 @@ def load_previous_projects():
     return []
 
 
+def merge_project_history(previous, candidate):
+    """Retain official lifecycle facts; append only a verified status/capacity change."""
+    history = list(previous.get("statusHistory", [])) if previous else []
+    candidate_history = list(candidate.get("statusHistory", []))
+    for event in candidate_history:
+        key = (event.get("date"), event.get("status"), event.get("capacityMw"), event.get("sourceUrl"))
+        if not any((old.get("date"), old.get("status"), old.get("capacityMw"), old.get("sourceUrl")) == key for old in history):
+            history.append(event)
+    if previous and (previous.get("status") != candidate.get("status") or previous.get("powerCapacityMw") != candidate.get("powerCapacityMw")):
+        event = {
+            "date": candidate.get("announcedAt") or candidate.get("lastVerifiedAt", "")[:10],
+            "status": candidate["status"],
+            "sourceUrl": candidate["sourceUrls"][0],
+            "capacityMw": candidate.get("powerCapacityMw"),
+            "note": "自动采集发现官方页面中的状态或披露容量变化；以该公告日期为准。",
+        }
+        key = (event.get("date"), event.get("status"), event.get("capacityMw"), event.get("sourceUrl"))
+        if not any((old.get("date"), old.get("status"), old.get("capacityMw"), old.get("sourceUrl")) == key for old in history):
+            history.append(event)
+    candidate["statusHistory"] = sorted(history, key=lambda event: (event.get("date", ""), event.get("status", "")))
+    return candidate
+
+
+def capacity_signature(projects, statuses):
+    facts = [
+        {"id": project["id"], "status": project.get("status"), "capacityMw": project.get("powerCapacityMw"), "sources": project.get("sourceUrls", [])}
+        for project in projects
+        if project.get("status") in statuses and isinstance(project.get("powerCapacityMw"), (int, float))
+    ]
+    return hashlib.sha256(json.dumps(sorted(facts, key=lambda item: item["id"]), sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+
+
+def retain_snapshots(previous, candidate):
+    """Keep a point only when the disclosed capacity composition changes."""
+    if candidate is None:
+        return previous
+    def key(point):
+        return (point.get("value"), (point.get("originalItems") or {}).get("projectIds", ""))
+    compact = []
+    for point in previous:
+        if not compact or key(compact[-1]) != key(point):
+            compact.append(point)
+    if compact and key(compact[-1]) == key(candidate):
+        return compact
+    if compact and compact[-1].get("periodEnd") == candidate.get("periodEnd"):
+        return [*compact[:-1], candidate]
+    return [*compact, candidate]
+
+
 def metric_definition(metric_id, name, family, method):
     result = definition(
         metric_id,
@@ -132,7 +187,7 @@ def metric_definition(metric_id, name, family, method):
         value_type="project_announcement",
         method=method,
         eligible=True,
-        frequency="quarterly",
+        frequency="event",
         export=True,
     )
     result.update({
@@ -161,7 +216,7 @@ def build():
             raw, fetched_at, digest = fetch(spec["url"])
             parsed = parse_source(spec, raw, fetched_at, digest)
             for project in parsed:
-                projects_by_id[project["id"]] = project
+                projects_by_id[project["id"]] = merge_project_history(previous_by_id.get(project["id"]), project)
             successful += 1
             latest_fetch = max(latest_fetch or fetched_at, fetched_at)
             latest_published = max(latest_published or spec["publishedAt"], spec["publishedAt"])
@@ -174,34 +229,39 @@ def build():
     operational = [p for p in projects if p.get("status") in ("operational", "partially_operational") and isinstance(p.get("powerCapacityMw"), (int, float))]
     snapshot_date = datetime.now(timezone.utc).date().isoformat()
     source_url = "https://www.energy.gov/powering-americas-ai-future-data-center-resource-hub"
-    version = hashlib.sha256(json.dumps({"construction": construction, "operational": operational}, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+    construction_version = capacity_signature(projects, {"construction"})
+    operational_version = capacity_signature(projects, {"operational", "partially_operational"})
     construction_value = sum(p["powerCapacityMw"] for p in construction)
     operational_value = sum(p["powerCapacityMw"] for p in operational)
     common_note = "仅汇总已核验且披露容量的公开项目样本，不代表全量市场；规划/审批/谈判项目不计入在建容量。"
+    old_payload = json.loads((DATA / "projects.json").read_text(encoding="utf-8")) if (DATA / "projects.json").exists() else {}
+    old_series = old_payload.get("series", {})
+    old_construction = old_series.get("PROJECT.construction_capacity", {}).get("observations", [])
+    old_operational = old_series.get("PROJECT.operational_capacity", {}).get("observations", [])
     construction_obs = observation(
-        "PROJECT.construction_capacity", snapshot_date, construction_value, source_url, checked_at, version,
+        "PROJECT.construction_capacity", snapshot_date, construction_value, source_url, checked_at, construction_version,
         fiscal="latest public snapshot", formula="sum(project.powerCapacityMw where status=construction and disclosed capacity)",
         items={"projectCount": len(construction), "projectIds": ",".join(p["id"] for p in construction), "sampleBoundary": "known official project sample"},
         published=latest_published,
     ) if successful else None
     operational_obs = observation(
-        "PROJECT.operational_capacity", snapshot_date, operational_value, source_url, checked_at, version,
+        "PROJECT.operational_capacity", snapshot_date, operational_value, source_url, checked_at, operational_version,
         fiscal="latest public snapshot", formula="sum(project.powerCapacityMw where status in (operational, partially_operational) and disclosed capacity)",
         items={"projectCount": len(operational), "projectIds": ",".join(p["id"] for p in operational), "sampleBoundary": "known official project sample"},
         published=latest_published,
     ) if successful and operational else None
+    construction_history = retain_snapshots(old_construction, construction_obs)
+    operational_history = retain_snapshots(old_operational, operational_obs)
     if successful:
         operational_series = {
-            "observations": [operational_obs] if operational_obs else [],
+            "observations": operational_history,
             "status": "ready" if operational_obs else "no_observation",
             "fetchedAt": latest_fetch,
             "checkedAt": checked_at,
             "note": "已核验项目中暂无官方宣布已投运容量；不显示零。" if not operational_obs else common_note,
         }
-        construction_series = {"observations": [construction_obs] if construction_obs else [], "status": "ready", "fetchedAt": latest_fetch, "checkedAt": checked_at, "note": common_note}
+        construction_series = {"observations": construction_history, "status": "ready", "fetchedAt": latest_fetch, "checkedAt": checked_at, "note": common_note}
     else:
-        old_payload = json.loads((DATA / "projects.json").read_text(encoding="utf-8")) if (DATA / "projects.json").exists() else {}
-        old_series = old_payload.get("series", {})
         operational_series = {**old_series.get("PROJECT.operational_capacity", {}), "status": "cached" if old_series.get("PROJECT.operational_capacity", {}).get("observations") else "fetch_failed", "checkedAt": checked_at, "error": "所有DOE来源本次获取失败；保留最近成功版本。"}
         construction_series = {**old_series.get("PROJECT.construction_capacity", {}), "status": "cached" if old_series.get("PROJECT.construction_capacity", {}).get("observations") else "fetch_failed", "checkedAt": checked_at, "error": "所有DOE来源本次获取失败；保留最近成功版本。"}
     result = {

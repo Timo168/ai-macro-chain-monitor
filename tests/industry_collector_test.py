@@ -8,7 +8,7 @@ import industry_common as common
 from industry_extended import Builder
 from industry_power_load import parse_archive
 from industry_schedule import bootstrap_extended
-from industry_projects import parse_source
+from industry_projects import parse_source, merge_project_history, retain_snapshots
 
 STATE_SPEC=importlib.util.spec_from_file_location('github_data_state',pathlib.Path(__file__).resolve().parents[1]/'scripts'/'github-data-state.py')
 github_data_state=importlib.util.module_from_spec(STATE_SPEC);STATE_SPEC.loader.exec_module(github_data_state)
@@ -22,6 +22,17 @@ class RevisionTests(unittest.TestCase):
   self.assertEqual(savannah[0]['status'],'planning');self.assertEqual(savannah[0]['powerCapacityMw'],1000)
   inl=parse_source({'id':'DOE.US.INL.RFA','publishedAt':'2025-09-08','url':'https://www.energy.gov/ne/articles/energy-department-seeks-proposals-ai-data-centers-energy-projects-idaho-national'},b'<p>DOE seeks proposals for AI data centers.</p>',stamp,'inl')
   self.assertEqual(inl[0]['status'],'announced');self.assertIsNone(inl[0]['powerCapacityMw'])
+
+ def test_project_history_and_snapshots_only_change_on_official_facts(self):
+  previous={'status':'planning','powerCapacityMw':1000,'statusHistory':[{'date':'2026-07-20','status':'planning','capacityMw':1000,'sourceUrl':'a'}]}
+  candidate={'status':'construction','powerCapacityMw':1000,'announcedAt':'2026-08-01','sourceUrls':['b'],'statusHistory':[{'date':'2026-08-01','status':'construction','capacityMw':1000,'sourceUrl':'b'}]}
+  merged=merge_project_history(previous,candidate)
+  self.assertEqual([event['status'] for event in merged['statusHistory']],['planning','construction'])
+  first={'periodEnd':'2026-09-19','value':12000,'version':'old','originalItems':{'projectIds':'A,B'}}
+  repeat={'periodEnd':'2026-09-21','value':12000,'version':'new','originalItems':{'projectIds':'A,B'}}
+  changed={'periodEnd':'2026-09-21','value':13000,'version':'changed','originalItems':{'projectIds':'A,B,C'}}
+  self.assertEqual(retain_snapshots([first],repeat),[first])
+  self.assertEqual(retain_snapshots([first],changed),[first,changed])
 
  def test_public_reviewed_projects_do_not_masquerade_as_operational(self):
   data=json.loads((common.DATA/'public-reviewed.json').read_text(encoding='utf-8'))
