@@ -5,6 +5,10 @@ import collect
 from schedule import expected_date
 from datetime import datetime
 class CollectorTests(unittest.TestCase):
+    def test_daily_precious_metal_market_references_are_configured(self):
+        self.assertEqual(collect.MARKET_QUOTES['MKT_GOLD'][0],'GC=F')
+        self.assertEqual(collect.MARKET_QUOTES['MKT_SILVER'][0],'SI=F')
+        self.assertTrue(set(['MKT_GOLD','MKT_SILVER']).issubset(collect.MARKET_IDS))
     def test_market_chart_uses_trading_dates_and_keeps_missing_close(self):
         timestamps=[1799712000+86400*i for i in range(13)]
         raw=json.dumps({'chart':{'result':[{'timestamp':timestamps,'indicators':{'quote':[{'close':[6.7]+[None]+[6.8]*11}]}}],'error':None}}).encode()
