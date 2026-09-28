@@ -135,6 +135,6 @@ def run(force=False):
         print(json.dumps({'checkedAt':now.isoformat(),'selected':selected,'calendarStatus':result['scheduler']['calendarStatus']},ensure_ascii=False))
     finally:lock.unlink(missing_ok=True)
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--force',action='store_true');args=p.parse_args();run(args.force)
+    p=argparse.ArgumentParser();p.add_argument('--force',action='store_true');p.add_argument('--skip-research',action='store_true');args=p.parse_args();run(args.force)
     from industry_schedule import run as run_industry
-    run_industry(args.force)
+    run_industry(args.force,not args.skip_research)

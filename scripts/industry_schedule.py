@@ -33,7 +33,7 @@ def bootstrap_extended(initial,target):
             restored={**initial['series'][definition['id']],'status':'cached','error':'从已核验发布快照恢复；等待本次官方来源检查'}
             extended['definitions'].append(definition);extended['series'][definition['id']]=restored
     atomic(target,extended)
-def run(force=False):
+def run(force=False,build_research=True):
     reviewed=DATA/'public-reviewed.json'
     if reviewed.exists():materialize()
     # Bootstrap normalized history so a first-run source outage cannot erase the reviewed seed.
@@ -65,4 +65,7 @@ def run(force=False):
         atomic(path,{'collectorVersion':7,'lastAttemptAt':now(),'failures':failures,'nextCheckAt':(current+timedelta(hours=24)).isoformat()})
     result=run_background(['node',str(ROOT/'scripts/build-industry.mjs')],cwd=ROOT)
     if result.returncode:raise RuntimeError('Industry build failed; last successful snapshot retained')
-if __name__=='__main__':run('--force' in sys.argv)
+    if build_research:
+        result=run_background(['node',str(ROOT/'scripts/build-investment-research.mjs')],cwd=ROOT)
+        if result.returncode:raise RuntimeError('Investment research build failed; last successful snapshot retained')
+if __name__=='__main__':run('--force' in sys.argv,'--skip-research' not in sys.argv)

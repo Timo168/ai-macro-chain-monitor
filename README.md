@@ -37,6 +37,7 @@ npm run dev
 
 - 默认从 FRED 官方公开图表 CSV 下载完整历史，无需密钥。这不是与正式 API 同等级的稳定接口承诺；下载适配器集中在 `scripts/collect.py`，方便替换。
 - 可选正式 FRED API：在**后台进程环境变量**配置 `FRED_API_KEY`。变量示例见 `.env.example`。采集器不会自动读取 `.env`，需要启动环境或密钥管理器注入。密钥不要进入 `NEXT_PUBLIC_*`、浏览器或 Git。
+- 可选推理模型：`OPENAI_API_KEY` 只由 GitHub Actions 的独立“行业研究”步骤读取，浏览器、数据采集器和 `data-cache` 都不会取得密钥。未配置时，投资结论页仍展示可复算的量化证据层；配置后模型只解释已绑定版本的产业、宏观和央行数据，不能输出个股买卖指令或覆盖规则结论。
 - 世界银行：从官方商品主页发现最新月度 XLSX，失败时使用最后已知官方链接；按 `Monthly Prices` 工作表、标题、单位和日期解析。每个新哈希保留原文件。
 - NFCI 目标用途许可待核验，首版关闭 CSV 导出。世界银行数据保留署名与基准说明，黄金在 2025-06 更换基准。
 
@@ -97,7 +98,7 @@ JS 验证包括 17 组图表各 3 点（51 点）、15 个 FRED 序列各 3 个�
 
 仓库：<https://github.com/Timo168/ai-macro-chain-monitor>。Pages 使用 Actions 模式，默认分支为 `main`。提交代码、手动运行工作流或定时触发都会执行数据检查、验证、构建、发布。工作流页面：<https://github.com/Timo168/ai-macro-chain-monitor/actions/workflows/deploy.yml>。
 
-可选密钥放在仓库 Settings → Secrets and variables → Actions → `FRED_API_KEY`。不配置则使用公开 CSV。不要在 data-cache 分支中放任何密钥、个人文件或非公开业务数据。
+可选密钥放在仓库 Settings → Secrets and variables → Actions → Secrets → `FRED_API_KEY` 与 `OPENAI_API_KEY`。不配置 FRED 密钥时使用公开 CSV；不配置 OpenAI 密钥时使用确定性量化证据层。可在 Actions → Variables 设置 `REASONING_MODEL`，默认 `gpt-5-mini`。不要在 data-cache 分支中放任何密钥、个人文件或非公开业务数据。
 
 本地构建 Pages：`npm run build:pages`，产物为 `dist-pages`。部署子路径由 `PAGES_BASE_PATH` 控制，默认 `/ai-macro-chain-monitor/`。页面导航、数据与静态资源均支持这个子路径。
 

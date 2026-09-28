@@ -40,19 +40,24 @@ jobs:
           MACRO_CHECK_MINUTES: '15'
         run: |
           if [ ! -f data/observations.sqlite ]; then python scripts/collect.py; fi
-          python scripts/schedule.py
-      - name: Persist cache and revisions even if a later build fails
-        if: always()
-        run: python scripts/github-data-state.py save
+          python scripts/schedule.py --skip-research
+      - name: Generate evidence-constrained industry research
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          REASONING_MODEL: ${{ vars.REASONING_MODEL }}
+        run: node scripts/build-investment-research.mjs
       - name: Verify calculations and collectors
         run: |
           node --test tests/calculations.test.mjs
           node --test tests/industry.test.mjs
+          node --test tests/research.test.mjs
           python tests/collector_test.py
           python tests/industry_collector_test.py
           python tests/policy_rates_test.py
           python tests/policy_decisions_test.py
           npx tsc --noEmit
+      - name: Persist validated cache and revisions
+        run: python scripts/github-data-state.py save
       - name: Build website
         env:
           PAGES_BASE_PATH: /ai-macro-chain-monitor/
