@@ -8,6 +8,21 @@ from industry_collect import html_tables,numbers,quarter_dates,row_numbers
 from industry_hardware import dates
 from collect import parse_csv
 
+HPE_RELEASES=(('q2','2026-06-01'),('q3','2026-09-02'))
+
+def parse_hpe_release(raw):
+ pages=[p.extract_text() for p in PdfReader(io.BytesIO(raw)).pages]
+ segment=next(p for p in pages if 'Server' in p and 'Net Revenue:' in p and 'Change (%)' in p)
+ if 'Cloud & AI' not in segment:raise ValueError('HPE FY2026 restated Cloud & AI segment scope missing')
+ header=re.search(r'([A-Z][a-z]+ \d+, 20\d\d)\s+([A-Z][a-z]+ \d+, 20\d\d)\s+([A-Z][a-z]+ \d+, 20\d\d)',segment)
+ if not header:raise ValueError('HPE actual quarter header not found')
+ ends=[datetime.strptime(v,'%B %d, %Y').date().isoformat() for v in header.groups()]
+ server=numbers(re.search(r'^\s*Server\s+([^\n]+)',segment,re.M)[1])
+ margin=next(p for p in pages if re.search(r'^\s*GAAP gross profit margin\s+[\d]',p,re.M))
+ margins=numbers(re.search(r'^\s*GAAP gross profit margin\s+([^\n]+)',margin,re.M)[1])
+ if len(server)<3 or len(margins)<3 or len(set(ends))!=3:raise ValueError('HPE dated quarterly columns incomplete')
+ return [{'periodEnd':end,'fiscalPeriod':f'FY{end[:4]} Q{int(end[5:7])//3+1}','server_revenue':server[i],'gross_margin':margins[i]} for i,end in enumerate(ends)]
+
 class Builder:
  def __init__(self):self.defs={};self.points={};self.errors={}
  def add(self,id,name,family,entity,category,unit,url,stamp,version,end,value,items,*,frequency='quarterly',kind='reported',method='',start=None,fiscal=None,published=None,eligible=True,estimated=False):
@@ -28,20 +43,14 @@ class Builder:
     q,year=int(m[1]),2000+int(m[2]);start,end=quarter_dates('MSFT',year,q);value=numbers(row[i])[0]
     self.add('MSFT.backlog','商业剩余履约义务','backlog','MSFT','cloud','亿美元',url,stamp,version,end,value*10,{'reported_billion_usd':value},method='商业RPO包含递延收入和未来将开票确认金额，非Azure单项订单。十亿美元×10；期末存量，不对季度求和。',fiscal=f'FY{year} Q{q}',published=published_by_fy[fy])
  def hpe(self):
-  # Latest official PDF also supplies explicitly restated prior-year comparison columns.
-  url='https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf'
-  raw,stamp,version=fetch(url);pages=[p.extract_text() for p in PdfReader(io.BytesIO(raw)).pages]
-  segment=next(p for p in pages if 'Server' in p and 'Net Revenue:' in p and 'Change (%)' in p)
-  header=re.search(r'([A-Z][a-z]+ \d+, 20\d\d)\s+([A-Z][a-z]+ \d+, 20\d\d)\s+([A-Z][a-z]+ \d+, 20\d\d)',segment)
-  if not header:raise ValueError('HPE actual quarter header not found')
-  ends=[datetime.strptime(v,'%B %d, %Y').date().isoformat() for v in header.groups()]
-  server=numbers(re.search(r'^\s*Server\s+([^\n]+)',segment,re.M)[1])[:3]
-  margin=next(p for p in pages if re.search(r'^\s*GAAP gross profit margin\s+[\d]',p,re.M))
-  margins=numbers(re.search(r'^\s*GAAP gross profit margin\s+([^\n]+)',margin,re.M)[1])[:3]
-  for i,end in enumerate(ends):
-   fiscal=['FY2026 Q3','FY2026 Q2','FY2025 Q3'][i]
-   self.add('HPE.server_revenue','服务器收入（重述可比口径）','server_revenue','HPE','servers','亿美元',url,stamp,version,end,server[i]/100,{'Server_USD_million':server[i]},method='HPE FY2026组织调整后的Server口径，比较期按公司重述列。含传统与AI服务器，不等于AI服务器销售。百万美元÷100。',fiscal=fiscal,published='2026-09-02')
-   self.add('HPE.gross_margin','GAAP毛利率','gross_margin','HPE','servers','%',url,stamp,version,end,margins[i],{'reported_percent':margins[i]},method='公司披露GAAP毛利率，比较变化使用百分点。',fiscal=fiscal,published='2026-09-02')
+  # Both releases use FY2026 segmentation; newer comparison columns win.
+  for quarter,published in HPE_RELEASES:
+   url=f'https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/{quarter}-2026/{quarter}-2026-earnings-press-release.pdf'
+   raw,stamp,version=fetch(url)
+   for row in parse_hpe_release(raw):
+    end=row['periodEnd'];fiscal=row['fiscalPeriod']
+    self.add('HPE.server_revenue','服务器收入（重述可比口径）','server_revenue','HPE','servers','亿美元',url,stamp,version,end,row['server_revenue']/100,{'Server_USD_million':row['server_revenue']},method='HPE FY2026组织调整后的Server口径，比较期按公司重述列。含传统与AI服务器，不等于AI服务器销售。百万美元÷100。',fiscal=fiscal,published=published)
+    self.add('HPE.gross_margin','GAAP毛利率','gross_margin','HPE','servers','%',url,stamp,version,end,row['gross_margin'],{'reported_percent':row['gross_margin']},method='公司披露GAAP毛利率，比较变化使用百分点。',fiscal=fiscal,published=published)
  def transformer(self):
   code='WPU117409';url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+code
   raw,stamp,version=fetch(url)

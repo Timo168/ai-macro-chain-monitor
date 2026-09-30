@@ -1,4 +1,5 @@
 import unittest,tempfile,pathlib,sys,json,sqlite3,importlib.util,io
+from types import SimpleNamespace
 from datetime import datetime,timedelta
 from zipfile import ZipFile,ZIP_DEFLATED
 from openpyxl import Workbook
@@ -255,4 +256,28 @@ class RevisionTests(unittest.TestCase):
    for value in (float('nan'),float('inf'),True):
     with self.assertRaises(ValueError):common.persist({'series':{'X':{'observations':[common.observation('X','2026-01-31',value,'url','stamp','v')]}}},path)
    self.assertEqual(json.loads(path.read_text()),{'last':'success'})
+class CompanyHistoryTests(unittest.TestCase):
+ def test_amd_history_requires_matching_dated_segment_and_gaap_columns(self):
+  from industry_hardware import parse_amd_release
+  header='<tr><td>March 28, 2026</td><td>December 27, 2025</td><td>March 29, 2025</td></tr>'
+  raw=('<table>'+header+'<tr><td>Net Revenue:</td></tr><tr><td>Data Center Segment</td><td>5775</td><td>5380</td><td>3674</td></tr><tr><td>Total net revenue</td><td>10253</td><td>10270</td><td>7438</td></tr><tr><td>Operating Income:</td></tr><tr><td>Data Center Segment</td><td>1599</td><td>1752</td><td>932</td></tr></table><table>'+header+'<tr><td>Net revenue</td><td>10253</td><td>10270</td><td>7438</td></tr><tr><td>Gross margin</td><td>53%</td><td>54%</td><td>50%</td></tr></table>').encode()
+  rows=parse_amd_release(raw)
+  self.assertEqual(rows[-1]['periodEnd'],'2025-03-29')
+  self.assertEqual(rows[-1]['datacenter_revenue'],3674)
+  self.assertEqual(rows[-1]['fiscalPeriod'],'FY2025 Q1')
+  self.assertEqual(rows[0]['datacenter_profit'],1599)
+  # Mismatched table periods must not silently attach a margin to the wrong quarter.
+  bad=raw.rsplit(b'March 29, 2025',1)
+  with self.assertRaises(ValueError):parse_amd_release(bad[0]+b'June 28, 2025'+bad[1])
+ def test_hpe_history_keeps_restatement_scope_and_actual_quarters(self):
+  from industry_extended import parse_hpe_release
+  text='Net Revenue: Cloud & AI Change (%)\nApril 30, 2026 January 31, 2026 April 30, 2025\nServer 5454 4232 4109 28.9 32.7\nGAAP gross profit margin 36.5% 35.9% 28.4%\n'
+  reader=SimpleNamespace(pages=[SimpleNamespace(extract_text=lambda:text)])
+  with patch('industry_extended.PdfReader',return_value=reader):rows=parse_hpe_release(b'fixture')
+  self.assertEqual([r['fiscalPeriod'] for r in rows],['FY2026 Q2','FY2026 Q1','FY2025 Q2'])
+  self.assertEqual(rows[-1]['server_revenue'],4109)
+  self.assertEqual(rows[-1]['gross_margin'],28.4)
+  reader.pages=[SimpleNamespace(extract_text=lambda:text.replace('Cloud & AI','Old Server scope'))]
+  with patch('industry_extended.PdfReader',return_value=reader),self.assertRaises(ValueError):parse_hpe_release(b'fixture')
+
 if __name__=='__main__':unittest.main()

@@ -55,6 +55,18 @@ def check(d,p,data):
         review=json.loads((DATA/'oracle-reviewed.json').read_text(encoding='utf-8'));idx=next(i for i,r in enumerate(review['periods']) if r[3]==p['periodEnd'])
         assert math.isclose(value,review['rows'][f][idx]/100)
         return 'matched separately reviewed official PDF table facts'
+    if id in ('HPE.server_revenue','HPE.gross_margin'):
+        from industry_extended import parse_hpe_release
+        row=next(row for row in parse_hpe_release(source_bytes(p['sourceUrl'])[0]) if row['periodEnd']==p['periodEnd'])
+        expected=row[f]/100 if f=='server_revenue' else row[f]
+        assert math.isclose(value,expected) and p['fiscalPeriod']==row['fiscalPeriod']
+        return 'matched dated official HPE FY2026 restated segment/GAAP columns and original million-dollar conversion'
+    if id in ('AMD.datacenter_revenue','AMD.revenue','AMD.datacenter_profit','AMD.gross_margin'):
+        from industry_hardware import parse_amd_release
+        row=next(row for row in parse_amd_release(source_bytes(p['sourceUrl'])[0]) if row['periodEnd']==p['periodEnd'])
+        expected=row[f] if f=='gross_margin' else row[f]/100
+        assert math.isclose(value,expected) and p['fiscalPeriod']==row['fiscalPeriod']
+        return 'matched dated official AMD segment/GAAP columns and original million-dollar conversion'
     if d.get('sourceAdapter')=='infrastructure':
         from industry_infrastructure import SERIES,parse_fred_monthly
         spec=next(item for item in SERIES if item['id']==id)

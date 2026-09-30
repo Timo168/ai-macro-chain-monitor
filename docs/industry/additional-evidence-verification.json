@@ -1,7 +1,115 @@
 {
-  "scope": "Three archived-source replays per added metric; arithmetic and provenance only, not coverage or license verification",
-  "metrics": 26,
+  "scope": "Three archived-source replays per added metric or expanded history; arithmetic and provenance only, not coverage or license verification",
+  "metrics": 32,
   "samples": [
+    {
+      "metricId": "AMD.datacenter_revenue",
+      "periodEnd": "2025-03-29",
+      "value": 36.74,
+      "unit": "亿美元",
+      "version": "641accbcef997e2ddf16fb0807717bbd2e21f8bf805d782d5840a3e5f456a010",
+      "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1284/amd-reports-first-quarter-2026-financial-results",
+      "check": "matched dated official AMD segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "AMD.datacenter_revenue",
+      "periodEnd": "2025-12-27",
+      "value": 53.8,
+      "unit": "亿美元",
+      "version": "641accbcef997e2ddf16fb0807717bbd2e21f8bf805d782d5840a3e5f456a010",
+      "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1284/amd-reports-first-quarter-2026-financial-results",
+      "check": "matched dated official AMD segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "AMD.datacenter_revenue",
+      "periodEnd": "2026-06-27",
+      "value": 67.18,
+      "unit": "亿美元",
+      "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
+      "check": "matched dated official AMD segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "AMD.revenue",
+      "periodEnd": "2025-03-29",
+      "value": 74.38,
+      "unit": "亿美元",
+      "version": "641accbcef997e2ddf16fb0807717bbd2e21f8bf805d782d5840a3e5f456a010",
+      "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1284/amd-reports-first-quarter-2026-financial-results",
+      "check": "matched dated official AMD segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "AMD.revenue",
+      "periodEnd": "2025-12-27",
+      "value": 102.7,
+      "unit": "亿美元",
+      "version": "641accbcef997e2ddf16fb0807717bbd2e21f8bf805d782d5840a3e5f456a010",
+      "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1284/amd-reports-first-quarter-2026-financial-results",
+      "check": "matched dated official AMD segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "AMD.revenue",
+      "periodEnd": "2026-06-27",
+      "value": 115.36,
+      "unit": "亿美元",
+      "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
+      "check": "matched dated official AMD segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "AMD.datacenter_profit",
+      "periodEnd": "2025-03-29",
+      "value": 9.32,
+      "unit": "亿美元",
+      "version": "641accbcef997e2ddf16fb0807717bbd2e21f8bf805d782d5840a3e5f456a010",
+      "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1284/amd-reports-first-quarter-2026-financial-results",
+      "check": "matched dated official AMD segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "AMD.datacenter_profit",
+      "periodEnd": "2025-12-27",
+      "value": 17.52,
+      "unit": "亿美元",
+      "version": "641accbcef997e2ddf16fb0807717bbd2e21f8bf805d782d5840a3e5f456a010",
+      "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1284/amd-reports-first-quarter-2026-financial-results",
+      "check": "matched dated official AMD segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "AMD.datacenter_profit",
+      "periodEnd": "2026-06-27",
+      "value": 21.03,
+      "unit": "亿美元",
+      "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
+      "check": "matched dated official AMD segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "AMD.gross_margin",
+      "periodEnd": "2025-03-29",
+      "value": 50,
+      "unit": "%",
+      "version": "641accbcef997e2ddf16fb0807717bbd2e21f8bf805d782d5840a3e5f456a010",
+      "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1284/amd-reports-first-quarter-2026-financial-results",
+      "check": "matched dated official AMD segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "AMD.gross_margin",
+      "periodEnd": "2025-12-27",
+      "value": 54,
+      "unit": "%",
+      "version": "641accbcef997e2ddf16fb0807717bbd2e21f8bf805d782d5840a3e5f456a010",
+      "sourceUrl": "https://ir.amd.com/news-events/press-releases/detail/1284/amd-reports-first-quarter-2026-financial-results",
+      "check": "matched dated official AMD segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "AMD.gross_margin",
+      "periodEnd": "2026-06-27",
+      "value": 54,
+      "unit": "%",
+      "version": "918957ee289a0805d61e9a4c5b6251a2791ad21dcd6a46f8499adaf26641d222",
+      "sourceUrl": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-26-000121/q22026991.htm",
+      "check": "matched dated official AMD segment/GAAP columns and original million-dollar conversion"
+    },
     {
       "metricId": "EIA.US.commercial_sales",
       "periodEnd": "2010-01-31",
@@ -676,6 +784,60 @@
       "version": "0017f52ee382e9478f1c94f921c843b008709efe02d66dbd92807004305f8c0a",
       "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A34XNO",
       "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "HPE.server_revenue",
+      "periodEnd": "2025-04-30",
+      "value": 41.09,
+      "unit": "亿美元",
+      "version": "faf3e34f3bba6efe7dc85281e833e430b2192a397862030870391f1ac549f0d2",
+      "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q2-2026/q2-2026-earnings-press-release.pdf",
+      "check": "matched dated official HPE FY2026 restated segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "HPE.server_revenue",
+      "periodEnd": "2026-01-31",
+      "value": 42.32,
+      "unit": "亿美元",
+      "version": "faf3e34f3bba6efe7dc85281e833e430b2192a397862030870391f1ac549f0d2",
+      "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q2-2026/q2-2026-earnings-press-release.pdf",
+      "check": "matched dated official HPE FY2026 restated segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "HPE.server_revenue",
+      "periodEnd": "2026-07-31",
+      "value": 67.66,
+      "unit": "亿美元",
+      "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
+      "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
+      "check": "matched dated official HPE FY2026 restated segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "HPE.gross_margin",
+      "periodEnd": "2025-04-30",
+      "value": 28.4,
+      "unit": "%",
+      "version": "faf3e34f3bba6efe7dc85281e833e430b2192a397862030870391f1ac549f0d2",
+      "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q2-2026/q2-2026-earnings-press-release.pdf",
+      "check": "matched dated official HPE FY2026 restated segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "HPE.gross_margin",
+      "periodEnd": "2026-01-31",
+      "value": 35.9,
+      "unit": "%",
+      "version": "faf3e34f3bba6efe7dc85281e833e430b2192a397862030870391f1ac549f0d2",
+      "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q2-2026/q2-2026-earnings-press-release.pdf",
+      "check": "matched dated official HPE FY2026 restated segment/GAAP columns and original million-dollar conversion"
+    },
+    {
+      "metricId": "HPE.gross_margin",
+      "periodEnd": "2026-07-31",
+      "value": 40.1,
+      "unit": "%",
+      "version": "7943780cb64cdb6cae533d2983c9bd6eef180e2d41a1a2a162e6bcdfb90474cf",
+      "sourceUrl": "https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf",
+      "check": "matched dated official HPE FY2026 restated segment/GAAP columns and original million-dollar conversion"
     },
     {
       "metricId": "PROJECT.operational_milestone_count",
