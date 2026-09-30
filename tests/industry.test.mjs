@@ -61,3 +61,24 @@ test('project construction snapshots stay evidence-limited without a false trend
  const data={definitions:[noObservation],series:{[noObservation.id]:{status:'no_observation',observations:[]}}};
  assert.ok(generateRecommendations(data,'2026-09-19').every(r=>r.level==='insufficient_data'));
 });
+test('sector proxies can supply a leading factor but never make the formal construction gate reachable',()=>{
+ const proxy={id:'CENSUS.private_power_construction',entity:'美国',family:'grid_construction_spending',unit:'百万美元（季调年率）',frequency:'monthly',normalUpdateDelayDays:45,recommendationEligible:true,valueType:'proxy',proxyTargets:['power','overall']};
+ const rows=[p('2025-08-31',100),p('2026-08-31',115)];
+ const data={definitions:[proxy],series:{[proxy.id]:{status:'ready',observations:rows}}};
+ const reachability=ruleReachability(data.definitions).find(r=>r.targetId==='power');
+ const recommendation=generateRecommendations(data,'2026-09-12').find(r=>r.targetId==='power');
+ assert.ok(reachability.unavailableDimensions.includes('construction'));
+ assert.ok(recommendation.positiveEvidence.some(item=>item.metricId===proxy.id&&item.dimension==='construction'));
+ assert.equal(recommendation.level,'insufficient_data');
+});
+test('project-level capacity samples stay out of formal reachability even when the source is official',()=>{
+ const sample={id:'PROJECT.disclosed_capacity_sample',entity:'DOE/项目级公开样本',family:'construction_capacity',unit:'MW',frequency:'quarterly',normalUpdateDelayDays:90,recommendationEligible:true,valueType:'project_announcement',directness:'project_sample',scoringTier:'leading_only'};
+ const rows=[p('2025-09-30',1000),p('2026-09-30',1500)];
+ const data={definitions:[sample],series:{[sample.id]:{status:'ready',observations:rows}}};
+ const reachability=ruleReachability(data.definitions).find(r=>r.targetId==='data_centers');
+ const recommendation=generateRecommendations(data,'2026-09-30').find(r=>r.targetId==='data_centers');
+ assert.ok(reachability.unavailableDimensions.includes('construction'));
+ assert.ok(recommendation.positiveEvidence.some(item=>item.metricId===sample.id&&item.dimension==='construction'));
+ assert.equal(recommendation.formalCoverage,0);
+ assert.equal(recommendation.level,'insufficient_data');
+});

@@ -9,7 +9,7 @@ const out=folder+'/latest.json';
 const prior=existsSync(out)?JSON.parse(readFileSync(out,'utf8')):null;
 const seedPath=folder+'/seed.json';
 const seed=existsSync(seedPath)?JSON.parse(readFileSync(seedPath,'utf8')):null;
-const sourceFiles=['companies.json','oracle.json','hardware.json','costs.json','sia.json','extended.json','power-load.json','projects.json',existsSync(folder+'/reviewed-cache.json')?'reviewed-cache.json':'public-reviewed.json'];
+const sourceFiles=['companies.json','oracle.json','hardware.json','costs.json','infrastructure.json','sia.json','extended.json','power-load.json','projects.json',existsSync(folder+'/reviewed-cache.json')?'reviewed-cache.json':'public-reviewed.json'];
 const hasValue=point=>typeof point?.value==='number'&&Number.isFinite(point.value);
 const observed=series=>(series?.observations??[]).filter(hasValue);
 

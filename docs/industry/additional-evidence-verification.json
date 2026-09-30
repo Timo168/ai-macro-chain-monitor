@@ -1,0 +1,708 @@
+{
+  "scope": "Three archived-source replays per added metric; arithmetic and provenance only, not coverage or license verification",
+  "metrics": 26,
+  "samples": [
+    {
+      "metricId": "EIA.US.commercial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 108120506,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.US.commercial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 103331939.73,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.US.commercial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 150578728.09,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.US.industrial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 75548905,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.US.industrial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 79157316.47,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.US.industrial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 94403257.16,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.VA.commercial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 3890580,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.VA.commercial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 3696288,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.VA.commercial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 8576890.4,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.VA.industrial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 1254474,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.VA.industrial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 1356268.8,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.VA.industrial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 1185850,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.TX.commercial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 9441809,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.TX.commercial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 10373914,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.TX.commercial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 17843545,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.TX.industrial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 7560571,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.TX.industrial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 9747034.1,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.TX.industrial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 15220429,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.OH.commercial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 3796844,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.OH.commercial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 3441732.6,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.OH.commercial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 6324990.3,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.OH.industrial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 4160345,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.OH.industrial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 4092574.6,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.OH.industrial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 4618814.8,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.GA.commercial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 3977384,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.GA.commercial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 3433407.9,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.GA.commercial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 5996783.4,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.GA.industrial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 2413520,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.GA.industrial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 2596126,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.GA.industrial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 2957675.2,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.AZ.commercial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 2080458,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.AZ.commercial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 2335251.6,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.AZ.commercial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 4452283.7,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.AZ.industrial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 886278,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.AZ.industrial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 1111014.6,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.AZ.industrial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 1420591.2,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.SC.commercial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 1791977,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.SC.commercial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 1559833.1,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.SC.commercial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 2811297.5,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.SC.industrial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 2059611,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.SC.industrial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 2299018.4,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.SC.industrial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 2283725.8,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.ID.commercial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 521723,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.ID.commercial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 483742.87,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.ID.commercial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 695200.37,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.ID.industrial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 562578,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.ID.industrial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 606438.66,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.ID.industrial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 1302609.1,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.IN.commercial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 2031273,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.IN.commercial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 1765468.6,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.IN.commercial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 2801230.5,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.IN.industrial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 3710377,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.IN.industrial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 3667573.7,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.IN.industrial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 4041231.9,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.LA.commercial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 1924309,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.LA.commercial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 1767510.8,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.LA.commercial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 2380436.1,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.LA.industrial_sales",
+      "periodEnd": "2010-01-31",
+      "value": 2150244,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.LA.industrial_sales",
+      "periodEnd": "2018-04-30",
+      "value": 3153347.5,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "EIA.LA.industrial_sales",
+      "periodEnd": "2026-07-31",
+      "value": 3754946,
+      "unit": "MWh",
+      "version": "f50ac9dcdcb1b8656e543927e9301bbb87288b1821c1d00ffa52e0902e77e4a0",
+      "sourceUrl": "https://www.eia.gov/electricity/data/state/xls/861m/HS861M%202010-.xlsx",
+      "check": "matched official state workbook; national series recomputed from 51 regions"
+    },
+    {
+      "metricId": "CENSUS.private_power_construction",
+      "periodEnd": "1993-01-31",
+      "value": 27195,
+      "unit": "百万美元（季调年率）",
+      "version": "371125b4ee733fda613bd304180a0794879432a977205f84c037064b3cb63b56",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PRPWRCONS",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "CENSUS.private_power_construction",
+      "periodEnd": "2009-10-31",
+      "value": 73370,
+      "unit": "百万美元（季调年率）",
+      "version": "371125b4ee733fda613bd304180a0794879432a977205f84c037064b3cb63b56",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PRPWRCONS",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "CENSUS.private_power_construction",
+      "periodEnd": "2026-07-31",
+      "value": 161541,
+      "unit": "百万美元（季调年率）",
+      "version": "371125b4ee733fda613bd304180a0794879432a977205f84c037064b3cb63b56",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PRPWRCONS",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "CENSUS.private_communications_construction",
+      "periodEnd": "1993-01-31",
+      "value": 9629,
+      "unit": "百万美元（季调年率）",
+      "version": "23743c008b0d7274cce2e81b6b9714775d624b95e5bfe67d6b9ef390b461f833",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PRCMUCONS",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "CENSUS.private_communications_construction",
+      "periodEnd": "2009-10-31",
+      "value": 19189,
+      "unit": "百万美元（季调年率）",
+      "version": "23743c008b0d7274cce2e81b6b9714775d624b95e5bfe67d6b9ef390b461f833",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PRCMUCONS",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "CENSUS.private_communications_construction",
+      "periodEnd": "2026-07-31",
+      "value": 28471,
+      "unit": "百万美元（季调年率）",
+      "version": "23743c008b0d7274cce2e81b6b9714775d624b95e5bfe67d6b9ef390b461f833",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PRCMUCONS",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "CENSUS.private_manufacturing_construction",
+      "periodEnd": "1993-01-31",
+      "value": 24811,
+      "unit": "百万美元（季调年率）",
+      "version": "bbc2b8b00f9d81db3dce72473c69053f71cab3447955ad0ecb2dcba595c90892",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PRMFGCONS",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "CENSUS.private_manufacturing_construction",
+      "periodEnd": "2009-10-31",
+      "value": 52021,
+      "unit": "百万美元（季调年率）",
+      "version": "bbc2b8b00f9d81db3dce72473c69053f71cab3447955ad0ecb2dcba595c90892",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PRMFGCONS",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "CENSUS.private_manufacturing_construction",
+      "periodEnd": "2026-07-31",
+      "value": 167805,
+      "unit": "百万美元（季调年率）",
+      "version": "bbc2b8b00f9d81db3dce72473c69053f71cab3447955ad0ecb2dcba595c90892",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PRMFGCONS",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "CENSUS.computer_electronics_new_orders",
+      "periodEnd": "1992-02-29",
+      "value": 19538,
+      "unit": "百万美元（季调）",
+      "version": "aeebff14c7c8ac1909e6f9824de51eb2db722e2d0402bf38d455eee1dfeed2d3",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A34SNO",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "CENSUS.computer_electronics_new_orders",
+      "periodEnd": "2009-05-31",
+      "value": 21614,
+      "unit": "百万美元（季调）",
+      "version": "3bbdbc074cd476d3bd507b0f2cb069e47ed8d4ab72c1d4fd8323f06296787352",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A34SNO",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "CENSUS.computer_electronics_new_orders",
+      "periodEnd": "2026-08-31",
+      "value": 30855,
+      "unit": "百万美元（季调）",
+      "version": "0677e7c3d1614986e55359fdc751a3464fd95cce1f244e63ccffe90eb410fad7",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A34SNO",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "CENSUS.communications_equipment_new_orders",
+      "periodEnd": "1992-02-29",
+      "value": 3286,
+      "unit": "百万美元（季调）",
+      "version": "706bca0b266e3b0f0d39e6d5c0c93e751d51ef394f1b8ec2493993eeb9429b61",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A34XNO",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "CENSUS.communications_equipment_new_orders",
+      "periodEnd": "2009-05-31",
+      "value": 4022,
+      "unit": "百万美元（季调）",
+      "version": "b87e446aba40200afcfbe7d4537515575f1e47ad0f0508f97ff9ba9cc7fc8ff4",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A34XNO",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "CENSUS.communications_equipment_new_orders",
+      "periodEnd": "2026-08-31",
+      "value": 5250,
+      "unit": "百万美元（季调）",
+      "version": "0017f52ee382e9478f1c94f921c843b008709efe02d66dbd92807004305f8c0a",
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A34XNO",
+      "check": "matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata"
+    },
+    {
+      "metricId": "PROJECT.operational_milestone_count",
+      "periodEnd": "2024-11-14",
+      "value": 1,
+      "unit": "个项目",
+      "version": "f1a5a76aa7b15b8d6deddc42a5734a6e75557b8d3583afbbaf4483491fd276cd",
+      "sourceUrl": "https://datacenters.atmeta.com/2024/11/gallatin-we-are-online/",
+      "check": "replayed official operator status pages and deduplicated project milestones; no MW inferred"
+    },
+    {
+      "metricId": "PROJECT.operational_milestone_count",
+      "periodEnd": "2025-08-20",
+      "value": 3,
+      "unit": "个项目",
+      "version": "3b71ce87da15e48a6e3fb18c68f350c71c639afc7bd6196992b7a128be6babf2",
+      "sourceUrl": "https://about.fb.com/news/2025/08/metas-kansas-city-data-center/",
+      "check": "replayed official operator status pages and deduplicated project milestones; no MW inferred"
+    },
+    {
+      "metricId": "PROJECT.operational_milestone_count",
+      "periodEnd": "2026-09-03",
+      "value": 5,
+      "unit": "个项目",
+      "version": "256b51a70cfd522af18e5b63729a61c7cb05c3a66a70df6938af23cc22e0eee5",
+      "sourceUrl": "https://datacenters.atmeta.com/2026/09/kuna-we-are-online/",
+      "check": "replayed official operator status pages and deduplicated project milestones; no MW inferred"
+    }
+  ]
+}

@@ -55,6 +55,28 @@ def check(d,p,data):
         review=json.loads((DATA/'oracle-reviewed.json').read_text(encoding='utf-8'));idx=next(i for i,r in enumerate(review['periods']) if r[3]==p['periodEnd'])
         assert math.isclose(value,review['rows'][f][idx]/100)
         return 'matched separately reviewed official PDF table facts'
+    if d.get('sourceAdapter')=='infrastructure':
+        from industry_infrastructure import SERIES,parse_fred_monthly
+        spec=next(item for item in SERIES if item['id']==id)
+        rows=parse_fred_monthly(source_bytes(p['sourceUrl'])[0])
+        expected=next(row for row in rows if row['periodEnd']==p['periodEnd'])
+        assert value==expected['value'] and items['source_observation_date']==expected['sourceDate']
+        assert items['seasonal_adjustment']==spec['seasonal_adjustment']
+        assert d['aggregation']==spec['aggregation'] and d['valueType']=='proxy'
+        return 'matched dated Census/FRED CSV and verified SA/SAAR and monthly aggregation metadata'
+    if id=='PROJECT.operational_milestone_count':
+        from industry_projects import SOURCES,parse_source,operational_milestone_observations
+        specs=[spec for spec in SOURCES if spec.get('milestoneGroup')=='operational']
+        projects=[]
+        for spec in specs:
+            raw,digest=source_bytes(spec['url'])
+            projects.extend(parse_source(spec,raw,p['fetchedAt'],digest))
+        rows=operational_milestone_observations(projects,{spec['url'] for spec in specs},p['fetchedAt'])
+        expected=next(row for row in rows if row['periodEnd']==p['periodEnd'])
+        assert value==expected['value'] and items['sampleProjectIds']==expected['originalItems']['sampleProjectIds']
+        assert items['newProjectIds']==expected['originalItems']['newProjectIds']
+        assert not d['recommendationEligible'] and d['scoringTier']=='leading_only'
+        return 'replayed official operator status pages and deduplicated project milestones; no MW inferred'
     raw,digest=source(p['sourceUrl'])
     if id=='DELL.inventory_days':
         from industry_collect import html_tables,row_numbers
@@ -93,7 +115,7 @@ def check(d,p,data):
         return 'matched dated cell in archived official monthly workbook'
     if id.startswith('EIA.'):
         expected=next(x[1] for x in parse_eia(raw)[id[4:]] if x[0]==p['periodEnd']);assert math.isclose(value,expected)
-        if id.startswith('EIA.US.'):assert math.isclose(value,items['revenue_thousand_usd']/items['sales_mwh']*100)
+        if id.startswith('EIA.US.') and f!='electricity_sales':assert math.isclose(value,items['revenue_thousand_usd']/items['sales_mwh']*100)
         return 'matched official state workbook; national series recomputed from 51 regions'
     operands=[v for k,v in items.items() if isinstance(v,(float,int)) and k not in ('source_page','region_count')]
     if not operands:operands=[p.get('originalValue',value)]

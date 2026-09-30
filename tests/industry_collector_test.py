@@ -5,15 +5,72 @@ from openpyxl import Workbook
 from unittest.mock import patch
 sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[1]/'scripts'))
 import industry_common as common
+import industry_projects as projects_adapter
+import industry_schedule as schedule_adapter
 from industry_extended import Builder
+from industry_costs import parse_eia
+from industry_infrastructure import SERIES, cached_series, parse_fred_monthly, proxy_definition
 from industry_power_load import parse_archive
 from industry_schedule import bootstrap_extended
-from industry_projects import parse_source, merge_project_history, retain_snapshots, restore_verified_baseline
+from industry_projects import SOURCES, parse_source, merge_project_history, operational_milestone_definition, operational_milestone_observations, retain_snapshots, restore_verified_baseline
 
 STATE_SPEC=importlib.util.spec_from_file_location('github_data_state',pathlib.Path(__file__).resolve().parents[1]/'scripts'/'github-data-state.py')
 github_data_state=importlib.util.module_from_spec(STATE_SPEC);STATE_SPEC.loader.exec_module(github_data_state)
 
 class RevisionTests(unittest.TestCase):
+ def test_census_construction_proxy_keeps_month_end_and_missing_source_values(self):
+  rows=parse_fred_monthly(b'observation_date,PRPWRCONS\n2026-01-01,100\n2026-02-01,.\n')
+  self.assertEqual(rows[0],{'sourceDate':'2026-01-01','periodEnd':'2026-01-31','value':100.0})
+  self.assertEqual(rows[1],{'sourceDate':'2026-02-01','periodEnd':'2026-02-28','value':None})
+  metric=proxy_definition({'id':'CENSUS.private_power_construction','code':'PRPWRCONS','name':'美国私营电力建设支出','name_en':'power','family':'grid_construction_spending','category':'power','stage':'power','unit':'百万美元（季调年率）','seasonal_adjustment':'SAAR','aggregation':'mean','data_role':'construction_environment_proxy','source_release_url':'https://example.com/release','methodology':'m','interpretation':'i','transmission':'t','proxy_targets':['power','overall']})
+  self.assertEqual(metric['valueType'],'proxy')
+  self.assertEqual(metric['directness'],'sector_proxy')
+  self.assertEqual(metric['proxyTargets'],['power','overall'])
+  self.assertEqual(metric['seasonalAdjustment'],'SAAR')
+  self.assertEqual(metric['aggregation'],'mean')
+  orders=proxy_definition(next(spec for spec in SERIES if spec['code']=='A34SNO'))
+  self.assertEqual(orders['seasonalAdjustment'],'SA')
+  self.assertEqual(orders['aggregation'],'sum')
+  cached=cached_series({'observations':[{'periodEnd':'2026-01-31','value':100}]},'offline')
+  self.assertEqual(cached['status'],'cached')
+  self.assertEqual(cached['observations'][0]['value'],100)
+  self.assertIn('offline',cached['error'])
+
+ def test_eia_sales_proxy_preserves_native_mwh_instead_of_using_price(self):
+  workbook=Workbook();sheet=workbook.active;sheet.title='Monthly-States'
+  sheet.append([None]*16)
+  header=[None]*16;header[8]='Revenue';header[9]='Sales';header[11]='Price';header[12]='Revenue';header[13]='Sales';header[15]='Price';sheet.append(header)
+  units=[None]*16;units[8]='Thousand Dollars';units[9]='Megawatthours';units[11]='Cents/kWh';units[12]='Thousand Dollars';units[13]='Megawatthours';units[15]='Cents/kWh';sheet.append(units)
+  row=[None]*16;row[0]=2026;row[1]=6;row[2]='VA';row[3]='Preliminary';row[8]=100;row[9]=1000;row[11]=10;row[12]=200;row[13]=2000;row[15]=10;sheet.append(row)
+  payload=io.BytesIO();workbook.save(payload)
+  parsed=parse_eia(payload.getvalue())
+  self.assertEqual(parsed['VA.commercial'][0][1],10.0)
+  self.assertEqual(parsed['VA.commercial_sales'][0][1],1000.0)
+  self.assertEqual(parsed['VA.commercial_sales'][0][3]['sales_mwh'],1000)
+
+ def test_eia_rejects_shifted_commercial_or_industrial_columns(self):
+  workbook=Workbook();sheet=workbook.active;sheet.title='Monthly-States'
+  sheet.append([None]*16)
+  header=[None]*16;header[8]='Revenue';header[9]='Sales';header[11]='Price';header[12]='Revenue';header[13]='Sales';header[15]='Wrong';sheet.append(header)
+  units=[None]*16;units[8]='Thousand Dollars';units[9]='Megawatthours';units[11]='Cents/kWh';units[12]='Thousand Dollars';units[13]='Megawatthours';units[15]='Cents/kWh';sheet.append(units)
+  payload=io.BytesIO();workbook.save(payload)
+  with self.assertRaisesRegex(ValueError,'Unexpected EIA-861M'):
+   parse_eia(payload.getvalue())
+
+ def test_fast_collector_retry_is_bounded_and_cached_sources_remain_retryable(self):
+  self.assertEqual(schedule_adapter.retry_minutes(0),15)
+  self.assertEqual(schedule_adapter.retry_minutes(1),15)
+  self.assertEqual(schedule_adapter.retry_minutes(2),30)
+  self.assertEqual(schedule_adapter.retry_minutes(3),60)
+  self.assertEqual(schedule_adapter.retry_minutes(9),120)
+  with tempfile.TemporaryDirectory(prefix='industry-fast-state-') as temp:
+   data_path=pathlib.Path(temp)
+   (data_path/'infrastructure.json').write_text(json.dumps({'series':{'CENSUS.x':{'status':'cached'}}}),encoding='utf-8')
+   with patch.object(schedule_adapter,'DATA',data_path):
+    healthy,details=schedule_adapter.source_snapshot_health('infrastructure.json')
+   self.assertFalse(healthy)
+   self.assertEqual(details,['CENSUS.x'])
+
  def test_doe_project_pages_keep_explicit_status_and_capacity_boundaries(self):
   stamp='2026-09-19T00:00:00+00:00'
   portsmouth=parse_source({'id':'DOE.US.PORTSMOUTH','publishedAt':'2026-03-24','url':'https://www.energy.gov/em/articles/partnership-ensures-affordable-energy-powers-ai-future-portsmouth-site'},b'<p>Groundbreaking for a 10-gigawatt artificial intelligence data center.</p>',stamp,'port')
@@ -22,6 +79,79 @@ class RevisionTests(unittest.TestCase):
   self.assertEqual(savannah[0]['status'],'planning');self.assertEqual(savannah[0]['powerCapacityMw'],1000)
   inl=parse_source({'id':'DOE.US.INL.RFA','publishedAt':'2025-09-08','url':'https://www.energy.gov/ne/articles/energy-department-seeks-proposals-ai-data-centers-energy-projects-idaho-national'},b'<p>DOE seeks proposals for AI data centers.</p>',stamp,'inl')
   self.assertEqual(inl[0]['status'],'announced');self.assertIsNone(inl[0]['powerCapacityMw'])
+
+ def test_meta_project_pages_keep_compute_capacity_and_operational_status_separate(self):
+  stamp='2026-09-19T00:00:00+00:00'
+  hyperion_spec=next(spec for spec in SOURCES if spec['id']=='META.US.HYPERION.EXPANSION')
+  hyperion=parse_source(hyperion_spec,b'<p>Richland Parish expansion reaches 5 GW of compute capacity after breaking ground.</p>',stamp,'hyperion')
+  self.assertEqual(hyperion[0]['status'],'construction');self.assertEqual(hyperion[0]['powerCapacityMw'],5000)
+  self.assertEqual(hyperion[0]['capacityKind'],'compute_capacity')
+  self.assertEqual(hyperion[0]['statusHistory'][0]['capacityMw'],5000)
+  temple_spec=next(spec for spec in SOURCES if spec['id']=='META.US.TEMPLE.OPERATIONAL')
+  temple=parse_source(temple_spec,b'<p>The Temple Data Center is serving traffic for AI workloads.</p>',stamp,'temple')
+  self.assertEqual(temple[0]['status'],'operational');self.assertIsNone(temple[0]['powerCapacityMw'])
+  self.assertNotIn('capacityMw',temple[0]['statusHistory'][0])
+
+ def test_operational_milestones_are_source_linked_project_counts_not_mw(self):
+  stamp='2026-09-19T00:00:00+00:00'
+  events=[
+   ('META-US-TN-GALLATIN','Gallatin','2024-11-14','https://example.com/gallatin'),
+   ('META-US-AZ-MESA','Mesa','2025-01-30','https://example.com/mesa'),
+   ('META-US-MO-KANSAS-CITY','Kansas City','2025-08-20','https://example.com/kc'),
+   ('META-US-TX-TEMPLE','Temple','2026-07-22','https://example.com/temple'),
+   ('META-US-ID-KUNA','Kuna','2026-09-03','https://example.com/kuna'),
+  ]
+  projects=[{'id':project_id,'name':name,'status':'operational','powerCapacityMw':None,'statusHistory':[{'date':date,'status':'operational','sourceUrl':url}]} for project_id,name,date,url in events]
+  points=operational_milestone_observations(projects,{url for _,_,_,url in events},stamp)
+  self.assertEqual([(point['periodEnd'],point['value']) for point in points],[('2024-11-14',1),('2025-01-30',2),('2025-08-20',3),('2026-07-22',4),('2026-09-03',5)])
+  self.assertTrue(all(point['originalItems']['capacityDisclosure'].startswith('operational status milestone') for point in points))
+  self.assertTrue(all('capacityMw' not in event for point in points for event in point['originalItems']['eventProjects']))
+  definition=operational_milestone_definition()
+  self.assertFalse(definition['recommendationEligible']);self.assertEqual(definition['unit'],'个项目');self.assertEqual(definition['frequency'],'event')
+
+ def test_project_adapter_keeps_operational_mw_missing_and_caches_milestones_on_partial_failure(self):
+  stamp='2026-09-19T00:00:00+00:00'
+  source_text={
+   'DOE.US.PORTSMOUTH':b'<p>Groundbreaking for a 10-gigawatt artificial intelligence data center.</p>',
+   'DOE.US.SAVANNAH':b'<p>Selection to enter negotiations for a 1-gigawatt data center.</p>',
+   'DOE.US.INL.RFA':b'<p>DOE seeks proposals for AI data centers.</p>',
+   'META.US.HYPERION.EXPANSION':b'<p>Richland Parish expansion reaches 5 GW of compute capacity after breaking ground.</p>',
+   'META.US.GALLATIN.OPERATIONAL':b'<p>The Gallatin Data Center is now serving traffic.</p>',
+   'META.US.MESA.OPERATIONAL':b'<p>The Mesa Data Center is now serving traffic.</p>',
+   'META.US.KANSAS_CITY.OPERATIONAL':b'<p>The Kansas City Data Center is operational and serving traffic.</p>',
+   'META.US.TEMPLE.OPERATIONAL':b'<p>The Temple Data Center is serving traffic for AI workloads.</p>',
+   'META.US.KUNA.OPERATIONAL':b'<p>The Kuna Data Center is online and operational.</p>',
+  }
+  by_url={spec['url']:spec for spec in SOURCES}
+  def successful_fetch(url):
+   spec=by_url[url];return source_text[spec['id']],stamp,'test-'+spec['id']
+  with tempfile.TemporaryDirectory(prefix='project-adapter-') as temp:
+   data_path=pathlib.Path(temp)
+   with patch.object(projects_adapter,'DATA',data_path),patch.object(common,'DATA',data_path),patch.object(projects_adapter,'fetch',side_effect=successful_fetch):
+    first=projects_adapter.build()
+    self.assertEqual(first['series']['PROJECT.construction_capacity']['status'],'no_observation')
+    self.assertEqual(first['series']['PROJECT.construction_capacity']['observations'],[])
+    self.assertIn('口径不同',first['series']['PROJECT.construction_capacity']['note'])
+    self.assertTrue(all(not metric['recommendationEligible'] and metric['scoringTier']=='leading_only' for metric in first['definitions']))
+    self.assertEqual(first['series']['PROJECT.operational_capacity']['status'],'no_observation')
+    self.assertEqual(first['series']['PROJECT.operational_capacity']['observations'],[])
+    self.assertEqual([point['value'] for point in first['series']['PROJECT.operational_milestone_count']['observations']],[1,2,3,4,5])
+    def fail_kuna(url):
+     if by_url[url]['id']=='META.US.KUNA.OPERATIONAL':raise RuntimeError('simulated upstream failure')
+     return successful_fetch(url)
+    with patch.object(projects_adapter,'fetch',side_effect=fail_kuna):
+     second=projects_adapter.build()
+   self.assertEqual(second['series']['PROJECT.operational_milestone_count']['status'],'cached')
+   self.assertEqual([point['value'] for point in second['series']['PROJECT.operational_milestone_count']['observations']],[1,2,3,4,5])
+   self.assertEqual(second['series']['PROJECT.operational_capacity']['status'],'fetch_failed')
+
+ def test_mixed_or_untyped_project_capacity_never_forms_a_single_mw_total(self):
+  self.assertIsNone(projects_adapter.homogeneous_capacity_kind([{'capacityKind':'compute_capacity'},{'capacityKind':'data_center_planned_capacity'}]))
+  self.assertIsNone(projects_adapter.homogeneous_capacity_kind([{'capacityMw':1000}]))
+  self.assertEqual(projects_adapter.homogeneous_capacity_kind([{'capacityKind':'compute_capacity'},{'capacityKind':'compute_capacity'}]),'compute_capacity')
+  self.assertEqual(projects_adapter.safe_capacity_snapshots([{'value':15000,'originalItems':{'projectIds':'A,B'}}]),[])
+  projects=[{'id':'live','status':'construction','powerCapacityMw':5000,'capacityKind':'compute_capacity'},{'id':'old','status':'construction','powerCapacityMw':1000,'capacityKind':'compute_capacity'}]
+  self.assertEqual([item['projectId'] for item in projects_adapter.capacity_project_items(projects,{'construction'},{'live'})],['live'])
 
  def test_project_history_and_snapshots_only_change_on_official_facts(self):
   previous={'status':'planning','powerCapacityMw':1000,'statusHistory':[{'date':'2026-07-20','status':'planning','capacityMw':1000,'sourceUrl':'a'}]}
@@ -33,6 +163,15 @@ class RevisionTests(unittest.TestCase):
   changed={'periodEnd':'2026-09-21','value':13000,'version':'changed','originalItems':{'projectIds':'A,B,C'}}
   self.assertEqual(retain_snapshots([first],repeat),[first])
   self.assertEqual(retain_snapshots([first],changed),[first,changed])
+
+ def test_status_transition_without_new_mw_does_not_promote_construction_capacity_to_operational(self):
+  previous={'status':'construction','powerCapacityMw':5000,'capacityKind':'compute_capacity','sourceUrls':['construction'], 'statusHistory':[{'date':'2026-07-13','status':'construction','capacityMw':5000,'capacityKind':'compute_capacity','sourceUrl':'construction'}]}
+  candidate={'status':'operational','powerCapacityMw':None,'sourceUrls':['operational'],'announcedAt':'2027-01-15','statusHistory':[{'date':'2027-01-15','status':'operational','sourceUrl':'operational'}]}
+  merged=merge_project_history(previous,candidate)
+  self.assertIsNone(merged['powerCapacityMw'])
+  self.assertIsNone(merged['capacityKind'])
+  self.assertEqual([event['status'] for event in merged['statusHistory']],['construction','operational'])
+  self.assertNotIn('capacityMw',merged['statusHistory'][-1])
 
  def test_project_baseline_survives_a_transient_source_fetch_failure(self):
   stale={'id':'DOE-US-SC-SAVANNAH-AI','status':'planning','powerCapacityMw':1000}

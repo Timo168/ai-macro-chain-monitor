@@ -15,7 +15,7 @@ const packet=()=>buildResearchPacket(industry,macro,macroDefinitions,policyRates
 function modelOutput(input=packet()){
  const cloudSignal=input.quantitative.sectorSignals.find(signal=>signal.targetId==='cloud');
  const context=input.contextRefs.find(reference=>reference.metricId==='DFII10');
- return {overallStance:'insufficient_data',summary:'整体证据不足，暂不形成方向性结论。',marketRegime:input.marketRegime,confidence:'low',limitations:['不做个股结论。'],sectorViews:[{targetId:'cloud',stance:'gradual_attention',thesis:'规则直接证据显示投入维度为正面，仍要验证盈利兑现。',evidenceRefs:cloudSignal.evidenceRefs.map(({metricId,observationVersion,periodEnd})=>({metricId,observationVersion,periodEnd})),contextRefs:context?[{metricId:context.metricId,observationVersion:context.observationVersion,periodEnd:context.periodEnd}]:[],missingMetricIds:[],risks:['样本和口径仍有限。'],nextEvidence:['核对下一份正式财报。']},{targetId:'overall',stance:'insufficient_data',thesis:'建设进度的连续、可比证据尚未齐备。',evidenceRefs:[],contextRefs:[],missingMetricIds:['PROJECT.construction_capacity'],risks:['关键建设进度尚未连续披露。'],nextEvidence:['补齐项目级连续建设进度。']}]};
+ return {overallStance:input.quantitative.overall.stance,summary:'整体证据不足，暂不形成方向性结论。',marketRegime:input.marketRegime,confidence:'low',limitations:['不做个股结论。'],sectorViews:[{targetId:'cloud',stance:cloudSignal.stance,thesis:'规则直接证据显示投入维度为正面，仍要验证盈利兑现。',evidenceRefs:cloudSignal.evidenceRefs.map(({metricId,observationVersion,periodEnd})=>({metricId,observationVersion,periodEnd})),contextRefs:context?[{metricId:context.metricId,observationVersion:context.observationVersion,periodEnd:context.periodEnd}]:[],missingMetricIds:cloudSignal.missingMetrics,risks:['样本和口径仍有限。'],nextEvidence:['核对下一份正式财报。']},{targetId:'overall',stance:'insufficient_data',thesis:'建设进度的连续、可比证据尚未齐备。',evidenceRefs:[],contextRefs:[],missingMetricIds:['PROJECT.construction_capacity'],risks:['关键建设进度尚未连续披露。'],nextEvidence:['补齐项目级连续建设进度。']}]};
 }
 
 test('research packet covers all current site domains without volatile generation time',()=>{
@@ -36,8 +36,23 @@ test('research packet covers all current site domains without volatile generatio
  assert.ok(Buffer.byteLength(prompt)<Buffer.byteLength(JSON.stringify(first)));
 });
 
+test('project samples and proxies are separated from direct evidence references',()=>{
+ const proxy={id:'CENSUS.order_proxy',entity:'美国',nameZh:'电子订单代理',sourceUrl:'https://example.com/proxy',recommendationEligible:true,category:'projects',family:'computer_electronics_orders',aiChainStage:['data_center'],frequency:'monthly',unit:'百万美元',valueType:'proxy',sourceName:'Official proxy'};
+ const projectSample={id:'PROJECT.capacity_sample',entity:'DOE/项目级公开样本',nameZh:'项目容量样本',sourceUrl:'https://example.com/project-capacity',recommendationEligible:true,category:'projects',family:'construction_capacity',aiChainStage:['data_center'],frequency:'quarterly',unit:'MW',valueType:'project_announcement',directness:'project_sample',scoringTier:'leading_only',sourceName:'Official project'};
+ const recommendation={...overall,targetId:'data_centers',targetName:'数据中心建设',positiveEvidence:[evidence,{metricId:proxy.id,observationVersion:'proxy-v1',direction:'positive',explanation:'代理订单增长。',periodEnd:'2026-06-30',dimension:'demand'},{metricId:projectSample.id,observationVersion:'sample-v1',direction:'positive',explanation:'项目样本状态更新。',periodEnd:'2026-06-30',dimension:'construction'}],missingMetrics:['PROJECT.operational_capacity']};
+ const input=buildResearchPacket({definitions:[...industry.definitions,proxy,projectSample],series:{...industry.series,[proxy.id]:{status:'ready',observations:[{periodEnd:'2026-06-30',sourceUrl:proxy.sourceUrl,version:'proxy-v1',value:100}]},[projectSample.id]:{status:'ready',observations:[{periodEnd:'2026-06-30',sourceUrl:projectSample.sourceUrl,version:'sample-v1',value:100}]}},recommendations:[recommendation]},macro,macroDefinitions,policyRates,policyDecisions);
+ const signal=input.quantitative.sectorSignals[0];
+ assert.deepEqual(signal.evidenceRefs.map(reference=>reference.metricId),['MSFT.capex']);
+ assert.deepEqual(signal.leadingEvidenceRefs.map(reference=>reference.metricId).sort(),['CENSUS.order_proxy','PROJECT.capacity_sample']);
+});
+
 test('model output must retain every deterministic target, stance and overall gate',()=>{
  const input=packet(),base=modelOutput(input);
+ const cloudSignal=input.quantitative.sectorSignals.find(signal=>signal.targetId==='cloud');
+ assert.equal(cloudSignal.score,null);
+ assert.equal(cloudSignal.stance,'insufficient_data');
+ assert.equal(cloudSignal.researchAction,'仅监测，补齐证据');
+ assert.ok(cloudSignal.missingMetrics.length);
  assert.equal(validateModelAnalysis(base,input).origin,'model');
  assert.throws(()=>validateModelAnalysis({...base,overallStance:'positive_allocation'},input),/整体量化证据门槛/);
  assert.throws(()=>validateModelAnalysis({...base,summary:'产业链整体积极配置。'},input),/整体证据不足/);
