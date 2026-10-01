@@ -21,6 +21,24 @@ test('staleness depends on observation cadence rather than fetch time',()=>{
  assert.equal(metricStats(def,[p('2026-06-30',50)],'2026-09-12').freshness,'fresh');
  assert.equal(metricStats(def,[p('2025-06-30',50)],'2026-09-12').freshness,'stale');
 });
+
+test('annually released quarterly data expire by verified publication rather than repeated fetching',()=>{
+ const releaseDef={...def,frequency:'quarterly',freshnessBasis:'source_publication',sourceReleaseFrequency:'annual',sourceReleaseDelayDays:35};
+ const observations=[{...p('2025-12-31',1991),publishedAt:'2026-07-07T11:00:00Z',fetchedAt:'2026-10-01'}];
+ assert.equal(metricStats(releaseDef,observations,'2026-10-01').freshness,'fresh');
+ assert.equal(metricStats(releaseDef,observations,'2027-09-01').freshness,'stale');
+ assert.equal(metricStats(releaseDef,[{...observations[0],publishedAt:null}],'2026-10-01').freshness,'stale');
+});
+
+test('company-wide sales only supply demand within the declared business scope',()=>{
+ const total={...def,id:'MU.company_revenue',entity:'MU',family:'company_revenue',unit:'亿美元',reportingScope:'company_total',researchTargets:['memory']};
+ const observations=[p('2025-06-30',100),p('2026-06-30',110)];
+ const data={definitions:[total],series:{[total.id]:{status:'ready',observations}}};
+ const results=generateRecommendations(data,'2026-10-01');
+ assert.ok(results.find(row=>row.targetId==='memory').positiveEvidence.some(item=>item.metricId===total.id&&item.dimension==='demand'));
+ assert.ok(!results.find(row=>row.targetId==='overall').positiveEvidence.some(item=>item.metricId===total.id));
+ assert.ok(ruleReachability([{...total,reportingScope:undefined}]).find(row=>row.targetId==='memory').unavailableDimensions.includes('demand'));
+});
 test('demo and missing critical evidence never create allocation recommendations',()=>{
  const data={definitions:[{...def,valueType:'demo'}],series:{[def.id]:{status:'ready',observations:[p('2025-06-30',40),p('2026-06-30',50)]}}};
  const output=generateRecommendations(data,'2026-09-12');assert.equal(output.length,10);

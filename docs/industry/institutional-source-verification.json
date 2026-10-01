@@ -1,0 +1,323 @@
+{
+  "scope": "9 actual series x 3 historical points; IEA two explicit scenario facts checked separately. Does not validate trading outcomes.",
+  "actualChecks": [
+    {
+      "metricId": "MU.company_revenue",
+      "periodEnd": "2023-03-02",
+      "value": 36.93,
+      "independentlyRecomputed": 36.93,
+      "unit": "亿美元",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000007/0000723125-24-000007-index.html",
+      "publishedAt": "2024-03-21",
+      "version": "a8b088c2111daef36536e53c81fef4c0f01220c64933e126a665b00a9257f882",
+      "passed": true
+    },
+    {
+      "metricId": "MU.company_revenue",
+      "periodEnd": "2024-11-28",
+      "value": 87.09,
+      "independentlyRecomputed": 87.09,
+      "unit": "亿美元",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312525000046/0000723125-25-000046-index.html",
+      "publishedAt": "2025-12-18",
+      "version": "a8b088c2111daef36536e53c81fef4c0f01220c64933e126a665b00a9257f882",
+      "passed": true
+    },
+    {
+      "metricId": "MU.company_revenue",
+      "periodEnd": "2026-05-28",
+      "value": 414.56,
+      "independentlyRecomputed": 414.56,
+      "unit": "亿美元",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312526000015/0000723125-26-000015-index.html",
+      "publishedAt": "2026-06-25",
+      "version": "a8b088c2111daef36536e53c81fef4c0f01220c64933e126a665b00a9257f882",
+      "passed": true
+    },
+    {
+      "metricId": "MU.gross_margin",
+      "periodEnd": "2023-03-02",
+      "value": -32.65637692932575,
+      "independentlyRecomputed": -32.65637692932575,
+      "unit": "%",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312524000007/0000723125-24-000007-index.html",
+      "publishedAt": "2024-03-21",
+      "version": "a8b088c2111daef36536e53c81fef4c0f01220c64933e126a665b00a9257f882",
+      "passed": true
+    },
+    {
+      "metricId": "MU.gross_margin",
+      "periodEnd": "2024-11-28",
+      "value": 38.442990010334135,
+      "independentlyRecomputed": 38.442990010334135,
+      "unit": "%",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312525000046/0000723125-25-000046-index.html",
+      "publishedAt": "2025-12-18",
+      "version": "a8b088c2111daef36536e53c81fef4c0f01220c64933e126a665b00a9257f882",
+      "passed": true
+    },
+    {
+      "metricId": "MU.gross_margin",
+      "periodEnd": "2026-05-28",
+      "value": 84.56194519490545,
+      "independentlyRecomputed": 84.56194519490545,
+      "unit": "%",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312526000015/0000723125-26-000015-index.html",
+      "publishedAt": "2026-06-25",
+      "version": "a8b088c2111daef36536e53c81fef4c0f01220c64933e126a665b00a9257f882",
+      "passed": true
+    },
+    {
+      "metricId": "ETN.company_revenue",
+      "periodEnd": "2023-03-31",
+      "value": 54.83,
+      "independentlyRecomputed": 54.83,
+      "unit": "亿美元",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1551182/000155118224000013/0001551182-24-000013-index.html",
+      "publishedAt": "2024-04-30",
+      "version": "109482303c686ea9a3927143981559f7285115a0d15e7baa226d3c705c664e02",
+      "passed": true
+    },
+    {
+      "metricId": "ETN.company_revenue",
+      "periodEnd": "2024-12-31",
+      "value": 62.4,
+      "independentlyRecomputed": 62.4,
+      "unit": "亿美元",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1551182/000155118226000007/0001551182-26-000007-index.html",
+      "publishedAt": "2026-02-26",
+      "version": "109482303c686ea9a3927143981559f7285115a0d15e7baa226d3c705c664e02",
+      "passed": true
+    },
+    {
+      "metricId": "ETN.company_revenue",
+      "periodEnd": "2026-06-30",
+      "value": 85.31,
+      "independentlyRecomputed": 85.31,
+      "unit": "亿美元",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1551182/000155118226000030/0001551182-26-000030-index.html",
+      "publishedAt": "2026-07-31",
+      "version": "109482303c686ea9a3927143981559f7285115a0d15e7baa226d3c705c664e02",
+      "passed": true
+    },
+    {
+      "metricId": "ETN.company_gross_margin",
+      "periodEnd": "2023-03-31",
+      "value": 34.36075141345978,
+      "independentlyRecomputed": 34.36075141345978,
+      "unit": "%",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1551182/000155118224000013/0001551182-24-000013-index.html",
+      "publishedAt": "2024-04-30",
+      "version": "109482303c686ea9a3927143981559f7285115a0d15e7baa226d3c705c664e02",
+      "passed": true
+    },
+    {
+      "metricId": "ETN.company_gross_margin",
+      "periodEnd": "2024-12-31",
+      "value": 38.92628205128205,
+      "independentlyRecomputed": 38.92628205128205,
+      "unit": "%",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1551182/000155118226000007/0001551182-26-000007-index.html",
+      "publishedAt": "2026-02-26",
+      "version": "109482303c686ea9a3927143981559f7285115a0d15e7baa226d3c705c664e02",
+      "passed": true
+    },
+    {
+      "metricId": "ETN.company_gross_margin",
+      "periodEnd": "2026-06-30",
+      "value": 33.46618215918416,
+      "independentlyRecomputed": 33.46618215918416,
+      "unit": "%",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1551182/000155118226000030/0001551182-26-000030-index.html",
+      "publishedAt": "2026-07-31",
+      "version": "109482303c686ea9a3927143981559f7285115a0d15e7baa226d3c705c664e02",
+      "passed": true
+    },
+    {
+      "metricId": "VRT.company_revenue",
+      "periodEnd": "2023-03-31",
+      "value": 15.211,
+      "independentlyRecomputed": 15.211,
+      "unit": "亿美元",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1674101/000162828024018417/0001628280-24-018417-index.html",
+      "publishedAt": "2024-04-26",
+      "version": "bd014465e4ffacad9de91c1c4afa057a4ec69ca9d2bded7fd660044be38a3ed3",
+      "passed": true
+    },
+    {
+      "metricId": "VRT.company_revenue",
+      "periodEnd": "2024-12-31",
+      "value": 23.464,
+      "independentlyRecomputed": 23.464,
+      "unit": "亿美元",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1674101/000167410126000008/0001674101-26-000008-index.html",
+      "publishedAt": "2026-02-13",
+      "version": "bd014465e4ffacad9de91c1c4afa057a4ec69ca9d2bded7fd660044be38a3ed3",
+      "passed": true
+    },
+    {
+      "metricId": "VRT.company_revenue",
+      "periodEnd": "2026-06-30",
+      "value": 32.743,
+      "independentlyRecomputed": 32.743,
+      "unit": "亿美元",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1674101/000162828026050609/0001628280-26-050609-index.html",
+      "publishedAt": "2026-07-29",
+      "version": "bd014465e4ffacad9de91c1c4afa057a4ec69ca9d2bded7fd660044be38a3ed3",
+      "passed": true
+    },
+    {
+      "metricId": "VRT.gross_margin",
+      "periodEnd": "2023-03-31",
+      "value": 32.575110117677994,
+      "independentlyRecomputed": 32.575110117677994,
+      "unit": "%",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1674101/000162828024018417/0001628280-24-018417-index.html",
+      "publishedAt": "2024-04-26",
+      "version": "bd014465e4ffacad9de91c1c4afa057a4ec69ca9d2bded7fd660044be38a3ed3",
+      "passed": true
+    },
+    {
+      "metricId": "VRT.gross_margin",
+      "periodEnd": "2024-12-31",
+      "value": 37.08660075008524,
+      "independentlyRecomputed": 37.08660075008524,
+      "unit": "%",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1674101/000167410126000008/0001674101-26-000008-index.html",
+      "publishedAt": "2026-02-13",
+      "version": "bd014465e4ffacad9de91c1c4afa057a4ec69ca9d2bded7fd660044be38a3ed3",
+      "passed": true
+    },
+    {
+      "metricId": "VRT.gross_margin",
+      "periodEnd": "2026-06-30",
+      "value": 37.714931435726726,
+      "independentlyRecomputed": 37.714931435726726,
+      "unit": "%",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1674101/000162828026050609/0001628280-26-050609-index.html",
+      "publishedAt": "2026-07-29",
+      "version": "bd014465e4ffacad9de91c1c4afa057a4ec69ca9d2bded7fd660044be38a3ed3",
+      "passed": true
+    },
+    {
+      "metricId": "TSM.company_revenue",
+      "periodEnd": "2024-03-31",
+      "value": 5926.4,
+      "independentlyRecomputed": 5926.4,
+      "unit": "亿新台币",
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2024-04/e19914dd320b6386af51d5ed27fa5c51af9c441e/1Q24EarningsRelease.pdf",
+      "publishedAt": "2024-04-18",
+      "version": "734d1dc0fc14593b65aaaaee310b7b2636bd45a2acfd0d685d661386bb8d3a4a",
+      "passed": true
+    },
+    {
+      "metricId": "TSM.company_revenue",
+      "periodEnd": "2025-06-30",
+      "value": 9337.9,
+      "independentlyRecomputed": 9337.9,
+      "unit": "亿新台币",
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2025-07/d9d294ed46ca22c560a17eb060373bc35f2d464a/2Q25EarningsRelease.pdf",
+      "publishedAt": "2025-07-17",
+      "version": "14b24d4f735363fff90ef8d50611864d0dc000edfd74489994569b7428e78d40",
+      "passed": true
+    },
+    {
+      "metricId": "TSM.company_revenue",
+      "periodEnd": "2026-06-30",
+      "value": 12703.800000000001,
+      "independentlyRecomputed": 12703.800000000001,
+      "unit": "亿新台币",
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-07/a80d7933be643644081584087731f73b22ea5a2c/2Q26%20EarningsRelease.pdf",
+      "publishedAt": "2026-07-16",
+      "version": "67c8e14a5786449dc6cbc4e8e0472b8b56c33895e4c8abcdfe4f48ac5f60207e",
+      "passed": true
+    },
+    {
+      "metricId": "TSM.gross_margin",
+      "periodEnd": "2024-03-31",
+      "value": 53.1,
+      "independentlyRecomputed": 53.1,
+      "unit": "%",
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2024-04/e19914dd320b6386af51d5ed27fa5c51af9c441e/1Q24EarningsRelease.pdf",
+      "publishedAt": "2024-04-18",
+      "version": "734d1dc0fc14593b65aaaaee310b7b2636bd45a2acfd0d685d661386bb8d3a4a",
+      "passed": true
+    },
+    {
+      "metricId": "TSM.gross_margin",
+      "periodEnd": "2025-06-30",
+      "value": 58.6,
+      "independentlyRecomputed": 58.6,
+      "unit": "%",
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2025-07/d9d294ed46ca22c560a17eb060373bc35f2d464a/2Q25EarningsRelease.pdf",
+      "publishedAt": "2025-07-17",
+      "version": "14b24d4f735363fff90ef8d50611864d0dc000edfd74489994569b7428e78d40",
+      "passed": true
+    },
+    {
+      "metricId": "TSM.gross_margin",
+      "periodEnd": "2026-06-30",
+      "value": 67.7,
+      "independentlyRecomputed": 67.7,
+      "unit": "%",
+      "sourceUrl": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-07/a80d7933be643644081584087731f73b22ea5a2c/2Q26%20EarningsRelease.pdf",
+      "publishedAt": "2026-07-16",
+      "version": "67c8e14a5786449dc6cbc4e8e0472b8b56c33895e4c8abcdfe4f48ac5f60207e",
+      "passed": true
+    },
+    {
+      "metricId": "CSO.datacenter_electricity",
+      "periodEnd": "2015-03-31",
+      "value": 291.0,
+      "independentlyRecomputed": 291.0,
+      "unit": "GWh",
+      "sourceUrl": "https://data.cso.ie/table/MEC02",
+      "publishedAt": "2026-07-07T11:00:00+00:00",
+      "version": "94ef02b160d08fa977a211d56659c18c70aaf8aa7e7187d2b066fe98f94dc219",
+      "passed": true
+    },
+    {
+      "metricId": "CSO.datacenter_electricity",
+      "periodEnd": "2020-09-30",
+      "value": 766.0,
+      "independentlyRecomputed": 766.0,
+      "unit": "GWh",
+      "sourceUrl": "https://data.cso.ie/table/MEC02",
+      "publishedAt": "2026-07-07T11:00:00+00:00",
+      "version": "94ef02b160d08fa977a211d56659c18c70aaf8aa7e7187d2b066fe98f94dc219",
+      "passed": true
+    },
+    {
+      "metricId": "CSO.datacenter_electricity",
+      "periodEnd": "2025-12-31",
+      "value": 1991.0,
+      "independentlyRecomputed": 1991.0,
+      "unit": "GWh",
+      "sourceUrl": "https://data.cso.ie/table/MEC02",
+      "publishedAt": "2026-07-07T11:00:00+00:00",
+      "version": "94ef02b160d08fa977a211d56659c18c70aaf8aa7e7187d2b066fe98f94dc219",
+      "passed": true
+    }
+  ],
+  "scenarioChecks": [
+    {
+      "report": "IEA.energy_ai_2026",
+      "facts": [
+        {
+          "period": "2025",
+          "value": 485.0,
+          "label": "全球数据中心用电历史估算",
+          "nature": "estimate"
+        },
+        {
+          "period": "2030",
+          "value": 950.0,
+          "label": "全球数据中心用电情景预测",
+          "nature": "forecast"
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "passed": true
+}

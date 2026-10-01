@@ -36,6 +36,7 @@ jobs:
       - name: Collect official observations and check release calendars
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
           MACRO_SCHEDULER: github_actions
           MACRO_CHECK_MINUTES: '15'
         run: |
@@ -54,6 +55,8 @@ jobs:
           node --test tests/quant-model.test.mjs
           python tests/collector_test.py
           python tests/industry_collector_test.py
+          python tests/sector_financials_test.py
+          python tests/institution_sources_test.py
           python tests/policy_rates_test.py
           python tests/policy_decisions_test.py
           npx tsc --noEmit

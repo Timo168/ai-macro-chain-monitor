@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {buildFallbackAnalysis,buildResearchPacket,modelPrompt,validateModelAnalysis} from '../lib/industry/research.mjs';
+import {buildQuantitativeSignal} from '../lib/industry/quant-model.mjs';
 
 const evidence={metricId:'MSFT.capex',observationVersion:'capex-v1',direction:'positive',explanation:'资本开支同比上升。',periodEnd:'2026-06-30',dimension:'investment'};
 const cloud={targetId:'cloud',targetName:'AI云计算平台',level:'gradual_attention',confidence:'medium',coverage:1,requiredDimensionCount:4,availableDimensionCount:4,reason:'多个维度为正面，但仍需验证。',dataCutoffAt:'2026-06-30',positiveEvidence:[evidence],negativeEvidence:[],neutralEvidence:[],missingMetrics:[],invalidationConditions:['需求或盈利连续放缓时重新评估。']};
@@ -34,6 +35,20 @@ test('research packet covers all current site domains without volatile generatio
  assert.match(prompt,/DFII10/);
  assert.match(prompt,/PROJECT\.project-1/);
  assert.ok(Buffer.byteLength(prompt)<Buffer.byteLength(JSON.stringify(first)));
+});
+
+test('fallback preserves every direct citation and distinguishes optional gaps from blocked factors',()=>{
+ const input=packet();const sector=input.quantitative.sectorSignals[0];
+ sector.score=30;sector.readiness={blockers:[]};sector.missingMetrics=['optional.backlog'];
+ sector.evidenceRefs=Array.from({length:12},(_,index)=>({metricId:`source.${index}`,observationVersion:`v${index}`,periodEnd:'2026-06-30'}));
+ sector.factorContributions=[{id:'demand',formalMetricIds:['source.11']},{id:'profitability',formalMetricIds:['source.10']}];
+ const view=buildFallbackAnalysis(input).sectorViews[0];
+ assert.equal(view.evidenceRefs.length,12);
+ assert.equal(view.evidenceRefs[0].metricId,'source.11');
+ assert.match(view.risks[0],/门槛已通过/);
+ assert.match(view.risks[0],/补充指标/);
+ sector.readiness.blockers=[{remedy:'补齐建设完成的实际容量历史。'}];
+ assert.deepEqual(buildFallbackAnalysis(input).sectorViews[0].risks,['补齐建设完成的实际容量历史。']);
 });
 
 test('project samples and proxies are separated from direct evidence references',()=>{
@@ -93,4 +108,55 @@ test('model text rejects packet company entities and unsupported causal or retur
  const base=modelOutput(input);
  assert.throws(()=>validateModelAnalysis({...base,sectorViews:[{...base.sectorViews[0],thesis:'ACME 具有更高配置价值。'},base.sectorViews[1]]},input),/公司层面推荐/);
  assert.throws(()=>validateModelAnalysis({...base,sectorViews:[{...base.sectorViews[0],thesis:'规则直接证据必然带动收益率上升。'},base.sectorViews[1]]},input),/因果或收益断言/);
+});
+
+test('stale industry values remain visible but are removed from model context citations',()=>{
+ const stale={...industry,series:{'MSFT.capex':{status:'cached',observations:[{periodEnd:'2025-12-31',sourceUrl:'https://example.com/filing',version:'stale-v1',value:654321,publishedAt:'2026-01-30'}]}}};
+ const input=buildResearchPacket(stale,macro,macroDefinitions,policyRates,policyDecisions,{asOfDate:'2026-10-01'});
+ const metric=input.fullSiteContext.industryMetrics[0];
+ assert.equal(metric.observations[0].value,654321);
+ assert.equal(metric.reasoningRole,'excluded');
+ assert.equal(metric.freshness,'stale');
+ assert.match(metric.exclusionReason,/发布窗口/);
+ assert.equal(input.contextRefs.some(reference=>reference.metricId==='MSFT.capex'),false);
+ assert.equal(modelPrompt(input).includes('654321'),false,'excluded values must not be sent to the model');
+});
+
+test('the calculation archive retains complete historical inputs while the model sees a compact context',()=>{
+ const historical=Array.from({length:12},(_,index)=>({periodEnd:new Date(Date.UTC(2023,3*index+3,0)).toISOString().slice(0,10),sourceUrl:'https://example.com/filing',version:`history-${index}`,value:987654+index,publishedAt:'2026-01-30',fetchedAt:'2026-02-01'}));
+ const input=buildResearchPacket({...industry,series:{'MSFT.capex':{status:'ready',observations:historical}}},macro,macroDefinitions,policyRates,policyDecisions,{asOfDate:'2026-01-31'});
+ assert.equal(input.calculationInputs.series['MSFT.capex'].observations.length,12);
+ assert.equal(input.observationManifest.length,12);
+ assert.equal(input.observationManifest[0].fetchedAt,'2026-02-01');
+ assert.equal(input.fullSiteContext.industryMetrics[0].observations.length,3);
+ assert.equal(modelPrompt(input).includes('987654'),false,'old numerical history must not be sent to the language model');
+ for(const signal of input.quantitative.sectorSignals){
+  const recommendation=input.calculationInputs.recommendations.find(item=>item.targetId===signal.targetId);
+  const replay=buildQuantitativeSignal(recommendation,input.calculationInputs);
+  assert.equal(replay.score,signal.score);
+  assert.deepEqual(replay.factorContributions,signal.factorContributions);
+ }
+ historical[0].value=-1;
+ assert.equal(input.calculationInputs.series['MSFT.capex'].observations[0].value,987654,'archive must not mutate with a source object');
+});
+
+test('only permitted reports enter the prompt and each fact preserves actual versus scenario roles',()=>{
+ const report={id:'example-report',publisher:'Example institute',title:'Permitted public research',publishedAt:'2026-07-01',sourceUrl:'https://example.com/report',licenseUrl:'https://example.com/license',licenseNote:'Explicit permission for this use',status:'ready',version:'report-v1',modelUseAllowed:true,observationNature:'estimate',scope:'Global sector',unit:'TWh',methodology:'Historical survey and disclosed projection',facts:[{period:'2025',value:100,label:'Historical observed demand',nature:'actual'},{period:'2030',value:250,label:'Projected demand',nature:'forecast'}]};
+ const denied={...report,id:'denied',title:'NEVER_SEND_THIS_REPORT',status:'authorization_required',modelUseAllowed:true};
+ const notPermitted={...report,id:'unlicensed',title:'NOT_LICENSED_FOR_MODEL',modelUseAllowed:false};
+ const input=buildResearchPacket({...industry,researchReports:[report,denied,notPermitted]},macro,macroDefinitions,policyRates,policyDecisions);
+ assert.equal(input.institutionalReports.length,1);
+ assert.deepEqual(input.institutionalReports[0].facts.map(fact=>fact.modelRole),['context','scenario_only']);
+ assert.equal(input.institutionalReports[0].modelRole,'scenario_only');
+ assert.ok(input.contextRefs.some(reference=>reference.metricId==='REPORT.example-report'&&reference.periodEnd==='2030'));
+ const prompt=modelPrompt(input);
+ assert.match(prompt,/Permitted public research/);
+ assert.equal(prompt.includes('NEVER_SEND_THIS_REPORT'),false);
+ assert.equal(prompt.includes('NOT_LICENSED_FOR_MODEL'),false);
+ assert.equal(input.quantitative.sectorSignals[0].evidenceRefs.some(reference=>reference.metricId.startsWith('REPORT.')),false);
+ const base=modelOutput(input),forecast=input.institutionalReports[0].facts[1].reference;
+ const reference={metricId:forecast.metricId,observationVersion:forecast.observationVersion,periodEnd:forecast.periodEnd};
+ const sector={...base.sectorViews[0],contextRefs:[reference]};
+ assert.throws(()=>validateModelAnalysis({...base,sectorViews:[sector,base.sectorViews[1]]},input),/情景边界/);
+ assert.equal(validateModelAnalysis({...base,sectorViews:[{...sector,thesis:'机构预测情景提示需求可能增加，实际兑现仍需后续验证。'},base.sectorViews[1]]},input).origin,'model');
 });

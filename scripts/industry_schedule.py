@@ -116,15 +116,15 @@ def run(force=False,build_research=True):
     state=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
     current=datetime.now(timezone.utc)
     last=state_time(state.get('lastAttemptAt'))
-    daily_due=force or current-last>=timedelta(hours=24) or state.get('collectorVersion')!=9
+    daily_due=force or current-last>=timedelta(hours=24) or state.get('collectorVersion')!=10
     if daily_due:
         failures=[]
-        for script in ['industry_collect.py','industry_hardware.py','industry_costs.py','industry_oracle.py','industry_sia.py','industry_extended.py','industry_power_load.py','industry_projects.py']:
+        for script in ['industry_collect.py','industry_hardware.py','industry_costs.py','industry_oracle.py','industry_sia.py','industry_extended.py','industry_power_load.py','industry_projects.py','industry_sector_financials.py','industry_institutions.py']:
             try:
                 result=run_background([sys.executable,str(ROOT/'scripts'/script)],cwd=ROOT,timeout=600)
                 if result.returncode:failures.append(script)
             except Exception as error:failures.append(script+': '+str(error))
-        state.update({'collectorVersion':9,'lastAttemptAt':now(),'dailyFailures':failures})
+        state.update({'collectorVersion':10,'lastAttemptAt':now(),'dailyFailures':failures})
     fast_next=[]
     fast_failures=[]
     for spec in FAST_COLLECTORS:
@@ -133,7 +133,7 @@ def run(force=False,build_research=True):
         if record.get('status')!='ready':fast_failures.append(spec['script']+': '+', '.join(record.get('failedSeries',[])))
     daily_next=last+timedelta(hours=24) if not daily_due else current+timedelta(hours=24)
     state.update({
-        'collectorVersion':9,
+        'collectorVersion':10,
         'failures':(state.get('dailyFailures',[])+fast_failures),
         'nextCheckAt':min([daily_next,*fast_next]).isoformat(),
     })

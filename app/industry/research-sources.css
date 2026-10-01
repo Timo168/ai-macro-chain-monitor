@@ -1,0 +1,24 @@
+.research-delivery-status{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0}
+.research-delivery-status article{padding:15px 17px;border:1px solid #d9e7e2;border-radius:10px;background:#fff;min-width:0}
+.research-delivery-status span,.research-delivery-status small{display:block;color:#728a86;font-size:12px;line-height:1.7}
+.research-delivery-status b{display:block;margin:6px 0;font-size:14px;color:#294842}
+.research-readiness{margin:16px 0;border-top:1px solid #e1ebe6;padding-top:12px;font-size:12px;line-height:1.75}
+.research-readiness summary{cursor:pointer;color:#226c5e;font-weight:600}
+.research-readiness p{font-size:12px!important}
+.research-readiness ul{padding-left:18px;margin:10px 0}
+.research-readiness li{margin-bottom:9px;overflow-wrap:anywhere}
+.research-readiness li b{display:block;color:#384e48}
+.research-readiness li small{display:block;color:#7b8f89}
+.institutional-sources{margin:22px 0;min-width:0}
+.institutional-report-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}
+.institutional-report-grid article{border:1px solid #dfe9e4;border-radius:10px;padding:18px;min-width:0;background:#f9fcfa}
+.institutional-report-grid article>div{display:flex;justify-content:space-between;gap:8px;color:#357c6c;font-size:12px}
+.institutional-report-grid h4{font-size:16px;margin:12px 0}
+.institutional-report-grid a{color:#287665;text-decoration:none}
+.institutional-report-grid p,.institutional-report-grid small{font-size:12px;line-height:1.8;color:#728980;overflow-wrap:anywhere}
+.institutional-report-grid dl{margin:14px 0}
+.institutional-report-grid dl div{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #e4ece7;font-size:13px}
+.institutional-report-grid dt{color:#6f827b}.institutional-report-grid dd{font-weight:600;color:#2c4e42;margin:0}
+.institutional-report-grid summary,.institutional-catalog summary{font-size:12px;cursor:pointer;color:#397765}
+.institutional-catalog{margin-top:20px}.institutional-catalog>p{font-size:12px;line-height:1.8;color:#7b8f86}
+@media(max-width:850px){.research-delivery-status{grid-template-columns:1fr}.institutional-report-grid{grid-template-columns:1fr}.institutional-report-grid dl div{flex-wrap:wrap}}

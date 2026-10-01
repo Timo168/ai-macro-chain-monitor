@@ -31,6 +31,9 @@ test('industry evidence factor model returns bounded, reproducible scored signal
  const second=buildQuantitativeSignal({...recommendation,positiveEvidence:[...recommendation.positiveEvidence,recommendation.positiveEvidence[0]]},{definitions,series,macroSignals:macro});
  assert.equal(first.factorModelVersion,QUANT_MODEL_VERSION);
  assert.equal(first.scoringGate,'passed');
+ assert.equal(first.calibration,'history_normalized');
+ assert.equal(first.readiness.stage,'formal_research');
+ assert.equal(first.readiness.investmentValidation,'not_started');
  assert.ok(first.score!==null&&first.score>=-100&&first.score<=100);
  assert.ok(first.fundamentalScore!==null&&first.fundamentalScore>=-100&&first.fundamentalScore<=100);
  assert.equal(first.score,second.score,'duplicate entity/family evidence must not add weight');
@@ -115,6 +118,73 @@ test('a missing historical quarter cannot be promoted to normalized formal histo
  const signal=buildQuantitativeSignal(recommendation,{definitions,series:gaps,macroSignals:macro});
  assert.equal(signal.score,null);
  assert.equal(signal.factorContributions.find(factor=>factor.id==='investment').formalContribution,null);
+ assert.ok(signal.readiness.blockers.some(blocker=>blocker.factorId==='investment'&&blocker.code==='history_gap'));
+});
+
+test('a complete recent eight-quarter window can recover from an older missing quarter',()=>{
+ const extraPeriods=['2022-09-30','2022-12-31',...periods];
+ const recovered=Object.fromEntries(Object.entries(series).map(([id,row])=>[id,{observations:[{periodEnd:extraPeriods[0],value:5,version:'older'},...row.observations]}]));
+ const complete=buildQuantitativeSignal(recommendation,{definitions,series:recovered,macroSignals:macro});
+ assert.equal(complete.scoringGate,'passed');
+ assert.equal(complete.factorContributions[0].metricDiagnostics[0].history.windowStart,'2024-03-31');
+ const recentGap={...recovered,'MSFT.capex':{observations:recovered['MSFT.capex'].observations.filter(point=>point.periodEnd!=='2025-06-30')}};
+ const blocked=buildQuantitativeSignal(recommendation,{definitions,series:recentGap,macroSignals:macro});
+ assert.equal(blocked.score,null);
+ assert.ok(blocked.readiness.blockers.some(blocker=>blocker.code==='history_gap'&&blocker.remedy.includes('2025-06')));
+});
+
+test('monthly price levels require enough baselines for four annual comparisons',()=>{
+ const monthlyDefinition={...definitions.at(-1),frequency:'monthly'};
+ const dates=Array.from({length:16},(_,index)=>new Date(Date.UTC(2024,8+index+1,0)).toISOString().slice(0,10));
+ const monthlySeries={observations:dates.map((periodEnd,index)=>({periodEnd,value:10+index,version:`monthly-${index}`}))};
+ const full=buildQuantitativeSignal(recommendation,{definitions:[...definitions.slice(0,-1),monthlyDefinition],series:{...series,'US.power':monthlySeries}});
+ assert.equal(full.scoringGate,'passed');
+ const short=buildQuantitativeSignal(recommendation,{definitions:[...definitions.slice(0,-1),monthlyDefinition],series:{...series,'US.power':{observations:monthlySeries.observations.slice(-8)}}});
+ assert.equal(short.score,null);
+ const cost=short.readiness.blockers.find(blocker=>blocker.factorId==='costs');
+ assert.equal(cost.actual,8);
+ assert.equal(cost.required,16);
+});
+
+test('readiness lists construction and demand breadth failures together',()=>{
+ const incomplete={...recommendation,targetId:'data_centers',level:'insufficient_data',coverage:.5,positiveEvidence:[item('MSFT.capex','positive','investment'),item('MSFT.cloud','positive','demand')],negativeEvidence:[],neutralEvidence:[]};
+ const signal=buildQuantitativeSignal(incomplete,{definitions,series});
+ assert.equal(signal.readiness.stage,'needs_evidence');
+ assert.ok(signal.readiness.blockers.some(blocker=>blocker.factorId==='construction'&&blocker.code==='missing_evidence'));
+ assert.ok(signal.readiness.blockers.some(blocker=>blocker.code==='demand_breadth'&&blocker.actual===1&&blocker.required===2));
+});
+
+test('annual-release sources retain publication-based review deadlines',()=>{
+ const annualReleaseDefinition={...definitions[0],freshnessBasis:'source_publication',sourceReleaseFrequency:'annual',sourceReleaseDelayDays:35};
+ const annualReleaseSeries={observations:series['MSFT.capex'].observations.map(point=>({...point,publishedAt:'2026-07-15'}))};
+ const onlyPublication={...recommendation,positiveEvidence:[item('MSFT.capex','positive','investment')],negativeEvidence:[]};
+ const signal=buildQuantitativeSignal(onlyPublication,{definitions:[annualReleaseDefinition],series:{'MSFT.capex':annualReleaseSeries}});
+ assert.equal(signal.validUntil,'2027-08-20');
+});
+
+test('sharp deceleration while growth stays positive weakens rather than strengthens its positive factor',()=>{
+ const slowing={...series,'MSFT.capex':observations([100,100,100,100,200,220,240,120])};
+ const accelerating={...series,'MSFT.capex':observations([100,100,100,100,120,125,130,140])};
+ const slow=buildQuantitativeSignal(recommendation,{definitions,series:slowing});
+ const fast=buildQuantitativeSignal(recommendation,{definitions,series:accelerating});
+ const slowFactor=slow.factorContributions.find(factor=>factor.id==='investment');
+ const fastFactor=fast.factorContributions.find(factor=>factor.id==='investment');
+ assert.ok(slowFactor.formalContribution>0,'rule-approved growth direction stays positive');
+ assert.ok(slowFactor.formalContribution<fastFactor.formalContribution,'growth falling from 140% to 20% must not look stronger than acceleration');
+});
+
+test('company-total alias families are coalesced while business-segment revenue keeps its own scope',()=>{
+ const totalRevenue=definition('MSFT.total_quarter','MSFT','company_revenue');
+ const monthlyAlias=definition('MSFT.total_month','MSFT','revenue');
+ const gross=definition('MSFT.company_gross','MSFT','company_gross_margin');
+ const grossAlias=definition('MSFT.gross','MSFT','gross_margin');
+ const added=[item(totalRevenue.id,'positive','demand'),item(gross.id,'positive','profitability')];
+ const additionalSeries={...series,[totalRevenue.id]:series['MSFT.cloud'],[monthlyAlias.id]:series['MSFT.cloud'],[gross.id]:series['MSFT.margin'],[grossAlias.id]:series['MSFT.margin']};
+ const baseline=buildQuantitativeSignal({...recommendation,positiveEvidence:[...recommendation.positiveEvidence,...added]},{definitions:[...definitions,totalRevenue,gross],series:additionalSeries});
+ const duplicated=buildQuantitativeSignal({...recommendation,positiveEvidence:[...recommendation.positiveEvidence,...added,item(monthlyAlias.id,'positive','demand'),item(grossAlias.id,'positive','profitability')]},{definitions:[...definitions,totalRevenue,monthlyAlias,gross,grossAlias],series:additionalSeries});
+ assert.equal(duplicated.score,baseline.score);
+ assert.equal(duplicated.factorContributions.find(factor=>factor.id==='demand').sourceGroupCount,3,'cloud-segment and company-total revenues keep distinct scopes');
+ assert.equal(duplicated.factorContributions.find(factor=>factor.id==='profitability').sourceGroupCount,2,'cloud margin and company gross margin keep distinct scopes');
 });
 
 test('macro overlay is capped and requires more than one valid macro factor',()=>{

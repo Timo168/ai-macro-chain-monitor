@@ -24,7 +24,11 @@ const policyDecisions=read(policyDecisionsPath,{decisions:[],checks:[]});
 const configuredModel=process.env.REASONING_MODEL?.trim()||'gpt-5-mini';
 const key=process.env.OPENAI_API_KEY?.trim();
 const packet=buildResearchPacket(industry,macro,macroDefinitions,policyRates,policyDecisions);
-const inputHash=hash({promptVersion:RESEARCH_PROMPT_VERSION,model:configuredModel,packet});
+// Archive the complete vintage for recomputation, while the website and model
+// receive only the compact evidence packet. A background check timestamp alone
+// must not invalidate an otherwise identical model input.
+const {calculationInputs,observationManifest,...publicPacket}=packet;
+const inputHash=hash({promptVersion:RESEARCH_PROMPT_VERSION,model:configuredModel,packet:publicPacket});
 const inputs={industry:{version:snapshotVersion(industry),generatedAt:industry.generatedAt??null},macro:{version:snapshotVersion(macro),generatedAt:macro.generatedAt??null},policyRates:{version:snapshotVersion(policyRates),generatedAt:policyRates.generatedAt??null},policyDecisions:{version:snapshotVersion(policyDecisions),generatedAt:policyDecisions.generatedAt??null}};
 const cutoffOf=items=>items.filter(Boolean).sort().at(-1)??null;
 const dataCutoffs={industry:cutoffOf(packet.quantitative.sectorSignals.map(signal=>signal.dataCutoffAt)),macro:cutoffOf(packet.macroSignals.map(signal=>signal.latestDate)),policy:cutoffOf(packet.policyRateSignals.map(signal=>signal.latestDate)),projects:cutoffOf(packet.fullSiteContext.projects.records.map(project=>project.latestEventDate))};
@@ -71,8 +75,8 @@ if(key){
   }
  }
 }
-const result={schemaVersion:'2',generatedAt:now,inputHash,inputs,dataCutoffs,model,quantitative:packet.quantitative,evidence:{macroSignals:packet.macroSignals,policyRateSignals:packet.policyRateSignals,sourceRefs:packet.sourceRefs,dataGaps:packet.dataGaps,inputCoverage:packet.inputCoverage,guardrails:packet.guardrails,inputSnapshot:packet},analysis};
-const immutableInput={schemaVersion:'2',inputHash,createdAt:now,inputs,dataCutoffs,packet};
+const result={schemaVersion:'2',generatedAt:now,inputHash,inputs,dataCutoffs,model,quantitative:packet.quantitative,evidence:{macroSignals:packet.macroSignals,policyRateSignals:packet.policyRateSignals,institutionalReports:packet.institutionalReports,sourceRefs:packet.sourceRefs,dataGaps:packet.dataGaps,inputCoverage:packet.inputCoverage,guardrails:packet.guardrails,inputSnapshot:publicPacket},analysis};
+const immutableInput={schemaVersion:'3',inputHash,createdAt:now,inputs,dataCutoffs,packet:publicPacket,calculationInputs,observationManifest,calculationInputHash:hash(calculationInputs)};
 mkdirSync(inputsFolder,{recursive:true});
 if(!existsSync(`${inputsFolder}/${inputHash}.json`))writeJsonAtomic(`${inputsFolder}/${inputHash}.json`,immutableInput);
 const historyEntry={inputHash,generatedAt:now,inputs,dataCutoffs,model:{status:model.status,model:model.model,promptVersion:model.promptVersion,lastSuccessfulAt:model.lastSuccessfulAt,outputHash:model.outputHash},analysis:{origin:analysis.origin,overallStance:analysis.overallStance,marketRegime:analysis.marketRegime,confidence:analysis.confidence,summary:analysis.summary}};
