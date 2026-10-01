@@ -57,6 +57,7 @@ jobs:
           python tests/industry_collector_test.py
           python tests/sector_financials_test.py
           python tests/institution_sources_test.py
+          python tests/industry_bootstrap_test.py
           python tests/policy_rates_test.py
           python tests/policy_decisions_test.py
           npx tsc --noEmit

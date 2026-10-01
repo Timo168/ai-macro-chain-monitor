@@ -21,7 +21,8 @@ from urllib.parse import urljoin
 from pypdf import PdfReader
 
 from industry_collect import html_tables
-from industry_common import DATA, CREATE_NO_WINDOW, WINDOWS_STARTUPINFO, atomic, definition, now, observation, persist
+from industry_common import DATA, ROOT, CREATE_NO_WINDOW, WINDOWS_STARTUPINFO, atomic, definition, now, observation, persist
+from industry_bootstrap import restore_bootstrap
 
 PARSER_VERSION = 'sector-financials-1.0.0'
 SEC_COMPANIES = {
@@ -53,14 +54,14 @@ def fetch_source(url, force=False):
     try:
         with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=30) as response:
             raw = response.read()
-    except Exception:
+    except Exception as request_error:
         process = subprocess.run(
             ['curl.exe' if os.name == 'nt' else 'curl', '--fail', '--location', '--silent', '--show-error',
              '--max-time', '30', '--user-agent', user_agent, url],
             capture_output=True, creationflags=CREATE_NO_WINDOW, startupinfo=WINDOWS_STARTUPINFO,
         )
         if process.returncode:
-            raise RuntimeError('官方来源请求失败；保留最后成功数据，不生成替代值')
+            raise RuntimeError(f'官方来源请求失败（HTTP {getattr(request_error, "code", "不可用")}，备用请求退出 {process.returncode}）；保留最后成功数据，不生成替代值')
         raw = process.stdout
     if len(raw) < 100:
         raise ValueError('官方来源响应为空或过短')
@@ -244,6 +245,8 @@ def build(force=False, source_fetch=fetch_source, prior=None, as_of=None):
     as_of = as_of or date.today().isoformat()
     path = DATA / 'sector-financials.json'
     old = prior if prior is not None else json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'series': {}}
+    if prior is None and DATA == ROOT / 'data' / 'industry':
+        old = restore_bootstrap('sector-financials.json', old)
     result = {'schemaVersion': '1', 'collectorVersion': PARSER_VERSION, 'generatedAt': now(), 'definitions': [], 'series': {}, 'projects': [], 'events': []}
     for entity, company in SEC_COMPANIES.items():
         defs = [financial_definition(entity, family) for family in ('company_revenue', 'gross_margin')]

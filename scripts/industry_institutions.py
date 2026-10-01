@@ -16,7 +16,8 @@ import re
 import sys
 from datetime import datetime, timezone
 
-from industry_common import DATA, definition, fetch, now, observation, persist
+from industry_common import DATA, ROOT, definition, fetch, now, observation, persist
+from industry_bootstrap import restore_bootstrap
 
 
 CSO_ID = "CSO.datacenter_electricity"
@@ -243,6 +244,8 @@ def _report_base() -> dict:
 def build(*, force: bool = False) -> dict:
     path = DATA / "institutions.json"
     old = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"series": {}, "researchReports": []}
+    if DATA == ROOT / 'data' / 'industry':
+        old = restore_bootstrap('institutions.json', old)
     result = {"schemaVersion": "1", "generatedAt": now(), "definitions": [cso_definition()],
               "series": {}, "projects": [], "events": [], "sources": [],
               "researchReports": [], "sourceCatalog": source_catalog()}

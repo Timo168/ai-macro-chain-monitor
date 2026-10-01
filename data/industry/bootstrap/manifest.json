@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1",
+  "reviewedAt": "2026-10-01",
+  "purpose": "首次公开来源获取失败时恢复已核验历史；不更新时间，不代表在线请求成功。",
+  "verificationDocument": "docs/industry/institutional-source-verification.json",
+  "verificationSha256": "bb713a00d4b6868c0a0ba8a689ce62c6e20d5517edd7c867af6f93b243db9163",
+  "files": {
+    "sector-financials.json": {
+      "sha256": "34a479281bf96a2a5c37875bdf6005e76ccbcfcf53fbdc203608ac51432da6e7",
+      "seriesIds": [
+        "MU.company_revenue",
+        "MU.gross_margin",
+        "ETN.company_revenue",
+        "ETN.company_gross_margin",
+        "VRT.company_revenue",
+        "VRT.gross_margin",
+        "TSM.company_revenue",
+        "TSM.gross_margin"
+      ],
+      "reportIds": []
+    },
+    "institutions.json": {
+      "sha256": "644e262ccb12d33f142a37e93d3c0fad4d94dbe0aae81661788edd2874501bb3",
+      "seriesIds": [
+        "CSO.datacenter_electricity"
+      ],
+      "reportIds": [
+        "IEA.energy_ai_2026"
+      ]
+    }
+  }
+}
