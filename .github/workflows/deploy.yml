@@ -53,11 +53,17 @@ jobs:
           node --test tests/industry.test.mjs
           node --test tests/research.test.mjs
           node --test tests/quant-model.test.mjs
+          node --test tests/financial-updates.test.mjs
           python tests/collector_test.py
           python tests/industry_collector_test.py
           python tests/sector_financials_test.py
           python tests/institution_sources_test.py
           python tests/industry_bootstrap_test.py
+          python tests/industry_releases_test.py
+          python tests/financial_dynamic_test.py
+          python tests/oracle_hpe_dynamic_test.py
+          python tests/financial_schedule_test.py
+          python tests/financial_sector_updates_test.py
           python tests/policy_rates_test.py
           python tests/policy_decisions_test.py
           npx tsc --noEmit

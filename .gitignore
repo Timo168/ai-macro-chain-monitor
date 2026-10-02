@@ -67,5 +67,6 @@ __pycache__/
 !/data/industry/public-reviewed.json
 !/data/industry/public-source-facts.json
 !/data/industry/research.seed.json
+!/data/industry/release-discovery.seed.json
 !/data/industry/bootstrap/
 !/data/industry/bootstrap/*.json

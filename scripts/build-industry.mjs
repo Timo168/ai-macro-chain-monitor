@@ -1,6 +1,7 @@
 import {existsSync,readFileSync,writeFileSync,mkdirSync,renameSync} from 'node:fs';
 import {generateRecommendations,ruleReachability} from '../lib/industry/engine.mjs';
 import {pendingMetrics} from '../lib/industry/catalog.mjs';
+import {financialUpdates} from '../lib/industry/financial-updates.mjs';
 
 const folder='data/industry';
 const now=new Date().toISOString();
@@ -12,6 +13,7 @@ const seed=existsSync(seedPath)?JSON.parse(readFileSync(seedPath,'utf8')):null;
 const sourceFiles=['companies.json','oracle.json','hardware.json','costs.json','infrastructure.json','sia.json','extended.json','power-load.json','projects.json','sector-financials.json','institutions.json',existsSync(folder+'/reviewed-cache.json')?'reviewed-cache.json':'public-reviewed.json'];
 const hasValue=point=>typeof point?.value==='number'&&Number.isFinite(point.value);
 const observed=series=>(series?.observations??[]).filter(hasValue);
+const ingestedReleases=[];
 
 // Source adapters must never erase an already verified chart merely because a
 // network request failed or returned an incomplete range. New observations win;
@@ -35,6 +37,7 @@ for(const file of sourceFiles){
  const path=folder+'/'+file;
  if(!existsSync(path))continue;
  const payload=JSON.parse(readFileSync(path,'utf8'));
+ ingestedReleases.push(...(payload.ingestedReleases??[]));
  for(const definition of payload.definitions??[]){
   const index=merged.definitions.findIndex(existing=>existing.id===definition.id);
   if(index<0)merged.definitions.push(definition);
@@ -61,6 +64,9 @@ merged.projects=[...new Map(merged.projects.map(project=>[project.id,project])).
 merged.sources=[...new Map(merged.sources.map(source=>[source.id,source])).values()];
 merged.researchReports=[...new Map(merged.researchReports.map(report=>[report.id,report])).values()];
 merged.sourceCatalog=[...new Map(merged.sourceCatalog.map(source=>[source.id,source])).values()];
+const discoveryPath=folder+'/release-discovery.json';
+if(existsSync(discoveryPath))merged.financialUpdates=financialUpdates(JSON.parse(readFileSync(discoveryPath,'utf8')),merged,ingestedReleases,now);
+for(const update of merged.financialUpdates??[])if(update.upcoming)merged.events.push({id:`release-${update.entity}-${update.upcoming.fiscalYear}-${update.upcoming.quarter}`,entity:update.entity,title:update.upcoming.title,date:update.upcoming.releaseAt,sourceUrl:update.upcoming.url,kind:'release',description:'公司官方公告的未来财报发布时间',fetchedAt:update.upcoming.fetchedAt??update.lastSuccessfulAt,isConfirmed:true});
 merged.verification={recommendationRuleReachability:ruleReachability(merged.definitions)};
 merged.recommendations=generateRecommendations(merged,merged.generatedAt,prior?.recommendations??[]);
 for(const recommendation of merged.recommendations){

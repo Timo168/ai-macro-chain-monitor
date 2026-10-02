@@ -94,6 +94,67 @@ def run_fast_collector(spec,state,current,force):
     records[spec['key']]=record
     return record,record['nextCheckAt']
 
+FINANCIAL_COLLECTORS={
+ 'MSFT':'industry_collect.py','GOOG':'industry_collect.py','AMZN':'industry_collect.py','META':'industry_collect.py','NVDA':'industry_collect.py',
+ 'DELL':'industry_hardware.py','AMD':'industry_hardware.py','ORCL':'industry_oracle.py','HPE':'industry_extended.py',
+ 'MU':'industry_sector_financials.py','ETN':'industry_sector_financials.py','VRT':'industry_sector_financials.py','TSM':'industry_sector_financials.py',
+}
+
+def release_key(release):
+    return '|'.join(str(release.get(key,'')) for key in ('url','fiscalYear','quarter','publishedAt'))
+
+def financial_release_checks(state,current,force=False,daily_scripts=()):
+    """Discover hourly, retry confirmed but unparsed releases with backoff.
+
+    A failed list request never becomes an unpublished financial report. This
+    state only governs retries; build-industry verifies ingestion independently.
+    """
+    prior=state.setdefault('financialReleases',{})
+    discovery_due=force or current-state_time(prior.get('lastAttemptAt'))>=timedelta(hours=1)
+    failures=[]
+    if discovery_due:
+        try:
+            result=run_background([sys.executable,str(ROOT/'scripts/industry_releases.py'),'--force'],cwd=ROOT,timeout=450)
+            if result.returncode:failures.append('industry_releases.py')
+        except Exception as error:failures.append('industry_releases.py: '+str(error))
+        prior['lastAttemptAt']=now()
+    path=DATA/'release-discovery.json'
+    discovery=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'entities':{}}
+    sources={}
+    for name in set(FINANCIAL_COLLECTORS.values()):
+        filename={'industry_collect.py':'companies.json','industry_hardware.py':'hardware.json','industry_oracle.py':'oracle.json','industry_extended.py':'extended.json','industry_sector_financials.py':'sector-financials.json'}[name]
+        p=DATA/filename
+        sources[name]=json.loads(p.read_text(encoding='utf-8')) if p.exists() else {}
+    attempts=prior.setdefault('ingestionAttempts',{})
+    scripts={}
+    for entity,source in discovery.get('entities',{}).items():
+        name=FINANCIAL_COLLECTORS.get(entity)
+        releases=[r for r in source.get('releases',[]) if r.get('publishedAt') and r['publishedAt'][:10]<=current.date().isoformat()]
+        if not name or not releases:continue
+        latest=max(releases,key=lambda r:r['publishedAt'])
+        key=release_key(latest)
+        parsed=any(r.get('entity')==entity and release_key(r)==key for r in sources[name].get('ingestedReleases',[]))
+        if parsed:
+            attempts[entity]={'releaseKey':key,'lastAttemptAt':now(),'failureCount':0}
+            continue
+        last_attempt=attempts.get(entity,{})
+        delay=retry_minutes(last_attempt.get('failureCount',0)) if last_attempt.get('releaseKey')==key else 0
+        if force or last_attempt.get('releaseKey')!=key or current-state_time(last_attempt.get('lastAttemptAt'))>=timedelta(minutes=max(30,delay)):
+            if name not in daily_scripts:scripts.setdefault(name,[]).append(entity)
+            attempts[entity]={'releaseKey':key,'lastAttemptAt':now(),'failureCount':int(last_attempt.get('failureCount',0))+1 if last_attempt.get('releaseKey')==key else 1}
+    for name in sorted(scripts):
+        try:
+            # Force bypasses source caches for a freshly discovered report.
+            args=[sys.executable,str(ROOT/'scripts'/name),'--force']
+            if name in ('industry_collect.py','industry_hardware.py'):
+                for entity in scripts[name]:args.extend(['--entity',entity])
+            result=run_background(args,cwd=ROOT,timeout=600)
+            if result.returncode:failures.append(name)
+        except Exception as error:failures.append(name+': '+str(error))
+    prior['sourceFailures']=[entity for entity,source in discovery.get('entities',{}).items() if source.get('status') in ('cached','fetch_failed')]
+    prior['nextCheckAt']=(current+timedelta(minutes=30)).isoformat()
+    return failures
+
 def run(force=False,build_research=True):
     reviewed=DATA/'public-reviewed.json'
     if reviewed.exists():materialize()
@@ -116,7 +177,9 @@ def run(force=False,build_research=True):
     state=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
     current=datetime.now(timezone.utc)
     last=state_time(state.get('lastAttemptAt'))
-    daily_due=force or current-last>=timedelta(hours=24) or state.get('collectorVersion')!=11
+    daily_due=force or current-last>=timedelta(hours=24) or state.get('collectorVersion')!=12
+    # Discover actual official URLs before any adapter attempts a new quarter.
+    release_failures=financial_release_checks(state,current,force or daily_due,set(FINANCIAL_COLLECTORS.values()) if daily_due else ())
     if daily_due:
         failures=[]
         for script in ['industry_collect.py','industry_hardware.py','industry_costs.py','industry_oracle.py','industry_sia.py','industry_extended.py','industry_power_load.py','industry_projects.py','industry_sector_financials.py','industry_institutions.py']:
@@ -124,7 +187,7 @@ def run(force=False,build_research=True):
                 result=run_background([sys.executable,str(ROOT/'scripts'/script)],cwd=ROOT,timeout=600)
                 if result.returncode:failures.append(script)
             except Exception as error:failures.append(script+': '+str(error))
-        state.update({'collectorVersion':11,'lastAttemptAt':now(),'dailyFailures':failures})
+        state.update({'collectorVersion':12,'lastAttemptAt':now(),'dailyFailures':failures})
     fast_next=[]
     fast_failures=[]
     for spec in FAST_COLLECTORS:
@@ -133,9 +196,9 @@ def run(force=False,build_research=True):
         if record.get('status')!='ready':fast_failures.append(spec['script']+': '+', '.join(record.get('failedSeries',[])))
     daily_next=last+timedelta(hours=24) if not daily_due else current+timedelta(hours=24)
     state.update({
-        'collectorVersion':11,
-        'failures':(state.get('dailyFailures',[])+fast_failures),
-        'nextCheckAt':min([daily_next,*fast_next]).isoformat(),
+        'collectorVersion':12,
+        'failures':(state.get('dailyFailures',[])+fast_failures+release_failures),
+        'nextCheckAt':min([daily_next,*fast_next,state_time(state['financialReleases']['nextCheckAt'])]).isoformat(),
     })
     atomic(path,state)
     result=run_background(['node',str(ROOT/'scripts/build-industry.mjs')],cwd=ROOT)

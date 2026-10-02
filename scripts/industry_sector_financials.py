@@ -23,6 +23,7 @@ from pypdf import PdfReader
 from industry_collect import html_tables
 from industry_common import DATA, ROOT, CREATE_NO_WINDOW, WINDOWS_STARTUPINFO, atomic, definition, now, observation, persist
 from industry_bootstrap import restore_bootstrap
+from industry_releases import candidates
 
 PARSER_VERSION = 'sector-financials-1.0.0'
 SEC_COMPANIES = {
@@ -241,19 +242,41 @@ def restore_failure(prior, error, checked_at):
     return {'observations': [], 'status': 'fetch_failed', 'checkedAt': checked_at, 'error': error}
 
 
+def sec_release_matches(entity, release, row, as_of):
+    """A filing's fy/fp also label comparative facts: validate the actual end."""
+    primary=next((p for p in row['inputs'] if p.get('end')==row['end']),{})
+    quarter_tag=re.fullmatch(r'Q([1-4])',str(primary.get('fp') or ''))
+    actual_quarter=4 if primary.get('fp')=='FY' else int(quarter_tag[1]) if quarter_tag else None
+    year,quarter=release.get('fiscalYear'),release.get('quarter')
+    if not year or quarter not in (1,2,3,4) or year!=primary.get('fy') or quarter!=actual_quarter:return False
+    month={1:11,2:2,3:5,4:8}[quarter] if entity=='MU' else quarter*3
+    actual_year=year-1 if entity=='MU' and quarter==1 else year
+    expected=date(actual_year,month,calendar.monthrange(actual_year,month)[1])
+    if abs((date.fromisoformat(row['end'])-expected).days)>14:return False
+    published=release.get('publishedAt')
+    return bool(published and published[:10]<=row['publishedAt']<=as_of)
+
+
 def build(force=False, source_fetch=fetch_source, prior=None, as_of=None):
     as_of = as_of or date.today().isoformat()
     path = DATA / 'sector-financials.json'
     old = prior if prior is not None else json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'series': {}}
     if prior is None and DATA == ROOT / 'data' / 'industry':
         old = restore_bootstrap('sector-financials.json', old)
-    result = {'schemaVersion': '1', 'collectorVersion': PARSER_VERSION, 'generatedAt': now(), 'definitions': [], 'series': {}, 'projects': [], 'events': []}
+    result = {'schemaVersion': '1', 'collectorVersion': PARSER_VERSION, 'generatedAt': now(), 'definitions': [], 'series': {}, 'projects': [], 'events': [], 'ingestedReleases': old.get('ingestedReleases', [])}
     for entity, company in SEC_COMPANIES.items():
         defs = [financial_definition(entity, family) for family in ('company_revenue', 'gross_margin')]
         result['definitions'].extend(defs)
         try:
             raw, stamp, version = source_fetch(defs[0]['sourceUrl'], force=force)
             values = parse_sec_companyfacts(raw, entity, as_of)
+            # The SEC filing can lag the earnings announcement. Only the actual
+            # latest quarter with matching fiscal tags and a filing published
+            # after that announcement proves ingestion of that new report.
+            latest_row = max(values['company_revenue'], key=lambda row: row['end'])
+            for release in candidates(entity, path=DATA/'release-discovery.json'):
+                if sec_release_matches(entity,release,latest_row,as_of):
+                    result['ingestedReleases'].append({**release, 'periodEnd':latest_row['end'], 'parsedAt':stamp, 'filingUrl':filing_url(company['cik'],latest_row['accession'])})
             for d in defs:
                 rows = sec_observations(entity, d['family'], values[d['family']], stamp, version)
                 prior_series = old.get('series', {}).get(d['id'], {})
@@ -272,20 +295,37 @@ def build(force=False, source_fetch=fetch_source, prior=None, as_of=None):
     points = {d['id']: {} for d in tsm_defs}
     errors = []
     latest_success_end = None
-    for year in range(2024, int(as_of[:4]) + 1):
-        for quarter in range(1, 5):
+    release_path=DATA/'release-discovery.json'
+    jobs={}
+    if release_path.exists():
+        # Known history plus actual links found on the official publication
+        # index. No guessed next-quarter URL is used to infer publication.
+        for p in old.get('series',{}).get('TSM.company_revenue',{}).get('observations',[]):
+            m=re.fullmatch(r'FY(20\d{2}) Q([1-4])',p.get('fiscalPeriod') or '')
+            if m:jobs[(int(m[1]),int(m[2]))]={'url':p['sourceUrl'],'release':None}
+        for release in candidates('TSM',path=release_path):
+            if release.get('publishedAt') and release['publishedAt'][:10]<=as_of:
+                jobs[(release['fiscalYear'],release['quarter'])]={'url':release['url'],'release':release}
+    else:
+        # Backward-compatible historical import before discovery is configured.
+        for year in range(2024, int(as_of[:4]) + 1):
+            for quarter in range(1, 5):
+                end=date(year,quarter*3,calendar.monthrange(year,quarter*3)[1])
+                if (date.fromisoformat(as_of)-end).days>=21:
+                    jobs[(year,quarter)]={'url':f'https://investor.tsmc.com/english/quarterly-results/{year}/q{quarter}','release':None}
+    for (year,quarter),job in sorted(jobs.items()):
             end = date(year, quarter * 3, calendar.monthrange(year, quarter * 3)[1])
-            # New quarter results are not normally available on quarter-end day.
-            if (date.fromisoformat(as_of) - end).days < 21:
-                continue
-            index = f'https://investor.tsmc.com/english/quarterly-results/{year}/q{quarter}'
+            index = job['url']
             try:
-                raw, _, _ = source_fetch(index, force=force)
-                soup, _ = html_tables(raw)
-                release = next((urljoin(index, a['href']) for a in soup.find_all('a', href=True) if a.get_text(' ', strip=True) == 'Earnings Release'), None)
-                if not release:
-                    raise ValueError('TSMC官方季度页未发布Earnings Release')
-                raw, stamp, version = source_fetch(release, force=force)
+                raw, stamp, version = source_fetch(index, force=force)
+                if raw.startswith(b'%PDF'):
+                    release=index
+                else:
+                    soup, _ = html_tables(raw)
+                    release = next((urljoin(index, a['href']) for a in soup.find_all('a', href=True) if a.get_text(' ', strip=True) == 'Earnings Release'), None)
+                    if not release:raise ValueError('TSMC官方季度页未提供Earnings Release附件；保留历史')
+                    if __import__('urllib.parse',fromlist=['urlparse']).urlparse(release).hostname not in ('investor.tsmc.com','pr.tsmc.com'):raise ValueError('TSMC附件不是允许的官方域名')
+                    raw, stamp, version = source_fetch(release, force=force)
                 row = parse_tsm_release(raw, year, quarter)
                 if row['publishedAt'] > as_of:
                     continue
@@ -298,6 +338,8 @@ def build(force=False, source_fetch=fetch_source, prior=None, as_of=None):
                     p.update({'originalValue': raw_value, 'originalUnit': '%' if margin else 'TWD billion', 'originalCurrency': 'TWD', 'basis': 'official_actual_quarter'})
                     points[d['id']][row['periodEnd']] = p
                 latest_success_end = row['periodEnd']
+                if job['release']:
+                    result['ingestedReleases'].append({**job['release'],'periodEnd':row['periodEnd'],'parsedAt':stamp})
             except Exception as error:
                 errors.append(f'{year} Q{quarter}: {error}')
     for d in tsm_defs:
@@ -306,10 +348,11 @@ def build(force=False, source_fetch=fetch_source, prior=None, as_of=None):
         merged.update(points[d['id']])
         rows = sorted(merged.values(), key=lambda p: p['periodEnd'])
         if not points[d['id']]:
-            result['series'][d['id']] = restore_failure(prior_series, '; '.join(errors) or 'TSMC可用季度报告尚未发布', now())
+            result['series'][d['id']] = restore_failure(prior_series, '; '.join(errors) or '未发现可验证的TSMC季度报告候选，发布状态尚不能确认', now())
         else:
             result['series'][d['id']] = {'observations': rows, 'status': 'cached' if errors else 'ready', 'fetchedAt': rows[-1]['fetchedAt'], 'lastSuccessfulAt': rows[-1]['fetchedAt'],
                                        'checkedAt': now(), 'error': '; '.join(errors) or None, 'note': '实际TIFRS季度数据；新季度未发布时保持最后观测，不插值、不引用指引。', 'latestVerifiedPeriodEnd': latest_success_end}
+    result['ingestedReleases']=list({(r['entity'],r['url'],r.get('publishedAt')):r for r in result['ingestedReleases']}.values())
     return result
 
 

@@ -1,30 +1,75 @@
 """Additional official company metrics and BLS price proxy. No estimates fill missing facts."""
-import calendar,concurrent.futures,io,json,re
+import argparse,calendar,concurrent.futures,io,json,re
 from datetime import date,datetime,timedelta
-from urllib.parse import urljoin
+from urllib.parse import urljoin,urlparse
+from bs4 import BeautifulSoup
 from pypdf import PdfReader
 from industry_common import DATA,fetch,definition,observation,persist,now
 from industry_collect import html_tables,numbers,quarter_dates,row_numbers
 from industry_hardware import dates
 from collect import parse_csv
 
-HPE_RELEASES=(('q2','2026-06-01'),('q3','2026-09-02'))
+HPE_HISTORY=(
+ {'entity':'HPE','fiscalYear':2026,'quarter':2,'publishedAt':'2026-06-01','url':'https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q2-2026/q2-2026-earnings-press-release.pdf'},
+ {'entity':'HPE','fiscalYear':2026,'quarter':3,'publishedAt':'2026-09-02','url':'https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/q3-2026/q3-2026-earnings-press-release.pdf'})
+HPE_METHOD='HPE FY2026组织调整后的Server口径，比较期按公司重述列；仅拼接明确披露Cloud & AI和Server的可比口径，未来部门改名或定义变化需重新核验。含传统与AI服务器，不等于AI服务器销售。百万美元÷100。'
 
-def parse_hpe_release(raw):
+def hpe_candidates():
+ from industry_releases import candidates
+ return candidates('HPE')
+
+def hpe_official_url(url):
+ p=urlparse(url)
+ return p.scheme=='https' and p.hostname in {'investors.hpe.com','www.hpe.com','hpe.com'} and not p.username
+
+def fetch_hpe_report(url,force=False):
+ from industry_releases import fetch_official
+ return fetch_official(url,force=force)
+
+def hpe_period(end):
+ actual=date.fromisoformat(end)
+ if (actual.month,actual.day) not in {(1,31),(4,30),(7,31),(10,31)}:raise ValueError('HPE unexpected actual fiscal-quarter end')
+ q={1:1,4:2,7:3,10:4}[actual.month];month=actual.month-2;year=actual.year
+ if month<1:month+=12;year-=1
+ return f'FY{actual.year} Q{q}',date(year,month,1).isoformat()
+
+def parse_hpe_release(raw,release=None):
  pages=[p.extract_text() for p in PdfReader(io.BytesIO(raw)).pages]
- segment=next(p for p in pages if 'Server' in p and 'Net Revenue:' in p and 'Change (%)' in p)
+ segment=next((p for p in pages if 'Server' in p and 'Net Revenue:' in p and 'Change (%)' in p),'')
  if 'Cloud & AI' not in segment:raise ValueError('HPE FY2026 restated Cloud & AI segment scope missing')
  header=re.search(r'([A-Z][a-z]+ \d+, 20\d\d)\s+([A-Z][a-z]+ \d+, 20\d\d)\s+([A-Z][a-z]+ \d+, 20\d\d)',segment)
  if not header:raise ValueError('HPE actual quarter header not found')
  ends=[datetime.strptime(v,'%B %d, %Y').date().isoformat() for v in header.groups()]
  server=numbers(re.search(r'^\s*Server\s+([^\n]+)',segment,re.M)[1])
- margin=next(p for p in pages if re.search(r'^\s*GAAP gross profit margin\s+[\d]',p,re.M))
+ margin=next((p for p in pages if re.search(r'^\s*GAAP gross profit margin\s+[\d]',p,re.M)),'')
+ margin_header=re.search(r'([A-Z][a-z]+ \d+, 20\d\d)\s+([A-Z][a-z]+ \d+, 20\d\d)\s+([A-Z][a-z]+ \d+, 20\d\d)',margin)
+ if not margin_header or margin_header.groups()!=header.groups():raise ValueError('HPE margin dates differ from segment dates')
  margins=numbers(re.search(r'^\s*GAAP gross profit margin\s+([^\n]+)',margin,re.M)[1])
  if len(server)<3 or len(margins)<3 or len(set(ends))!=3:raise ValueError('HPE dated quarterly columns incomplete')
- return [{'periodEnd':end,'fiscalPeriod':f'FY{end[:4]} Q{int(end[5:7])//3+1}','server_revenue':server[i],'gross_margin':margins[i]} for i,end in enumerate(ends)]
+ if release:
+  current=f"FY{release['fiscalYear']} Q{release['quarter']}"
+  if hpe_period(ends[0])[0]!=current:raise ValueError('HPE candidate fiscal identity differs from actual table period')
+  if not re.search(r'For the three months ended',margin,re.I):raise ValueError('HPE quarterly gross-margin table required; cumulative margins rejected')
+  if not re.search(r'(?:Dollars|In)\s+(?:in\s+)?millions',segment,re.I):raise ValueError('HPE segment revenue unit is not USD millions')
+ return [{'periodEnd':end,'periodStart':hpe_period(end)[1],'fiscalPeriod':hpe_period(end)[0],'server_revenue':server[i],'gross_margin':margins[i]} for i,end in enumerate(ends)]
+
+def load_hpe_release(release,force=False):
+ url=release['url']
+ if not hpe_official_url(url):raise ValueError('HPE report outside official domain')
+ raw,stamp,version=fetch_hpe_report(url,force=force)
+ if raw.startswith(b'%PDF'):return parse_hpe_release(raw,release),url,stamp,version
+ soup=BeautifulSoup(raw,'html.parser');failures=[]
+ for a in soup.find_all('a',href=True):
+  target=urljoin(url,a['href']);label=a.get_text(' ',strip=True)+' '+target
+  if not hpe_official_url(target) or not urlparse(target).path.lower().endswith('.pdf') or not re.search(r'earnings|press.?release|financial.?results',label,re.I):continue
+  try:
+   pdf,stamp,version=fetch_hpe_report(target,force=force)
+   return parse_hpe_release(pdf,release),target,stamp,version
+  except Exception as e:failures.append(str(e))
+ raise ValueError('HPE official quarterly appendix unavailable or unvalidated'+(': '+'; '.join(failures) if failures else ''))
 
 class Builder:
- def __init__(self):self.defs={};self.points={};self.errors={}
+ def __init__(self,force=False):self.defs={};self.points={};self.errors={};self.ingested=[];self.force=force
  def add(self,id,name,family,entity,category,unit,url,stamp,version,end,value,items,*,frequency='quarterly',kind='reported',method='',start=None,fiscal=None,published=None,eligible=True,estimated=False):
   d=definition(id,name,name,category,family,entity,entity+' official disclosure',url,unit,kind,method,eligible,frequency)
   d['aggregation']='none' if frequency in ('quarterly','annual') else 'mean';d['sourceAdapter']='extended';self.defs[id]=d
@@ -43,14 +88,21 @@ class Builder:
     q,year=int(m[1]),2000+int(m[2]);start,end=quarter_dates('MSFT',year,q);value=numbers(row[i])[0]
     self.add('MSFT.backlog','商业剩余履约义务','backlog','MSFT','cloud','亿美元',url,stamp,version,end,value*10,{'reported_billion_usd':value},method='商业RPO包含递延收入和未来将开票确认金额，非Azure单项订单。十亿美元×10；期末存量，不对季度求和。',fiscal=f'FY{year} Q{q}',published=published_by_fy[fy])
  def hpe(self):
-  # Both releases use FY2026 segmentation; newer comparison columns win.
-  for quarter,published in HPE_RELEASES:
-   url=f'https://investors.hpe.com/~/media/Files/H/HP-Enterprise-IR/documents/{quarter}-2026/{quarter}-2026-earnings-press-release.pdf'
-   raw,stamp,version=fetch(url)
-   for row in parse_hpe_release(raw):
-    end=row['periodEnd'];fiscal=row['fiscalPeriod']
-    self.add('HPE.server_revenue','服务器收入（重述可比口径）','server_revenue','HPE','servers','亿美元',url,stamp,version,end,row['server_revenue']/100,{'Server_USD_million':row['server_revenue']},method='HPE FY2026组织调整后的Server口径，比较期按公司重述列。含传统与AI服务器，不等于AI服务器销售。百万美元÷100。',fiscal=fiscal,published=published)
-    self.add('HPE.gross_margin','GAAP毛利率','gross_margin','HPE','servers','%',url,stamp,version,end,row['gross_margin'],{'reported_percent':row['gross_margin']},method='公司披露GAAP毛利率，比较变化使用百分点。',fiscal=fiscal,published=published)
+  # Reviewed baseline remains usable; future releases only follow discovered official links.
+  failures=[]
+  try:discovered=hpe_candidates()
+  except Exception as e:discovered=[];failures.append('官方发布发现失败：'+str(e))
+  releases=list({(r['fiscalYear'],r['quarter']):r for r in [*HPE_HISTORY,*discovered]}.values())
+  for release in sorted(releases,key=lambda r:(r['fiscalYear'],r['quarter'])):
+   try:
+    rows,url,stamp,version=load_hpe_release(release,force=self.force)
+    for row in rows:
+     end=row['periodEnd'];fiscal=row['fiscalPeriod'];published=release['publishedAt']
+     self.add('HPE.server_revenue','服务器收入（重述可比口径）','server_revenue','HPE','servers','亿美元',url,stamp,version,end,row['server_revenue']/100,{'Server_USD_million':row['server_revenue'],'segmentScope':'FY2026 restated Cloud & AI / Server'},method=HPE_METHOD,start=row['periodStart'],fiscal=fiscal,published=published)
+     self.add('HPE.gross_margin','GAAP毛利率','gross_margin','HPE','servers','%',url,stamp,version,end,row['gross_margin'],{'reported_percent':row['gross_margin']},method='公司披露单季GAAP毛利率，比较变化使用百分点；按同一组三个月实际财期与Server表核对。',start=row['periodStart'],fiscal=fiscal,published=published)
+    self.ingested.append({**{k:release[k] for k in ('entity','url','fiscalYear','quarter','publishedAt')},'periodEnd':rows[0]['periodEnd'],'parsedAt':stamp,'financialSourceUrl':url})
+   except Exception as e:failures.append(f"FY{release['fiscalYear']} Q{release['quarter']}: {e}")
+  if failures:raise ValueError('; '.join(failures))
  def transformer(self):
   code='WPU117409';url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+code
   raw,stamp,version=fetch(url)
@@ -124,7 +176,7 @@ class Builder:
     try:future.result();print(name,'OK',flush=True)
     except Exception as e:self.errors[name]=str(e);print(name,str(e),flush=True)
   path=DATA/'extended.json';old=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'definitions':[],'series':{}}
-  result={'definitions':list(self.defs.values()),'series':{},'projects':[],'events':[],'generatedAt':now()}
+  result={'definitions':list(self.defs.values()),'series':{},'projects':[],'events':[],'generatedAt':now(),'ingestedReleases':list({(r['entity'],r['url'],r['fiscalYear'],r['quarter']):r for r in [*old.get('ingestedReleases',[]),*self.ingested]}.values())}
   for id,points in self.points.items():
    prior=old['series'].get(id,{}).get('observations',[])
    if id=='POWER.equipment_price':prior=[p for p in prior if p.get('originalItems',{}).get('source_series')=='WPU117409']
@@ -136,4 +188,5 @@ class Builder:
   for d in old['definitions']:
    if d['id'] not in result['series']:result['definitions'].append(d);result['series'][d['id']]={**old['series'][d['id']],'status':'cached','checkedAt':now(),'error':'来源未返回新数据，保留缓存'}
   persist(result,path);print('Extended metrics',len(result['series']),flush=True)
-if __name__=='__main__':Builder().run()
+if __name__=='__main__':
+ parser=argparse.ArgumentParser();parser.add_argument('--force',action='store_true');Builder(force=parser.parse_args().force).run()
