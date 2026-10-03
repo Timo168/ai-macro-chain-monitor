@@ -11,7 +11,7 @@ permissions:
   id-token: write
 concurrency:
   group: macro-data-and-pages
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name != 'schedule' }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -46,7 +46,12 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           REASONING_MODEL: ${{ vars.REASONING_MODEL }}
-        run: node scripts/build-investment-research.mjs
+          SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: |
+          python scripts/research_market.py
+          python scripts/research_alfred.py
+          node scripts/build-investment-research.mjs
       - name: Verify calculations and collectors
         run: |
           node --test tests/calculations.test.mjs
@@ -54,6 +59,8 @@ jobs:
           node --test tests/research.test.mjs
           node --test tests/quant-model.test.mjs
           node --test tests/financial-updates.test.mjs
+          node --test tests/research-evolution.test.mjs tests/research-tracking.test.mjs tests/valuation.test.mjs
+          python tests/research_market_test.py
           python tests/collector_test.py
           python tests/industry_collector_test.py
           python tests/sector_financials_test.py

@@ -2,14 +2,14 @@
 import argparse, pathlib, shutil, subprocess, sqlite3, tempfile
 ROOT=pathlib.Path(__file__).resolve().parents[1];WORK=ROOT/'.data-work';DATA=ROOT/'data'
 FILES=['latest.json','calendar.json','scheduler.json','observations.sqlite','policy-rates.json','policy-decisions.json']
-INDUSTRY_FILES=['latest.json','research.json','research-history.json','companies.json','hardware.json','oracle.json','costs.json','infrastructure.json','sia.json','extended.json','power-load.json','projects.json','sector-financials.json','institutions.json','release-discovery.json','reviewed-cache.json','scheduler.json']
+INDUSTRY_FILES=['latest.json','research.json','research-history.json','research-ledger.json','research-followup.json','research-market.json','research-alfred.json','companies.json','hardware.json','oracle.json','costs.json','infrastructure.json','sia.json','extended.json','power-load.json','projects.json','sector-financials.json','institutions.json','release-discovery.json','reviewed-cache.json','scheduler.json']
 
 def industry_state(source,destination):
     if not source.exists():return
     destination.mkdir(parents=True,exist_ok=True)
     for name in INDUSTRY_FILES:
         if (source/name).exists():shutil.copy2(source/name,destination/name)
-    for name in ['parsed','recommendations','research-inputs']:
+    for name in ['parsed','recommendations','research-inputs','research-market-versions','research-vintages']:
         if (source/name).exists():shutil.copytree(source/name,destination/name,dirs_exist_ok=True)
     if (source/'industry.sqlite').exists():
         connection=sqlite3.connect(source/'industry.sqlite');backup=sqlite3.connect(destination/'industry.sqlite')
@@ -80,7 +80,7 @@ def save():
     git('add','.',cwd=WORK)
     # These new audit artifacts are intentionally ignored in the source branch,
     # but are durable public-data state on data-cache and must be versioned there.
-    for relative in ['industry/research.json','industry/research-history.json','industry/research-inputs']:
+    for relative in ['industry/research.json','industry/research-history.json','industry/research-inputs','industry/research-ledger.json','industry/research-followup.json','industry/research-market.json','industry/research-market-versions','industry/research-alfred.json','industry/research-vintages']:
         if (WORK/relative).exists():git('add','-f',relative,cwd=WORK)
     changed=git('diff','--cached','--quiet',cwd=WORK,check=False).returncode
     if changed:

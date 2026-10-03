@@ -11,6 +11,7 @@ import './industry.css';
 import './data-quality.css';
 import {InstitutionalSources,ReadinessDetail,ResearchDeliveryStatus} from './research-sources';
 import {FinancialUpdates} from './financial-updates';
+import {ResearchProgress} from './research-progress';
 
 const tabs=[['overview','产业总览'],['metrics','指标看板'],['companies','公司对比'],['conclusions','投资结论'],['sources','数据说明']];
 const categories=[['capex','云厂商资本开支'],['cloud','云业务需求'],['projects','数据中心建设'],['power','电力与基础设施'],['servers','服务器与网络设备'],['semiconductor','半导体需求'],['costs','上游成本']];
@@ -53,7 +54,7 @@ export default function Industry(){
    <div className="industry-chart-grid">{data.definitions.filter(d=>d.category===category&&`${d.nameZh} ${d.entity} ${d.nameEn}`.toLowerCase().includes(search.toLowerCase())).map(d=><MetricCard key={d.id} def={d} data={data} now={now} recommendations={recommendations}/>)}</div>
    {!data.definitions.some(d=>d.category===category)&&<div className="industry-empty">该环节尚未接入可验证指标。</div>}</>}
   {tab==='companies'&&<CompanyComparison data={data}/>}
-  {tab==='conclusions'&&<><ResearchConclusionPanelV2 research={research} issue={researchIssue} data={data} showMetric={showMetric}/><details className="industry-panel"><summary>查看底层方向规则与历史</summary><p className="industry-small">以下规则描述已接入数据的方向，未检查连续历史。正式研究结论以本页上方因子模型为准。</p><div className="industry-recommendation-grid">{recommendations.map(r=><RecommendationCard key={r.targetId} recommendation={r} data={data} showMetric={showMetric}/>)}</div><History history={recommendationHistory}/></details></>}
+  {tab==='conclusions'&&<><ResearchProgress research={research} showMetric={showMetric}/><ResearchConclusionPanelV2 research={research} issue={researchIssue} data={data} showMetric={showMetric}/><details className="industry-panel"><summary>查看底层方向规则与历史</summary><p className="industry-small">以下规则描述已接入数据的方向，未检查连续历史。正式研究结论以本页上方因子模型为准。</p><div className="industry-recommendation-grid">{recommendations.map(r=><RecommendationCard key={r.targetId} recommendation={r} data={data} showMetric={showMetric}/>)}</div><History history={recommendationHistory}/></details></>}
   {tab==='sources'&&<><FinancialUpdates data={data}/><InstitutionalSources data={data} showMetric={showMetric}/><Sources data={data} now={now}/></>}
   </>}
  </section>

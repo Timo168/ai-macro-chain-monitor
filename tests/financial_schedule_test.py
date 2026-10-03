@@ -44,5 +44,13 @@ class ReleaseScheduling(unittest.TestCase):
    self.assertEqual(run.call_args.kwargs['creationflags'],schedule.CREATE_NO_WINDOW)
    self.assertEqual(run.call_args.kwargs['startupinfo'],schedule.WINDOWS_STARTUPINFO)
    self.assertEqual(run.call_args.kwargs['stdout'],schedule.subprocess.DEVNULL)
+ def test_reference_collectors_precede_research_and_use_hidden_runner(self):
+  with patch.object(schedule,'run_background',return_value=type('Result',(),{'returncode':0})()) as run:
+   schedule.refresh_research()
+   self.assertEqual([pathlib.Path(c.args[0][1]).name for c in run.call_args_list],['research_market.py','research_alfred.py','build-investment-research.mjs'])
+ def test_reference_timeout_still_builds_conclusion_with_last_cached_values(self):
+  success=type('Result',(),{'returncode':0})()
+  with patch.object(schedule,'run_background',side_effect=[TimeoutError('source timeout'),success,success]) as run:
+   schedule.refresh_research();self.assertEqual(len(run.call_args_list),3)
 
 if __name__=='__main__':unittest.main()

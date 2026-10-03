@@ -155,6 +155,16 @@ def financial_release_checks(state,current,force=False,daily_scripts=()):
     prior['nextCheckAt']=(current+timedelta(minutes=30)).isoformat()
     return failures
 
+def refresh_research():
+    for script in ['research_market.py','research_alfred.py']:
+        try:
+            supplement=run_background([sys.executable,str(ROOT/'scripts'/script)],cwd=ROOT,timeout=600)
+            if supplement.returncode:print(script+' failed; retaining last successful reference data')
+        except Exception as error:
+            print(script+' unavailable; retaining last successful reference data: '+str(error)[:160])
+    result=run_background(['node',str(ROOT/'scripts/build-investment-research.mjs')],cwd=ROOT)
+    if result.returncode:raise RuntimeError('Investment research build failed; last successful snapshot retained')
+
 def run(force=False,build_research=True):
     reviewed=DATA/'public-reviewed.json'
     if reviewed.exists():materialize()
@@ -204,6 +214,5 @@ def run(force=False,build_research=True):
     result=run_background(['node',str(ROOT/'scripts/build-industry.mjs')],cwd=ROOT)
     if result.returncode:raise RuntimeError('Industry build failed; last successful snapshot retained')
     if build_research:
-        result=run_background(['node',str(ROOT/'scripts/build-investment-research.mjs')],cwd=ROOT)
-        if result.returncode:raise RuntimeError('Investment research build failed; last successful snapshot retained')
+        refresh_research()
 if __name__=='__main__':run('--force' in sys.argv,'--skip-research' not in sys.argv)
