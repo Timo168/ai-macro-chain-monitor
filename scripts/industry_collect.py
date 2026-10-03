@@ -222,7 +222,7 @@ def sources():
    items.append({'entity':'AMZN','year':y,'q':q,'url':f'https://s2.q4cdn.com/299287126/files/doc_earnings/{y}/q{q}/earnings-result/AMZN-Q{q}-{y}-Earnings-Release.pdf'})
    word={1:'First',2:'Second',3:'Third',4:'Fourth'}[q]
    items.append({'entity':'META','year':y,'q':q,'url':f'https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-{word}-Quarter-{y}-Results-{y}.pdf'})
- for fy,q in [(2026,1),(2026,2),(2026,3),(2026,4),(2027,1),(2027,2)]:
+ for fy,q in [(fy,q) for fy in (2024,2025,2026) for q in (1,2,3,4)]+[(2027,1),(2027,2)]:
   word={1:'first',2:'second',3:'third',4:'fourth'}[q];suffix=f'{word}-quarter-'+('and-' if q==4 else '')+f'fiscal-{fy}';items.append({'entity':'NVDA','year':fy,'q':q,'url':f'https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-{suffix}'})
  return [item for entity in ('MSFT','GOOG','AMZN','META','NVDA') for item in dynamic_sources(entity,[r for r in items if r['entity']==entity])]
 def load_one(item):
@@ -309,6 +309,8 @@ def run(entities=None):
    result['definitions'].append(d);result['series'][d['id']]=old['series'][d['id']] if d.get('entity') not in selected else {**old['series'][d['id']],'status':'cached','checkedAt':now(),'error':'未能刷新该指标，保留最后成功观测。'}
  result['sourceRuns']=[r for r in old.get('sourceRuns',[]) if r.get('entity') not in selected]+[{k:r.get(k) for k in ('entity','year','q','url','status','checkedAt','error','publishedAt')} for r in records]
  result['ingestedReleases']=merge_ingested(old.get('ingestedReleases',[]),records)
+ from industry_bootstrap import restore_bootstrap
+ if DATA.resolve()==(__import__('pathlib').Path(__file__).resolve().parents[1]/'data'/'industry').resolve():result=restore_bootstrap('accelerator-history.json',result,backfill_history=True)
  persist(result,path);print('industry company metrics:',len(result['series']),flush=True)
 if __name__=='__main__':
  cli=argparse.ArgumentParser();cli.add_argument('--force',action='store_true');cli.add_argument('--entity',action='append',choices=('MSFT','GOOG','AMZN','META','NVDA'));args=cli.parse_args();run(args.entity)

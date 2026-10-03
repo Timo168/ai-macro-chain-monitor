@@ -160,3 +160,14 @@ test('only permitted reports enter the prompt and each fact preserves actual ver
  assert.throws(()=>validateModelAnalysis({...base,sectorViews:[sector,base.sectorViews[1]]},input),/情景边界/);
  assert.equal(validateModelAnalysis({...base,sectorViews:[{...sector,thesis:'机构预测情景提示需求可能增加，实际兑现仍需后续验证。'},base.sectorViews[1]]},input).origin,'model');
 });
+
+test('new model outputs require three conditional scenarios and exact references',()=>{
+ const input=packet(),base=modelOutput(input);
+ assert.throws(()=>validateModelAnalysis(base,input,{requireScenarios:true}),/三个不同/);
+ const views=base.sectorViews.map(view=>({...view,positiveCase:'投入数据提供正面线索，仍待验证。',contraryCase:'关键建设历史仍有缺口。',scenarios:['base','upside','downside'].map(name=>({name,assumption:'若后续正式披露维持当前方向。',implication:'则保持条件性的观察倾向。',invalidation:'需求或盈利连续走弱时重新核验。',evidenceRefs:view.evidenceRefs}))}));
+ const value={...base,sectorViews:views};
+ assert.equal(validateModelAnalysis(value,input,{requireScenarios:true}).sectorViews[0].scenarios.length,3);
+ assert.throws(()=>validateModelAnalysis({...value,sectorViews:[{...views[0],scenarios:[views[0].scenarios[0],views[0].scenarios[0],views[0].scenarios[2]]},views[1]]},input,{requireScenarios:true}),/三个不同/);
+ assert.throws(()=>validateModelAnalysis({...value,sectorViews:[{...views[0],scenarios:[{...views[0].scenarios[0],evidenceRefs:[{metricId:'fake',observationVersion:'fake',periodEnd:'2026-06-30'}]},...views[0].scenarios.slice(1)]},views[1]]},input,{requireScenarios:true}),/情景引用/);
+ assert.throws(()=>validateModelAnalysis({...value,sectorViews:[{...views[0],evidenceRefs:[{metricId:'MSFT.capex'}]},views[1]]},input,{requireScenarios:true}),/引用缺少完整/);
+});

@@ -100,3 +100,19 @@ test('project-level capacity samples stay out of formal reachability even when t
  assert.equal(recommendation.formalCoverage,0);
  assert.equal(recommendation.level,'insufficient_data');
 });
+
+test('issuer operating capacity respects explicit targets and development cannot become construction',()=>{
+ const operating={id:'EQIX.operational_capacity',entity:'EQIX',family:'operational_capacity',unit:'MW',frequency:'quarterly',normalUpdateDelayDays:65,recommendationEligible:true,valueType:'reported',reportingScope:'operator_portfolio',researchTargets:['data_centers']};
+ const development={...operating,id:'EQIX.development_capacity',family:'development_capacity',recommendationEligible:false};
+ const reach=ruleReachability([operating,development]);
+ assert.equal(reach.find(r=>r.targetId==='data_centers').unavailableDimensions.includes('construction'),false);
+ assert.equal(reach.find(r=>r.targetId==='overall').unavailableDimensions.includes('construction'),true);
+ assert.equal(ruleReachability([development]).find(r=>r.targetId==='data_centers').unavailableDimensions.includes('construction'),true);
+});
+
+test('52/53-week fiscal quarter ends do not produce false missing calendar quarters',()=>{
+ const rows=['2024-11-01','2025-01-31','2025-05-02','2025-08-01','2025-10-31','2026-01-30','2026-05-01','2026-07-31'].map((date,index)=>p(date,100+index));
+ assert.deepEqual(historyCompleteness(def,rows).missingPeriods,[]);
+ assert.equal(chartRows(def,rows,{range:'all'}).length,8);
+ assert.equal(historyCompleteness(def,rows.filter(point=>point.periodEnd!=='2025-05-02')).missingPeriods.length,1);
+});

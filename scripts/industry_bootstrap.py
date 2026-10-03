@@ -147,7 +147,7 @@ def _cached(record, current_record, filename, checksum):
     return result
 
 
-def restore_bootstrap(filename, current, bootstrap_dir=None):
+def restore_bootstrap(filename, current, bootstrap_dir=None, backfill_history=False):
     """Return a copied dataset with permitted empty series/reports restored.
 
     Manifest shape: {"schemaVersion":"1","files":{"file.json":{
@@ -198,6 +198,13 @@ def restore_bootstrap(filename, current, bootstrap_dir=None):
     for metric_id, record in seed.get('series', {}).items():
         existing = current.get('series', {}).get(metric_id, {})
         if any(_numeric(point.get('value')) for point in existing.get('observations', [])):
+            if backfill_history:
+                seed_points={point['periodEnd']:copy.deepcopy(point) for point in record.get('observations', []) if _numeric(point.get('value'))}
+                live_points={point['periodEnd']:copy.deepcopy(point) for point in existing.get('observations', [])}
+                added=set(seed_points)-set(live_points)
+                if added:
+                    seed_points.update(live_points)
+                    result['series'][metric_id]={**existing,'observations':sorted(seed_points.values(),key=lambda point:point['periodEnd']),'bootstrapFile':filename,'bootstrapSha256':checksum,'note':str(existing.get('note',''))+' 已从核验缓存补回缺少的历史期，当前来源数值优先。'}
             continue
         if not any(_numeric(point.get('value')) for point in record.get('observations', [])):
             continue

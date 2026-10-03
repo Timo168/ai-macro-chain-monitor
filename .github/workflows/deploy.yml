@@ -46,6 +46,11 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           REASONING_MODEL: ${{ vars.REASONING_MODEL }}
+          REASONING_EFFORT: ${{ vars.REASONING_EFFORT }}
+          REASONING_MAX_DAILY_CALLS: ${{ vars.REASONING_MAX_DAILY_CALLS }}
+          REASONING_MAX_OUTPUT_TOKENS: ${{ vars.REASONING_MAX_OUTPUT_TOKENS }}
+          REASONING_TIMEOUT_SECONDS: ${{ vars.REASONING_TIMEOUT_SECONDS }}
+          REASONING_RETRY_MINUTES: ${{ vars.REASONING_RETRY_MINUTES }}
           SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: |
@@ -56,7 +61,7 @@ jobs:
         run: |
           node --test tests/calculations.test.mjs
           node --test tests/industry.test.mjs
-          node --test tests/research.test.mjs
+          node --test tests/research.test.mjs tests/model-runtime.test.mjs tests/research-pipeline.test.mjs
           node --test tests/quant-model.test.mjs
           node --test tests/financial-updates.test.mjs
           node --test tests/research-evolution.test.mjs tests/research-tracking.test.mjs tests/valuation.test.mjs tests/project-events.test.mjs
@@ -64,6 +69,7 @@ jobs:
           python tests/research_state_test.py
           python tests/collector_test.py
           python tests/industry_collector_test.py
+          python tests/supply_evidence_test.py
           python tests/sector_financials_test.py
           python tests/institution_sources_test.py
           python tests/industry_bootstrap_test.py

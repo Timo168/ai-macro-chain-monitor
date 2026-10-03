@@ -21,6 +21,7 @@ from industry_common import DATA, ROOT, atomic, fetch, now
 PATH = DATA / 'release-discovery.json'
 VERSION = 1
 SOURCES = {
+    'ANET': ['https://investors.arista.com/Communications/Press-Releases-and-Events/default.aspx'],
     'DELL': ['https://investors.delltechnologies.com/news-events/press-release'],
     'AMD': ['https://ir.amd.com/news-events/press-releases?category=financial'],
     'NVDA': ['https://nvidianews.nvidia.com/helper-search-news?ct=releases&page=1&q=financial%20results'],
@@ -36,6 +37,7 @@ SOURCES = {
     'VRT': ['https://investors.vertiv.com/financials/quarterly-results/default.aspx'],
 }
 HOSTS = {
+    'ANET': {'investors.arista.com', 's21.q4cdn.com'},
     'DELL': {'investors.delltechnologies.com'},
     'AMD': {'ir.amd.com', 'www.amd.com'},
     'NVDA': {'investor.nvidia.com', 'nvidianews.nvidia.com'},

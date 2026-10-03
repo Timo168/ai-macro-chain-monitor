@@ -4,6 +4,7 @@ import {buildFallbackAnalysis,buildResearchPacket,modelJsonSchema,modelPrompt,RE
 import {researchCheckpoint,appendCheckpoint,compareCheckpoints} from '../lib/industry/research-evolution.mjs';
 import {buildTracking} from '../lib/industry/research-tracking.mjs';
 import {buildValuations} from '../lib/industry/valuation.mjs';
+import {modelSettings,callPermission,callReasoning,citationAudit,MODEL_RUNTIME_VERSION} from '../lib/industry/model-runtime.mjs';
 
 const folder='data/industry';
 const output=folder+'/research.json';
@@ -24,38 +25,30 @@ const macro=read(macroPath,{series:{}});
 const macroDefinitions=read('lib/indicators.json',[]);
 const policyRates=read(policyRatesPath,{series:[]});
 const policyDecisions=read(policyDecisionsPath,{decisions:[],checks:[]});
-const configuredModel=process.env.REASONING_MODEL?.trim()||'gpt-5-mini';
+const settings=modelSettings();
+const configuredModel=settings.model;
 const key=process.env.OPENAI_API_KEY?.trim();
 const packet=buildResearchPacket(industry,macro,macroDefinitions,policyRates,policyDecisions);
 // Archive the complete vintage for recomputation, while the website and model
 // receive only the compact evidence packet. A background check timestamp alone
 // must not invalidate an otherwise identical model input.
 const {calculationInputs,observationManifest,...publicPacket}=packet;
-const inputHash=hash({promptVersion:RESEARCH_PROMPT_VERSION,model:configuredModel,packet:publicPacket});
+const inputHash=hash({promptVersion:RESEARCH_PROMPT_VERSION,model:configuredModel,effort:settings.effort,runtimeVersion:MODEL_RUNTIME_VERSION,packet:publicPacket});
 const inputs={industry:{version:snapshotVersion(industry),generatedAt:industry.generatedAt??null},macro:{version:snapshotVersion(macro),generatedAt:macro.generatedAt??null},policyRates:{version:snapshotVersion(policyRates),generatedAt:policyRates.generatedAt??null},policyDecisions:{version:snapshotVersion(policyDecisions),generatedAt:policyDecisions.generatedAt??null}};
 const cutoffOf=items=>items.filter(Boolean).sort().at(-1)??null;
 const dataCutoffs={industry:cutoffOf(packet.quantitative.sectorSignals.map(signal=>signal.dataCutoffAt)),macro:cutoffOf(packet.macroSignals.map(signal=>signal.latestDate)),policy:cutoffOf(packet.policyRateSignals.map(signal=>signal.latestDate)),projects:cutoffOf(packet.fullSiteContext.projects.records.map(project=>project.latestEventDate))};
 
 function safeError(error){const text=String(error?.message??error).replace(/[\r\n]+/g,' ');return (key?text.replaceAll(key,'[redacted]'):text).slice(0,220);}
-function outputText(payload){
- if(typeof payload?.output_text==='string')return payload.output_text;
- for(const item of payload?.output??[])for(const content of item?.content??[])if(typeof content?.text==='string')return content.text;
- throw Error('模型响应中没有结构化文本');
-}
 async function requestModel(){
- const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),45000);
- try{
-  const response=await fetch('https://api.openai.com/v1/responses',{method:'POST',signal:controller.signal,headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:configuredModel,instructions:'输出简体中文的结构化产业研究结论。只能解释已验证数据，遵守所有 JSON Schema 与个股边界。',input:modelPrompt(packet),max_output_tokens:3200,text:{format:modelJsonSchema(packet)}})});
-  if(!response.ok)throw Error(`模型请求失败 HTTP ${response.status}`);
-  const payload=await response.json();
-  return {raw:JSON.parse(outputText(payload)),requestId:payload?._request_id??payload?.id??null};
- }finally{clearTimeout(timer);}
+ return callReasoning({key,settings,prompt:modelPrompt(packet),schema:modelJsonSchema(packet)});
 }
 
 const now=new Date().toISOString();
 const localAsOf=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(now));
 let analysis=buildFallbackAnalysis(packet);
-let model={status:'not_configured',provider:'OpenAI Responses API',model:configuredModel,promptVersion:RESEARCH_PROMPT_VERSION,generatedAt:null,lastSuccessfulAt:previous?.model?.lastSuccessfulAt??null,checkedAt:now,requestId:null,cacheReason:null,error:null,outputHash:null};
+const callsPath=folder+'/research-model-calls.json';
+const calls=read(callsPath,[]);
+let model={status:'not_configured',provider:'OpenAI Responses API',model:configuredModel,effort:settings.effort,runtimeVersion:MODEL_RUNTIME_VERSION,promptVersion:RESEARCH_PROMPT_VERSION,generatedAt:null,lastSuccessfulAt:previous?.model?.lastSuccessfulAt??null,checkedAt:now,requestId:null,cacheReason:null,error:null,outputHash:null,usage:null,citationAudit:null};
 const sameInput=previous?.inputHash===inputHash;
 const reusableModel=sameInput&&previous?.analysis?.origin==='model'&&['ready','cached'].includes(previous?.model?.status);
 if(key){
@@ -63,23 +56,35 @@ if(key){
   analysis=previous.analysis;
   model={...previous.model,status:'cached',checkedAt:now,cacheReason:'unchanged_input',error:null};
  }else{
+  const permission=callPermission(calls,settings,inputHash,now);
+  if(!permission.allowed){model={...model,status:'deferred',cacheReason:permission.reason,error:permission.reason==='daily_call_limit'?'达到后台每日调用次数设置，等待下一日。':'上次调用失败，正在等待后台重试。'};}
+  else{
   let response;
+  const call={attemptedAt:now,inputHash,model:configuredModel,effort:settings.effort,promptVersion:RESEARCH_PROMPT_VERSION,status:'fetch_failed',usage:null,citationAudit:null};
   try{response=await requestModel();}
   catch(error){
+   Object.assign(call,error.metadata??{},{error:safeError(error)});
    if(sameInput&&previous?.analysis?.origin==='model'){
     analysis=previous.analysis;
     model={...previous.model,status:'cached',checkedAt:now,cacheReason:'request_failed',error:safeError(error)};
-   }else model={...model,status:'fetch_failed',error:safeError(error)};
+   }else model={...model,...(error.metadata??{}),status:'fetch_failed',error:safeError(error)};
   }
   if(response){
+   Object.assign(call,{requestId:response.requestId,responseId:response.responseId,resolvedModel:response.usage.resolvedModel,elapsedMs:response.elapsedMs,usage:response.usage});
    try{
-    analysis=validateModelAnalysis(response.raw,packet);
-    model={...model,status:'ready',generatedAt:now,lastSuccessfulAt:now,requestId:response.requestId,outputHash:hash(analysis)};
-   }catch(error){model={...model,status:'rejected',requestId:response.requestId,error:safeError(error)};}
+    const audit=citationAudit(response.raw,packet);call.citationAudit=audit;
+    if(audit.invalid)throw Error('模型引用未通过精确版本校验');
+    analysis=validateModelAnalysis(response.raw,packet,{requireScenarios:true});
+    call.status='ready';
+    model={...model,status:'ready',generatedAt:now,lastSuccessfulAt:now,requestId:response.requestId,resolvedModel:response.usage.resolvedModel,usage:response.usage,citationAudit:audit,elapsedMs:response.elapsedMs,outputHash:hash(analysis)};
+   }catch(error){call.status='rejected';call.error=safeError(error);model={...model,status:'rejected',requestId:response.requestId,resolvedModel:response.usage.resolvedModel,usage:response.usage,citationAudit:call.citationAudit,error:safeError(error)};}
+  }
+  calls.push(call);writeJsonAtomic(callsPath,calls);
   }
  }
 }
 const result={schemaVersion:'2',generatedAt:now,inputHash,inputs,dataCutoffs,model,quantitative:packet.quantitative,evidence:{macroSignals:packet.macroSignals,policyRateSignals:packet.policyRateSignals,institutionalReports:packet.institutionalReports,sourceRefs:packet.sourceRefs,dataGaps:packet.dataGaps,inputCoverage:packet.inputCoverage,guardrails:packet.guardrails,inputSnapshot:publicPacket},analysis};
+result.modelAudit={totalCalls:calls.length,successfulCalls:calls.filter(call=>call.status==='ready').length,rejectedCalls:calls.filter(call=>call.status==='rejected').length,estimatedCostUsd:calls.reduce((sum,call)=>sum+(call.usage?.estimatedCostUsd??0),0),unpricedCalls:calls.filter(call=>call.usage?.estimatedCostUsd==null).length,maxDailyCalls:settings.maxDailyCalls,note:'引用匹配率只衡量来源版本匹配；费用为可计价调用的小计，未计价调用另列。'};
 const ledgerPath=folder+'/research-ledger.json';
 let ledger=read(ledgerPath,[]);
 // Only actual previously saved output can establish the first comparison.

@@ -42,6 +42,14 @@ test('industry evidence factor model returns bounded, reproducible scored signal
  assert.ok(first.dataQualityScore>0&&first.dataQualityScore<=100);
 });
 
+test('complete same-issuer history takes precedence over a short extreme duplicate family',()=>{
+ const duplicate=definition('MSFT.cloud_short','MSFT','cloud_revenue');
+ const short={observations:series['MSFT.cloud'].observations.slice(-5).map((p,i)=>({...p,value:i===4?1000:p.value}))};
+ const signal=buildQuantitativeSignal({...recommendation,positiveEvidence:[...recommendation.positiveEvidence,item(duplicate.id,'positive','demand')]},{definitions:[...definitions,duplicate],series:{...series,[duplicate.id]:short},macroSignals:macro});
+ assert.equal(signal.scoringGate,'passed');
+ const demand=signal.factorContributions.find(f=>f.id==='demand');assert.ok(demand.formalMetricIds.includes('MSFT.cloud'));assert.equal(demand.metricIds.includes(duplicate.id),false);
+});
+
 test('missing evidence and short histories suspend a score instead of turning them into zero',()=>{
  const missing=buildQuantitativeSignal({...recommendation,level:'insufficient_data',coverage:.75,missingMetrics:['PROJECT.construction_capacity']},{definitions,series,macroSignals:macro});
  assert.equal(missing.score,null);

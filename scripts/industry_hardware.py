@@ -23,22 +23,29 @@ def parse_dell_release(raw,year,q):
  if not re.search(r'Dell Technologies (?:Delivers|Announces) '+word+r'[- ]Quarter(?: and Full[- ]Year)? Fiscal '+str(year),text,re.I):raise ValueError('Dell公告财年/季度不一致')
  pnl=next(t for t in tables if row_numbers(t,'Total net revenue') and 'Three Months Ended' in ' '.join(' '.join(r) for r in t[:6]))
  periods=dates(pnl)[:2];revenue=row_numbers(pnl,'Total net revenue');gross=row_numbers(pnl,'Gross margin')
- segment=next(t for t in tables if row_numbers(t,'AI-optimized servers'))
+ segment=next(t for t in tables if row_numbers(t,'AI-optimized servers') or row_numbers(t,'Servers and networking'))
  if len(periods)!=2 or periods!=dates(segment)[:2] or 'millions' not in ' '.join(' '.join(r) for r in pnl[:6]).lower() or 'Three Months Ended' not in ' '.join(' '.join(r) for r in segment[:6]):raise ValueError('Dell季度收入与分部日期/百万美元单位不一致')
  validate_fiscal_end('DELL',year,q,periods[0]);validate_fiscal_end('DELL',year-1,q,periods[1])
  values={'revenue':revenue,'gross_profit':gross}
- for family,label in [('ai_server_revenue','AI-optimized servers'),('server_revenue','Traditional servers and networking'),('storage_revenue','Storage')]:values[family]=row_numbers(segment,label)
+ for family,label in [('ai_server_revenue','AI-optimized servers'),('server_revenue','Traditional servers and networking'),('storage_revenue','Storage'),('servers_networking_revenue','Servers and networking')]:
+  v=row_numbers(segment,label)
+  if v:values[family]=v
+ # The older combined business is a separate series; never relabel it as AI-only.
+ if 'servers_networking_revenue' not in values and 'ai_server_revenue' in values and 'server_revenue' in values:
+  values['servers_networking_revenue']=[a+b for a,b in zip(values['ai_server_revenue'],values['server_revenue'])]
  if any(len(v)<2 for v in values.values()) or any(v<=0 for v in revenue[:2]):raise ValueError('Dell季度收入/分部数值不足')
  balance=next((t for t in tables if row_numbers(t,'Inventories')),None);inventory=[]
  if balance:
   balance_values=row_numbers(balance,'Inventories');balance_dates=dates(balance)
   if len(balance_values)<len(balance_dates[:2]):raise ValueError('Dell库存列与日期不一致')
   inventory=[{'periodEnd':end,'value':balance_values[i]} for i,end in enumerate(balance_dates[:2])]
- return {'periods':periods,'values':{key:value[:2] for key,value in values.items()},'inventory':inventory}
+ return {'periods':periods,'values':{key:value[:2] for key,value in values.items()},'inventory':inventory,'combinedDerived':not bool(row_numbers(segment,'Servers and networking'))}
 
 def hardware_sources(entity):
  if entity=='DELL':
-  bootstrap=[{'entity':'DELL','year':2027,'q':q,'url':f'https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-{word}-quarter-fiscal-2027-financial'} for q,word in [(1,'first'),(2,'second')]]
+  bootstrap=[{'entity':'DELL','year':fy,'q':q,'url':f'https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-{word}-quarter-fiscal-{fy}-financial'} for fy in (2025,2026,2027) for q,word in [(1,'first'),(2,'second'),(3,'third')] if fy<2027 or q<3]
+  bootstrap.append({'entity':'DELL','year':2026,'q':4,'url':'https://investors.delltechnologies.com/node/19176','publishedAt':'2026-02-26'})
+  bootstrap.append({'entity':'DELL','year':2026,'q':3,'url':'https://investors.delltechnologies.com/node/19036','publishedAt':'2025-11-25'})
  elif entity=='AMD':bootstrap=[{'entity':'AMD','year':2026,'q':q,'url':url,'publishedAt':published} for q,(url,published) in enumerate(AMD_RELEASES,1)]
  else:raise ValueError('Unsupported dynamic hardware entity')
  return dynamic_sources(entity,bootstrap)
@@ -72,9 +79,14 @@ def run(entities=None):
    for i,end in enumerate(periods):
     fiscal=f'FY{year-i} Q{q}';add('DELL.revenue','营业收入','revenue','DELL','亿美元','reported',url,end,revenue[i]/100,stamp,version,{'Total net revenue USD million':revenue[i]},fiscal,published=published)
     add('DELL.gross_margin','GAAP毛利率','gross_margin','DELL','%','calculated',url,end,gross[i]/revenue[i]*100,stamp,version,{'Gross profit USD million':gross[i],'Revenue USD million':revenue[i]},fiscal,published=published)
-   for family,name,label in [('ai_server_revenue','AI优化服务器收入','AI-optimized servers'),('server_revenue','传统服务器与网络收入','Traditional servers and networking'),('storage_revenue','存储设备收入','Storage')]:
+   for family,name,label in [('ai_server_revenue','AI优化服务器收入','AI-optimized servers'),('server_revenue','传统服务器与网络收入','Traditional servers and networking'),('storage_revenue','存储设备收入','Storage'),('servers_networking_revenue','服务器与网络总收入（含AI与传统）','Servers and networking')]:
+    if family not in parsed['values']:continue
     values=parsed['values'][family]
-    for i,end in enumerate(periods):add('DELL.'+family,name,'server_revenue' if family=='ai_server_revenue' else family,'DELL','亿美元','reported',url,end,values[i]/100,stamp,version,{label+' USD million':values[i]},f'FY{year-i} Q{q}',published=published)
+    for i,end in enumerate(periods):
+     derived=family=='servers_networking_revenue' and parsed['combinedDerived']
+     inputs={label+' USD million':values[i],'scope':'servers_and_networking_including_ai_and_traditional' if family=='servers_networking_revenue' else label}
+     if derived:inputs.update({'ai_server_million':parsed['values']['ai_server_revenue'][i],'traditional_server_million':parsed['values']['server_revenue'][i],'calculation':'ai_server_million + traditional_server_million'})
+     add('DELL.'+family,name,'server_revenue' if family in ('ai_server_revenue','servers_networking_revenue') else family,'DELL','亿美元','calculated' if derived else 'reported',url,end,values[i]/100,stamp,version,inputs,f'FY{year-i} Q{q}',published=published)
    for row in parsed['inventory']:add('DELL.inventory','期末库存','inventory','DELL','亿美元','reported',url,row['periodEnd'],row['value']/100,stamp,version,{'Inventories USD million':row['value']},published=published)
    records.append({**item,'publishedAt':published,'end':periods[0],'values':parsed['values'],'fetchedAt':stamp,'parsedAt':now(),'version':version,'status':'ready','checkedAt':now()})
    errors.pop('DELL',None)
@@ -118,6 +130,8 @@ def run(entities=None):
   if d['id'] not in result['series']:result['definitions'].append(d);result['series'][d['id']]=old['series'][d['id']] if d.get('entity') not in selected else {**old['series'][d['id']],'status':'cached','checkedAt':now(),'error':errors.get(d.get('entity'),'来源未返回可解析数据')}
  result['ingestedReleases']=merge_ingested(old.get('ingestedReleases',[]),records)
  result['sourceRuns']=[r for r in old.get('sourceRuns',[]) if r.get('entity') not in selected]+[{key:r.get(key) for key in ('entity','year','q','url','publishedAt','status','checkedAt','error')} for r in records]
+ from industry_bootstrap import restore_bootstrap
+ if DATA.resolve()==(__import__('pathlib').Path(__file__).resolve().parents[1]/'data'/'industry').resolve():result=restore_bootstrap('server-history.json',result,backfill_history=True)
  persist(result,path);print('Hardware metrics',len(result['series']),'errors',errors)
 if __name__=='__main__':
  cli=argparse.ArgumentParser();cli.add_argument('--force',action='store_true');cli.add_argument('--entity',action='append',choices=('DELL','AMD','TSM'));args=cli.parse_args();run(args.entity)

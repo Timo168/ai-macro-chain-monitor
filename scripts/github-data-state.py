@@ -2,7 +2,7 @@
 import argparse, hashlib, json, os, pathlib, shutil, subprocess, sqlite3, tempfile
 ROOT=pathlib.Path(__file__).resolve().parents[1];WORK=ROOT/'.data-work';DATA=ROOT/'data'
 FILES=['latest.json','calendar.json','scheduler.json','observations.sqlite','policy-rates.json','policy-decisions.json']
-INDUSTRY_FILES=['latest.json','research.json','research-history.json','research-ledger.json','research-followup.json','research-market.json','research-alfred.json','companies.json','hardware.json','oracle.json','costs.json','infrastructure.json','sia.json','extended.json','power-load.json','projects.json','sector-financials.json','institutions.json','release-discovery.json','reviewed-cache.json','scheduler.json']
+INDUSTRY_FILES=['latest.json','research.json','research-model-calls.json','research-history.json','research-ledger.json','research-followup.json','research-market.json','research-alfred.json','companies.json','hardware.json','supply-evidence.json','oracle.json','costs.json','infrastructure.json','sia.json','extended.json','power-load.json','projects.json','sector-financials.json','institutions.json','release-discovery.json','reviewed-cache.json','scheduler.json']
 
 def industry_state(source,destination):
     if not source.exists():return
@@ -85,12 +85,13 @@ def merge_followup(local,remote):
         merged['byHorizon'].append({'months':months,'maturedCount':len(values),'meanNetReturn':round(sum(window['netReturn'] for window in values)/len(values),2) if values else None,'meanExcessReturn':round(sum(window['excessReturn'] for window in values)/len(values),2) if values else None})
     return merged
 
-RESEARCH_ARCHIVES=['industry/research-ledger.json','industry/research-history.json','industry/research-followup.json','industry/research-alfred.json']
+RESEARCH_ARCHIVES=['industry/research-model-calls.json','industry/research-ledger.json','industry/research-history.json','industry/research-followup.json','industry/research-alfred.json']
 def merge_research_archive(local,local_blob,remote_blob):
     if not local_blob or not remote_blob:return
     ours=json.loads(local_blob);theirs=json.loads(remote_blob)
     if local.name=='research-ledger.json':
         result=ordered_union(ours,theirs,lambda record:record.get('recordId') or record.get('id','')+':'+record.get('recordedAt',''),'recordedAt',True)
+    elif local.name=='research-model-calls.json':result=ordered_union(ours,theirs,lambda record:record.get('requestId') or str((record.get('attemptedAt'),record.get('inputHash'))),'attemptedAt')
     elif local.name=='research-history.json':result=ordered_union(ours,theirs,lambda record:record.get('inputHash'),'generatedAt')
     elif local.name=='research-followup.json':result=merge_followup(ours,theirs)
     else:
@@ -159,7 +160,7 @@ def save():
     git('add','.',cwd=WORK)
     # These new audit artifacts are intentionally ignored in the source branch,
     # but are durable public-data state on data-cache and must be versioned there.
-    for relative in ['industry/research.json','industry/research-history.json','industry/research-inputs','industry/research-ledger.json','industry/research-followup.json','industry/research-market.json','industry/research-market-versions','industry/research-alfred.json','industry/research-vintages']:
+    for relative in ['industry/research.json','industry/research-model-calls.json','industry/research-history.json','industry/research-inputs','industry/research-ledger.json','industry/research-followup.json','industry/research-market.json','industry/research-market-versions','industry/research-alfred.json','industry/research-vintages']:
         if (WORK/relative).exists():git('add','-f',relative,cwd=WORK)
     changed=git('diff','--cached','--quiet',cwd=WORK,check=False).returncode
     if changed:

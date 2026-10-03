@@ -95,6 +95,7 @@ def run_fast_collector(spec,state,current,force):
     return record,record['nextCheckAt']
 
 FINANCIAL_COLLECTORS={
+ 'ANET':'industry_supply_evidence.py',
  'MSFT':'industry_collect.py','GOOG':'industry_collect.py','AMZN':'industry_collect.py','META':'industry_collect.py','NVDA':'industry_collect.py',
  'DELL':'industry_hardware.py','AMD':'industry_hardware.py','ORCL':'industry_oracle.py','HPE':'industry_extended.py',
  'MU':'industry_sector_financials.py','ETN':'industry_sector_financials.py','VRT':'industry_sector_financials.py','TSM':'industry_sector_financials.py',
@@ -122,7 +123,7 @@ def financial_release_checks(state,current,force=False,daily_scripts=()):
     discovery=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'entities':{}}
     sources={}
     for name in set(FINANCIAL_COLLECTORS.values()):
-        filename={'industry_collect.py':'companies.json','industry_hardware.py':'hardware.json','industry_oracle.py':'oracle.json','industry_extended.py':'extended.json','industry_sector_financials.py':'sector-financials.json'}[name]
+        filename={'industry_supply_evidence.py':'supply-evidence.json','industry_collect.py':'companies.json','industry_hardware.py':'hardware.json','industry_oracle.py':'oracle.json','industry_extended.py':'extended.json','industry_sector_financials.py':'sector-financials.json'}[name]
         p=DATA/filename
         sources[name]=json.loads(p.read_text(encoding='utf-8')) if p.exists() else {}
     attempts=prior.setdefault('ingestionAttempts',{})
@@ -187,17 +188,17 @@ def run(force=False,build_research=True):
     state=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
     current=datetime.now(timezone.utc)
     last=state_time(state.get('lastAttemptAt'))
-    daily_due=force or current-last>=timedelta(hours=24) or state.get('collectorVersion')!=12
+    daily_due=force or current-last>=timedelta(hours=24) or state.get('collectorVersion')!=13
     # Discover actual official URLs before any adapter attempts a new quarter.
     release_failures=financial_release_checks(state,current,force or daily_due,set(FINANCIAL_COLLECTORS.values()) if daily_due else ())
     if daily_due:
         failures=[]
-        for script in ['industry_collect.py','industry_hardware.py','industry_costs.py','industry_oracle.py','industry_sia.py','industry_extended.py','industry_power_load.py','industry_projects.py','industry_sector_financials.py','industry_institutions.py']:
+        for script in ['industry_collect.py','industry_hardware.py','industry_supply_evidence.py','industry_costs.py','industry_oracle.py','industry_sia.py','industry_extended.py','industry_power_load.py','industry_projects.py','industry_sector_financials.py','industry_institutions.py']:
             try:
                 result=run_background([sys.executable,str(ROOT/'scripts'/script)],cwd=ROOT,timeout=600)
                 if result.returncode:failures.append(script)
             except Exception as error:failures.append(script+': '+str(error))
-        state.update({'collectorVersion':12,'lastAttemptAt':now(),'dailyFailures':failures})
+        state.update({'collectorVersion':13,'lastAttemptAt':now(),'dailyFailures':failures})
     fast_next=[]
     fast_failures=[]
     for spec in FAST_COLLECTORS:
@@ -206,7 +207,7 @@ def run(force=False,build_research=True):
         if record.get('status')!='ready':fast_failures.append(spec['script']+': '+', '.join(record.get('failedSeries',[])))
     daily_next=last+timedelta(hours=24) if not daily_due else current+timedelta(hours=24)
     state.update({
-        'collectorVersion':12,
+        'collectorVersion':13,
         'failures':(state.get('dailyFailures',[])+fast_failures+release_failures),
         'nextCheckAt':min([daily_next,*fast_next,state_time(state['financialReleases']['nextCheckAt'])]).isoformat(),
     })

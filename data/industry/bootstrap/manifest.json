@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1",
-  "reviewedAt": "2026-10-01",
+  "reviewedAt": "2026-10-03",
   "purpose": "首次公开来源获取失败时恢复已核验历史；不更新时间，不代表在线请求成功。",
   "verificationDocument": "docs/industry/institutional-source-verification.json",
   "verificationSha256": "bb713a00d4b6868c0a0ba8a689ce62c6e20d5517edd7c867af6f93b243db9163",
@@ -27,6 +27,38 @@
       "reportIds": [
         "IEA.energy_ai_2026"
       ]
+    },
+    "accelerator-history.json": {
+      "sha256": "e7d8542c93e5cddbf317e3340d31bfde7448d220513c1f292720fadb93b11967",
+      "seriesIds": [
+        "NVDA.revenue",
+        "NVDA.gross_margin",
+        "NVDA.datacenter_revenue"
+      ],
+      "reportIds": []
+    },
+    "server-history.json": {
+      "sha256": "f106a424cdc4ef85999df487dbdb5b6741936f54362a7b1926f1434771bf26a7",
+      "seriesIds": [
+        "DELL.revenue",
+        "DELL.gross_margin",
+        "DELL.storage_revenue",
+        "DELL.servers_networking_revenue",
+        "DELL.inventory",
+        "DELL.ai_server_revenue",
+        "DELL.server_revenue"
+      ],
+      "reportIds": []
+    },
+    "supply-evidence.json": {
+      "sha256": "5e36b3efbce3cc842f8f1db305e3cc04e4b0679f612c8499fd332b2e15b751fd",
+      "seriesIds": [
+        "EQIX.operational_capacity",
+        "EQIX.development_capacity",
+        "ANET.company_revenue",
+        "ANET.gross_margin"
+      ],
+      "reportIds": []
     }
   }
 }

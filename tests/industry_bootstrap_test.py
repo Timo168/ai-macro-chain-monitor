@@ -162,6 +162,15 @@ class BootstrapTests(unittest.TestCase):
         result = self.restore(current)
         self.assertEqual(result['researchReports'], current['researchReports'])
 
+    def test_opt_in_history_backfill_preserves_current_revision_and_missingness(self):
+        current=copy.deepcopy(self.current)
+        points=copy.deepcopy(self.seed['series']['MU.company_revenue']['observations'])
+        current['series']['MU.company_revenue']={'status':'ready','observations':[dict(points[0],value=999,version='live-revision'),dict(points[0],periodEnd='2026-09-30',value=None,version='live-null')]}
+        seed=copy.deepcopy(self.seed);seed['series']['MU.company_revenue']['observations'].append(dict(points[0],periodEnd='2026-03-31',value=250,version='older-fact'));self.write_seed(seed)
+        result=restore_bootstrap('sample.json',current,self.folder,backfill_history=True)
+        rows=result['series']['MU.company_revenue']['observations']
+        self.assertEqual(len(rows),3);self.assertEqual(next(p for p in rows if p['version']=='live-revision')['value'],999);self.assertIsNone(next(p for p in rows if p['version']=='live-null')['value']);self.assertEqual(result['series']['MU.company_revenue']['status'],'ready')
+
     def test_missing_definition_restored_but_report_without_allowed_scenario_use_rejected(self):
         result = self.restore({'series': {}, 'researchReports': []})
         self.assertEqual(result['definitions'], self.seed['definitions'])
