@@ -1,4 +1,5 @@
-import json, pathlib, sys, tempfile, unittest
+import io, json, pathlib, sys, tempfile, unittest
+from zipfile import ZipFile
 from datetime import datetime, timezone, timedelta
 from unittest.mock import patch
 sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[1]/'scripts'))
@@ -68,18 +69,43 @@ class MarketTests(unittest.TestCase):
             with patch.object(adapter,'DATA',root),patch.object(adapter,'fetch_source',side_effect=RuntimeError('offline')),patch.object(adapter,'download_market',side_effect=RuntimeError('offline')):
                 cached=adapter.run(True,path,['MSFT'])
             self.assertEqual(cached['prices']['MSFT']['status'],'cached');self.assertEqual(cached['prices']['MSFT']['lastSuccessfulAt'],result['prices']['MSFT']['lastSuccessfulAt'])
+    def test_separate_retry_clocks_and_next_session_check(self):
+        current=datetime(2026,10,2,20,30,tzinfo=timezone.utc)
+        ready={'status':'ready','checkedAt':(current-timedelta(hours=1)).isoformat(),'observations':[{'date':'2026-10-01'}]}
+        self.assertTrue(adapter.due(ready,current,True))
+        before=datetime(2026,10,2,19,50,tzinfo=timezone.utc)
+        self.assertFalse(adapter.due(ready,before,True))
+        latest={**ready,'observations':[{'date':'2026-10-02'}]};self.assertFalse(adapter.due(latest,current,True))
+        retry={**ready,'status':'cached','checkedAt':(current-timedelta(minutes=29)).isoformat()}
+        self.assertFalse(adapter.due(retry,current,True));retry['checkedAt']=(current-timedelta(minutes=30)).isoformat();self.assertTrue(adapter.due(retry,current,True))
+        self.assertFalse(adapter.due(ready,current));self.assertTrue(adapter.due({},current))
+        self.assertTrue(adapter.due({**ready,'checkedAt':'invalid'},current))
+    def test_ready_price_is_not_refetched_when_only_finance_is_due(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=pathlib.Path(temp);path=root/'market.json';stamp=adapter.now();old={'prices':{'MSFT':{'status':'ready','checkedAt':stamp,'observations':[{'date':stamp[:10]}]}},'finance':{'MSFT':{'status':'fetch_failed','checkedAt':'2020-01-01T00:00:00Z'}}};path.write_text(json.dumps(old))
+            with patch.object(adapter,'DATA',root),patch.object(adapter,'fetch_source',side_effect=RuntimeError('offline')),patch.object(adapter,'download_market',return_value=json.dumps(vendor()).encode()) as download:
+                result=adapter.run(False,path,['MSFT'])
+            self.assertEqual(download.call_count,1);self.assertIn('fundamentals-timeseries',download.call_args.args[0]);self.assertEqual(result['prices']['MSFT'],old['prices']['MSFT'])
+
+def vintage_zip(series='ICSA',date='2026-10-01',values=None,format='Observations by Vintage Date, All Observations'):
+    raw=io.BytesIO()
+    with ZipFile(raw,'w') as archive:
+        archive.writestr('README.txt',f'Series ID: {series}\nOutput Format: {format}\n')
+        rows=values or '2026-09-03,200\n2026-09-10,210\n2026-09-17,.\n2026-09-24,220\n'
+        archive.writestr('vintages.csv','observation_date,'+series+'_'+date.replace('-','')+'\n'+rows)
+    return raw.getvalue()
 
 class AlfredTests(unittest.TestCase):
-    def test_missing_key_never_fabricates_vintages_and_retains_cache(self):
-        with tempfile.TemporaryDirectory() as temp,patch.object(alfred,'DATA',pathlib.Path(temp)),patch.dict('os.environ',{'FRED_API_KEY':''}):
-            self.assertEqual(alfred.run()['status'],'not_configured')
+    def test_public_download_failure_never_fabricates_vintages_and_retains_cache(self):
+        with tempfile.TemporaryDirectory() as temp,patch.object(alfred,'DATA',pathlib.Path(temp)),patch.dict('os.environ',{'FRED_API_KEY':''}),patch.object(alfred,'IDS',['ICSA']),patch.object(alfred,'fetch_public',side_effect=RuntimeError('offline')):
+            self.assertEqual(alfred.run()['status'],'fetch_failed')
             (pathlib.Path(temp)/'research-alfred.json').write_text(json.dumps({'vintages':{'ICSA:2026-10-01':{'count':10}}}))
             cached=alfred.run();self.assertEqual(cached['status'],'cached');self.assertEqual(cached['vintages']['ICSA:2026-10-01']['count'],10)
     def test_real_vintage_match_future_guard_and_no_secret_in_archives(self):
         class Session:
             trust_env=True
             def get(self,url,params,timeout):
-                date=params['realtime_start'];payload={'realtime_start':date,'realtime_end':date,'observations':[{'date':date,'value':'.'}]}
+                date=params['realtime_start'];payload={'realtime_start':date,'realtime_end':date,'observations':[{'date':date,'value':'220'},{'date':'2026-09-01','value':'210'},{'date':'2026-08-01','value':'200'}]}
                 class Response:
                     status_code=200
                     content=json.dumps(payload).encode()
@@ -89,6 +115,29 @@ class AlfredTests(unittest.TestCase):
             ready=alfred.run();self.assertEqual(ready['status'],'ready');self.assertEqual(len(ready['vintages']),1)
             self.assertNotIn('secret-for-test',(pathlib.Path(temp)/'research-alfred.json').read_text(encoding='utf-8'))
             vintage=next((pathlib.Path(temp)/'research-vintages').glob('*.json'));self.assertNotIn('secret-for-test',vintage.read_text(encoding='utf-8'))
+    def test_public_download_exact_series_vintage_format_and_nulls(self):
+        payload=alfred.parse_download(vintage_zip(),'ICSA','2026-10-01')
+        self.assertIsNone(payload['observations'][2]['value']);self.assertEqual(payload['observations'][3]['value'],'220')
+        for raw in [vintage_zip(series='NFCI'),vintage_zip(date='2026-10-02'),vintage_zip(format='Latest observations'),vintage_zip(values='2026-09-01,nan\n2026-09-02,1\n2026-09-03,2\n'),vintage_zip(values='2026-09-01,1\n2026-09-01,2\n2026-09-03,3\n'),vintage_zip(values='2026-09-01,1\n2026-09-02,2\n2026-10-02,3\n')]:
+            with self.assertRaises(ValueError):alfred.parse_download(raw,'ICSA','2026-10-01')
+    def test_public_no_key_path_archives_original_zip_and_skips_repeat_download(self):
+        class Session:
+            trust_env=True
+            def get(self,url,timeout):
+                class Response:
+                    status_code=200
+                    text='<input id="form_obs_start_date" value="2020-01-01"><input id="form_obs_end_date" value="2026-09-24">'
+                return Response()
+            def post(self,url,data,timeout):
+                assert data['form[obs_end_date]']=='2026-09-24'
+                class Response:
+                    status_code=200
+                    content=vintage_zip('ICSA',data['form[entered_vintage_dates]'])
+                return Response()
+        with tempfile.TemporaryDirectory() as temp,patch.object(alfred,'DATA',pathlib.Path(temp)),patch.object(alfred,'IDS',['ICSA']),patch.dict('os.environ',{'FRED_API_KEY':''}),patch.object(alfred.requests,'Session',Session):
+            ready=alfred.run();self.assertEqual(ready['status'],'ready');self.assertEqual(next(iter(ready['vintages'].values()))['adapter'],'alfred_public_download')
+            self.assertEqual(len(list((pathlib.Path(temp)/'research-vintages').glob('*.zip'))),1)
+            with patch.object(alfred,'fetch_public',side_effect=AssertionError('already archived')):self.assertEqual(alfred.run()['status'],'ready')
     def test_wrong_vintage_and_future_observations_fail_without_archive(self):
         for invalid in ['wrong_vintage','future_observation']:
             class Session:

@@ -40,3 +40,39 @@ test('negative signals still show long basket performance, not invented shorts',
  const w=buildTracking([record({score:-30})],market(),{asOf:'2026-02-03',costBps:0}).cohorts[0].windows[0];assert.equal(w.grossReturn,20);
  assert.throws(()=>buildTracking([],{}, {costBps:-1}),/Invalid/);
 });
+test('ongoing returns use actual common observations and only entry fees',()=>{
+ const r=buildTracking([record()],market(),{asOf:'2026-01-20'}),c=r.cohorts[0],p=c.progress;
+ assert.equal(p.status,'ongoing');assert.equal(p.entryAt,'2026-01-02');assert.equal(p.observedAt,'2026-01-20');
+ assert.equal(p.netReturn,-20.08);assert.equal(p.benchmarkNetReturn,-0.1);assert.equal(p.excessReturn,-19.98);
+ assert.equal(p.feesApplied,'entry_only');assert.equal(c.windows[0].netReturn,undefined);
+ assert.equal(p.observations.at(-1).netReturn,p.netReturn);assert.equal(c.entry.referencePrices.MU.adjustedClose,100);
+});
+test('entry is pinned, unavailable entry prices never move the date',()=>{
+ const first=buildTracking([record()],market(),{asOf:'2026-01-10'}),m=market();
+ m.prices.MU.observations=m.prices.MU.observations.filter(p=>p.date!=='2026-01-02');
+ const next=buildTracking([record()],m,{asOf:'2026-01-20',prior:first}).cohorts[0];
+ assert.deepEqual(next.entry,first.cohorts[0].entry);assert.equal(next.progress.status,'price_gap');assert.equal(next.progress.entryAt,'2026-01-02');assert.equal(next.progress.netReturn,undefined);
+});
+test('uniform dividend adjustment cannot mix current prices with old entry basis',()=>{
+ const first=buildTracking([record()],market(),{asOf:'2026-01-10'}),m=market();
+ m.prices.MU.version='dividend-adjustment';m.prices.MU.observations=m.prices.MU.observations.map(p=>({...p,adjustedClose:p.adjustedClose*0.8}));
+ const next=buildTracking([record()],m,{asOf:'2026-01-20',prior:first}).cohorts[0];
+ assert.equal(next.entry.referencePrices.MU.adjustedClose,100);assert.equal(next.progress.netReturn,-20.08);assert.equal(next.progress.priceVersions.MU.version,'dividend-adjustment');
+});
+test('pending legacy cohort entry migrates without changing the original date',()=>{
+ const prior=buildTracking([record()],market(),{asOf:'2026-01-10'});delete prior.cohorts[0].entry;
+ const next=buildTracking([record()],market(),{asOf:'2026-01-20',prior}).cohorts[0];assert.equal(next.entry.date,'2026-01-02');
+});
+test('source outage, stale prices and long ongoing gaps have explicit states',()=>{
+ const m=market({end:'2026-01-09'});m.prices.MU.status='cached';
+ const cached=buildTracking([record()],m,{asOf:'2026-01-10'}).cohorts[0].progress;assert.equal(cached.status,'cached');assert.equal(cached.observedAt,'2026-01-09');
+ const stale=buildTracking([record()],m,{asOf:'2026-01-20'}).cohorts[0].progress;assert.equal(stale.status,'stale_prices');assert.equal(stale.observedAt,'2026-01-09');
+ const missing=market({drop:['2026-01-05','2026-01-06','2026-01-07','2026-01-08','2026-01-09','2026-01-12']});
+ assert.equal(buildTracking([record()],missing,{asOf:'2026-01-20'}).cohorts[0].progress.status,'price_gap');
+});
+test('six-month completion freezes daily path and both-side fees',()=>{
+ const checkpoint=record(),m=market(),first=buildTracking([checkpoint],m,{asOf:'2026-07-03'});
+ assert.equal(first.cohorts[0].progress.status,'completed');assert.equal(first.cohorts[0].progress.netReturn,first.cohorts[0].windows[2].netReturn);
+ m.prices.MU.observations=m.prices.MU.observations.map(p=>({...p,adjustedClose:999}));
+ const next=buildTracking([checkpoint],m,{asOf:'2026-08-01',prior:first});assert.deepEqual(next.cohorts[0].progress,first.cohorts[0].progress);
+});

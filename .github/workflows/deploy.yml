@@ -59,8 +59,9 @@ jobs:
           node --test tests/research.test.mjs
           node --test tests/quant-model.test.mjs
           node --test tests/financial-updates.test.mjs
-          node --test tests/research-evolution.test.mjs tests/research-tracking.test.mjs tests/valuation.test.mjs
+          node --test tests/research-evolution.test.mjs tests/research-tracking.test.mjs tests/valuation.test.mjs tests/project-events.test.mjs
           python tests/research_market_test.py
+          python tests/research_state_test.py
           python tests/collector_test.py
           python tests/industry_collector_test.py
           python tests/sector_financials_test.py

@@ -84,20 +84,44 @@ def parse_sec_facts(raw,entity,as_of):
 def retained(previous,error,stamp):
     return {**previous,'status':'cached' if previous.get('observations') or previous.get('fields') else 'fetch_failed','checkedAt':stamp,'error':str(error)[:240]}
 
+def due(record,current,price=False):
+    """Independent retry clocks; a failed price must not wait behind successful facts."""
+    try:
+        checked=datetime.fromisoformat(record['checkedAt'].replace('Z','+00:00'))
+        age=current-checked
+    except (KeyError,TypeError,ValueError):return True
+    if age<timedelta(0):return True
+    if record.get('status') not in ('ready',):return age>=timedelta(minutes=30)
+    if price:
+        local=current.astimezone(ZoneInfo('America/New_York'))
+        expected=local.date()
+        if (local.hour,local.minute)<(16,15):expected-=timedelta(days=1)
+        while expected.weekday()>=5:expected-=timedelta(days=1)
+        latest=max((row.get('date','') for row in record.get('observations',[])),default='')
+        # A US holiday may have no new session: check politely, never invent it.
+        if latest<expected.isoformat():return age>=timedelta(minutes=45)
+    if record.get('vendorSourceError') or record.get('officialSourceError'):return age>=timedelta(hours=6)
+    return age>=timedelta(hours=20)
+
 def run(force=False,path=PATH,symbols=None):
     old=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
-    if not force and old.get('checkedAt') and datetime.now(timezone.utc)-datetime.fromisoformat(old['checkedAt'])<timedelta(hours=20):return old
     stamp=now();as_of=stamp[:10];previous_prices=old.get('prices',{});previous_finance=old.get('finance',{})
+    current=datetime.fromisoformat(stamp.replace('Z','+00:00'))
+    selected=[symbol for symbol in (symbols or SYMBOLS) if force or due(previous_prices.get(symbol,{}),current,True) or symbol!='QQQ' and due(previous_finance.get(symbol,{}),current)]
+    if not selected:return old
     def job(symbol):
         price=previous_prices.get(symbol,{});finance=previous_finance.get(symbol,{})
         url=f'https://query2.finance.yahoo.com/v8/finance/chart/{quote(symbol)}?range=2y&interval=1d&events=div%2Csplits'
         try:
+            if not force and not due(price,current,True):raise SkipRefresh()
             raw=download_market(url);parsed=parse_prices(raw,symbol);version=archive(symbol,'prices',raw)
             merged={p['date']:p for p in price.get('observations',[])};merged.update({p['date']:p for p in parsed['observations']})
             price={**parsed,'observations':[merged[d] for d in sorted(merged)],'sourceUrl':f'https://finance.yahoo.com/quote/{symbol}/history/','provider':'Yahoo Finance','version':version,'status':'ready','checkedAt':stamp,'fetchedAt':stamp,'lastSuccessfulAt':stamp,'exportAllowed':False,'error':None}
+        except SkipRefresh:pass
         except Exception as error:price=retained(price,error,stamp)
         if symbol!='QQQ':
             try:
+                if not force and not due(finance,current):raise SkipRefresh()
                 fields={};sec_error=None;vendor_error=None;sec_url=None
                 if symbol in CIKS:
                     sec_url=f'https://data.sec.gov/api/xbrl/companyfacts/CIK{CIKS[symbol]}.json'
@@ -116,14 +140,17 @@ def run(force=False,path=PATH,symbols=None):
                 for key,field in finance.get('fields',{}).items():
                     if key not in fields:fields[key]={**field,'sourceStatus':'cached','sourceError':vendor_error or sec_error}
                 finance={'fields':fields,'status':'ready','checkedAt':stamp,'fetchedAt':stamp,'lastSuccessfulAt':stamp,'officialSourceError':sec_error,'vendorSourceError':vendor_error,'sourceUrl':sec_url,'note':'同报告期优先SEC正式财务；缺项或较新报告期使用Yahoo第三方转录，逐字段标明来源，不补入正式产业因子评分。','error':None}
+            except SkipRefresh:pass
             except Exception as error:finance=retained(finance,error,stamp)
         return symbol,price,finance
     prices=dict(previous_prices);finance=dict(previous_finance)
     with ThreadPoolExecutor(max_workers=3) as pool:
-        for symbol,price,facts in pool.map(job,symbols or SYMBOLS):prices[symbol]=price;finance[symbol]=facts
+        for symbol,price,facts in pool.map(job,selected):prices[symbol]=price;finance[symbol]=facts
     result={'schemaVersion':'1','generatedAt':stamp,'checkedAt':stamp,'prices':prices,'finance':finance,'exportAllowed':False,'usageNote':'公开日频市场参考，仅用于本站研究对照；不开放行情CSV，也不宣称交易所实时或专业授权行情。'}
     atomic(path,result);print(f'Research market: {sum(p.get("status")=="ready" for p in prices.values())}/{len(prices)} price series; {sum(p.get("status")=="ready" for p in finance.values())} valuation fact sets.')
     return result
+
+class SkipRefresh(Exception):pass
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--force',action='store_true');args=parser.parse_args();run(args.force)

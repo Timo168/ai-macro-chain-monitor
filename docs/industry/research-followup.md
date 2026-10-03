@@ -16,6 +16,10 @@
 
 入场/到期或中间共同行情存在超过7日的空档，暂停该窗口。缺值不填零，不使用未来价格。未期满不展示该期限收益，不计算虚假胜率。负向结论同样跟踪篮子，不反转收益冒充做空策略。重叠期限、不同产业共用公司不是独立样本，不据此宣称统计显著性。
 
+另有“跟踪至今”表格和每日曲线：尚未期满时只扣买入10基点，显示截至最后一个共同完整交易日的累计收益、QQQ同口径表现、超额和回撤。六个月完成后终止此样本跟踪并保存买卖两侧扣费结果。当前表现不进入1、3、6个月的期满统计；缓存和超过7日未更新的行情分别提示，并显示实际观测截止日。
+
+首次出现完整入场行情时，`entry`保存固定日期、首次获取的各公司参考价和行情版本。后续缺失该日期不会向后移动起点。Yahoo可能因分红或拆股重述复权基数，因此收益始终以同一当前版本的期末/入场复权价计算，不把后来复权价除以旧版本入场价。期满结果与六个月完成后的每日曲线冻结，旧版本只有期满结果时不以修订数据补造其每日曲线。
+
 | 环节 | 初始固定代表样本 |
 | --- | --- |
 | 云平台 | MSFT、GOOG、AMZN、ORCL |
@@ -43,11 +47,15 @@
 
 ## 持久化、调度及配置
 
-研究档案：`research-inputs/{inputHash}.json`存完整计算输入和首次时间；`research-history.json`不覆盖同输入历史；`research-ledger.json`存有效结论；`research-followup.json`存前瞻模拟结果。新原始参考响应位于`research-market-versions/{symbol}/`，ALFRED官方版本位于`research-vintages/`。这些文件由GitHub `data-cache`分支持久化，源代码分支只保存代码与种子数据。
+研究档案：`research-inputs/{inputHash}.json`存完整计算输入和首次时间；`research-history.json`不覆盖同输入历史；`research-ledger.json`存有效结论；`research-followup.json`存前瞻模拟结果。新原始参考响应位于`research-market-versions/{symbol}/`，ALFRED官方版本与下载原始压缩包位于`research-vintages/`。这些文件由GitHub `data-cache`分支持久化，源代码分支只保存代码与种子数据。
 
-GitHub工作流每次运行检查日频补充，通常间隔20小时；本机`industry_schedule.py`使用已有`run_background`隐藏子进程。源失败保留最后成功观测和获取时间，另记检查时间与错误；首次失败显示获取失败，未配置ALFRED单独显示未配置。网页刷新只读取后台缓存。
+数据分支遇到并发更新时，除数据库修订记录外，结论账本、输入历史、模拟样本与ALFRED版本也按稳定身份合并。同输入的完整档案保留首次生成版本，并将另一个并发档案另存为`.concurrent-`文件。已期满窗口保留最早计算结果，其他并发结果记录在`concurrentEvaluations`，不静默覆盖。固定篮子、费用或入场日期出现冲突时停止持久化并报告失败，避免改写交易假设。
 
-可选`FRED_API_KEY`通过服务端环境或GitHub Actions Secrets注入。ALFRED保存记录日前一日的官方历史版本，保守避免同日尚未发布值；验证响应历史版本区间及观测日期。不写入包含密钥的请求URL。缺密钥时使用实际留存快照做前瞻跟踪，不宣称已经完成历史策略回测。
+GitHub工作流每次运行检查日频补充，各公司的行情与财务使用独立时钟。成功数据通常间隔20小时检查；纽约工作日16:15后发现尚缺新的完整收盘，则45分钟间隔补查。首次失败或缓存失败30分钟后可重试，财务的部分来源失败6小时后再查，避免失败被成功数据的每日节奏阻塞。美国假日没有新收盘也不制造观测，GitHub实际执行可能延迟。本机`industry_schedule.py`使用已有`run_background`隐藏子进程。源失败保留最后成功观测和获取时间，另记检查时间与错误；网页刷新只读取后台缓存。
+
+ALFRED保存记录日前一日的官方历史版本，保守避免同日尚未发布值。未配置密钥时使用ALFRED官方公开下载表单，自动读取来源允许的观测范围，校验压缩包README指标代码、完整观测格式、精确历史日期列、重复日期、缺值与有限数值，保存原始ZIP和解析JSON。首次已接入ICSA、NFCI、DFII10、DGS10、PCEPI、PCEPILFE六个指标的指定日期版本。下载失败显示失败或缓存状态。
+
+可选`FRED_API_KEY`通过服务端环境或GitHub Actions Secrets注入，配置后采用官方API并校验历史版本区间。不写入包含密钥的请求URL。取得官方宏观版本只是历史验证的备料；财务发布时间和策略假设仍须逐项补齐，不能据此宣称已经完成历史策略回测。
 
 ## 验证
 
@@ -55,4 +63,4 @@ GitHub工作流每次运行检查日频补充，通常间隔20小时；本机`in
 
 运行`node --test tests/research-evolution.test.mjs tests/research-tracking.test.mjs tests/valuation.test.mjs`、`python tests/research_market_test.py`，再执行既有测试、类型检查和Pages构建。测试使用明显的合成输入核验规则，不发布为真实历史。前瞻样本需要实际等待1、3、6个月，当前功能上线不代表投资有效性已验证。
 
-来源说明：[SEC官方API](https://www.sec.gov/search-filings/edgar-application-programming-interfaces)、[ALFRED历史版本](https://fred.stlouisfed.org/docs/api/fred/realtime_period.html)、[Yahoo行情参考](https://finance.yahoo.com/)。
+来源说明：[SEC官方API](https://www.sec.gov/search-filings/edgar-application-programming-interfaces)、[ALFRED公开历史下载说明](https://alfred.stlouisfed.org/help/downloaddata)、[ALFRED API历史版本](https://fred.stlouisfed.org/docs/api/fred/realtime_period.html)、[Yahoo行情参考](https://finance.yahoo.com/)。
