@@ -21,6 +21,8 @@ from industry_common import DATA, ROOT, atomic, fetch, now
 PATH = DATA / 'release-discovery.json'
 VERSION = 1
 SOURCES = {
+    'AMKR': ['https://ir.amkor.com/taxonomy/term/3896'],
+    'ENTG': ['https://www.entegris.com/en/home/about-us/news/news-archive.html?index=7'],
     'ANET': ['https://investors.arista.com/Communications/Press-Releases-and-Events/default.aspx'],
     'DELL': ['https://investors.delltechnologies.com/news-events/press-release'],
     'AMD': ['https://ir.amd.com/news-events/press-releases?category=financial'],
@@ -37,6 +39,8 @@ SOURCES = {
     'VRT': ['https://investors.vertiv.com/financials/quarterly-results/default.aspx'],
 }
 HOSTS = {
+    'AMKR': {'ir.amkor.com'},
+    'ENTG': {'www.entegris.com', 'investor.entegris.com'},
     'ANET': {'investors.arista.com', 's21.q4cdn.com'},
     'DELL': {'investors.delltechnologies.com'},
     'AMD': {'ir.amd.com', 'www.amd.com'},
@@ -233,7 +237,12 @@ def validate_release(item, raw):
     soup, text = _document(raw)
     if re.search(r'Just a moment|Access Denied|Checking your browser', text[:600], re.I):
         raise ValueError('官方页面受访问限制')
-    headline = soup.select_one('h1,h2.module-news-detail-title') if soup else None
+    # Issuer IR pages often use a generic h1 such as News Details. Select the
+    # actual earnings headline first so metadata and quarter can be confirmed.
+    headlines=soup.select('h1,h2,h3,h4') if soup else []
+    headline=next((h for h in headlines if fiscal_period(h.get_text(' ',strip=True)) and RESULT.search(h.get_text(' ',strip=True))),None)
+    if headline is None and soup:
+        headline=soup.select_one('h1,h2.module-news-detail-title')
     title = headline.get_text(' ', strip=True) if headline else item['title']
     is_upcoming = item.get('kind') == 'upcoming' or bool(PREANNOUNCEMENT.search(title)) or (item['entity'] == 'TSM' and bool(re.search(r'Earnings\s+Conference\s+will\s+be\s+held', text, re.I)))
     stated = (item.get('fiscalYear'), item.get('quarter'))

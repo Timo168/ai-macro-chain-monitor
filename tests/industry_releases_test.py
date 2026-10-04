@@ -18,6 +18,12 @@ DELL_LIST = b'''<article class="node--nir-news--nir-widget-list">
 <a class="nir-widget--accordion-toggle">Dell Technologies Delivers Third Quarter Fiscal 2028 Financial Results</a>
 <div class="nir-widget--news--date-time">September 30, 2026</div>
 <div class="nir-widget--news--read-more"><a href="/news-releases/new-actual-release">Read More</a></div></article>'''
+# Minimal official page structures sampled on 2026-10-04. No full reports or
+# licensed tables are embedded; the detail-page financial sentence is synthetic.
+AMKR_LIST = b'''<article class="node node--nir-news--teaser node--type-nir-news node--view-mode-teaser node--promoted"><h2><a href="/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2026" rel="bookmark"><span class="field field--name-title field--type-string field--label-hidden">Amkor Technology Reports Financial Results for the Second Quarter 2026</span></a></h2><div class="node__content"></div><div class="node__links"><a href="/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2026">Read more</a></div></article>'''
+ENTG_LIST = b'''<div class="item"><div class="date">Published Aug 4, 2026</div><a href="/en/home/about-us/news/entegris-reports-results-for-second-quarter-2026.html">Entegris Reports Results for Second Quarter 2026</a></div>'''
+AMKR_DETAIL = b'''<html><meta property="article:published_time" content="2026-07-27T16:03:28-04:00"><h1>Press Releases</h1><h2><div class="field field--name-field-nir-news-title field--type-string field--label-hidden"><div class="field__item">Amkor Technology Reports Financial Results for the Second Quarter 2026</div></div></h2><main>Revenue was $100 million.</main></html>'''
+ENTG_DETAIL = b'''<html><h1 class="module_title">News Details</h1><h3 class="evergreen-item-detail-title evergreen-news-title"><span>Entegris Reports Results for Second Quarter of 2026</span></h3><span class="evergreen-news-date-text">Aug 4, 2026</span><main>Revenue was $100 million.</main></html>'''
 
 
 def document(title, content='Revenue was $100 million.', date='2026-09-30'):
@@ -25,6 +31,47 @@ def document(title, content='Revenue was $100 million.', date='2026-09-30'):
 
 
 class ReleaseDiscoveryTests(unittest.TestCase):
+    def test_amkor_actual_index_structure_keeps_fiscal_quarter_and_reads_detail_date(self):
+        items = releases.parse_index('AMKR', AMKR_LIST, releases.SOURCES['AMKR'][0])
+        self.assertEqual(len(items), 1)
+        self.assertEqual((items[0]['fiscalYear'], items[0]['quarter']), (2026, 2))
+        self.assertIsNone(items[0]['publishedAt'])
+        item = releases.validate_release(items[0], AMKR_DETAIL)
+        self.assertEqual(item['publishedAt'], '2026-07-27T16:03:28-04:00')
+        self.assertEqual(item['title'], 'Amkor Technology Reports Financial Results for the Second Quarter 2026')
+
+    def test_entegris_corporate_index_keeps_actual_link_date_and_report_headline(self):
+        item = releases.parse_index('ENTG', ENTG_LIST, releases.SOURCES['ENTG'][0])[0]
+        self.assertEqual((item['fiscalYear'], item['quarter']), (2026, 2))
+        self.assertEqual(item['publishedAt'], '2026-08-04')
+        self.assertTrue(item['url'].startswith('https://www.entegris.com/en/home/about-us/news/'))
+        verified = releases.validate_release(item, ENTG_DETAIL)
+        self.assertEqual(verified['title'], 'Entegris Reports Results for Second Quarter of 2026')
+        self.assertEqual(verified['publishedAt'], '2026-08-04')
+
+    def test_new_issuer_discovery_validates_detail_then_preserves_cache_on_failure(self):
+        for entity, index, body in [('AMKR', AMKR_LIST, AMKR_DETAIL), ('ENTG', ENTG_LIST, ENTG_DETAIL)]:
+            with self.subTest(entity=entity):
+                def get(url, force=False):
+                    return (index if url == releases.SOURCES[entity][0] else body), '2026-10-03T01:00:00+00:00', 'official-hash'
+                ready = releases._entity(entity, {}, True, get)
+                self.assertEqual(ready['status'], 'ready')
+                self.assertEqual(len(ready['releases']), 1)
+                def fail(url, force=False):
+                    raise RuntimeError('upstream timeout')
+                cached = releases._entity(entity, ready, True, fail)
+                self.assertEqual(cached['status'], 'cached')
+                self.assertEqual(cached['releases'], ready['releases'])
+                self.assertEqual(cached['lastSuccessfulAt'], ready['lastSuccessfulAt'])
+
+    def test_entegris_upcoming_notice_is_not_an_actual_financial_release(self):
+        raw = ENTG_LIST.replace(b'Entegris Reports Results', b'Entegris to Report Results')
+        item = releases.parse_index('ENTG', raw, releases.SOURCES['ENTG'][0])[0]
+        body = ENTG_DETAIL.replace(b'Entegris Reports Results', b'Entegris to Report Results').replace(b'Revenue was $100 million.', b'Entegris will report financial results on October 20, 2026.')
+        value = releases.validate_release(item, body)
+        self.assertEqual(value['kind'], 'upcoming')
+        self.assertEqual(value['eventAt'], '2026-10-20')
+
     def test_unknown_future_fiscal_quarter_is_discovered_without_guessing_url(self):
         items = releases.parse_index('AMD', AMD_LIST, releases.SOURCES['AMD'][0])
         self.assertEqual(len(items), 1)

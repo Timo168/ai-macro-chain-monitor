@@ -12,6 +12,15 @@ test('official publication without parsed observations is pending, not collected
 test('matching source URL and publication establish previously verified ingestion',()=>{
  assert.equal(financialUpdates(discovery,data(),[],'2026-10-02')[0].status,'collected');
 });
+test('verified release aliases require both actual quarter observations and the same publication day',()=>{
+ const alternate='https://ir.example.com/corporate/q3';
+ const aliasDiscovery={entities:{EX:{status:'ready',releases:[{...release,url:alternate,publishedAt:'2026-10-01T14:00:00-04:00'}]}}};
+ const ledger=[{...release,sourceAliases:[alternate],periodEnd:point.periodEnd}];
+ assert.equal(financialUpdates(aliasDiscovery,data(),ledger,'2026-10-02')[0].status,'collected');
+ assert.equal(financialUpdates(aliasDiscovery,{},ledger,'2026-10-02')[0].status,'published_pending');
+ assert.equal(financialUpdates(aliasDiscovery,data(),[{...ledger[0],publishedAt:'2026-09-30'}],'2026-10-02')[0].status,'published_pending');
+ assert.equal(financialUpdates(aliasDiscovery,data(),[{...ledger[0],sourceAliases:[]}],'2026-10-02')[0].status,'published_pending');
+});
 test('prior-year comparison inside a new release cannot be counted as the current quarter',()=>{
  assert.equal(financialUpdates(discovery,data({...point,periodEnd:'2025-09-30',fiscalPeriod:'FY2025 Q3'}),[],'2026-10-02')[0].status,'published_pending');
 });

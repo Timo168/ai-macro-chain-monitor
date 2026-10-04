@@ -76,3 +76,52 @@ test('six-month completion freezes daily path and both-side fees',()=>{
  m.prices.MU.observations=m.prices.MU.observations.map(p=>({...p,adjustedClose:999}));
  const next=buildTracking([checkpoint],m,{asOf:'2026-08-01',prior:first});assert.deepEqual(next.cohorts[0].progress,first.cohorts[0].progress);
 });
+
+test('failed, unpublished, unconfigured and unknown sources cannot turn residual values into normal tracking',()=>{
+ for(const status of ['fetch_failed','not_configured','no_observation','not_published','unknown','other_state',undefined]){
+  const m=market();m.prices.MU.status=status;
+  const c=buildTracking([record()],m,{asOf:'2026-02-03'}).cohorts[0];
+  assert.equal(c.progress.status,'missing_prices');
+  assert.equal(c.progress.netReturn,undefined);
+  assert.equal(c.progress.observations,undefined);
+  assert.equal(c.entry,undefined);
+  assert.ok(c.progress.unavailableSources.some(source=>source.symbol==='MU'));
+  assert.match(c.progress.reason,/暂停新的收益计算/);
+  assert.equal(c.windows[0].status,'missing_prices');
+ }
+ const m=market();m.prices.QQQ.status='fetch_failed';
+ assert.equal(buildTracking([record()],m,{asOf:'2026-01-20'}).cohorts[0].progress.status,'missing_prices');
+});
+
+test('cached prices expose actual source success, observation date and expiration boundary',()=>{
+ const m=market({end:'2026-01-09'});
+ Object.assign(m.prices.MU,{status:'cached',lastSuccessfulAt:'2026-01-09T22:00:00Z',checkedAt:'2026-01-10T10:00:00Z'});
+ const first=buildTracking([record()],m,{asOf:'2026-01-10'}).cohorts[0].progress;
+ assert.equal(first.status,'cached');
+ assert.equal(first.priceVersions.MU.lastSuccessfulAt,'2026-01-09T22:00:00Z');
+ assert.equal(first.priceVersions.MU.checkedAt,'2026-01-10T10:00:00Z');
+ assert.deepEqual(first.priceValidity,{observedAt:'2026-01-09',validUntil:'2026-01-16',maxCalendarGapDays:7,cached:true,expired:false});
+ assert.match(first.reason,/最近成功 2026-01-09/);
+ assert.match(first.reason,/有效至 2026-01-16/);
+ const expired=buildTracking([record()],m,{asOf:'2026-01-20'}).cohorts[0].progress;
+ assert.equal(expired.status,'stale_prices');assert.equal(expired.priceValidity.expired,true);
+ assert.equal(expired.observedAt,'2026-01-09');assert.equal(expired.netReturn,first.netReturn);
+ assert.match(expired.reason,/只截至该观测日/);
+});
+
+test('later source failure preserves fixed entry, mature horizons and the final completed path',()=>{
+ const r=record(),m=market(),first=buildTracking([r],m,{asOf:'2026-02-03'});
+ m.prices.MU.status='fetch_failed';
+ const failed=buildTracking([r],m,{asOf:'2026-03-03',prior:first}).cohorts[0];
+ assert.deepEqual(failed.entry,first.cohorts[0].entry);
+ assert.deepEqual(failed.symbols,first.cohorts[0].symbols);
+ assert.deepEqual(failed.windows[0],first.cohorts[0].windows[0]);
+ assert.equal(failed.progress.status,'missing_prices');assert.equal(failed.progress.entryAt,'2026-01-02');
+ assert.equal(failed.progress.netReturn,undefined);
+ m.prices.MU.status='ready';
+ const completed=buildTracking([r],m,{asOf:'2026-07-03'});
+ m.prices.QQQ.status='unknown';
+ const later=buildTracking([r],m,{asOf:'2026-08-01',prior:completed}).cohorts[0];
+ assert.deepEqual(later.progress,completed.cohorts[0].progress);
+ assert.deepEqual(later.windows,completed.cohorts[0].windows);
+});

@@ -101,7 +101,7 @@ JS 验证包括 17 组图表各 3 点（51 点）、15 个 FRED 序列各 3 个�
 
 仓库：<https://github.com/Timo168/ai-macro-chain-monitor>。Pages 使用 Actions 模式，默认分支为 `main`。提交代码、手动运行工作流或定时触发都会执行数据检查、验证、构建、发布。工作流页面：<https://github.com/Timo168/ai-macro-chain-monitor/actions/workflows/deploy.yml>。
 
-可选密钥放在仓库 Settings → Secrets and variables → Actions → Secrets → `FRED_API_KEY` 与 `OPENAI_API_KEY`。不配置 FRED 密钥时使用公开 CSV；不配置 OpenAI 密钥时使用确定性量化证据层。可在 Actions → Variables 设置 `REASONING_MODEL`，默认 `gpt-5-mini`。不要在 data-cache 分支中放任何密钥、个人文件或非公开业务数据。
+可选密钥放在仓库 Settings → Secrets and variables → Actions → Secrets → `FRED_API_KEY` 与 `OPENAI_API_KEY`。不配置 FRED 密钥时使用公开 CSV；不配置 OpenAI 密钥时使用确定性量化证据层。可在 Actions → Variables 设置 `REASONING_MODEL`，默认 `gpt-5.4`。不要在 data-cache 分支中放任何密钥、个人文件或非公开业务数据。
 
 本地构建 Pages：`npm run build:pages`，产物为 `dist-pages`。部署子路径由 `PAGES_BASE_PATH` 控制，默认 `/ai-macro-chain-monitor/`。页面导航、数据与静态资源均支持这个子路径。
 
@@ -111,6 +111,8 @@ JS 验证包括 17 组图表各 3 点（51 点）、15 个 FRED 序列各 3 个�
 ## AI产业链关键指标
 
 原“AI产业链影响”已升级为独立产业模块，包含五个子页面和可追溯的配置规则。[完整交付、来源、运行和未完成清单](docs/industry/README.md)。入口：`?page=impact`。
+
+已新增 [Amkor 封装与测试、Entegris 半导体材料经营样本](docs/industry/operating-samples.md)：各十个连续季度，独立显示范围与正式研究信号。24 个源点独立抽查记录、采集异常边界及未完成的全球产业证据列在说明中。
 
 ## 结论变化、模拟跟踪与公司估值
 

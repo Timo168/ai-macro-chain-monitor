@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1",
-  "reviewedAt": "2026-10-03",
+  "reviewedAt": "2026-10-05",
   "purpose": "首次公开来源获取失败时恢复已核验历史；不更新时间，不代表在线请求成功。",
   "verificationDocument": "docs/industry/institutional-source-verification.json",
   "verificationSha256": "bb713a00d4b6868c0a0ba8a689ce62c6e20d5517edd7c867af6f93b243db9163",
@@ -59,6 +59,30 @@
         "ANET.gross_margin"
       ],
       "reportIds": []
+    },
+    "packaging-evidence.json": {
+      "sha256": "01cd0201895b24c8366ac4757bb46a9509de1ed90c27db7f362f3754712f47fe",
+      "seriesIds": [
+        "AMKR.advanced_products_revenue",
+        "AMKR.company_revenue",
+        "AMKR.gross_margin",
+        "AMKR.materials_cost_share",
+        "AMKR.capex"
+      ],
+      "reportIds": [],
+      "verificationDocument": "docs/industry/operating-samples-verification.json",
+      "verificationSha256": "71e97c18741d849aa2da97d0407f2c6ca3095b5e6326c34297247d5f0d8fbd00"
+    },
+    "materials-evidence.json": {
+      "sha256": "494115f0f1d2c2008ede7a56e4faa589bcafc906fbb96fdf66d87b1afa6b1ecb",
+      "seriesIds": [
+        "ENTG.company_revenue",
+        "ENTG.gross_margin",
+        "ENTG.capex"
+      ],
+      "reportIds": [],
+      "verificationDocument": "docs/industry/operating-samples-verification.json",
+      "verificationSha256": "71e97c18741d849aa2da97d0407f2c6ca3095b5e6326c34297247d5f0d8fbd00"
     }
   }
 }

@@ -41,7 +41,7 @@ test('company-wide sales only supply demand within the declared business scope',
 });
 test('demo and missing critical evidence never create allocation recommendations',()=>{
  const data={definitions:[{...def,valueType:'demo'}],series:{[def.id]:{status:'ready',observations:[p('2025-06-30',40),p('2026-06-30',50)]}}};
- const output=generateRecommendations(data,'2026-09-12');assert.equal(output.length,10);
+ const output=generateRecommendations(data,'2026-09-12');assert.equal(output.filter(r=>r.researchScope==='industry').length,10);assert.equal(output.filter(r=>r.researchScope==='company_operating_sample').length,2);
  assert.ok(output.every(r=>r.level==='insufficient_data'&&r.positiveEvidence.length===0));
 });
 test('same data preserve recommendation identity and first generated timestamp',()=>{

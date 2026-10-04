@@ -17,11 +17,12 @@ export function ReadinessDetail({signal}:{signal:ResearchSectorSignal|undefined}
 
 export function ResearchDeliveryStatus({research}:{research:IndustryResearch}){
  const signals=research.quantitative.sectorSignals;
- const formal=signals.filter(signal=>signal.score!=null).length;
+ const formal=signals.filter(signal=>signal.score!=null&&signal.researchScope!=='company_operating_sample').length;
+ const samples=signals.filter(signal=>signal.score!=null&&signal.researchScope==='company_operating_sample').length;
  const leading=signals.filter(signal=>signal.score==null&&signal.leadingSignal?.status==='available').length;
  const modelActive=['ready','cached'].includes(research.model.status)&&research.analysis.origin==='model';
  return <div className="research-delivery-status" aria-label="研究可用性与投资验证状态">
-  <article><span>研究可用性</span><b>{formal} 个环节可正式评分 · {leading} 个可先行跟踪</b><small>点开每个环节的“结论落地检查”，查看原因与补齐路径。</small></article>
+  <article><span>研究可用性</span><b>{formal} 个产业目标 · {samples} 个公司经营样本可评分 · {leading} 个可先行跟踪</b><small>点开每个环节的“结论落地检查”，查看原因与补齐路径。</small></article>
   <article><span>外部推理模型</span><b>{modelActive?'已启用':'尚未启用'}</b><small>{modelActive?`${research.model.model} · 输入版本已绑定`:research.model.status==='not_configured'?'服务端尚未配置 API 密钥；当前使用确定性因子引擎。':'本次调用未成功；状态与错误保留在审计信息中。'}</small></article>
   <article><span>投资效果验证</span><b>尚未完成回测</b><small>评分尚未经过样本外收益、回撤、估值和交易成本检验。</small></article>
  </div>;

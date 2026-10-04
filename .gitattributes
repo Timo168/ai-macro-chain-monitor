@@ -1,0 +1,3 @@
+# Historical seeds are verified byte-for-byte; Windows checkout must preserve LF.
+data/industry/bootstrap/*.json text eol=lf
+docs/industry/operating-samples-verification.json text eol=lf
