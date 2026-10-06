@@ -6,10 +6,12 @@
 
 | 产业位置 | 主样本 | 交叉样本 | 公开来源 | 当前边界 |
 | --- | --- | --- | --- | --- |
-| 封装与测试 | AMKR | ASE | ASE 季度财报页面 | ASE 的公开页面当前拒绝自动抓取时保留 `fetch_failed`；页面显示来源未核验，不使用旧值伪造更新。 |
+| 封装与测试 | AMKR | ASE | ASE 公司经 PR Newswire 分发的季度业绩公告 | 2024 年一季度至 2026 年二季度已有十个实际财季。ATM 为封装、测试及材料业务，另列公司合并收入；新台币原币展示。 |
 | 半导体材料 | ENTG | Fujimi | Fujimi 官方 IR 季度 PDF | 提取合并收入、营业利润和营业利润率的连续财季。CMP 同时服务逻辑和存储材料，不能视为纯 AI 需求。 |
 
 Fujimi 数值由其官方 PDF 的财年累计披露推导单季值。每个观测保留 PDF 链接、报告期、公告时间、获取时间、原始文件哈希和本期/上期累计值；推导过程在数据中标记为 `cumulative_difference`。日元和美元分别展示，不做汇率换算或金额合计。
+
+ASE 原投资者关系入口曾拒绝自动获取，因此改为公司自行发布、由 [PR Newswire 的 ASE 公告页](https://www.prnewswire.com/news/ase-technology-holding-co.%2C-ltd./)分发的季度业绩。采集器逐份核验发行人、实际财季、公告时间、ATM 收入及营业利润率，同时保留合并收入作为范围对照。三期源值还与 [2025 年二季度 SEC 存档](https://www.sec.gov/Archives/edgar/data/1122411/000095010325009595/dp232391_6k.htm)、[2026 年二季度 SEC 存档](https://www.sec.gov/Archives/edgar/data/1122411/000095010326011351/dp250868_6k.htm)等公司提交文件核对。公告 ATM 口径含封装、测试和材料，也可能含非 AI 业务；与 Amkor 的先进产品收入并不等同。
 
 ## 状态与更新
 
@@ -22,4 +24,4 @@ Fujimi 数值由其官方 PDF 的财年累计披露推导单季值。每个观�
 
 ## 核验
 
-`tests/cross_company_evidence_test.py` 会抽查 Fujimi 三份原始官方 PDF 的文件哈希、单季推导值和利润率，并验证 ASE 抓取失败不会转成已获取数据。
+`tests/cross_company_evidence_test.py` 会抽查 Fujimi 三份原始官方 PDF 的文件哈希、单季推导值和利润率；ASE 检查 2024 年一季度、2025 年二季度、2026 年二季度三份公告的原始 HTML 哈希和收入、利润率，以及来源失败后保留缓存的状态。

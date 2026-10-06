@@ -8,6 +8,7 @@ import calendar
 import hashlib
 import io
 import json
+import os
 import re
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timezone
@@ -23,8 +24,9 @@ from industry_bootstrap import restore_bootstrap
 
 VERSION = 'cross-company-1.0.0'
 INDEX = 'https://www.fujimiinc.co.jp/english/ir/news/'
-ASE_INDEX = 'https://ir.aseglobal.com/html/ir_quarterly.php'
+ASE_INDEX = 'https://www.prnewswire.com/news/ase-technology-holding-co.%2C-ltd./'
 FAMILIES = ('cmp_revenue', 'company_revenue', 'operating_income', 'operating_margin')
+ASE_FAMILIES = ('atm_revenue', 'company_revenue', 'atm_margin')
 SCOPE = ('Fujimi CMP包括逻辑与存储器研磨材料，不是纯AI收入；公司收入和营业利润还含硅片、硬盘、一般工业等。'
          '以日元原币观察同比方向，不与美元金额相加；营业利润率不等于Entegris毛利率。')
 
@@ -35,7 +37,10 @@ def allowed(url):
         return p.scheme == 'https' and not p.username and not p.password and p.port in (None, 443) and (
             p.hostname == 'www.fujimiinc.co.jp' and p.path.startswith('/english/ir/')
             or p.hostname == 'www.ircms.jp' and p.path.startswith('/irexport/fujimiinc/')
-            or p.hostname == 'ir.aseglobal.com' and p.path.startswith('/html/')
+            or p.hostname == 'www.prnewswire.com' and (
+                p.path == '/news/ase-technology-holding-co.%2C-ltd./'
+                or re.fullmatch(r'/news-releases/ase-technology-holding-co-ltd-reports-its-unaudited-consolidated-financial-results-for-the-(?:first|second|third|fourth)-quarter(?:-and-the-full-year)?-of-20\d{2}-\d+\.html', p.path)
+            )
         )
     except ValueError:
         return False
@@ -57,7 +62,7 @@ def fetch_source(url, force=False):
             raise ValueError('来源缓存字节校验失败')
         return raw, previous['fetchedAt'], previous['hash']
     with requests.Session() as session:
-        response = session.get(url, timeout=25, headers={'User-Agent': 'AI Macro Chain Monitor public financial research'})
+        response = session.get(url, timeout=25, headers={'User-Agent': os.environ.get('SEC_USER_AGENT') or 'AI Macro Chain Monitor public financial research'})
         response.raise_for_status()
         if not allowed(response.url):
             raise ValueError('来源重定向至未允许域名')
@@ -174,6 +179,116 @@ def definitions():
     return result
 
 
+def ase_definitions():
+    scope = ('ASE Technology Holding 自行发布、经 PR Newswire 分发的季度业绩；ATM 为封装、测试和材料业务，'
+             '不同于公司含 EMS 的合并收入。新台币原币观察自身同比，不能视为纯 AI 订单或与 Amkor 美元金额相加。')
+    result = []
+    for family, label, method in [
+        ('atm_revenue', 'ASE 封装测试与材料收入', '季度公告 ATM Results Highlights 中当季 Net revenues，百万新台币÷100。'),
+        ('company_revenue', 'ASE 公司合并收入', '季度公告导语中当季合并 Net revenues，百万新台币÷100。'),
+        ('atm_margin', 'ASE 封装测试与材料营业利润率', '季度公告 ATM Results Highlights 中当季 Operating margin，百分点原值。'),
+    ]:
+        d = definition('ASE.' + family, label, label, 'semiconductor', family, 'ASE',
+                       'ASE Technology Holding company release via PR Newswire', ASE_INDEX,
+                       '%' if family == 'atm_margin' else '亿新台币', 'reported', method + scope,
+                       eligible=False)
+        d.update(currency='TWD', sourceAdapter='cross-company',
+                 reportingScope='ase_atm' if family != 'company_revenue' else 'company_total',
+                 researchTargets=['packaging'], scope='ase_atm_includes_non_ai_and_materials',
+                 directness='company_disclosure', dataRole='cross_company_actual',
+                 isComparableAcrossEntities=False, crossEvidenceOnly=True,
+                 interpretation='以第二家公司的封装测试业务经营方向交叉观察。', crossCheck=scope,
+                 normalUpdateDelayDays=65)
+        result.append(d)
+    return result
+
+
+def ase_indexes():
+    return [ASE_INDEX, ASE_INDEX + '?page=2&pagesize=25', ASE_INDEX + '?page=3&pagesize=25']
+
+
+def discover_ase_releases(raw, as_of=None):
+    soup = BeautifulSoup(raw, 'html.parser')
+    results = []
+    for link in soup.select('a[href]'):
+        title = link.get_text(' ', strip=True)
+        if not re.search(r'ASE Technology Holding Co\., Ltd\. Reports Its Unaudited Consolidated Financial Results for the (?:First|Second|Third|Fourth) Quarter', title, re.I):
+            continue
+        year = re.search(r'of (20\d{2})\b', title)
+        if not year or int(year[1]) < 2024:
+            continue
+        url = 'https://www.prnewswire.com' + link['href'] if link['href'].startswith('/') else link['href']
+        if allowed(url) and url not in results:
+            results.append(url)
+    return results
+
+
+def parse_ase_report(raw, url, as_of=None):
+    soup = BeautifulSoup(raw, 'html.parser')
+    heading = soup.find('h1')
+    title = heading.get_text(' ', strip=True) if heading else ''
+    match = re.fullmatch(r'ASE Technology Holding Co\., Ltd\. Reports Its Unaudited Consolidated Financial Results for the (First|Second|Third|Fourth) Quarter(?: and the Full Year)? of (20\d{2})', title, re.I)
+    if not match:
+        raise ValueError('ASE 公司、公告标题或实际季度无法核验')
+    quarter = {'first': 1, 'second': 2, 'third': 3, 'fourth': 4}[match[1].lower()]
+    year = int(match[2])
+    published_tag = soup.find('meta', attrs={'name': 'date'})
+    published = published_tag.get('content') if published_tag else None
+    if not published:
+        raise ValueError('ASE 公告发布时间缺失')
+    published_day = datetime.fromisoformat(published).date().isoformat()
+    if as_of and published_day > as_of:
+        raise ValueError('ASE 公告尚未发布')
+    end = f'{year}-{quarter * 3:02d}-{calendar.monthrange(year, quarter * 3)[1]:02d}'
+    if published_day <= end:
+        raise ValueError('ASE 公告时间早于报告期末')
+    text = ' '.join(soup.get_text(' ', strip=True).split())
+    # Some issuer releases render a space before a thousands separator.
+    text = re.sub(r'(?<=\d)\s*,\s*(?=\d)', ',', text)
+    if 'SOURCE ASE Technology Holding Co., Ltd.' not in text:
+        raise ValueError('ASE 公告发布主体未通过核验')
+    fiscal = f'{quarter}Q{str(year)[2:]}'
+    total = re.search(r'reported its unaudited.{0,45}?net revenues.{0,35}?of NT\s*\$\s*([\d,]+)\s*million for ' + fiscal + r'\b', text, re.I)
+    atm_start = re.search(re.escape(fiscal) + r' Results Highlights\s*[–—-]\s*ATM\b', text, re.I)
+    if not total or not atm_start:
+        raise ValueError('ASE 当季合并收入或 ATM 分项未找到')
+    next_section = re.search(re.escape(fiscal) + r' Results Highlights\s*[–—-]\s*EMS\b', text[atm_start.end():], re.I)
+    if not next_section:
+        raise ValueError('ASE ATM 与 EMS 分段边界缺失')
+    atm_text = text[atm_start.end():atm_start.end() + next_section.start()]
+    atm_revenue = re.search(r'Net revenues were\s*NT\s*\$\s*([\d,]+)\s*million', atm_text, re.I)
+    atm_margin = re.search(r'Operating margin was\s*([\d.]+)\s*%', atm_text, re.I)
+    if not atm_revenue or not atm_margin:
+        raise ValueError('ASE ATM 当季收入或营业利润率缺失')
+    values = {'company_revenue': float(total[1].replace(',', '')),
+              'atm_revenue': float(atm_revenue[1].replace(',', '')),
+              'atm_margin': float(atm_margin[1])}
+    if not 0 < values['atm_revenue'] <= values['company_revenue'] * 1.1 or not 0 < values['atm_margin'] < 100:
+        raise ValueError('ASE 当季数值超出已核验业务范围')
+    return {'entity': 'ASE', 'fiscalYear': year, 'quarter': quarter,
+            'periodStart': f'{year}-{quarter * 3 - 2:02d}-01', 'periodEnd': end,
+            'publishedAt': published, 'url': url, 'values': values}
+
+
+def ase_points(reports):
+    result = {family: {} for family in ASE_FAMILIES}
+    for report in reports:
+        for family in ASE_FAMILIES:
+            value = report['values'][family]
+            items = {'parserVersion': VERSION, 'reportedUnit': '%' if family == 'atm_margin' else 'NTD million',
+                     'reportedValue': value, 'sourceScope': 'ATM including packaging, testing and materials' if family != 'company_revenue' else 'ASE consolidated including EMS',
+                     'sourceHash': report['version']}
+            p = observation('ASE.' + family, report['periodEnd'], value if family == 'atm_margin' else value / 100,
+                            report['url'], report['fetchedAt'], report['version'], report['periodStart'],
+                            f"FY{report['fiscalYear']} Q{report['quarter']}",
+                            'reported percentage point' if family == 'atm_margin' else 'reported NTD million / 100',
+                            items, report['publishedAt'])
+            p.update(originalValue=value, originalUnit='%' if family == 'atm_margin' else 'NTD million',
+                     originalCurrency='TWD', reportingScope='ase_atm' if family != 'company_revenue' else 'company_total')
+            result[family][p['periodEnd']] = p
+    return result
+
+
 def quarterly_points(reports):
     lookup = {(r['fiscalYear'], r['quarter']): r for r in reports}
     result = {family: {} for family in FAMILIES}
@@ -257,23 +372,68 @@ def run(force=False):
     healthy = bool(jobs) and not any(r['status'] == 'fetch_failed' and r['url'] == INDEX for r in runs)
     series = {d['id']: merge_series(old.get('series', {}).get(d['id'], {}), points[d['family']],
                                    healthy and newest in points[d['family']], '最新官方财季或差分基期缺失；保留最后成功观测和时间。') for d in definitions()}
-    # Official ASE index is checked explicitly. HTTP 200 is not financial data:
-    # only a future validated adapter may change its source state to ready.
-    try:
-        _, stamp, digest = fetch_source(ASE_INDEX, force)
-        ase = {'status': 'not_configured', 'reason': '官方页面已获取，季度数据解析和连续历史尚未接入；不计入任何评分。', 'fetchedAt': stamp, 'version': digest}
-    except Exception as exc:
-        ase = {'status': 'fetch_failed', 'reason': '官方季度入口获取失败，未取得已核验连续数据；不计入评分。', 'error': str(exc)}
+    ase_urls = []
+    ase_errors = []
+    ase_reports = []
+    for url in ase_indexes():
+        try:
+            body, fetched, digest = fetch_source(url, force)
+            ase_urls.extend(discover_ase_releases(body))
+            runs.append({'entity': 'ASE', 'url': url, 'status': 'ready', 'fetchedAt': fetched,
+                         'version': digest, 'checkedAt': now()})
+        except Exception as exc:
+            ase_errors.append(str(exc))
+            runs.append({'entity': 'ASE', 'url': url, 'status': 'fetch_failed', 'checkedAt': now(), 'error': str(exc)})
+    ase_urls = list(dict.fromkeys(ase_urls))
+    if not ase_urls:
+        ase_errors.append('ASE 公司公告目录尚未提供可核验的季度业绩链接')
+
+    def collect_ase(url):
+        try:
+            body, fetched, digest = fetch_source(url, force)
+            report = parse_ase_report(body, url, date.today().isoformat())
+            report.update(fetchedAt=fetched, version=digest)
+            return report, {'entity': 'ASE', 'url': url, 'periodEnd': report['periodEnd'],
+                            'publishedAt': report['publishedAt'], 'fetchedAt': fetched, 'version': digest,
+                            'parsedAt': now(), 'checkedAt': now(),
+                            'metricIds': ['ASE.' + family for family in ASE_FAMILIES], 'status': 'ready'}
+        except Exception as exc:
+            return None, {'entity': 'ASE', 'url': url, 'status': 'fetch_failed',
+                          'checkedAt': now(), 'error': str(exc)}
+
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        for report, source_run in pool.map(collect_ase, ase_urls):
+            runs.append(source_run)
+            if report:
+                ase_reports.append(report)
+            else:
+                ase_errors.append(source_run['error'])
+    ase_values = ase_points(ase_reports)
+    newest_ase = max((r['periodEnd'] for r in ase_reports), default=None)
+    for d in ase_definitions():
+        series[d['id']] = merge_series(old.get('series', {}).get(d['id'], {}), ase_values[d['family']],
+                                       bool(ase_urls) and newest_ase in ase_values[d['family']] and not ase_errors,
+                                       'ASE 最新公司公告抓取或解析未完全成功；保留上次已核验观测。')
+    ase_status = ('ready' if all(series['ASE.' + family]['status'] == 'ready' for family in ASE_FAMILIES)
+                  else 'cached' if any(series['ASE.' + family]['observations'] for family in ASE_FAMILIES)
+                  else 'fetch_failed')
+    ase = {'status': ase_status, 'reason': 'ASE 公司自行发布的季度公告，经 PR Newswire 分发；只做跨公司经营线索，不参与正式评分。',
+           'error': '; '.join(ase_errors[:3]) or None,
+           'lastSuccessfulAt': series['ASE.atm_revenue']['lastSuccessfulAt']}
+    errors.extend(ase_errors)
     catalog = [{'id': 'fujimi_cross_company', 'publisher': 'Fujimi', 'title': 'Fujimi CMP与公司实际经营数据', 'sourceUrl': INDEX,
-                'status': 'ready' if all(s['status'] == 'ready' for s in series.values()) else 'cached' if any(s['observations'] for s in series.values()) else 'fetch_failed',
+                'status': 'ready' if all(series['FUJIMI.' + family]['status'] == 'ready' for family in FAMILIES)
+                          else 'cached' if any(series['FUJIMI.' + family]['observations'] for family in FAMILIES) else 'fetch_failed',
                 'modelUseAllowed': True, 'exportAllowed': True, 'purpose': '半导体材料第二家公司交叉证据', 'reason': SCOPE, 'checkedAt': now()},
                {'id': 'ase_cross_company', 'publisher': 'ASE Technology Holding', 'title': 'ASE封装测试季度交叉证据', 'sourceUrl': ASE_INDEX,
-                'modelUseAllowed': False, 'exportAllowed': False, 'purpose': '封装测试第二家公司交叉证据', 'checkedAt': now(), **ase}]
-    result = {'schemaVersion': '1', 'generatedAt': now(), 'definitions': definitions(), 'series': series, 'events': [], 'projects': [],
+                'modelUseAllowed': True, 'exportAllowed': True, 'purpose': '封装测试第二家公司交叉证据', 'checkedAt': now(), **ase}]
+    result = {'schemaVersion': '2', 'generatedAt': now(), 'definitions': definitions() + ase_definitions(), 'series': series, 'events': [], 'projects': [],
               'sourceRuns': runs, 'sourceCatalog': catalog, 'errors': errors, 'missingPeriods': missing,
               'sources': [{'id': 'cross-company-FUJIMI', 'name': 'Fujimi官方财报', 'url': INDEX, 'status': catalog[0]['status']},
-                          {'id': 'cross-company-ASE', 'name': 'ASE官方季度财报', 'url': ASE_INDEX, 'status': ase['status'], 'error': ase.get('error')}],
-              'ingestedReleases': [r for r in runs if r['status'] == 'ready' and r.get('periodEnd') and r['periodEnd'] in points['company_revenue']]}
+                          {'id': 'cross-company-ASE', 'name': 'ASE公司公告', 'url': ASE_INDEX, 'status': ase['status'], 'error': ase.get('error')}],
+              'ingestedReleases': [r for r in runs if r['status'] == 'ready' and r.get('periodEnd') and
+                                   (r['entity'] == 'FUJIMI' and r['periodEnd'] in points['company_revenue'] or
+                                    r['entity'] == 'ASE' and r['periodEnd'] in ase_values['company_revenue'])]}
     if (DATA / 'bootstrap' / path.name).exists() and DATA.resolve() == (Path(__file__).resolve().parents[1] / 'data' / 'industry').resolve():
         result = restore_bootstrap(path.name, result, backfill_history=True)
     persist(result, path)

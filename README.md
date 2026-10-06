@@ -144,4 +144,6 @@ npm run build:pages
 - **公司交叉验证**：将 AMKR/ASE、ENTG/Fujimi 的公开经营线索并列，保留业务范围、币种与抓取状态，绝不合并不同口径的金额。详见[交叉证据说明](docs/industry/cross-company-evidence.md)。
 - **模型评测**：每次生成前先运行固定的引用、反证、失效条件、范围和禁止个股交易语言测试。没有 API 密钥时页面明确显示“模型未运行”；离线合约通过不被写成模型表现。评测方法参考 [OpenAI evaluation best practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices)。
 
-本次验证包含 152 项 Node 测试、215 项 Python 测试和 TypeScript 类型检查；其中交叉证据测试会逐项抽查官方 PDF 的哈希、推导值和失败状态。
+2026-10-07 补充：AMKR 与 ENTG 的发行人每股收益历史和日频参考行情已纳入自动采集，满足历史估值分位的样本门槛；ASE 也已从公司经 PR Newswire 分发的公告提取 2024 Q1—2026 Q2 的十个季度，作为封装测试的第二家公司交叉线索。模拟跟踪中最早的结论于 2026-10-05 固定入场，首个一个月窗口到 2026-11-05 才届满；此前的跟踪至今仅是观察，不能报告投资效果。推理 API 尚未开通，真实模型输出及其质量检验仍未完成。
+
+验证覆盖 Node、Python 与 TypeScript 类型检查；交叉证据测试抽查 Fujimi 官方 PDF 及 ASE 发行人公告的原始哈希、计算值和缓存边界。
