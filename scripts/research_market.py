@@ -8,10 +8,11 @@ from zoneinfo import ZoneInfo
 from collect import download_market
 from industry_common import DATA, atomic, now
 from industry_sector_financials import fetch_source, quarterly_flows, tagged_facts
+from valuation_disclosures import collect_eps
 
 PATH=DATA/'research-market.json'
-SYMBOLS=['MSFT','GOOG','META','AMZN','ORCL','NVDA','DELL','AMD','HPE','MU','ETN','VRT','TSM','QQQ']
-CIKS={'MSFT':'0000789019','GOOG':'0001652044','META':'0001326801','AMZN':'0001018724','ORCL':'0001341439','NVDA':'0001045810','DELL':'0001571996','AMD':'0000002488','HPE':'0001645590','MU':'0000723125','ETN':'0001551182','VRT':'0001674101'}
+SYMBOLS=['MSFT','GOOG','META','AMZN','ORCL','NVDA','DELL','AMD','HPE','MU','ETN','VRT','TSM','AMKR','ENTG','QQQ']
+CIKS={'MSFT':'0000789019','GOOG':'0001652044','META':'0001326801','AMZN':'0001018724','ORCL':'0001341439','NVDA':'0001045810','DELL':'0001571996','AMD':'0000002488','HPE':'0001645590','MU':'0000723125','ETN':'0001551182','VRT':'0001674101','AMKR':'0001047127','ENTG':'0001101302'}
 TYPES={'revenue':'trailingTotalRevenue','netIncome':'trailingNetIncomeCommonStockholders','operatingCashFlow':'trailingOperatingCashFlow','capex':'trailingCapitalExpenditure','shares':'quarterlyOrdinarySharesNumber','cash':'quarterlyCashCashEquivalentsAndShortTermInvestments','debt':'quarterlyTotalDebt'}
 
 def numeric(value):return isinstance(value,(int,float)) and not isinstance(value,bool) and math.isfinite(value)
@@ -39,7 +40,20 @@ def parse_prices(raw,symbol,current=None):
         points.append({'date':day,'close':float(close),'adjustedClose':float(adj)})
     if len(points)<20:raise ValueError('有效完整交易日少于20天')
     splits=[{'date':datetime.fromtimestamp(int(key),zone).date().isoformat(),'numerator':row.get('numerator'),'denominator':row.get('denominator')} for key,row in result.get('events',{}).get('splits',{}).items()]
-    return {'currency':'USD','observations':sorted(points,key=lambda p:p['date']),'splits':splits,'adjustment':'provider_split_dividend_adjusted','delayNote':'完整交易日日频收盘参考，可能有延迟；不是实时成交报价。'}
+    return {'currency':'USD','observations':sorted(points,key=lambda p:p['date']),'splits':splits,'adjustment':'provider_split_dividend_adjusted','closeAdjustment':'split_adjusted','closeBasisDate':max(p['date'] for p in points),'delayNote':'完整交易日日频收盘参考，可能有延迟；不是实时成交报价。close按拆股调整，adjustedClose另含分红调整。'}
+
+def issuer_ttm(history, as_of):
+    """Latest four published actual EPS quarters; each source remains linked."""
+    visible={}
+    for p in sorted(history.get('observations',[]),key=lambda p:p.get('availableAt',p.get('publishedAt',''))):
+        if p.get('availableAt',p.get('publishedAt','9999'))[:10]<=as_of and p['periodEnd']<=as_of:visible[p['periodEnd']]=p
+    rows=sorted(visible.values(),key=lambda p:p['periodEnd'])[-4:]
+    if len(rows)!=4 or any(not 70<=(datetime.fromisoformat(b['periodEnd'])-datetime.fromisoformat(a['periodEnd'])).days<=105 for a,b in zip(rows,rows[1:])):return {}
+    fields={}
+    for key,source,unit in [('dilutedEps','value','USD per diluted share'),('netIncome','netIncome','USD')]:
+        if not all(numeric(p.get(source)) for p in rows):continue
+        fields[key]={'value':sum(p[source] for p in rows),'periodEnd':rows[-1]['periodEnd'],'currency':'USD','unit':unit,'publishedAt':max(p.get('availableAt',p['publishedAt']) for p in rows),'sourceUrl':rows[-1]['sourceUrl'],'basis':'official_quarter_eps_sum' if key=='dilutedEps' else 'official_quarter_income_sum','periodType':'TTM','fetchedAt':max(p['fetchedAt'] for p in rows),'version':'|'.join(p['version'] for p in rows),'inputs':rows,'sourceStatus':history['status']}
+    return fields
 
 def parse_vendor_facts(raw,symbol,as_of):
     payload=json.loads(raw);root=payload.get('timeseries',{})
@@ -122,13 +136,18 @@ def run(force=False,path=PATH,symbols=None):
         if symbol!='QQQ':
             try:
                 if not force and not due(finance,current):raise SkipRefresh()
-                fields={};sec_error=None;vendor_error=None;sec_url=None
+                fields={};sec_error=None;vendor_error=None;sec_url=None;eps_history=None
                 if symbol in CIKS:
                     sec_url=f'https://data.sec.gov/api/xbrl/companyfacts/CIK{CIKS[symbol]}.json'
                     try:
                         raw,fetched,version=fetch_source(sec_url,force=force);fields=parse_sec_facts(raw,symbol,as_of)
                         for field in fields.values():field.update({'sourceUrl':sec_url,'fetchedAt':fetched,'version':version})
                     except Exception as error:sec_error=str(error)[:180]
+                if symbol in ('AMKR','ENTG'):
+                    eps_history=collect_eps(symbol,finance.get('epsHistory'))
+                    if eps_history.get('status') in ('ready','cached'):
+                        for key,field in issuer_ttm(eps_history,as_of).items():
+                            if key not in fields or field['periodEnd']>fields[key]['periodEnd']:fields[key]=field
                 url='https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/'+symbol+'?type='+','.join(TYPES.values())+'&period1=1704067200&period2='+str(int(time.time()))
                 try:
                     raw=download_market(url);version=archive(symbol,'finance',raw)
@@ -139,7 +158,7 @@ def run(force=False,path=PATH,symbols=None):
                     if not fields:raise
                 for key,field in finance.get('fields',{}).items():
                     if key not in fields:fields[key]={**field,'sourceStatus':'cached','sourceError':vendor_error or sec_error}
-                finance={'fields':fields,'status':'ready','checkedAt':stamp,'fetchedAt':stamp,'lastSuccessfulAt':stamp,'officialSourceError':sec_error,'vendorSourceError':vendor_error,'sourceUrl':sec_url,'note':'同报告期优先SEC正式财务；缺项或较新报告期使用Yahoo第三方转录，逐字段标明来源，不补入正式产业因子评分。','error':None}
+                finance={'fields':fields,'status':'ready','checkedAt':stamp,'fetchedAt':stamp,'lastSuccessfulAt':stamp,'officialSourceError':sec_error,'vendorSourceError':vendor_error,'sourceUrl':sec_url,'note':'同报告期优先SEC或公司正式财报；缺项或较新报告期使用Yahoo第三方转录，逐字段标明来源，不补入正式产业因子评分。','error':None,**({'epsHistory':eps_history} if eps_history is not None else {})}
             except SkipRefresh:pass
             except Exception as error:finance=retained(finance,error,stamp)
         return symbol,price,finance

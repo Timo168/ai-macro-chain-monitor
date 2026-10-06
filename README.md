@@ -132,3 +132,16 @@ python scripts/research_alfred.py
 node scripts/build-investment-research.mjs
 npm run build:pages
 ```
+
+## 研究可靠性、验证与交叉证据
+
+“投资结论”现增加六项独立工具，均只使用带版本、来源和可见时间的数据，不把缺失值当成零：
+
+- **结论稳健性**：对已存档的同一份计算输入做因子权重上下扰动、删除单个指标和删除单家公司三类检验，显示分数范围、方向是否改变及何处会失去正式评分资格。
+- **我的关注**：列出真正发生的结论变动、正式资格丢失、财报同比连续放缓、来源修订/过期和估值历史极端位置；已读状态只保存在当前浏览器。
+- **效果检验**：只在结论先保存、后续交易窗口完整到期、价格版本被冻结后，比较固定分数组的长期持有篮子与基准；不生成胜率、夏普或“有效”的收益承诺。详情见[验证方法](docs/industry/research-validation.md)。
+- **公司估值**：历史 P/E、P/S 和 FCF 收益率仅用当时已发布的发行人财务与当日收盘价重建；样本少于 60 个有效日不计算分位数。固定市值情景只展示增长和利润率敏感度，不给目标价。
+- **公司交叉验证**：将 AMKR/ASE、ENTG/Fujimi 的公开经营线索并列，保留业务范围、币种与抓取状态，绝不合并不同口径的金额。详见[交叉证据说明](docs/industry/cross-company-evidence.md)。
+- **模型评测**：每次生成前先运行固定的引用、反证、失效条件、范围和禁止个股交易语言测试。没有 API 密钥时页面明确显示“模型未运行”；离线合约通过不被写成模型表现。评测方法参考 [OpenAI evaluation best practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices)。
+
+本次验证包含 152 项 Node 测试、215 项 Python 测试和 TypeScript 类型检查；其中交叉证据测试会逐项抽查官方 PDF 的哈希、推导值和失败状态。

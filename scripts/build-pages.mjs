@@ -1,7 +1,7 @@
 import {spawnSync} from 'node:child_process';
 import {existsSync,readFileSync,mkdirSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-const result=spawnSync(process.execPath,['node_modules/vite/bin/vite.js','build','--config','vite.pages.config.ts'],{stdio:'inherit'});if(result.status!==0)process.exit(result.status??1);
+const result=spawnSync(process.execPath,['node_modules/vite/bin/vite.js','build','--config','vite.pages.config.ts'],{stdio:'inherit',windowsHide:true});if(result.status!==0)process.exit(result.status??1);
 const version=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0,16);
 const source=existsSync('data/latest.json')?'data/latest.json':'data/seed.json';const data=JSON.parse(readFileSync(source,'utf8'));
 const macroSnapshotVersion=version(data);

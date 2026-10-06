@@ -5,6 +5,11 @@ import {researchCheckpoint,appendCheckpoint,compareCheckpoints} from '../lib/ind
 import {buildTracking} from '../lib/industry/research-tracking.mjs';
 import {buildValuations} from '../lib/industry/valuation.mjs';
 import {modelSettings,callPermission,callReasoning,citationAudit,MODEL_RUNTIME_VERSION} from '../lib/industry/model-runtime.mjs';
+import {buildResearchRobustness} from '../lib/industry/research-robustness.mjs';
+import {buildResearchValidation} from '../lib/industry/research-validation.mjs';
+import {buildResearchWatchlist} from '../lib/industry/research-watchlist.mjs';
+import {buildCrossCompanyComparison} from '../lib/industry/cross-company.mjs';
+import {buildModelEvaluation} from '../lib/industry/model-evaluation.mjs';
 
 const folder='data/industry';
 const output=folder+'/research.json';
@@ -112,7 +117,13 @@ const followupPath=folder+'/research-followup.json';
 result.followup=buildTracking(evolution.records,market,{asOf:localAsOf,prior:read(followupPath,null)});
 writeJsonAtomic(followupPath,result.followup);
 result.followup.vintageArchive=read(folder+'/research-alfred.json',{status:'not_configured',note:'未配置ALFRED历史版本；前瞻跟踪采用实际留存快照。'});
-result.valuation=buildValuations(industry,market,{asOf:localAsOf});
+result.valuation=buildValuations(industry,market,{asOf:localAsOf,previous:previous?.valuation,recordedAt:now});
+result.robustness=buildResearchRobustness(calculationInputs,{inputHash});
+result.validation=buildResearchValidation(evolution.records,result.followup,{asOf:localAsOf,registeredAt:previous?.validation?.registeredAt??now});
+result.attention=buildResearchWatchlist({ledger:evolution.records,signals:packet.quantitative.sectorSignals,industry,valuation:result.valuation,robustness:result.robustness},{asOf:localAsOf});
+result.crossCompany=buildCrossCompanyComparison(industry,{asOf:localAsOf});
+result.modelEvaluation=buildModelEvaluation({model,analysis,packet,calls});
+if(result.modelEvaluation.contract.status!=='passed')throw Error('模型接口验收题未通过，停止发布本次研究数据');
 writeJsonAtomic(ledgerPath,evolution.records);
 const immutableInput={schemaVersion:'3',inputHash,createdAt:now,inputs,dataCutoffs,packet:publicPacket,calculationInputs,observationManifest,calculationInputHash:hash(calculationInputs)};
 mkdirSync(inputsFolder,{recursive:true});

@@ -5,6 +5,7 @@ import {CartesianGrid,Legend,Line,LineChart,ResponsiveContainer,Tooltip,XAxis,YA
 import type {IndustryResearch} from '@/lib/industry/types';
 import {beijing,format} from '@/lib/data';
 import './research-progress.css';
+import {ResearchAttention,ResearchRobustness,ResearchValidation,ResearchCrossCompany,ResearchModelEvaluation,ResearchValuationContext} from './research-tools';
 
 const score=(value:number|null|undefined)=>value==null?'—':`${value>0?'+':''}${format(value)}`;
 const percent=(value:number|null|undefined)=>value==null?'—':`${score(value)}%`;
@@ -15,7 +16,7 @@ const windowLabels:Record<string,string>={matured:'已期满',pending:'等待期
 const fieldNames:Record<string,string>={revenue:'TTM收入',netIncome:'TTM净利润',operatingCashFlow:'TTM营业现金流',capex:'TTM现金资本开支',cash:'现金及短期投资',debt:'总债务',longTermDebt:'长期借款（非总债务）',shares:'普通股股数'};
 
 export function ResearchProgress({research,showMetric}:{research:IndustryResearch|null;showMetric:(id:string)=>void}){
- const current=research as any;const [section,setSection]=useState('changes'),[horizon,setHorizon]=useState(0),[cohortId,setCohortId]=useState(''),[entity,setEntity]=useState('MSFT'),[priceInput,setPriceInput]=useState(''),[capInput,setCapInput]=useState('');
+ const current=research as any;const [section,setSection]=useState('attention'),[horizon,setHorizon]=useState(0),[cohortId,setCohortId]=useState(''),[entity,setEntity]=useState('MSFT'),[priceInput,setPriceInput]=useState(''),[capInput,setCapInput]=useState('');
  const changes=current?.changes,tracking=current?.followup,valuation=current?.valuation;
  const company=valuation?.companies?.find((row:any)=>row.entity===entity);
  const selectedCohort=tracking?.cohorts?.find((row:any)=>row.id===cohortId)??tracking?.cohorts?.at(-1);
@@ -30,7 +31,12 @@ export function ResearchProgress({research,showMetric}:{research:IndustryResearc
  if(!research)return null;
  return <section className="industry-panel research-progress" aria-label="研究变化、模拟跟踪与公司估值">
   <div className="research-progress-title"><div><span className="industry-kicker">RESEARCH FOLLOW-UP</span><h2>把研究结论接到实际观察</h2><p>看变化的依据，再跟踪后续表现，最后核对增长与价格。</p></div><span className="industry-tag">真实存档 · 日频参考</span></div>
-  <nav className="research-progress-tabs" aria-label="研究验证导航">{[['changes','结论为什么变了'],['tracking','模拟跟踪'],['valuation','公司估值']].map(([id,name])=><button key={id} onClick={()=>setSection(id)} aria-pressed={section===id}>{name}</button>)}</nav>
+  <nav className="research-progress-tabs" aria-label="研究验证导航">{[['attention','我的关注'],['changes','结论变化'],['robustness','结论稳健性'],['tracking','模拟跟踪'],['validation','效果检验'],['valuation','公司估值'],['crossCompany','公司交叉验证'],['modelEvaluation','模型评测']].map(([id,name])=><button key={id} onClick={()=>setSection(id)} aria-pressed={section===id}>{name}</button>)}</nav>
+  {section==='attention'&&<ResearchAttention research={current} showMetric={showMetric}/>}
+  {section==='robustness'&&<ResearchRobustness data={current.robustness}/>}
+  {section==='validation'&&<ResearchValidation data={current.validation}/>}
+  {section==='crossCompany'&&<ResearchCrossCompany data={current.crossCompany} showMetric={showMetric}/>}
+  {section==='modelEvaluation'&&<ResearchModelEvaluation data={current.modelEvaluation}/>}
   {section==='changes'&&<div>
    <h3>上一版 → 本版</h3><p className="research-progress-note">{changes?.summary??'等待新版本生成对比。'}</p>
    {changes?.previousAt&&<p className="industry-small">上一版保存 {beijing(changes.previousAt)} · 本版保存 {beijing(changes.currentAt)}（北京时间）</p>}
@@ -56,6 +62,7 @@ export function ResearchProgress({research,showMetric}:{research:IndustryResearc
    <p className="research-table-hint">表格可左右滑动查看全部指标。</p><div className="research-progress-table"><table><thead><tr><th>公司 / 日期</th><th>股价 USD</th><th>估算市值 亿USD</th><th>TTM P/E</th><th>TTM P/S</th><th>FCF收益率</th><th>季度收入同比</th><th>可比情况</th></tr></thead><tbody>{valuation?.companies?.map((row:any)=><tr key={row.entity} className={row.entity===entity?'selected':''}><td><button onClick={()=>{setEntity(row.entity);setPriceInput('');setCapInput('')}}>{row.entity}</button><small>行情 {row.priceAt??'缺失'}<br/>TTM {row.ttmEnd??'待核验'}</small></td><td>{format(row.price)}</td><td>{row.marketCap==null?'—':format(row.marketCap/1e8)}</td><td>{row.pe==null?'不适用 / 缺项':format(row.pe)+' 倍'}</td><td>{row.ps==null?'—':format(row.ps)+' 倍'}</td><td>{percent(row.fcfYield)}</td><td>{percent(row.revenueGrowth)}</td><td><small>{row.peerGroup} · {row.peerComparison}<br/>{row.status==='available'?'可用估值字段已计算':'有缺项或口径需核验'}</small></td></tr>)}</tbody></table></div>
    {company&&<article className="research-company-detail"><div className="research-company-header"><h4>{company.entity} · 估值与现金流核对</h4>{company.sourceUrl&&<a href={company.sourceUrl} target="_blank" rel="noreferrer">行情来源 ↗</a>}</div><p>{company.summary??company.reasons?.join('；')}</p><p className="industry-small">行情状态：{company.priceStatus==='cached'?'使用缓存':company.priceStatus==='ready'?'已获取':'需核验'} · 成功获取 {beijing(company.priceFetchedAt)} · 市值口径：{company.marketCapBasis??'ADR口径待核验'}</p><div className="research-company-facts"><span>{company.cashScope==='cash_only'?'现金（未含短期投资）':'现金及短期投资'} <b>{company.cash==null?'—':format(company.cash/1e8)+' 亿USD'}</b></span><span>总债务 <b>{company.debt==null?'—':format(company.debt/1e8)+' 亿USD'}</b></span><span>净债务 <b>{company.netDebt==null?'—':format(company.netDebt/1e8)+' 亿USD'}</b></span><span>企业价值估算 <b>{company.ev==null?'—':format(company.ev/1e8)+' 亿USD'}</b></span></div>
     <details><summary>逐项来源、口径与缺项原因</summary><ul>{company.reasons?.map((reason:string)=><li key={reason}>{reason}</li>)}</ul>{company.sourceError&&<p className="industry-small">来源检查：{company.sourceError}。当前补充字段的实际来源逐项列出。</p>}<div className="research-progress-table"><table><thead><tr><th>字段</th><th>值 / 单位</th><th>报告期</th><th>来源</th></tr></thead><tbody>{Object.entries(company.fields??{}).map(([key,value])=>{const field=value as any;return <tr key={key}><td>{key==='cash'&&field.scope==='cash_only'?'现金（未含短期投资）':fieldNames[key]??key}</td><td>{field.unit==='shares'?format(field.value/1e8)+' 亿股':format(field.value/1e8)+' 亿'+(field.currency??'未知币种')}</td><td>{field.periodEnd}</td><td><a href={field.sourceUrl} target="_blank" rel="noreferrer">{field.basis==='third_party_transcription'?'第三方财务转录':'官方披露 / 计算'} ↗</a><small>发布 {field.publishedAt??'来源未提供'} · 获取 {beijing(field.fetchedAt)}{field.sourceStatus==='cached'?' · 使用缓存':''}</small></td></tr>})}</tbody></table></div></details>
+    <ResearchValuationContext company={company}/>
     <details className="research-progress-disclosure"><summary>用你看到的最新价格做本机试算</summary><p>输入不写入后台，也不修改研究评分。估值仍受财务字段是否齐全限制。</p><div className="research-manual-controls"><label>价格（USD）<input type="number" min="0" value={priceInput} onChange={e=>setPriceInput(e.target.value)} placeholder="沿用后台收盘价"/></label><label>市值（亿USD，可选）<input type="number" min="0" value={capInput} onChange={e=>setCapInput(e.target.value)} placeholder="缺股数时可输入"/></label><button onClick={()=>{setPriceInput('');setCapInput('')}}>清除试算</button></div>{manual&&('error' in manual?<p>{manual.error}</p>:<p>本机输入试算：P/E {manual.pe==null?'不适用 / 缺项':format(manual.pe)+' 倍'} · P/S {manual.ps==null?'—':format(manual.ps)+' 倍'} · FCF收益率 {percent(manual.fcfYield)}。输入时间口径为当前用户试算，不属于已核验行情。</p>)}</details>
    </article>}
    <p className="industry-small">{valuation?.note} 日频价格可能延迟；股数与总债务的披露时点可能早于价格日。TSM 为 ADR，未核验币种和兑换比例时不混算估值。</p>
