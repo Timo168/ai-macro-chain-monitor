@@ -201,7 +201,7 @@ def run(force=False,build_research=True):
     state=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
     current=datetime.now(timezone.utc)
     last=state_time(state.get('lastAttemptAt'))
-    daily_due=force or current-last>=timedelta(hours=24) or state.get('collectorVersion')!=15
+    daily_due=force or current-last>=timedelta(hours=24) or state.get('collectorVersion')!=16
     # Discover actual official URLs before any adapter attempts a new quarter.
     release_failures=financial_release_checks(state,current,force or daily_due,set(FINANCIAL_COLLECTORS.values()) if daily_due else ())
     if daily_due:
@@ -211,7 +211,7 @@ def run(force=False,build_research=True):
                 result=run_background([sys.executable,str(ROOT/'scripts'/script)],cwd=ROOT,timeout=600)
                 if result.returncode:failures.append(script)
             except Exception as error:failures.append(script+': '+str(error))
-        state.update({'collectorVersion':15,'lastAttemptAt':now(),'dailyFailures':failures})
+        state.update({'collectorVersion':16,'lastAttemptAt':now(),'dailyFailures':failures})
     fast_next=[]
     fast_failures=[]
     for spec in FAST_COLLECTORS:
@@ -220,7 +220,7 @@ def run(force=False,build_research=True):
         if record.get('status')!='ready':fast_failures.append(spec['script']+': '+', '.join(record.get('failedSeries',[])))
     daily_next=last+timedelta(hours=24) if not daily_due else current+timedelta(hours=24)
     state.update({
-        'collectorVersion':15,
+        'collectorVersion':16,
         'failures':(state.get('dailyFailures',[])+fast_failures+release_failures),
         'nextCheckAt':min([daily_next,*fast_next,state_time(state['financialReleases']['nextCheckAt'])]).isoformat(),
     })
