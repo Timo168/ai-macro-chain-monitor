@@ -1,3 +1,5 @@
+import { orderYieldSeries } from './yield-display.mjs';
+
 export type Group={id:string;title:string;category:number;series:string[];unit:string;frequency:string;kind?:string;read:string;impact:string;evidence:string;sectors:string[]};
 export const groups:Group[]=[
 {id:'claims',title:'初次申请失业救济人数',category:1,series:['ICSA'],unit:'千人',frequency:'周度',kind:'bar',read:'四周移动平均过滤单周波动。人数持续上升可能意味着裁员压力增加，需结合非农与失业率。',impact:'就业放缓可能缓解政策收紧压力，也可能削弱企业需求与资本开支。',evidence:'通胀趋势、非农就业、云厂商投资计划与企业订单。',sectors:['云服务','服务器','芯片']},
@@ -16,6 +18,6 @@ export const groups:Group[]=[
 {id:'nickel',title:'镍',category:2,series:['NICKEL'],unit:'美元／公吨',frequency:'月度',read:'世界银行月度均价。镍与不锈钢、特种合金及部分储能电池相关，但不是 AI 芯片的直接成本指标。',impact:'变化可作为备用电力、储能和设备材料的上游线索，不能单独推导 AI 硬件成本。',evidence:'电池技术路线、储能项目、合金用量、库存和采购合同。',sectors:['数据中心','电力设备']},
 {id:'gold',title:'黄金',category:2,series:['GOLD'],unit:'美元／金衡盎司',frequency:'月度',read:'实际利率、美元与避险需求的交叉线索。2025-06 起基准改为现货日均价，此前为伦敦下午定盘价。',impact:'不能单凭黄金价格判断 CPI、AI 硬件成本或 AI 投资需求。',evidence:'实际收益率、美元、避险需求与流动性。',sectors:['芯片','云服务']},
 {id:'silver',title:'白银',category:2,series:['SILVER'],unit:'美元／金衡盎司',frequency:'月度',read:'同时具有贵金属与工业属性；月度均价不展示日内交易机会。',impact:'工业需求和供给可能影响部分电子与电力设备材料成本，实际影响取决于用量。',evidence:'产业用途、库存、采购合同与成本占比。',sectors:['电力设备','芯片']},
-{id:'yields',title:'美国十年期国债收益率',category:3,series:['DFII10','DGS10'],unit:'%',frequency:'日度',read:'名义收益率与通胀保值国债实际收益率同时观察。非交易日缺值不填零。',impact:'实际收益率下降可能减轻长期现金流折现压力，也可能伴随需求恶化。',evidence:'融资环境、信用利差、企业盈利和资本开支。',sectors:['云服务','芯片','数据中心']},
+{id:'yields',title:'美国十年期国债收益率',category:3,series:orderYieldSeries(['DFII10','DGS10']),unit:'%',frequency:'日度',read:'大数字与总览卡优先显示名义收益率；实际收益率用于观察通胀调整后的长期资金成本。非交易日缺值不填零。',impact:'实际收益率下降可能减轻长期现金流折现压力，也可能伴随需求恶化。',evidence:'融资环境、信用利差、企业盈利和资本开支。',sectors:['云服务','芯片','数据中心']},
 {id:'nfci',title:'芝加哥联储金融条件指数',category:3,series:['NFCI'],unit:'指数',frequency:'周度',read:'零以上比历史平均更紧，零以下更松。处于宽松水平与最近收紧可以同时成立。',impact:'条件收紧可能提高融资难度，影响资本密集环节的建设与扩张。',evidence:'信贷利差、融资成交、贷款标准与项目回报。',sectors:['数据中心','电力设备','云服务']}
 ];

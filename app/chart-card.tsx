@@ -5,6 +5,7 @@ import { ArrowDownToLine, ArrowUpRight, ChartColumn, ChartLine, Info } from 'luc
 import { Button } from '@/components/ui/button';
 import { type Dataset, colors, makeChart, firstValues, format, deltaFormat, beijing, metadata, sourceLink } from '@/lib/data';
 import type { Group } from '@/lib/groups';
+import { yieldDisplay } from '@/lib/yield-display.mjs';
 import { metrics, selectRange } from '@/lib/calculations.mjs';
 export function RangeButtons({value,onChange,available=['1','3','5','all']}:{value:string;onChange:(value:string)=>void;available?:string[]}){return <div className="range-selector">{[['1','近一年'],['3','三年'],['5','五年'],['all','全部']].map(([id,label])=><Button key={id} variant="ghost" aria-pressed={value===id} className={value===id?'selected':''} disabled={!available.includes(id)} onClick={()=>onChange(id)}>{label}</Button>)}</div>}
 export default function ChartCard({group,data,range:globalRange,compact=false}:{group:Group;data:Dataset;range:string;compact?:boolean}){
@@ -30,7 +31,7 @@ export default function ChartCard({group,data,range:globalRange,compact=false}:{
  const latestText=stats.last?.date??'暂无观测';
  const publication=series[0]?.publication;
  return <section id={group.id} className={'chart-card '+(compact?'compact':'')} aria-label={group.title}>
- <div className="chart-title"><div><h3>{group.title}</h3><div className="chart-subtitle">{group.kind==='inflation'?(mode==='yoy'?'同比变化':'环比变化'):group.id==='yields'?'实际收益率 · 名义收益率':group.id==='claims'?'季调 · 四周移动平均':group.category===2&&group.frequency==='月度'?`${metadata[group.series[0]]?.source} · ${metadata[group.series[0]]?.seasonal}`:metadata[group.series[0]]?.seasonal}</div></div><span className="frequency">{group.frequency}</span></div>
+ <div className="chart-title"><div><h3>{group.title}</h3><div className="chart-subtitle">{group.kind==='inflation'?(mode==='yoy'?'同比变化':'环比变化'):group.id==='yields'?yieldDisplay.chartSubtitle:group.id==='claims'?'季调 · 四周移动平均':group.category===2&&group.frequency==='月度'?`${metadata[group.series[0]]?.source} · ${metadata[group.series[0]]?.seasonal}`:metadata[group.series[0]]?.seasonal}</div></div><span className="frequency">{group.frequency}</span></div>
  <div className="stat-row"><div className="chart-stat">{format(stats.last?.value,digits)} <small>{unit}</small></div><span className={'delta '+(stats.previous===null?'neutral':stats.previous>0?'up':stats.previous<0?'down':'neutral')}>{stats.previous===null?'—':(stats.previous>0?'↑ ':stats.previous<0?'↓ ':'→ ')+deltaFormat(stats.previous,digits)+' '+deltaUnit}<small>较上期</small></span></div>
  <div className="chart-date">{chart.names[0]} · 最新有效观测 {latestText}{failed&&<span className="warning-inline"> · 获取失败，保留缓存</span>}</div>
  {publication&&<div className="next-release">{publication.state==='awaiting_source'?'已到计划发布时间，等待来源更新':publication.state==='delayed'?'来源发布延迟，继续展示最后成功数据':publication.state==='calendar_unavailable'?'发布日历暂不可用，按日检查来源':publication.nextReleaseAt?'下次计划发布：'+beijing(publication.nextReleaseAt)+'（北京）':'按来源节奏检查，等待下一次发布'}{publication.calendarSource?.startsWith('https://')&&<a href={publication.calendarSource} target="_blank" rel="noreferrer"> · 日历 ↗</a>}</div>}
