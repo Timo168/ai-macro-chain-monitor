@@ -24,10 +24,11 @@ def quarter_value(inputs):
     assert current['start']==base['start'] and base['filed']<=current['filed']
     return current['val']-base['val']
 
-def verify_financial(definition,point):
+def verify_financial(definition,point,raw_loader=None):
+    load=raw_loader or raw_source
     items=point['originalItems']
     if definition['entity']=='TSM':
-        text=' '.join(' '.join(page.extract_text() or '' for page in PdfReader(io.BytesIO(raw_source(point['sourceUrl']))).pages).split())
+        text=' '.join(' '.join(page.extract_text() or '' for page in PdfReader(io.BytesIO(load(point['sourceUrl']))).pages).split())
         text=re.sub(r'(?<=\d)\s+(?=\d)', '', text)
         text=re.sub(r'(\d)\.\s+(\d)',r'\1.\2',text)
         pattern=r'Gross margin for the quarter was (\d+(?:\.\d+)?)%' if definition['family']=='gross_margin' else r'consolidated revenue of NT\$([\d,.]+) billion'
@@ -35,7 +36,7 @@ def verify_financial(definition,point):
         expected=float(match[1].replace(',',''))*(1 if definition['family']=='gross_margin' else 10)
         assert point['publishedAt'] and point['publishedAt']>point['periodEnd']
     else:
-        payload=json.loads(raw_source(items['source_api_url']))
+        payload=json.loads(load(items['source_api_url']))
         assert str(payload['cik']).zfill(10)==items['source_cik']
         inputs=json.loads(items['rawSourceFacts']);groups=defaultdict(list)
         for fact in inputs:
@@ -55,8 +56,8 @@ def verify_financial(definition,point):
     assert math.isclose(point['value'],expected,rel_tol=1e-9,abs_tol=1e-9)
     return expected
 
-def verify_cso(point):
-    payload=json.loads(raw_source(point['originalItems']['sourceApiUrl']))
+def verify_cso(point,raw_loader=None):
+    payload=json.loads((raw_loader or raw_source)(point['originalItems']['sourceApiUrl']))
     indices={}
     for dimension in payload['id']:
         order=payload['dimension'][dimension]['category']['index']

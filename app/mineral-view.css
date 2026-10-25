@@ -5,3 +5,11 @@
 .mineral-selector label.unavailable{opacity:.48;cursor:not-allowed}
 .mineral-selector label small{margin-left:4px;font-size:9px;color:#9aa7ac}
 @media(max-width:800px){.mineral-view-switch{width:100%;overflow:auto}}
+.mineral-coverage{font-size:12px;color:#526b73;line-height:1.8;margin:12px 0}
+.mineral-latest>div{display:block!important;padding:12px!important}
+.mineral-latest .mineral-quote{display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+.mineral-latest .mineral-quote>span{margin-left:auto}
+.mineral-latest .mineral-quote-meta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;color:#5c7179;font-size:12px;line-height:1.7;margin-top:7px}
+.mineral-latest .mineral-quote-meta>span{margin-left:0;white-space:normal;overflow:visible}
+.mineral-view-switch button{font-size:12px;min-height:34px}
+@media(max-width:600px){.mineral-latest .mineral-quote>span{margin-left:0}.mineral-view-switch button{min-height:40px}.mineral-selector label{min-height:40px}}

@@ -59,7 +59,8 @@ test('historical P/E uses only previously published issuer EPS and never current
 test('history keeps real saved snapshots and withholds percentiles below sixty observations',()=>{
  const company={entity:'MSFT',status:'available',isManual:false,priceAt:'2026-10-02',price:10,pe:10,ps:1,fcfYield:5,marketCap:1000,revenue:1000,fields:{}};
  const h=buildValuationHistory(company,market(),{asOf:'2026-10-03',recordedAt:'2026-10-03T12:00:00Z',previous:{observations:[{date:'2026-09-01',recordedAt:'2026-09-01T12:00:00Z',origin:'live_snapshot',pe:99,ps:9,fcfYield:1}]}});
- assert.equal(h.metrics.pe.percentile,null);assert.equal(h.observations[0].pe,99);assert.equal(h.snapshotCount,2);
+ assert.equal(h.metrics.pe.percentile,null);assert.equal(h.observations[0].pe,99);assert.equal(h.snapshotCount,1);
+ assert.equal(h.snapshots.length,2);assert.equal(h.currentSnapshot.historyEligible,false,'undated current financials are archived, not backdated to yesterday\'s quote');
 });
 
 test('growth and margin scenario keeps market capitalization fixed and is not a target price',()=>{

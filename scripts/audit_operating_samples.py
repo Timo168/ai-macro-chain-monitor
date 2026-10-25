@@ -20,12 +20,15 @@ METRICS = {
 }
 
 
-def source_bytes(url, expected_hash=None):
-    meta_path = DATA / 'raw' / (hashlib.sha256(url.encode()).hexdigest() + '.meta.json')
-    meta = json.loads(meta_path.read_text(encoding='utf-8'))
-    raw = (DATA / 'raw' / meta['file']).read_bytes()
+def source_bytes(url, expected_hash=None, raw_loader=None):
+    if raw_loader is None:
+        meta_path = DATA / 'raw' / (hashlib.sha256(url.encode()).hexdigest() + '.meta.json')
+        meta = json.loads(meta_path.read_text(encoding='utf-8'))
+        raw = (DATA / 'raw' / meta['file']).read_bytes()
+        assert hashlib.sha256(raw).hexdigest() == meta['hash'], 'Archived official byte checksum mismatch'
+    else:
+        raw = raw_loader(url)
     digest = hashlib.sha256(raw).hexdigest()
-    assert digest == meta['hash'], 'Archived official byte checksum mismatch'
     if expected_hash:
         assert digest == expected_hash, 'Saved observation source version differs from raw bytes'
     assert not raw.startswith(b'%PDF'), 'Selected audit point is PDF: add independent PDF audit before claiming success'
@@ -69,7 +72,7 @@ def amkor_cash(soup, year, quarter):
     return -value
 
 
-def amkor(metric, point, soup):
+def amkor(metric, point, soup, raw_loader=None):
     fiscal = re.fullmatch(r'FY(\d{4}) Q([1-4])', point['fiscalPeriod'])
     year, quarter = map(int, fiscal.groups())
     if metric == 'AMKR.capex':
@@ -79,7 +82,7 @@ def amkor(metric, point, soup):
         base = 0
         if quarter > 1:
             inputs = point['originalItems']
-            baseline, digest = source_bytes(inputs['baseUrl'], inputs['baseVersion'])
+            baseline, digest = source_bytes(inputs['baseUrl'], inputs['baseVersion'], raw_loader)
             base = amkor_cash(baseline, year, quarter - 1)
             assert base == inputs['baseYtdThousandUsd']
             evidence.append({'sourceUrl': inputs['baseUrl'], 'sourceByteSha256': digest,

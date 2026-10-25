@@ -6,16 +6,16 @@ on:
     - cron: '18 2 * * *'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: industry-source-audit
+  group: macro-data-and-pages
   cancel-in-progress: false
 
 jobs:
   audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
@@ -25,5 +25,28 @@ jobs:
           cache-dependency-path: scripts/requirements.txt
       - name: Install collector dependencies
         run: python -m pip install -r scripts/requirements.txt
+      - name: Restore durable observations before audit
+        id: restore
+        run: python scripts/github-data-state.py restore
       - name: Replay public industry sources
-        run: python scripts/audit_industry.py
+        id: audit
+        if: always()
+        env:
+          SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
+        run: python scripts/run-industry-audit.py
+      - name: Preserve latest audit outcome even when source checks fail
+        if: always() && steps.restore.outcome == 'success'
+        run: python scripts/github-data-state.py save
+      - name: Upload source audit results and diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: industry-source-audit-${{ github.run_id }}
+          path: |
+            data/industry/audit-status.json
+            data/industry/audit-samples.json
+            docs/industry/verification.json
+            .logs/industry-audit/
+          retention-days: 30
+          include-hidden-files: true
+          if-no-files-found: warn

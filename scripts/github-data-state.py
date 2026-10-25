@@ -2,7 +2,7 @@
 import argparse, hashlib, json, os, pathlib, shutil, subprocess, sqlite3, tempfile
 ROOT=pathlib.Path(__file__).resolve().parents[1];WORK=ROOT/'.data-work';DATA=ROOT/'data'
 FILES=['latest.json','calendar.json','scheduler.json','observations.sqlite','policy-rates.json','policy-decisions.json']
-INDUSTRY_FILES=['latest.json','research.json','research-model-calls.json','research-history.json','research-ledger.json','research-followup.json','research-market.json','research-alfred.json','companies.json','hardware.json','supply-evidence.json','packaging-evidence.json','materials-evidence.json','cross-company-evidence.json','oracle.json','costs.json','infrastructure.json','sia.json','extended.json','power-load.json','projects.json','sector-financials.json','institutions.json','release-discovery.json','reviewed-cache.json','scheduler.json']
+INDUSTRY_FILES=['latest.json','audit-status.json','audit-samples.json','research.json','research-model-calls.json','research-history.json','research-ledger.json','research-followup.json','research-market.json','research-alfred.json','companies.json','hardware.json','supply-evidence.json','packaging-evidence.json','materials-evidence.json','cross-company-evidence.json','oracle.json','costs.json','infrastructure.json','sia.json','extended.json','power-load.json','projects.json','sector-financials.json','institutions.json','release-discovery.json','reviewed-cache.json','scheduler.json']
 
 def industry_state(source,destination):
     if not source.exists():return
@@ -160,7 +160,7 @@ def save():
     git('add','.',cwd=WORK)
     # These new audit artifacts are intentionally ignored in the source branch,
     # but are durable public-data state on data-cache and must be versioned there.
-    for relative in ['industry/research.json','industry/research-model-calls.json','industry/research-history.json','industry/research-inputs','industry/research-ledger.json','industry/research-followup.json','industry/research-market.json','industry/research-market-versions','industry/research-alfred.json','industry/research-vintages']:
+    for relative in ['industry/audit-status.json','industry/audit-samples.json','industry/research.json','industry/research-model-calls.json','industry/research-history.json','industry/research-inputs','industry/research-ledger.json','industry/research-followup.json','industry/research-market.json','industry/research-market-versions','industry/research-alfred.json','industry/research-vintages']:
         if (WORK/relative).exists():git('add','-f',relative,cwd=WORK)
     changed=git('diff','--cached','--quiet',cwd=WORK,check=False).returncode
     if changed:

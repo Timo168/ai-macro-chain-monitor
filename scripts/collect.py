@@ -114,6 +114,30 @@ CREATE INDEX IF NOT EXISTS idx_observations_series_date ON observations(series_i
 CREATE TABLE IF NOT EXISTS snapshots(series_id TEXT PRIMARY KEY,payload TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS runs(id INTEGER PRIMARY KEY,started_at TEXT,finished_at TEXT,status TEXT,detail TEXT);''')
     return conn
+def observation_change(old_payload,points,at,revision):
+    """Describe observed changes, never equate a successful fetch with new data."""
+    previous={p['date']:p['value'] for p in old_payload.get('observations',[])}
+    current={p['date']:p['value'] for p in points}
+    prior_latest=max((date for date,value in previous.items() if value is not None),default='')
+    latest=max((date for date,value in current.items() if value is not None),default='')
+    added=[date for date,value in current.items() if value is not None and (date not in previous or previous[date] is None)]
+    revised=[date for date,value in current.items() if date in previous and previous[date] is not None and value!=previous[date]]
+    removed=[date for date,value in previous.items() if value is not None and date not in current]
+    changed=sorted(set(added+revised+removed))
+    if not changed:return old_payload.get('lastChange')
+    recent=any(date>prior_latest for date in added)
+    kind='initial_import' if not previous else 'new_and_revised' if recent and (revised or removed) else 'new_observation' if recent else 'revision' if revised or removed else 'history_backfill'
+    return {'at':at,'kind':kind,'added':len(added),'revised':len(revised),'removed':len(removed),'firstChangedObservation':changed[0],'lastChangedObservation':changed[-1],'latestObservationDate':latest or None,'revision':revision,'previousRevision':old_payload.get('revision')}
+
+def source_status(payload,status,at):
+    """Keep failure/recovery time separate from observation revisions."""
+    previous=payload.get('status')
+    if previous!=status:
+        payload['statusChangedAt']=at
+        payload['statusChange']={'at':at,'from':previous,'to':status}
+    payload['status']=status
+    return payload
+
 def save(conn,key,points,raw,source_url,started):
     digest=hashlib.sha256(raw).hexdigest(); version=DATA/'versions'/key;version.mkdir(parents=True,exist_ok=True)
     path=version/(digest+('.xlsx' if key in WB_IDS or key==EIA_US_COMMERCIAL else '.json' if key in MARKET_IDS else '.csv'))
@@ -122,8 +146,14 @@ def save(conn,key,points,raw,source_url,started):
     old_payload=json.loads(old[0]) if old else {}; old_points={p['date']:p['value'] for p in old_payload.get('observations',[])}
     revision=started+'_'+digest[:10]
     changed=[(key,p['date'],p['value'],None,started,revision) for p in points if p['date'] not in old_points or old_points[p['date']]!=p['value']]
+    current_dates={p['date'] for p in points}
+    # Preserve withdrawals in the revision ledger too; absence is not a zero.
+    changed.extend((key,date,None,None,started,revision) for date,value in old_points.items() if value is not None and date not in current_dates)
     conn.executemany('INSERT OR IGNORE INTO observations VALUES(?,?,?,?,?,?)',changed)
-    payload={'id':key,'observations':points,'fetchedAt':started,'checkedAt':started,'sourcePublishedAt':None,'revision':revision if changed else old_payload.get('revision',revision),'sourceUrl':source_url,'status':'ready','error':None,'revisionCount':conn.execute('SELECT count(DISTINCT revision) FROM observations WHERE series_id=?',(key,)).fetchone()[0]}
+    payload={'id':key,'observations':points,'fetchedAt':started,'checkedAt':started,'sourcePublishedAt':None,'revision':revision if changed else old_payload.get('revision',revision),'sourceUrl':source_url,'status':old_payload.get('status'),'error':None,'revisionCount':conn.execute('SELECT count(DISTINCT revision) FROM observations WHERE series_id=?',(key,)).fetchone()[0],
+             'changeTrackingStartedAt':old_payload.get('changeTrackingStartedAt',started),'lastChange':observation_change(old_payload,points,started,revision),
+             **{field:old_payload[field] for field in ('statusChangedAt','statusChange') if field in old_payload}}
+    source_status(payload,'ready',started)
     conn.execute('INSERT OR REPLACE INTO snapshots VALUES(?,?)',(key,json.dumps(payload,ensure_ascii=False)));conn.commit()
     return payload
 def collect(import_dir=None, selected=None):
@@ -170,7 +200,8 @@ def collect(import_dir=None, selected=None):
         except Exception as exc:
             failures.append(key);old=conn.execute('SELECT payload FROM snapshots WHERE series_id=?',(key,)).fetchone()
             payload=json.loads(old[0]) if old else {'id':key,'observations':[],'fetchedAt':None,'sourcePublishedAt':None,'sourceUrl':config['release']}
-            payload.update(status='cached' if payload['observations'] else 'fetch_failed',checkedAt=ts,error=str(exc))
+            source_status(payload,'cached' if payload['observations'] else 'fetch_failed',ts)
+            payload.update(checkedAt=ts,error=str(exc))
             conn.execute('INSERT OR REPLACE INTO snapshots VALUES(?,?)',(key,json.dumps(payload,ensure_ascii=False)));conn.commit();print(key,'FAILED; retained cache',flush=True)
     series={key:json.loads(payload) for key,payload in conn.execute('SELECT series_id,payload FROM snapshots')}
     result={'generatedAt':now(),'series':series,'scheduler':{'mode':os.environ.get('MACRO_SCHEDULER','manual'),'lastRunAt':started,'failed':failures}}

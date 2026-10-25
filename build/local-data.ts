@@ -20,6 +20,9 @@ const researchSnapshot=snapshots.find(snapshot=>snapshot.route==='/api/industry/
 const policyRatesSnapshot=snapshots.find(snapshot=>snapshot.route==='/api/policy-rates')!;
 const policyDecisionsSnapshot=snapshots.find(snapshot=>snapshot.route==='/api/policy-decisions')!;
 const version=(value:unknown)=>createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0,16);
+async function sourceAudit(){
+ return readFile(resolve(process.cwd(),'data/industry/audit-status.json'),'utf8').then(raw=>JSON.parse(raw)).catch(()=>({status:'not_run',lastSuccessAt:null}));
+}
 
 async function currentSnapshot(snapshot:SnapshotRoute){
  const current=resolve(process.cwd(),snapshot.folder,snapshot.current);
@@ -39,8 +42,9 @@ export function localData():Plugin{
    if(pathname==='/api/manifest'){
     const [macroRaw,industryRaw,researchRaw,policyRatesRaw,policyDecisionsRaw]=await Promise.all([macroSnapshot,industrySnapshot,researchSnapshot,policyRatesSnapshot,policyDecisionsSnapshot].map(currentSnapshot));
     const [macro,industry,research,policyRates,policyDecisions]=[macroRaw,industryRaw,researchRaw,policyRatesRaw,policyDecisionsRaw].map(raw=>JSON.parse(raw));
+    const audit=await sourceAudit();
     res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');
-    return res.end(JSON.stringify({generatedAt:new Date().toISOString(),macro:{version:version(macro),generatedAt:macro.generatedAt},industry:{version:version(industry),generatedAt:industry.generatedAt},industryResearch:{version:version(research),generatedAt:research.generatedAt},policyRates:{version:version(policyRates),generatedAt:policyRates.generatedAt},policyDecisions:{version:version(policyDecisions),generatedAt:policyDecisions.generatedAt}}));
+    return res.end(JSON.stringify({generatedAt:new Date().toISOString(),macro:{version:version(macro),generatedAt:macro.generatedAt},sourceAudit:{version:version(audit),generatedAt:audit.completedAt??null},industry:{version:version(industry),generatedAt:industry.generatedAt},industryResearch:{version:version(research),generatedAt:research.generatedAt},policyRates:{version:version(policyRates),generatedAt:policyRates.generatedAt},policyDecisions:{version:version(policyDecisions),generatedAt:policyDecisions.generatedAt}}));
    }
    if(pathname==='/api/industry/history'){
     const industry=JSON.parse(await currentSnapshot(industrySnapshot));
@@ -50,6 +54,7 @@ export function localData():Plugin{
    if(!snapshot)return next();
    const raw=await currentSnapshot(snapshot);
    res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');
+   if(snapshot.folder==='data'&&snapshot.current==='latest.json')return res.end(JSON.stringify({...JSON.parse(raw),sourceAudit:await sourceAudit()}));
    return res.end(raw);
   }catch{
    res.statusCode=503;return res.end(JSON.stringify({error:'Data cache unavailable'}));

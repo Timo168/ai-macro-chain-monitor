@@ -1,14 +1,31 @@
 import {spawnSync} from 'node:child_process';
 import {existsSync,readFileSync,mkdirSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-const result=spawnSync(process.execPath,['node_modules/vite/bin/vite.js','build','--config','vite.pages.config.ts'],{stdio:'inherit',windowsHide:true});if(result.status!==0)process.exit(result.status??1);
+import {recordFrontend,verifyFrontend} from './pages-package.mjs';
+const frontendIdentity={commitSha:process.env.GITHUB_SHA??'local-build',basePath:process.env.PAGES_BASE_PATH??'/ai-macro-chain-monitor/'};
+if(process.argv.includes('--check-frontend')){
+ verifyFrontend('dist-pages',frontendIdentity);
+ console.log('Cached frontend source commit, base path and assets verified.');
+ process.exit(0);
+}
+if(process.argv.includes('--data-only')){
+ verifyFrontend('dist-pages',frontendIdentity);
+ console.log('Reusing verified frontend; exporting a fresh data snapshot.');
+}else{
+ const result=spawnSync(process.execPath,['node_modules/vite/bin/vite.js','build','--config','vite.pages.config.ts'],{stdio:'inherit',windowsHide:true});if(result.status!==0)process.exit(result.status??1);
+ recordFrontend('dist-pages',frontendIdentity);
+}
 const version=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0,16);
 const source=existsSync('data/latest.json')?'data/latest.json':'data/seed.json';const data=JSON.parse(readFileSync(source,'utf8'));
 const macroSnapshotVersion=version(data);
+const auditPath='data/industry/audit-status.json';
+const sourceAudit=existsSync(auditPath)?JSON.parse(readFileSync(auditPath,'utf8')):{status:'not_run',lastSuccessAt:null};
+data.sourceAudit=sourceAudit;
 data.storage='github_pages';
 // Only advertise scheduled operation when it was actually produced by that environment.
 if(process.env.GITHUB_ACTIONS==='true')data.scheduler={...data.scheduler,mode:'github_actions',workflowUrl:'https://github.com/'+process.env.GITHUB_REPOSITORY+'/actions/workflows/deploy.yml'};
 mkdirSync('dist-pages/data',{recursive:true});writeFileSync('dist-pages/data/latest.json',JSON.stringify(data));writeFileSync('dist-pages/.nojekyll','');
+writeFileSync('dist-pages/data/industry-audit.json',JSON.stringify(sourceAudit));
 console.log('Pages build includes '+Object.keys(data.series).length+' real source series.');
 const industryPath=existsSync('data/industry/latest.json')?'data/industry/latest.json':'data/industry/seed.json';
 const industry=JSON.parse(readFileSync(industryPath,'utf8'));
@@ -28,4 +45,4 @@ writeFileSync('dist-pages/data/policy-rates.json',JSON.stringify(policyRates));
 const policyDecisionsPath=existsSync('data/policy-decisions.json')?'data/policy-decisions.json':'data/policy-decisions.seed.json';
 const policyDecisions=JSON.parse(readFileSync(policyDecisionsPath,'utf8'));
 writeFileSync('dist-pages/data/policy-decisions.json',JSON.stringify(policyDecisions));
-writeFileSync('dist-pages/data/manifest.json',JSON.stringify({generatedAt:new Date().toISOString(),macro:{version:macroSnapshotVersion,generatedAt:data.generatedAt},industry:{version:industrySnapshotVersion,generatedAt:industry.generatedAt},industryResearch:{version:version(research),generatedAt:research.generatedAt},policyRates:{version:version(policyRates),generatedAt:policyRates.generatedAt},policyDecisions:{version:version(policyDecisions),generatedAt:policyDecisions.generatedAt}}));
+writeFileSync('dist-pages/data/manifest.json',JSON.stringify({generatedAt:new Date().toISOString(),macro:{version:macroSnapshotVersion,generatedAt:data.generatedAt},sourceAudit:{version:version(sourceAudit),generatedAt:sourceAudit.completedAt??null},industry:{version:industrySnapshotVersion,generatedAt:industry.generatedAt},industryResearch:{version:version(research),generatedAt:research.generatedAt},policyRates:{version:version(policyRates),generatedAt:policyRates.generatedAt},policyDecisions:{version:version(policyDecisions),generatedAt:policyDecisions.generatedAt}}));

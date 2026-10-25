@@ -8,6 +8,19 @@ def cohort(ident='A',value=10,at='2026-10-01'):
     return {'id':ident,'recordedAt':'2026-09-01T01:00:00Z','symbols':['MU'],'benchmark':'QQQ','inputHash':'input-'+ident,'costBpsPerSide':10,'entry':{'date':'2026-09-02','lockedAt':'2026-09-03'},'windows':[{'months':1,'status':'matured','netReturn':value,'excessReturn':value-2,'evaluatedAt':at},{'months':3,'status':'pending','evaluatedAt':at}],'progress':{'status':'ongoing','evaluatedAt':at}}
 
 class ResearchStateTests(unittest.TestCase):
+    def test_audit_status_and_prior_samples_survive_restore_without_full_reports(self):
+        with tempfile.TemporaryDirectory() as temp:
+            source=pathlib.Path(temp)/'source';destination=pathlib.Path(temp)/'destination'
+            source.mkdir();(source/'raw').mkdir()
+            status={'status':'failed','lastSuccessAt':'2026-10-24T00:00:00Z'}
+            samples={'samples':[{'metricId':'A','periodEnd':'2026-06-30','value':1,'version':'v1'}]}
+            (source/'audit-status.json').write_text(json.dumps(status),encoding='utf-8')
+            (source/'audit-samples.json').write_text(json.dumps(samples),encoding='utf-8')
+            (source/'raw'/'report.html').write_text('full issuer report',encoding='utf-8')
+            state.industry_state(source,destination)
+            self.assertEqual(json.loads((destination/'audit-status.json').read_text()),status)
+            self.assertEqual(json.loads((destination/'audit-samples.json').read_text()),samples)
+            self.assertFalse((destination/'raw').exists())
     def test_union_preserves_both_writers_and_first_known_dates(self):
         local=[{'recordId':'a','recordedAt':'2026-10-01'},{'recordId':'c','recordedAt':'2026-10-03'}]
         remote=[{'recordId':'a','recordedAt':'2026-10-01'},{'recordId':'b','recordedAt':'2026-10-02'}]
