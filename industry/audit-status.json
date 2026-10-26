@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "status": "failed",
-  "startedAt": "2026-10-25T14:22:57.036263+00:00",
-  "completedAt": "2026-10-25T14:24:49.166516+00:00",
+  "startedAt": "2026-10-26T07:48:15.444742+00:00",
+  "completedAt": "2026-10-26T07:50:13.765755+00:00",
   "lastSuccessAt": null,
-  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/40201443486",
-  "checkedSnapshotAt": "2026-10-25T14:15:43.974Z",
+  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/40287960369",
+  "checkedSnapshotAt": "2026-10-26T05:29:11.711Z",
   "checks": [
     {
       "id": "restored_data",
@@ -13,11 +13,11 @@
     },
     {
       "id": "industry_source_replay",
-      "startedAt": "2026-10-25T14:22:57.158740+00:00",
+      "startedAt": "2026-10-26T07:48:15.661386+00:00",
       "status": "failed",
       "exitCode": 1,
       "error": "来源或计算重放未通过；失败明细见检查报告和运行日志。",
-      "completedAt": "2026-10-25T14:24:49.166497+00:00"
+      "completedAt": "2026-10-26T07:50:13.765735+00:00"
     }
   ],
   "scope": "行业公开来源抽查和计算重放；不验证投资收益，也不代表所有历史点都逐点通过。",
@@ -181,14 +181,14 @@
       "periodEnd": "2025-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
       "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.advanced_products_revenue",
       "periodEnd": "2026-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2026",
       "version": "79c261ba2bdd02770341165494d86d168dc6770958ae1ca0703d4eee12b9e73c",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+      "error": "AssertionError: Saved observation source version differs from raw bytes"
     },
     {
       "metricId": "AMKR.company_revenue",
@@ -202,7 +202,7 @@
       "periodEnd": "2025-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
       "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     }
   ],
   "error": "本次检查未全部通过，详见逐项结果；这不代表所有数据均不可用。"
