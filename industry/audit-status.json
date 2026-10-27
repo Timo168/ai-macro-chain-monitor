@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "status": "failed",
-  "startedAt": "2026-10-26T07:48:15.444742+00:00",
-  "completedAt": "2026-10-26T07:50:13.765755+00:00",
+  "startedAt": "2026-10-27T07:51:57.654491+00:00",
+  "completedAt": "2026-10-27T07:54:08.032931+00:00",
   "lastSuccessAt": null,
-  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/40287960369",
-  "checkedSnapshotAt": "2026-10-26T05:29:11.711Z",
+  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/40469632550",
+  "checkedSnapshotAt": "2026-10-27T06:13:18.623Z",
   "checks": [
     {
       "id": "restored_data",
@@ -13,11 +13,11 @@
     },
     {
       "id": "industry_source_replay",
-      "startedAt": "2026-10-26T07:48:15.661386+00:00",
+      "startedAt": "2026-10-27T07:51:57.744675+00:00",
       "status": "failed",
       "exitCode": 1,
       "error": "来源或计算重放未通过；失败明细见检查报告和运行日志。",
-      "completedAt": "2026-10-26T07:50:13.765735+00:00"
+      "completedAt": "2026-10-27T07:54:08.032903+00:00"
     }
   ],
   "scope": "行业公开来源抽查和计算重放；不验证投资收益，也不代表所有历史点都逐点通过。",
@@ -188,7 +188,7 @@
       "periodEnd": "2026-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2026",
       "version": "79c261ba2bdd02770341165494d86d168dc6770958ae1ca0703d4eee12b9e73c",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.company_revenue",
