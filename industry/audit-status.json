@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "status": "failed",
-  "startedAt": "2026-10-30T08:39:34.446823+00:00",
-  "completedAt": "2026-10-30T08:40:22.170201+00:00",
+  "startedAt": "2026-10-31T08:26:08.065772+00:00",
+  "completedAt": "2026-10-31T08:28:05.915440+00:00",
   "lastSuccessAt": null,
-  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/41027832668",
-  "checkedSnapshotAt": "2026-10-30T06:36:13.574Z",
+  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/41184527634",
+  "checkedSnapshotAt": "2026-10-31T08:23:35.053Z",
   "checks": [
     {
       "id": "restored_data",
@@ -13,11 +13,11 @@
     },
     {
       "id": "industry_source_replay",
-      "startedAt": "2026-10-30T08:39:34.627757+00:00",
+      "startedAt": "2026-10-31T08:26:08.730818+00:00",
       "status": "failed",
       "exitCode": 1,
       "error": "来源或计算重放未通过；失败明细见检查报告和运行日志。",
-      "completedAt": "2026-10-30T08:40:22.170178+00:00"
+      "completedAt": "2026-10-31T08:28:05.915419+00:00"
     }
   ],
   "scope": "行业公开来源抽查和计算重放；不验证投资收益，也不代表所有历史点都逐点通过。",
@@ -130,42 +130,42 @@
     {
       "metricId": "EQIX.operational_capacity",
       "periodEnd": "2024-06-30",
-      "sourceUrl": "https://d1io3yog0oux5.cloudfront.net/_efb2b98472387873281f33bf2dc5d71b/equinix/db/2183/23510/earnings_presentation/Equinix+Q2+24+Earnings+Presentation+Final.pdf",
+      "sourceUrl": "https://d1io3yog0oux5.cloudfront.net/_242cef02cfb36b3f9104757fbb870957/equinix/db/2183/23510/earnings_presentation/Equinix+Q2+24+Earnings+Presentation+Final.pdf",
       "version": "beac1c8a5fb7cd5b2dd4b7094f020c163f66b38cfc6722312bb1d88f89246410",
       "error": "AssertionError: "
     },
     {
       "metricId": "EQIX.operational_capacity",
       "periodEnd": "2025-09-30",
-      "sourceUrl": "https://d1io3yog0oux5.cloudfront.net/_efb2b98472387873281f33bf2dc5d71b/equinix/db/2183/26994/earnings_presentation/Equinix+Q3+25+Earnings+Presentation+Final.pdf",
+      "sourceUrl": "https://d1io3yog0oux5.cloudfront.net/_242cef02cfb36b3f9104757fbb870957/equinix/db/2183/26994/earnings_presentation/Equinix+Q3+25+Earnings+Presentation+Final.pdf",
       "version": "231264f773388e07c6aac0fdec7ba15e2983f2394b8983341953917151c41315",
       "error": "AssertionError: "
     },
     {
       "metricId": "EQIX.operational_capacity",
       "periodEnd": "2026-09-30",
-      "sourceUrl": "https://d1io3yog0oux5.cloudfront.net/_efb2b98472387873281f33bf2dc5d71b/equinix/db/2183/27073/earnings_presentation/Equinix_Q3_26_Earnings_Presentation_Final.pdf",
+      "sourceUrl": "https://d1io3yog0oux5.cloudfront.net/_242cef02cfb36b3f9104757fbb870957/equinix/db/2183/27073/earnings_presentation/Equinix_Q3_26_Earnings_Presentation_Final.pdf",
       "version": "2b2d3aad052aa3b49a3e45e950eaabb0b4bd99498e53384fb813a41691adfaa3",
       "error": "AssertionError: "
     },
     {
       "metricId": "EQIX.development_capacity",
       "periodEnd": "2024-06-30",
-      "sourceUrl": "https://d1io3yog0oux5.cloudfront.net/_efb2b98472387873281f33bf2dc5d71b/equinix/db/2183/23510/earnings_presentation/Equinix+Q2+24+Earnings+Presentation+Final.pdf",
+      "sourceUrl": "https://d1io3yog0oux5.cloudfront.net/_242cef02cfb36b3f9104757fbb870957/equinix/db/2183/23510/earnings_presentation/Equinix+Q2+24+Earnings+Presentation+Final.pdf",
       "version": "beac1c8a5fb7cd5b2dd4b7094f020c163f66b38cfc6722312bb1d88f89246410",
       "error": "AssertionError: "
     },
     {
       "metricId": "EQIX.development_capacity",
       "periodEnd": "2025-09-30",
-      "sourceUrl": "https://d1io3yog0oux5.cloudfront.net/_efb2b98472387873281f33bf2dc5d71b/equinix/db/2183/26994/earnings_presentation/Equinix+Q3+25+Earnings+Presentation+Final.pdf",
+      "sourceUrl": "https://d1io3yog0oux5.cloudfront.net/_242cef02cfb36b3f9104757fbb870957/equinix/db/2183/26994/earnings_presentation/Equinix+Q3+25+Earnings+Presentation+Final.pdf",
       "version": "231264f773388e07c6aac0fdec7ba15e2983f2394b8983341953917151c41315",
       "error": "AssertionError: "
     },
     {
       "metricId": "EQIX.development_capacity",
       "periodEnd": "2026-09-30",
-      "sourceUrl": "https://d1io3yog0oux5.cloudfront.net/_efb2b98472387873281f33bf2dc5d71b/equinix/db/2183/27073/earnings_presentation/Equinix_Q3_26_Earnings_Presentation_Final.pdf",
+      "sourceUrl": "https://d1io3yog0oux5.cloudfront.net/_242cef02cfb36b3f9104757fbb870957/equinix/db/2183/27073/earnings_presentation/Equinix_Q3_26_Earnings_Presentation_Final.pdf",
       "version": "2b2d3aad052aa3b49a3e45e950eaabb0b4bd99498e53384fb813a41691adfaa3",
       "error": "AssertionError: "
     },
@@ -174,35 +174,35 @@
       "periodEnd": "2024-03-31",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
       "version": "409836b5e0b2451e49d3f75d0e0d2929e5edd3efa28cc2aa08c4c4eab0db903c",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.advanced_products_revenue",
       "periodEnd": "2025-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
       "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.company_revenue",
       "periodEnd": "2024-03-31",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
       "version": "409836b5e0b2451e49d3f75d0e0d2929e5edd3efa28cc2aa08c4c4eab0db903c",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.company_revenue",
       "periodEnd": "2025-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
       "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.gross_margin",
       "periodEnd": "2024-03-31",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
       "version": "409836b5e0b2451e49d3f75d0e0d2929e5edd3efa28cc2aa08c4c4eab0db903c",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     }
   ],
   "error": "本次检查未全部通过，详见逐项结果；这不代表所有数据均不可用。"
