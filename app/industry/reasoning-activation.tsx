@@ -1,13 +1,17 @@
+"use client";
 import type {IndustryResearch} from '@/lib/industry/types';
 import {beijing} from '@/lib/data';
 import {reasoningStatus} from './reasoning-status';
 import './reasoning-activation.css';
+import {PanelToggle,PanelBody,usePanelDisclosure} from '../panel-disclosure';
 
 export function ReasoningActivation({research}:{research:IndustryResearch}){
  const state=reasoningStatus(research),model=research.model;
+ const disclosure=usePanelDisclosure('research:reasoning-activation',{defaultOpen:false,scope:'research'});
  return <section className={'reasoning-activation '+(state.active?'active':'pending')} aria-label="推理模型启用进度">
-  <div className="reasoning-activation-heading"><div><span>推理模型启用进度</span><h3>{state.title}</h3></div><span className="industry-tag">{state.active?'真实模型结果':'规则引擎运行中'}</span></div>
+  <div className="reasoning-activation-heading"><div><span>推理模型启用进度</span><h3>{state.title}</h3><span className="industry-tag">{state.active?'真实模型结果':'规则引擎运行中'}</span></div><PanelToggle open={disclosure.open} onToggle={disclosure.toggle} controls={disclosure.contentId} label="推理模型启用进度"/></div>
   <p>{state.explanation}</p>
+  <PanelBody open={disclosure.open} id={disclosure.contentId}>
   <dl className="reasoning-activation-metrics">
    <div><dt>{state.active?'实际返回模型':'预设模型 · 尚未代表已启用'}</dt><dd>{state.actualModel||model.model||'待配置'}</dd></div>
    <div><dt>真实成功调用</dt><dd>{state.successfulCalls} <small>次</small></dd></div>
@@ -17,5 +21,6 @@ export function ReasoningActivation({research}:{research:IndustryResearch}){
   {state.local&&<p className="reasoning-activation-mode">本机推理需要电脑保持运行；线上展示最近发布的结果，并以上方成功时间为准。</p>}
   {state.diagnostic&&<div className="reasoning-activation-diagnostic"><strong>{state.diagnostic.reason}</strong><p>{state.diagnostic.action}</p>{model.retryable===true&&<small>可重试；实际执行受后台间隔和每日调用上限控制。</small>}{model.retryable===false&&model.status!=='not_configured'&&<small>需要管理员处理后再尝试。</small>}</div>}
   {!state.active&&<details className="reasoning-activation-setup" open={model.status==='not_configured'}><summary>本地推理启用步骤</summary><ol><li>准备本机模型服务，并选择本机硬件可运行的模型。</li><li>使用网站的实际研究数据运行一次推理，检查引用、正反证据和情景。</li><li>校验通过并发布结果后，页面才会标记真实推理已生成。</li></ol><small>本地推理无需外部 API 密钥。网页不会直接调用你的电脑；后台运行和结果发布需单独完成。</small></details>}
+  </PanelBody>
  </section>;
 }

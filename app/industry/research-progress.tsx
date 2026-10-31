@@ -6,6 +6,7 @@ import type {IndustryResearch} from '@/lib/industry/types';
 import {beijing,format} from '@/lib/data';
 import './research-progress.css';
 import {ResearchAttention,ResearchRobustness,ResearchValidation,ResearchCrossCompany,ResearchModelEvaluation,ResearchValuationContext} from './research-tools';
+import {PanelToggle,PanelBody,usePanelDisclosure} from '../panel-disclosure';
 
 const score=(value:number|null|undefined)=>value==null?'—':`${value>0?'+':''}${format(value)}`;
 const percent=(value:number|null|undefined)=>value==null?'—':`${score(value)}%`;
@@ -17,6 +18,7 @@ const fieldNames:Record<string,string>={revenue:'TTM收入',netIncome:'TTM净利
 
 export function ResearchProgress({research,showMetric}:{research:IndustryResearch|null;showMetric:(id:string)=>void}){
  const current=research as any;const [section,setSection]=useState('attention'),[horizon,setHorizon]=useState(0),[cohortId,setCohortId]=useState(''),[entity,setEntity]=useState('MSFT'),[priceInput,setPriceInput]=useState(''),[capInput,setCapInput]=useState('');
+ const disclosure=usePanelDisclosure('research:progress',{defaultOpen:true,scope:'research'});
  const changes=current?.changes,tracking=current?.followup,valuation=current?.valuation;
  const company=valuation?.companies?.find((row:any)=>row.entity===entity);
  const selectedCohort=tracking?.cohorts?.find((row:any)=>row.id===cohortId)??tracking?.cohorts?.at(-1);
@@ -30,8 +32,9 @@ export function ResearchProgress({research,showMetric}:{research:IndustryResearc
  },[company,priceInput,capInput]);
  if(!research)return null;
  return <section className="industry-panel research-progress" aria-label="研究变化、模拟跟踪与公司估值">
-  <div className="research-progress-title"><div><span className="industry-kicker">RESEARCH FOLLOW-UP</span><h2>把研究结论接到实际观察</h2><p>看变化的依据，再跟踪后续表现，最后核对增长与价格。</p></div><span className="industry-tag">真实存档 · 日频参考</span></div>
-  <nav className="research-progress-tabs" aria-label="研究验证导航">{[['attention','我的关注'],['changes','结论变化'],['robustness','结论稳健性'],['tracking','模拟跟踪'],['validation','效果检验'],['valuation','公司估值'],['crossCompany','公司交叉验证'],['modelEvaluation','模型评测']].map(([id,name])=><button key={id} onClick={()=>setSection(id)} aria-pressed={section===id}>{name}</button>)}</nav>
+  <div className="research-progress-title"><div><span className="industry-kicker">RESEARCH FOLLOW-UP</span><h2>把研究结论接到实际观察</h2><p>看变化的依据，再跟踪后续表现，最后核对增长与价格。</p><span className="industry-tag">真实存档 · 日频参考</span></div><PanelToggle open={disclosure.open} onToggle={disclosure.toggle} controls={disclosure.contentId} label="研究跟踪与验证"/></div>
+  <nav className="research-progress-tabs" aria-label="研究验证导航">{[['attention','我的关注'],['changes','结论变化'],['robustness','结论稳健性'],['tracking','模拟跟踪'],['validation','效果检验'],['valuation','公司估值'],['crossCompany','公司交叉验证'],['modelEvaluation','模型评测']].map(([id,name])=><button key={id} onClick={()=>{setSection(id);disclosure.setOpen(true)}} aria-pressed={section===id}>{name}</button>)}</nav>
+  <PanelBody open={disclosure.open} id={disclosure.contentId}>
   {section==='attention'&&<ResearchAttention research={current} showMetric={showMetric}/>}
   {section==='robustness'&&<ResearchRobustness data={current.robustness}/>}
   {section==='validation'&&<ResearchValidation data={current.validation}/>}
@@ -67,5 +70,6 @@ export function ResearchProgress({research,showMetric}:{research:IndustryResearc
    </article>}
    <p className="industry-small">{valuation?.note} 日频价格可能延迟；股数与总债务的披露时点可能早于价格日。TSM 为 ADR，未核验币种和兑换比例时不混算估值。</p>
   </div>}
+  </PanelBody>
  </section>;
 }

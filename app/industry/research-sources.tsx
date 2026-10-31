@@ -2,6 +2,7 @@
 import type {IndustryDataset,IndustryResearch,ResearchSectorSignal} from '@/lib/industry/types';
 import './research-sources.css';
 import {reasoningStatus} from './reasoning-status';
+import {PanelToggle,PanelBody,usePanelDisclosure} from '../panel-disclosure';
 
 const natureLabel={actual:'实际观测',estimate:'机构估算',forecast:'机构预测'};
 const stateLabel:Record<string,string>={ready:'已接入',cached:'获取失败 · 展示缓存',fetch_failed:'获取失败',authorization_required:'需取得授权',not_configured:'未配置',no_observation:'尚未发布',pending:'待接入'};
@@ -31,10 +32,12 @@ export function ResearchDeliveryStatus({research}:{research:IndustryResearch}){
 
 export function InstitutionalSources({data,showMetric,compact=false}:{data:IndustryDataset;showMetric?:(id:string)=>void;compact?:boolean}){
  const reports=data.researchReports??[],catalog=data.sourceCatalog??[];
+ const disclosure=usePanelDisclosure('research:institutional-sources',{defaultOpen:!compact,scope:'research'});
  if(!reports.length&&!catalog.length)return null;
  const cso=data.definitions.find(def=>def.id==='CSO.datacenter_electricity');
  return <section className="industry-panel institutional-sources" aria-label="权威研究与数据来源">
-  <div className="industry-section-title"><div><h3>权威研究与数据来源</h3><p>按数字性质和适用范围使用报告：实际、估算、预测分别保留；机构名称本身不提高评分。</p></div><span className="industry-tag">来源可追溯</span></div>
+  <div className="industry-section-title"><div><h3>权威研究与数据来源</h3><p>{reports.length} 份报告 · {catalog.length} 项来源。实际、估算、预测分别保留；机构名称本身不提高评分。</p></div><PanelToggle open={disclosure.open} onToggle={disclosure.toggle} controls={disclosure.contentId} label="权威研究与数据来源"/></div>
+  <PanelBody open={disclosure.open} id={disclosure.contentId}>
   {cso&&<button className="industry-text-button" onClick={()=>showMetric?.(cso.id)}>查看爱尔兰数据中心实际用电图表 ↗</button>}
   <div className="institutional-report-grid">{reports.map(report=><article key={report.id}>
    <div><span>{report.publisher}</span><b>{stateLabel[report.status]??report.status}</b></div>
@@ -44,5 +47,6 @@ export function InstitutionalSources({data,showMetric,compact=false}:{data:Indus
    <details><summary>方法、版本与许可</summary><p>{report.methodology}</p><p>{report.licenseNote}</p><small>来源版本 {report.version?.slice(0,16)||'暂无'} · 最近成功获取 {report.fetchedAt?.slice(0,10)||'尚无成功记录'}</small><p><a href={report.licenseUrl} target="_blank" rel="noreferrer">使用许可 ↗</a></p>{report.error&&<p>{report.error}</p>}</details>
   </article>)}</div>
   {catalog.length>0&&<details className="institutional-catalog" open={!compact}><summary>来源接入清单 · {catalog.filter(source=>source.status==='authorization_required').length} 个来源需授权</summary><p>以下清单保留接入方向与当前原因。未获相应用途授权的报告不自动抓取、不送入推理模型、不提供 CSV。</p><div className="industry-table-wrap"><table><thead><tr><th>机构 / 数据</th><th>可补充什么</th><th>当前状态与原因</th></tr></thead><tbody>{catalog.map(source=><tr key={source.id}><td><a href={source.sourceUrl} target="_blank" rel="noreferrer">{source.publisher} ↗</a><small>{source.title}</small></td><td>{source.purpose}</td><td>{stateLabel[source.status]??source.status}<small>{source.reason}</small><a href={source.licenseUrl} target="_blank" rel="noreferrer">许可说明 ↗</a></td></tr>)}</tbody></table></div></details>}
+  </PanelBody>
  </section>;
 }
