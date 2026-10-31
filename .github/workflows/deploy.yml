@@ -116,7 +116,7 @@ jobs:
         if: steps.frontend-proof.outputs.reusable != 'true'
         run: |
           node --test tests/reasoning-status-ui.test.mjs
-          node --test --test-isolation=none tests/chart-card-navigation.test.mjs tests/observer-workspace.test.mjs tests/observer-catalog.test.mjs tests/observer-changes.test.mjs tests/observation-events.test.mjs tests/plan-delivery.test.mjs tests/research-notebook.test.mjs
+          node --test tests/chart-card-navigation.test.mjs tests/observer-workspace.test.mjs tests/observer-catalog.test.mjs tests/observer-changes.test.mjs tests/observation-events.test.mjs tests/plan-delivery.test.mjs tests/research-notebook.test.mjs
           npx tsc --noEmit
       - name: Persist validated cache and revisions
         run: python scripts/github-data-state.py save
