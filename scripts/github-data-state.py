@@ -142,6 +142,10 @@ def restore():
             if (WORK/name).exists():shutil.copy2(WORK/name,DATA/name)
         if (WORK/'versions').exists():shutil.copytree(WORK/'versions',DATA/'versions',dirs_exist_ok=True)
         industry_state(WORK/'industry',DATA/'industry')
+        # Locally generated inference is a read-only handoff for cloud builds.
+        # Never copy it back in save(): a PC may publish a newer result meanwhile.
+        if (WORK/'industry/research-local-model.json').exists():
+            shutil.copy2(WORK/'industry/research-local-model.json',DATA/'industry/research-local-model.json')
         print('Restored database, source archives and scheduling state from data-cache')
     elif exists.returncode==2:
         git('worktree','add','--detach',str(WORK),'HEAD');git('switch','--orphan','data-cache',cwd=WORK)

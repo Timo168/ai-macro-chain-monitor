@@ -14,7 +14,7 @@ test('complete background research pipeline records real response metadata and s
  try{
   mkdirSync(join(directory,'data/industry'),{recursive:true});mkdirSync(join(directory,'lib'));
   json('lib/indicators.json',[]);json('data/industry/latest.json',{definitions:[],series:{},recommendations:[recommendation],projects:[],events:[]});
-  process.chdir(directory);process.env.OPENAI_API_KEY='local-mock-only-never-a-live-key';process.env.REASONING_MODEL='gpt-5-mini';process.env.REASONING_EFFORT='medium';
+  process.chdir(directory);process.env.OPENAI_API_KEY='local-mock-only-never-a-live-key';process.env.REASONING_PROVIDER='openai';process.env.REASONING_ENABLED='true';process.env.REASONING_MODEL='gpt-5-mini';process.env.REASONING_EFFORT='medium';
   globalThis.fetch=async(url,options)=>{
    requests++;assert.equal(url,'https://api.openai.com/v1/responses');const body=JSON.parse(options.body);assert.equal(body.store,false);assert.equal(body.reasoning.effort,'medium');
    const packet=JSON.parse(body.input.split('数据包：\n').at(-1));

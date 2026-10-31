@@ -65,6 +65,8 @@ jobs:
           python scripts/schedule.py --skip-research
       - name: Generate evidence-constrained industry research
         env:
+          REASONING_PROVIDER: ${{ vars.REASONING_PROVIDER }}
+          REASONING_ENABLED: ${{ vars.REASONING_ENABLED }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           REASONING_MODEL: ${{ vars.REASONING_MODEL }}
           REASONING_EFFORT: ${{ vars.REASONING_EFFORT }}
@@ -83,6 +85,7 @@ jobs:
           node --test tests/calculations.test.mjs
           node --test tests/industry.test.mjs
           node --test tests/research.test.mjs tests/model-runtime.test.mjs tests/research-pipeline.test.mjs
+          node --test tests/local-research.test.mjs tests/local-handoff.test.mjs tests/reasoning-status-ui.test.mjs tests/local-publisher.test.mjs
           node --test tests/quant-model.test.mjs tests/research-asof.test.mjs tests/operating-samples.test.mjs
           node --test tests/financial-updates.test.mjs
           node --test tests/research-evolution.test.mjs tests/research-tracking.test.mjs tests/valuation.test.mjs tests/research-robustness.test.mjs tests/research-validation.test.mjs tests/research-attention.test.mjs tests/model-evaluation.test.mjs tests/project-events.test.mjs

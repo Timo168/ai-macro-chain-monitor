@@ -36,7 +36,7 @@ export function ResearchProgress({research,showMetric}:{research:IndustryResearc
   {section==='robustness'&&<ResearchRobustness data={current.robustness}/>}
   {section==='validation'&&<ResearchValidation data={current.validation}/>}
   {section==='crossCompany'&&<ResearchCrossCompany data={current.crossCompany} showMetric={showMetric}/>}
-  {section==='modelEvaluation'&&<ResearchModelEvaluation data={current.modelEvaluation}/>}
+  {section==='modelEvaluation'&&<ResearchModelEvaluation data={current.modelEvaluation} research={research}/>}
   {section==='changes'&&<div>
    <h3>上一版 → 本版</h3><p className="research-progress-note">{changes?.summary??'等待新版本生成对比。'}</p>
    {changes?.previousAt&&<p className="industry-small">上一版保存 {beijing(changes.previousAt)} · 本版保存 {beijing(changes.currentAt)}（北京时间）</p>}

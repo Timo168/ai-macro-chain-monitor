@@ -111,7 +111,7 @@ JS 验证包括 17 组图表各 3 点（51 点）、15 个 FRED 序列各 3 个�
 
 仓库：<https://github.com/Timo168/ai-macro-chain-monitor>。Pages 使用 Actions 模式，默认分支为 `main`。提交代码、手动运行工作流或定时触发都会执行数据检查、验证、构建、发布。工作流页面：<https://github.com/Timo168/ai-macro-chain-monitor/actions/workflows/deploy.yml>。
 
-可选密钥放在仓库 Settings → Secrets and variables → Actions → Secrets → `FRED_API_KEY` 与 `OPENAI_API_KEY`。不配置 FRED 密钥时使用公开 CSV；不配置 OpenAI 密钥时使用确定性量化证据层。可在 Actions → Variables 设置 `REASONING_MODEL`，默认 `gpt-5.4`。不要在 data-cache 分支中放任何密钥、个人文件或非公开业务数据。
+可选 FRED 密钥放在仓库 Settings → Secrets and variables → Actions → Secrets → `FRED_API_KEY`；未配置时使用公开 CSV。推理默认使用本机 Ollama / `qwen3:8b`，无需 OpenAI 密钥，未取得本机验收结果时展示规则证据层。详见[本地推理准备与发布](docs/industry/local-reasoning.md)。`REASONING_ENABLED` 默认关闭；只有显式选择 `REASONING_PROVIDER=openai`、开启生成并配置 `OPENAI_API_KEY` 才可使用收费 API，不会自动回退到收费服务。不要在 data-cache 分支中放任何密钥、个人文件或非公开业务数据。
 
 本地构建 Pages：`npm run build:pages`，产物为 `dist-pages`。部署子路径由 `PAGES_BASE_PATH` 控制，默认 `/ai-macro-chain-monitor/`。页面导航、数据与静态资源均支持这个子路径。
 

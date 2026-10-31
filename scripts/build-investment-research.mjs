@@ -10,6 +10,8 @@ import {buildResearchValidation} from '../lib/industry/research-validation.mjs';
 import {buildResearchWatchlist} from '../lib/industry/research-watchlist.mjs';
 import {buildCrossCompanyComparison} from '../lib/industry/cross-company.mjs';
 import {buildModelEvaluation} from '../lib/industry/model-evaluation.mjs';
+import {createLocalResearchPrompt,LOCAL_RESEARCH_PROMPT_VERSION} from '../lib/industry/local-research.mjs';
+import {validateLocalHandoff} from './publish-local-reasoning.mjs';
 
 const folder='data/industry';
 const output=folder+'/research.json';
@@ -32,20 +34,25 @@ const policyRates=read(policyRatesPath,{series:[]});
 const policyDecisions=read(policyDecisionsPath,{decisions:[],checks:[]});
 const settings=modelSettings();
 const configuredModel=settings.model;
+const localProvider=settings.provider==='ollama';
+// Neither a page refresh nor adding an API key opts into paid generation.
+const automaticEnabled=process.env.REASONING_ENABLED==='true';
+const activationRequested=process.argv.includes('--activate-model');
+const generationEnabled=automaticEnabled||activationRequested;
 const key=process.env.OPENAI_API_KEY?.trim();
 const packet=buildResearchPacket(industry,macro,macroDefinitions,policyRates,policyDecisions);
 // Archive the complete vintage for recomputation, while the website and model
 // receive only the compact evidence packet. A background check timestamp alone
 // must not invalidate an otherwise identical model input.
 const {calculationInputs,observationManifest,...publicPacket}=packet;
-const inputHash=hash({promptVersion:RESEARCH_PROMPT_VERSION,model:configuredModel,effort:settings.effort,runtimeVersion:MODEL_RUNTIME_VERSION,packet:publicPacket});
+const inputHash=hash({promptVersion:RESEARCH_PROMPT_VERSION,localPromptVersion:localProvider?LOCAL_RESEARCH_PROMPT_VERSION:null,provider:settings.provider,model:configuredModel,effort:settings.effort,runtimeVersion:MODEL_RUNTIME_VERSION,packet:publicPacket});
 const inputs={industry:{version:snapshotVersion(industry),generatedAt:industry.generatedAt??null},macro:{version:snapshotVersion(macro),generatedAt:macro.generatedAt??null},policyRates:{version:snapshotVersion(policyRates),generatedAt:policyRates.generatedAt??null},policyDecisions:{version:snapshotVersion(policyDecisions),generatedAt:policyDecisions.generatedAt??null}};
 const cutoffOf=items=>items.filter(Boolean).sort().at(-1)??null;
 const dataCutoffs={industry:cutoffOf(packet.quantitative.sectorSignals.map(signal=>signal.dataCutoffAt)),macro:cutoffOf(packet.macroSignals.map(signal=>signal.latestDate)),policy:cutoffOf(packet.policyRateSignals.map(signal=>signal.latestDate)),projects:cutoffOf(packet.fullSiteContext.projects.records.map(project=>project.latestEventDate))};
 
 function safeError(error){const text=String(error?.message??error).replace(/[\r\n]+/g,' ');return (key?text.replaceAll(key,'[redacted]'):text).slice(0,220);}
 async function requestModel(){
- return callReasoning({key,settings,prompt:modelPrompt(packet),schema:modelJsonSchema(packet)});
+ return callReasoning({key,settings,prompt:localProvider?createLocalResearchPrompt(packet):modelPrompt(packet),schema:modelJsonSchema(packet)});
 }
 
 const now=new Date().toISOString();
@@ -53,25 +60,42 @@ const localAsOf=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'
 let analysis=buildFallbackAnalysis(packet);
 const callsPath=folder+'/research-model-calls.json';
 const calls=read(callsPath,[]);
-let model={status:'not_configured',provider:'OpenAI Responses API',model:configuredModel,effort:settings.effort,runtimeVersion:MODEL_RUNTIME_VERSION,promptVersion:RESEARCH_PROMPT_VERSION,generatedAt:null,lastSuccessfulAt:previous?.model?.lastSuccessfulAt??null,checkedAt:now,requestId:null,cacheReason:null,error:null,outputHash:null,usage:null,citationAudit:null};
+const sameModel=previous?.model?.providerId===settings.provider&&previous?.model?.model===configuredModel;
+let model={status:'not_configured',provider:localProvider?'Ollama 本地推理':'OpenAI Responses API',providerId:settings.provider,automaticEnabled,model:configuredModel,effort:settings.effort,runtimeVersion:MODEL_RUNTIME_VERSION,promptVersion:RESEARCH_PROMPT_VERSION,localPromptVersion:localProvider?LOCAL_RESEARCH_PROMPT_VERSION:null,generatedAt:null,lastSuccessfulAt:sameModel?(previous?.model?.lastSuccessfulAt??null):null,checkedAt:now,requestId:null,cacheReason:null,error:null,errorCode:localProvider?'local_not_configured':'key_not_configured',action:localProvider?'在本机启动已下载的模型，并运行一次真实推理验收。':'在后台配置 API 密钥；付费推理还需显式启用。',retryable:false,outputHash:null,usage:null,citationAudit:null};
 const sameInput=previous?.inputHash===inputHash;
 const reusableModel=sameInput&&previous?.analysis?.origin==='model'&&['ready','cached'].includes(previous?.model?.status);
-if(key){
+const handoffPath=folder+'/research-local-model.json';
+const localHandoff=localProvider?read(handoffPath,null):null;
+let acceptedHandoff=false,handoffRejected=false;
+// GitHub Pages reads a locally generated result; it never calls a home PC.
+// Only the exact current evidence packet and a revalidated answer are reusable.
+if(localHandoff?.inputHash===inputHash&&localHandoff.model?.providerId==='ollama'&&localHandoff.model?.model===configuredModel&&localHandoff.analysis?.origin==='model'&&localHandoff.model?.lastSuccessfulAt){
+ try{
+  const verified=validateLocalHandoff(localHandoff,{inputHash,model,evidence:{inputSnapshot:publicPacket}});
+  analysis=verified.analysis;
+  model={...verified.model,status:'cached',automaticEnabled,checkedAt:now,cacheReason:'local_handoff'};
+  for(const call of verified.calls)if(!calls.some(saved=>saved.inputHash===call.inputHash&&saved.attemptedAt===call.attemptedAt))calls.push(call);
+  acceptedHandoff=true;
+ }catch{handoffRejected=true;model={...model,status:'rejected',errorCode:'output_rejected',error:'本地模型结果未通过当前证据校验。',action:'请在本机根据当前数据重新生成分析。'};}
+}
+if(!acceptedHandoff&&!handoffRejected&&(localProvider||key)){
  if(reusableModel){
   analysis=previous.analysis;
-  model={...previous.model,status:'cached',checkedAt:now,cacheReason:'unchanged_input',error:null};
+  model={...previous.model,status:'cached',automaticEnabled,checkedAt:now,cacheReason:'unchanged_input',error:null,errorCode:null,action:null,retryable:null};
+ }else if(!generationEnabled){
+  model={...model,errorCode:localProvider?'local_not_configured':'automation_disabled',status:localProvider?'not_configured':'deferred',action:localProvider?'等待本机生成并发布与当前数据匹配的推理结果；不会调用付费 API。':'自动付费推理未开启；先手动验收，再决定运行频率。'};
  }else{
   const permission=callPermission(calls,settings,inputHash,now);
   if(!permission.allowed){model={...model,status:'deferred',cacheReason:permission.reason,error:permission.reason==='daily_call_limit'?'达到后台每日调用次数设置，等待下一日。':'上次调用失败，正在等待后台重试。'};}
   else{
   let response;
-  const call={attemptedAt:now,inputHash,model:configuredModel,effort:settings.effort,promptVersion:RESEARCH_PROMPT_VERSION,status:'fetch_failed',usage:null,citationAudit:null};
+  const call={attemptedAt:now,inputHash,providerId:settings.provider,model:configuredModel,effort:settings.effort,promptVersion:RESEARCH_PROMPT_VERSION,status:'fetch_failed',usage:null,citationAudit:null};
   try{response=await requestModel();}
   catch(error){
    Object.assign(call,error.metadata??{},{error:safeError(error)});
    if(sameInput&&previous?.analysis?.origin==='model'){
     analysis=previous.analysis;
-    model={...previous.model,status:'cached',checkedAt:now,cacheReason:'request_failed',error:safeError(error)};
+    model={...previous.model,automaticEnabled,status:'cached',checkedAt:now,cacheReason:'request_failed',error:safeError(error),errorCode:error.metadata?.errorCode,action:error.metadata?.action,retryable:error.metadata?.retryable};
    }else model={...model,...(error.metadata??{}),status:'fetch_failed',error:safeError(error)};
   }
   if(response){
@@ -81,13 +105,15 @@ if(key){
     if(audit.invalid)throw Error('模型引用未通过精确版本校验');
     analysis=validateModelAnalysis(response.raw,packet,{requireScenarios:true});
     call.status='ready';
-    model={...model,status:'ready',generatedAt:now,lastSuccessfulAt:now,requestId:response.requestId,resolvedModel:response.usage.resolvedModel,usage:response.usage,citationAudit:audit,elapsedMs:response.elapsedMs,outputHash:hash(analysis)};
-   }catch(error){call.status='rejected';call.error=safeError(error);model={...model,status:'rejected',requestId:response.requestId,resolvedModel:response.usage.resolvedModel,usage:response.usage,citationAudit:call.citationAudit,error:safeError(error)};}
+    model={...model,status:'ready',generatedAt:now,lastSuccessfulAt:now,requestId:response.requestId,resolvedModel:response.usage.resolvedModel,modelDigest:response.modelDigest??null,modelCapabilities:response.modelCapabilities??null,thinkingEnabled:response.thinkingEnabled??null,usage:response.usage,citationAudit:audit,elapsedMs:response.elapsedMs,outputHash:hash(analysis),error:null,errorCode:null,action:null,retryable:null};
+   }catch(error){call.status='rejected';call.error=safeError(error);model={...model,status:'rejected',requestId:response.requestId,resolvedModel:response.usage.resolvedModel,usage:response.usage,citationAudit:call.citationAudit,error:safeError(error),errorCode:'output_rejected',action:'检查证据引用与输出边界，再运行验收。',retryable:false};}
   }
   calls.push(call);writeJsonAtomic(callsPath,calls);
   }
  }
 }
+if(acceptedHandoff)writeJsonAtomic(callsPath,calls);
+if(localProvider&&model.status==='ready')writeJsonAtomic(handoffPath,{schemaVersion:'1',inputHash,generatedAt:now,model,analysis,calls:calls.filter(call=>call.inputHash===inputHash&&call.providerId==='ollama'&&call.status==='ready')});
 const result={schemaVersion:'2',generatedAt:now,inputHash,inputs,dataCutoffs,model,quantitative:packet.quantitative,evidence:{macroSignals:packet.macroSignals,policyRateSignals:packet.policyRateSignals,institutionalReports:packet.institutionalReports,sourceRefs:packet.sourceRefs,dataGaps:packet.dataGaps,inputCoverage:packet.inputCoverage,guardrails:packet.guardrails,inputSnapshot:publicPacket},analysis};
 result.modelAudit={totalCalls:calls.length,successfulCalls:calls.filter(call=>call.status==='ready').length,rejectedCalls:calls.filter(call=>call.status==='rejected').length,estimatedCostUsd:calls.reduce((sum,call)=>sum+(call.usage?.estimatedCostUsd??0),0),unpricedCalls:calls.filter(call=>call.usage?.estimatedCostUsd==null).length,maxDailyCalls:settings.maxDailyCalls,note:'引用匹配率只衡量来源版本匹配；费用为可计价调用的小计，未计价调用另列。'};
 const ledgerPath=folder+'/research-ledger.json';
@@ -134,3 +160,4 @@ const previousHistory=Array.isArray(history)?history:[];
 writeJsonAtomic(historyPath,previousHistory.some(entry=>entry.inputHash===inputHash)?previousHistory:[...previousHistory,historyEntry]);
 writeJsonAtomic(output,result);
 console.log(`Investment research: ${model.status}; ${packet.quantitative.sectorSignals.length} industry targets; ${packet.inputCoverage.industryMetricCount} industry metrics; input ${inputHash.slice(0,12)}.`);
+if(activationRequested&&!['ready','cached'].includes(model.status)){console.error(`真实推理未通过：${model.errorCode??model.status}；${model.action??model.error??'请检查后台诊断。'}`);process.exitCode=1;}
