@@ -1,4 +1,5 @@
 import {fileURLToPath} from 'node:url';
+import './hide-windows-console.mjs';
 
 process.env.VITE_LOCAL_PREVIEW='true';
 const args=process.argv.slice(2);

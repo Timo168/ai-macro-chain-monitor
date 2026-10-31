@@ -12,7 +12,7 @@ if(process.argv.includes('--data-only')){
  verifyFrontend('dist-pages',frontendIdentity);
  console.log('Reusing verified frontend; exporting a fresh data snapshot.');
 }else{
- const result=spawnSync(process.execPath,['node_modules/vite/bin/vite.js','build','--config','vite.pages.config.ts'],{stdio:'inherit',windowsHide:true});if(result.status!==0)process.exit(result.status??1);
+ const result=spawnSync(process.execPath,['--import',new URL('./hide-windows-console.mjs',import.meta.url).href,'node_modules/vite/bin/vite.js','build','--config','vite.pages.config.ts'],{stdio:'inherit',windowsHide:true});if(result.status!==0)process.exit(result.status??1);
  recordFrontend('dist-pages',frontendIdentity);
 }
 const version=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0,16);

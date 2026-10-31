@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "plan-delivery-reviewed-1",
+  "reviewedAt": "2026-10-31T09:51:26Z",
+  "mode": "manual_reviewed",
+  "methodology": "逐项核对公司官方财报的资本开支指引、已实现值、披露日和口径。这里只保留事实摘录与链接；指引版本为已核验关键节点，并非完整修订史。年度资本开支含融资租赁本金支付，不能与现金购置固定资产单项直接比较。",
+  "plans": [
+    {
+      "id": "META-capex-2026",
+      "entity": "META", "title": "2026 年资本开支", "periodStart": "2026-01-01", "periodEnd": "2026-12-31", "currency": "USD", "unit": "亿美元",
+      "scope": "cash_ppe_plus_finance_lease_principal", "scopeLabel": "固定资产购置与融资租赁本金支付合计",
+      "versions": [
+        {"publishedAt":"2026-01-28","low":1150,"high":1350,"sourceUrl":"https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Fourth-Quarter-and-Full-Year-2025-Results/","version":"META-FY2025-release-20260128"},
+        {"publishedAt":"2026-10-21","low":1350,"high":1450,"sourceUrl":"https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Third-Quarter-2026-Results/","version":"META-Q32026-release-20261021"}
+      ],
+      "actual": null,
+      "partial": {"value":349.1,"periodStart":"2026-07-01","periodEnd":"2026-09-30","publishedAt":"2026-10-21","sourceUrl":"https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Third-Quarter-2026-Results/","label":"仅第三季度，不是全年累计"},
+      "outcomes": [{"label":"第三季度收入","value":646.01,"unit":"亿美元","periodEnd":"2026-09-30","yoy":26,"sourceUrl":"https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Third-Quarter-2026-Results/","note":"公司整体收入；未单独披露由本年资本开支带来的收入或订单。"}]
+    },
+    {
+      "id": "META-capex-2025",
+      "entity": "META", "title": "2025 年资本开支", "periodStart": "2025-01-01", "periodEnd": "2025-12-31", "currency": "USD", "unit": "亿美元",
+      "scope": "cash_ppe_plus_finance_lease_principal", "scopeLabel": "固定资产购置与融资租赁本金支付合计",
+      "versions": [
+        {"publishedAt":"2025-01-29","low":600,"high":650,"sourceUrl":"https://investor.atmeta.com/investor-news/press-release-details/2025/Meta-Reports-Fourth-Quarter-and-Full-Year-2024-Results/","version":"META-FY2024-release-20250129"},
+        {"publishedAt":"2025-10-29","low":700,"high":720,"sourceUrl":"https://investor.atmeta.com/investor-news/press-release-details/2025/Meta-Reports-Third-Quarter-2025-Results/","version":"META-Q32025-release-20251029"}
+      ],
+      "actual": {"entity":"META","value":722.2,"currency":"USD","unit":"亿美元","scope":"cash_ppe_plus_finance_lease_principal","periodStart":"2025-01-01","periodEnd":"2025-12-31","publishedAt":"2026-01-28","sourceUrl":"https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Fourth-Quarter-and-Full-Year-2025-Results/","version":"META-FY2025-release-20260128","isEstimated":false},
+      "outcomes": [{"label":"全年收入","value":2009.66,"unit":"亿美元","periodEnd":"2025-12-31","yoy":22,"sourceUrl":"https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Fourth-Quarter-and-Full-Year-2025-Results/","note":"公司整体收入；不能据此把增长归因于当年资本开支，订单单项尚未取得。"}]
+    },
+    {
+      "id": "META-capex-2024",
+      "entity": "META", "title": "2024 年资本开支", "periodStart": "2024-01-01", "periodEnd": "2024-12-31", "currency": "USD", "unit": "亿美元",
+      "scope": "cash_ppe_plus_finance_lease_principal", "scopeLabel": "固定资产购置与融资租赁本金支付合计",
+      "versions": [
+        {"publishedAt":"2024-02-01","low":300,"high":370,"sourceUrl":"https://investor.atmeta.com/investor-news/press-release-details/2024/Meta-Reports-Fourth-Quarter-and-Full-Year-2023-Results-Initiates-Quarterly-Dividend/default.aspx","version":"META-FY2023-release-20240201"},
+        {"publishedAt":"2024-10-30","low":380,"high":400,"sourceUrl":"https://investor.atmeta.com/investor-news/press-release-details/2024/Meta-Reports-Third-Quarter-2024-Results/default.aspx","version":"META-Q32024-release-20241030"}
+      ],
+      "actual": {"entity":"META","value":392.3,"currency":"USD","unit":"亿美元","scope":"cash_ppe_plus_finance_lease_principal","periodStart":"2024-01-01","periodEnd":"2024-12-31","publishedAt":"2025-01-29","sourceUrl":"https://investor.atmeta.com/investor-news/press-release-details/2025/Meta-Reports-Fourth-Quarter-and-Full-Year-2024-Results/","version":"META-FY2024-release-20250129","isEstimated":false},
+      "outcomes": [{"label":"全年收入","value":1645.01,"unit":"亿美元","periodEnd":"2024-12-31","yoy":22,"sourceUrl":"https://investor.atmeta.com/investor-news/press-release-details/2025/Meta-Reports-Fourth-Quarter-and-Full-Year-2024-Results/","note":"公司整体收入；不能据此把增长归因于当年资本开支，订单单项尚未取得。"}]
+    }
+  ]
+}

@@ -1,4 +1,9 @@
 "use client";
+import {ObserverPin} from './observer-workspace';
+import {ObservationNoteButton} from './research-notebook';
+import {useObserver} from './observer-context';
+import {useSavedView} from './use-saved-view';
+
 
 import {Fragment,useCallback,useEffect,useMemo,useState} from 'react';
 import {Bell,CalendarDays,Check,Download,ExternalLink,Info,Clock3,RefreshCw} from 'lucide-react';
@@ -102,7 +107,8 @@ function RateComparison({following,refreshRequest,onRefreshState}:{following:str
  const [dataset,setDataset]=useState<PolicyRatesDataset|null>(null);
  const [decisionDataset,setDecisionDataset]=useState<PolicyDecisionsDataset|null>(null);
  const [loadError,setLoadError]=useState('');
- const [range,setRange]=useState<'1'|'3'|'5'|'10'>('5');
+ const [range,setRange]=useSavedView<'1'|'3'|'5'|'10'>('policy:range','5',(v):v is '1'|'3'|'5'|'10'=>typeof v==='string'&&['1','3','5','10'].includes(v));
+ const {catalog}=useObserver();
  const [hoveredDecision,setHoveredDecision]=useState<PolicyDecision|null>(null);
  const [refreshMessage,setRefreshMessage]=useState('');
 
@@ -208,12 +214,13 @@ function RateComparison({following,refreshRequest,onRefreshState}:{following:str
    </section>:<div className="policy-decision-unavailable"><strong>官方决议：</strong>{decisionDataset?.status==='fetch_failed'?'本轮获取失败，尚无可用缓存。':'等待后台同步官方决议；月末横向比较仍可正常使用。'}</div>}
    <div className="policy-rate-summary">{visible.map((series,index)=>{
     const decision=decisionsByBank.get(series.id);
-    const change=policyRateChange(series);
+    const change=policyRateChange(series);const item=catalog.find(item=>item.id==='policy:'+series.id);
     return <article key={series.id}>
      <span className="policy-rate-dot" style={{background:policyRateColor(series.id,index)}}/>
      <div><small>{series.country} · {series.shortName}</small><strong>{series.name}</strong></div>
      <b>{decision?rateRange(decision):rateNumber(series.latestValue)}</b>
      <p>{decision?`最新决议 · ${policyDecisionChange(decision)}`:`${series.latestObservationDate.slice(0,7)} 月末 · ${change==null?'无上月比较':`${change>0?'↑':'↓'} ${Math.abs(change).toFixed(3).replace(/0+$/,'').replace(/\.$/,'')} 个百分点`}`}</p>
+     <div className="observer-policy-actions"><ObserverPin itemId={'policy:'+series.id} title={series.name}/>{item&&<ObservationNoteButton item={item}/>}</div>
     </article>;
    })}{!visible.length&&<div className="policy-empty">请在“我的关注范围”至少选择一家央行，以显示政策利率。</div>}</div>
    {rows.length&&visible.length?<>
@@ -254,6 +261,7 @@ export default function PolicyCalendar(){
  const [refreshRequest,setRefreshRequest]=useState(0);
  const [refreshing,setRefreshing]=useState(false);
  useEffect(()=>{try{localStorage.setItem(storageKey,JSON.stringify(following));}catch{}},[following]);
+ useEffect(()=>{const choose=()=>{const bank=new URLSearchParams(location.search).get('bank');if(bank&&policyBanks.some(item=>item.id===bank))setFollowing(prior=>prior.includes(bank)?prior:[...prior,bank])};choose();addEventListener('popstate',choose);return()=>removeEventListener('popstate',choose)},[]);
  const now=new Date();
  const visible=policyCalendar.filter(event=>following.includes(event.bankId));
  const upcoming=visible.filter(event=>daysTo(event.decisionDate,now)>=0);

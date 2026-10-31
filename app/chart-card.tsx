@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ResponsiveContainer, ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Brush, ReferenceLine, ReferenceDot } from 'recharts';
 import { ArrowDownToLine, ArrowUpRight, ChartColumn, ChartLine, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,21 +9,68 @@ import { yieldDisplay } from '@/lib/yield-display.mjs';
 import { metrics, selectRange } from '@/lib/calculations.mjs';
 import { seriesHealth, barDomain } from '@/lib/data-health.mjs';
 import { PanelBody, PanelToggle, usePanelDisclosure } from './panel-disclosure';
+import { ChartEvents, chartEventReferenceLines, useChartEventLayer } from './chart-events';
+import {ObserverPin} from './observer-workspace';
+import {ObservationNoteButton} from './research-notebook';
+import {useObserver} from './observer-context';
+import {useSavedView,rangePreference} from './use-saved-view';
+export function shouldApplyChartGlobalRange(previous:string,next:string,waitingForInitialUrl:boolean,initialUrlRange:string|null,currentUrlRange:string|null){
+ return previous!==next&&!(waitingForInitialUrl&&next===initialUrlRange&&currentUrlRange===initialUrlRange);
+}
+export function chartNavigationIntent(group:Group,currentMode:string,search:string,hash:string){
+ const query=new URLSearchParams(search),series=query.get('series');let anchor=hash.replace(/^#/,'');try{anchor=decodeURIComponent(anchor)}catch{}
+ const matches=anchor?anchor===group.id:!series||group.series.includes(series);
+ if(!matches)return {mode:null,range:null,revealIndex:null};
+ const requested=query.get('chartMode');
+ let mode=group.kind==='inflation'&&['yoy','mom'].includes(requested??'')?requested:null;
+ // A raw-series link without chartMode still selects its matching inflation
+ // basis. CPI's seasonally adjusted and unadjusted series are distinct.
+ if(group.kind==='inflation'&&!mode&&series){
+  const currentIds=makeChart(group,{generatedAt:'',series:{}},currentMode).ids;
+  if(!currentIds.includes(series))mode=['yoy','mom'].find(candidate=>makeChart(group,{generatedAt:'',series:{}},candidate).ids.includes(series))??null;
+ }
+ const ids=makeChart(group,{generatedAt:'',series:{}},mode??currentMode).ids,index=series?ids.indexOf(series):-1;
+ const chartRange=query.get('chartRange');
+ return {mode,range:rangePreference(chartRange)?chartRange:null,revealIndex:index>=0?index:null};
+}
 export function RangeButtons({value,onChange,available=['1','3','5','all']}:{value:string;onChange:(value:string)=>void;available?:string[]}){return <div className="range-selector">{[['1','近一年'],['3','三年'],['5','五年'],['all','全部']].map(([id,label])=><Button key={id} variant="ghost" aria-pressed={value===id} className={value===id?'selected':''} disabled={!available.includes(id)} onClick={()=>onChange(id)}>{label}</Button>)}</div>}
 export default function ChartCard({group,data,range:globalRange,compact=false}:{group:Group;data:Dataset;range:string;compact?:boolean}){
  const disclosure=usePanelDisclosure(`macro:chart:${group.id}`,{anchorId:group.id,scope:'macro'});
- const [range,setRange]=useState(globalRange),[mode,setMode]=useState('yoy'),[style,setStyle]=useState(group.kind==='bar'?'bar':'line'),[hidden,setHidden]=useState<number[]>([]),[zoom,setZoom]=useState<{startIndex?:number;endIndex?:number}|null>(null),[details,setDetails]=useState(false);
+ const [range,setRange]=useSavedView(`chart:${group.id}:range`,globalRange,rangePreference);
+ const [mode,setMode]=useSavedView<string>(`chart:${group.id}:mode`,'yoy',(value):value is string=>typeof value==='string'&&['yoy','mom'].includes(value));
+ const [style,setStyle]=useSavedView<string>(`chart:${group.id}:style`,group.kind==='bar'?'bar':'line',(value):value is string=>value==='bar'||value==='line');
+ const [hidden,setHidden]=useSavedView<number[]>(`chart:${group.id}:hidden`,[],(value):value is number[]=>Array.isArray(value)&&value.every(index=>Number.isInteger(index)&&index>=0&&index<4));
+ const [zoom,setZoom]=useState<{startIndex?:number;endIndex?:number}|null>(null),[details,setDetails]=useState(false);
+ const {catalog}=useObserver();const previousGlobal=useRef(globalRange),initialGlobalSync=useRef({mounted:false,urlRange:null as string|null,waiting:false}),modeRef=useRef(mode);modeRef.current=mode;
  // The page-level range is an explicit external control. Reset the local brush
  // in the same commit so the selected period and chart window never disagree.
  // eslint-disable-next-line react-hooks/set-state-in-effect
- useEffect(()=>{setRange(globalRange);setZoom(null)},[globalRange]);
+ useEffect(()=>{
+  const urlRange=new URLSearchParams(location.search).get('range'),sync=initialGlobalSync.current;
+  // A page URL always carries the global range. Restoring that URL on mount is
+  // not a new user selection and must not erase a saved per-chart range.
+  if(!sync.mounted){sync.mounted=true;sync.urlRange=urlRange;sync.waiting=rangePreference(urlRange)&&urlRange!==globalRange;}
+  else if(previousGlobal.current!==globalRange){if(shouldApplyChartGlobalRange(previousGlobal.current,globalRange,sync.waiting,sync.urlRange,urlRange)){setRange(globalRange);setZoom(null)}sync.waiting=false;}
+  previousGlobal.current=globalRange;
+ },[globalRange,setRange]);
+ useEffect(()=>{
+  const read=()=>{const intent=chartNavigationIntent(group,modeRef.current,location.search,location.hash);
+   if(intent.mode){setMode(intent.mode);setStyle(intent.mode==='mom'?'bar':'line');setZoom(null)}
+   if(intent.range){setRange(intent.range);setZoom(null)}
+   if(intent.revealIndex!==null)setHidden(previous=>previous.filter(index=>index!==intent.revealIndex));
+  };
+  read();addEventListener('popstate',read);addEventListener('hashchange',read);
+  return()=>{removeEventListener('popstate',read);removeEventListener('hashchange',read)};
+ },[group.id,group.kind,setMode,setStyle,setRange,setHidden]);
  const chart=useMemo(()=>makeChart(group,data,mode),[group,data,mode]);
+ const itemId=`macro:${chart.ids[0]}${group.kind==='inflation'?':'+mode:''}`;const observationItem=catalog.find(item=>item.id===itemId);
  const hasValue=(r:Record<string,unknown>)=>Object.entries(r).some(([key,v])=>key!=='date'&&v!==null);
  const firstIndex=chart.rows.findIndex(hasValue),lastIndex=chart.rows.findLastIndex(hasValue);
  const nonEmpty=firstIndex<0?[]:chart.rows.slice(firstIndex,lastIndex+1);
  const available=['1','3','5'].filter(y=>nonEmpty.length>0&&Date.parse(nonEmpty.at(-1)!.date)-Date.parse(nonEmpty[0].date)>=Number(y)*365*86400000).concat('all');
  const effective=available.includes(range)?range:'all';
  const rows=selectRange(nonEmpty,effective);const visibleRows=zoom?rows.slice(zoom.startIndex??0,(zoom.endIndex??rows.length-1)+1):rows;
+ const eventLayer=useChartEventLayer({seriesIds:chart.ids,rows:visibleRows,includePolicy:['yields','nfci','cpi','pce'].includes(group.id)});
  const isPrice=group.category===2;const unit=group.unit;const deltaUnit=isPrice?'%':group.id==='nfci'?'指数点':unit==='%'?'个百分点':unit;
  const stats=metrics(firstValues(chart.rows),isPrice),selectedStats=metrics(firstValues(visibleRows),isPrice),digits=group.id==='claims'||group.id==='payrolls'?1:group.id==='nfci'?3:2;
  const series=chart.ids.map(id=>data.series[id]).filter(Boolean);
@@ -34,13 +81,15 @@ export default function ChartCard({group,data,range:globalRange,compact=false}:{
  const latestText=stats.last?.date??'暂无观测';
  const publication=series[0]?.publication;
  return <section id={group.id} className={'chart-card '+(compact?'compact':'')} aria-label={group.title}>
- <div className="chart-title"><div><h3>{group.title}</h3><div className="chart-subtitle">{group.kind==='inflation'?(mode==='yoy'?'同比变化':'环比变化'):group.id==='yields'?yieldDisplay.chartSubtitle:group.id==='claims'?'季调 · 四周移动平均':group.category===2&&group.frequency==='月度'?`${metadata[group.series[0]]?.source} · ${metadata[group.series[0]]?.seasonal}`:metadata[group.series[0]]?.seasonal}</div></div><div className="panel-heading-actions"><span className="frequency">{group.frequency}</span><PanelToggle open={disclosure.open} onToggle={disclosure.toggle} controls={disclosure.contentId} label={group.title}/></div></div>
+ <div className="chart-title"><div><h3>{group.title}</h3><div className="chart-subtitle">{group.kind==='inflation'?(mode==='yoy'?'同比变化':'环比变化'):group.id==='yields'?yieldDisplay.chartSubtitle:group.id==='claims'?'季调 · 四周移动平均':group.category===2&&group.frequency==='月度'?`${metadata[group.series[0]]?.source} · ${metadata[group.series[0]]?.seasonal}`:metadata[group.series[0]]?.seasonal}</div></div><div className="panel-heading-actions"><ObserverPin itemId={itemId} title={group.title}/><span className="frequency">{group.frequency}</span><PanelToggle open={disclosure.open} onToggle={disclosure.toggle} controls={disclosure.contentId} label={group.title}/></div></div>
  <div className="stat-row"><div className="chart-stat">{format(stats.last?.value,digits)} <small>{unit}</small></div><span className={'delta '+(stats.previous===null?'neutral':stats.previous>0?'up':stats.previous<0?'down':'neutral')}>{stats.previous===null?'—':(stats.previous>0?'↑ ':stats.previous<0?'↓ ':'→ ')+deltaFormat(stats.previous,digits)+' '+deltaUnit}<small>较上期</small></span></div>
  <div className="chart-date">{chart.names[0]} · 最新有效观测 {latestText}<span className={'state-pill '+(health.warning?'warning':'')}>{health.label}</span></div>
  {publication&&<div className="next-release">{publication.state==='awaiting_source'?'已到计划发布时间，等待来源更新':publication.state==='delayed'?'来源发布延迟，继续展示最后成功数据':publication.state==='calendar_unavailable'?'发布日历暂不可用，按日检查来源':publication.nextReleaseAt?'下次计划发布：'+beijing(publication.nextReleaseAt)+'（北京）':'按来源节奏检查，等待下一次发布'}{publication.calendarSource?.startsWith('https://')&&<a href={publication.calendarSource} target="_blank" rel="noreferrer"> · 日历 ↗</a>}</div>}
  <PanelBody open={disclosure.open} id={disclosure.contentId}>
  <div className="chart-controls"><RangeButtons value={effective} available={available} onChange={v=>{setRange(v);setZoom(null)}}/><div className="chart-actions">{group.kind==='inflation'&&<div className="mode-switch">{['yoy','mom'].map(m=><Button key={m} variant="ghost" aria-pressed={mode===m} className={mode===m?'selected':''} onClick={()=>{setMode(m);setZoom(null);setStyle(m==='mom'?'bar':'line')}}>{m==='yoy'?'同比':'环比'}</Button>)}</div>}{group.kind!=='step'&&<Button variant="ghost" size="icon-sm" aria-label={style==='line'?'切换为柱状图':'切换为折线图'} title={style==='line'?'切换为柱状图':'切换为折线图'} onClick={()=>setStyle(s=>s==='line'?'bar':'line')}>{style==='line'?<ChartColumn/>:<ChartLine/>}</Button>}<Button variant="ghost" size="icon-sm" aria-label={exportAllowed?'导出 '+group.title+' CSV':'此来源尚未开放导出'} title={exportAllowed?'导出所选区间 CSV':'NFCI 导出许可待核验'} disabled={!exportAllowed||!rows.length} onClick={exportCsv}><ArrowDownToLine/></Button></div></div>
- {rows.length?<><div className="data-chart"><ResponsiveContainer width="100%" height="100%"><ComposedChart data={rows} margin={{top:10,right:6,bottom:0,left:-17}} accessibilityLayer><CartesianGrid vertical={false} stroke="#e9eff0" strokeDasharray="3 4"/><XAxis dataKey="date" tickFormatter={(date:string)=>date.slice(2,7).replace('-','/')} minTickGap={35} tickLine={false} axisLine={false} tick={{fontSize:12,fill:'#5b7079'}}/><YAxis domain={style==='bar'?barDomain:['auto','auto']} tickLine={false} axisLine={false} tick={{fontSize:12,fill:'#5b7079'}} tickFormatter={v=>Math.abs(v)>=10000?(v/1000).toFixed(0)+'k':format(v,Math.abs(v)<2?2:1)} width={64}/><Tooltip labelFormatter={label=>String(label)} formatter={(v,name)=>[format(Number(v),digits)+' '+unit,name]} contentStyle={{fontSize:12,border:'1px solid #dae7e2',borderRadius:7,boxShadow:'0 5px 18px #234a3c12'}}/>{(group.id==='nfci'||group.id==='payrolls')&&<ReferenceLine y={0} stroke="#83969c" strokeDasharray="4 4"/>}{group.id==='pce'&&mode==='yoy'&&<ReferenceLine y={2} stroke="#b3aaa1" strokeDasharray="4 5" label={{value:'总体 PCE 目标 2%',position:'insideTopRight',fill:'#a39a90',fontSize:10}}/>}{chart.names.map((name,i)=>hidden.includes(i)?null:style==='bar'&&i===0?<Bar key={name} dataKey={'s'+i} name={name} fill={colors[i]} radius={[2,2,0,0]} isAnimationActive={false}/>:<Line key={name} type={group.kind==='step'?'stepAfter':'linear'} dataKey={'s'+i} name={name} stroke={colors[i]} strokeWidth={i===0?2:1.7} dot={false} connectNulls={false} isAnimationActive={false}/>)}{group.kind==='step'&&rows.filter((r:Record<string,unknown>,i:number)=>i>0&&r.s0!==rows[i-1].s0).map((r:Record<string,unknown>)=><ReferenceDot key={String(r.date)} x={String(r.date)} y={Number(r.s0)} r={3} fill={colors[0]} stroke="white"/>)}<Brush dataKey="date" height={17} stroke="#cbdad5" fill="#f6f9f8" travellerWidth={7} tickFormatter={(d:string)=>d.slice(0,7)} onChange={z=>setZoom(z)} startIndex={zoom?.startIndex} endIndex={zoom?.endIndex}/></ComposedChart></ResponsiveContainer></div><div className="chart-legend">{chart.names.map((name,i)=><Button key={name} variant="ghost" aria-pressed={!hidden.includes(i)} className={hidden.includes(i)?'muted-legend':''} onClick={()=>setHidden(h=>h.includes(i)?h.filter(n=>n!==i):[...h,i])}><i style={{background:colors[i]}}/>{name}</Button>)}<span className="zoom-tip">拖动下方滑块缩放</span></div></>:<div className="empty-chart"><Info size={22}/><p>{series.some(s=>s.status==='fetch_failed')?'来源获取失败，暂无可用缓存':'来源未配置或尚未发布'}</p></div>}
+ {rows.length?<><div className="data-chart"><ResponsiveContainer width="100%" height="100%"><ComposedChart data={rows} margin={{top:10,right:6,bottom:0,left:-17}} accessibilityLayer><CartesianGrid vertical={false} stroke="#e9eff0" strokeDasharray="3 4"/><XAxis dataKey="date" tickFormatter={(date:string)=>date.slice(2,7).replace('-','/')} minTickGap={35} tickLine={false} axisLine={false} tick={{fontSize:12,fill:'#5b7079'}}/><YAxis domain={style==='bar'?barDomain:['auto','auto']} tickLine={false} axisLine={false} tick={{fontSize:12,fill:'#5b7079'}} tickFormatter={v=>Math.abs(v)>=10000?(v/1000).toFixed(0)+'k':format(v,Math.abs(v)<2?2:1)} width={64}/><Tooltip labelFormatter={label=>String(label)} formatter={(v,name)=>[format(Number(v),digits)+' '+unit,name]} contentStyle={{fontSize:12,border:'1px solid #dae7e2',borderRadius:7,boxShadow:'0 5px 18px #234a3c12'}}/>{(group.id==='nfci'||group.id==='payrolls')&&<ReferenceLine y={0} stroke="#83969c" strokeDasharray="4 4"/>}{group.id==='pce'&&mode==='yoy'&&<ReferenceLine y={2} stroke="#b3aaa1" strokeDasharray="4 5" label={{value:'总体 PCE 目标 2%',position:'insideTopRight',fill:'#a39a90',fontSize:10}}/>}{chart.names.map((name,i)=>hidden.includes(i)?null:style==='bar'&&i===0?<Bar key={name} dataKey={'s'+i} name={name} fill={colors[i]} radius={[2,2,0,0]} isAnimationActive={false}/>:<Line key={name} type={group.kind==='step'?'stepAfter':'linear'} dataKey={'s'+i} name={name} stroke={colors[i]} strokeWidth={i===0?2:1.7} dot={false} connectNulls={false} isAnimationActive={false}/>)}{group.kind==='step'&&rows.filter((r:Record<string,unknown>,i:number)=>i>0&&r.s0!==rows[i-1].s0).map((r:Record<string,unknown>)=><ReferenceDot key={String(r.date)} x={String(r.date)} y={Number(r.s0)} r={3} fill={colors[0]} stroke="white"/>)}{chartEventReferenceLines(eventLayer.events,eventLayer.enabled)}<Brush dataKey="date" height={17} stroke="#cbdad5" fill="#f6f9f8" travellerWidth={7} tickFormatter={(d:string)=>d.slice(0,7)} onChange={z=>setZoom(z)} startIndex={zoom?.startIndex} endIndex={zoom?.endIndex}/></ComposedChart></ResponsiveContainer></div><div className="chart-legend">{chart.names.map((name,i)=><Button key={name} variant="ghost" aria-pressed={!hidden.includes(i)} className={hidden.includes(i)?'muted-legend':''} onClick={()=>setHidden(h=>h.includes(i)?h.filter(n=>n!==i):[...h,i])}><i style={{background:colors[i]}}/>{name}</Button>)}<span className="zoom-tip">拖动下方滑块缩放</span></div></>:<div className="empty-chart"><Info size={22}/><p>{series.some(s=>s.status==='fetch_failed')?'来源获取失败，暂无可用缓存':'来源未配置或尚未发布'}</p></div>}
+ {observationItem&&<ObservationNoteButton item={observationItem}/>}
+ <ChartEvents events={eventLayer.events} enabled={eventLayer.enabled} onChange={eventLayer.setEnabled}/>
  <div className="period-change"><span>所选区间 {selectedStats.first?.date??'—'} — {selectedStats.last?.date??'—'}</span><strong className={(selectedStats.range??0)>0?'up':(selectedStats.range??0)<0?'down':'neutral'}>{selectedStats.range==null?'—':((selectedStats.range??0)>0?'+':'')+format(selectedStats.range,digits)+' '+deltaUnit}</strong></div>
  <div className="chart-explanation"><strong>如何理解</strong><p>{group.read}</p><strong className="impact-label">对 AI 产业链的影响</strong><p>{group.impact}</p><div className="sector-tags">{group.sectors.map(s=><span key={s}>{s}</span>)}</div></div>
  <div className="chart-source"><a href={sourceLink(group.series[0])} target="_blank" rel="noreferrer">{metadata[group.series[0]]?.source} ↗</a><Button variant="ghost" onClick={()=>setDetails(d=>!d)} aria-expanded={details}>数据详情 <Info size={12}/></Button></div>
