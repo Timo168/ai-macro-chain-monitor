@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "status": "failed",
-  "startedAt": "2026-11-07T08:47:41.574307+00:00",
-  "completedAt": "2026-11-07T08:48:52.701547+00:00",
+  "startedAt": "2026-11-08T09:00:09.185237+00:00",
+  "completedAt": "2026-11-08T09:01:59.023053+00:00",
   "lastSuccessAt": null,
-  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/42356900627",
-  "checkedSnapshotAt": "2026-11-07T03:10:42.813Z",
+  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/42465190689",
+  "checkedSnapshotAt": "2026-11-08T05:52:51.947Z",
   "checks": [
     {
       "id": "restored_data",
@@ -13,11 +13,11 @@
     },
     {
       "id": "industry_source_replay",
-      "startedAt": "2026-11-07T08:47:41.892542+00:00",
+      "startedAt": "2026-11-08T09:00:09.349552+00:00",
       "status": "failed",
       "exitCode": 1,
       "error": "来源或计算重放未通过；失败明细见检查报告和运行日志。",
-      "completedAt": "2026-11-07T08:48:52.701525+00:00"
+      "completedAt": "2026-11-08T09:01:59.023032+00:00"
     }
   ],
   "scope": "行业公开来源抽查和计算重放；不验证投资收益，也不代表所有历史点都逐点通过。",
@@ -132,70 +132,70 @@
       "periodEnd": "2024-03-31",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
       "version": "409836b5e0b2451e49d3f75d0e0d2929e5edd3efa28cc2aa08c4c4eab0db903c",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.advanced_products_revenue",
       "periodEnd": "2025-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
       "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.company_revenue",
       "periodEnd": "2024-03-31",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
       "version": "409836b5e0b2451e49d3f75d0e0d2929e5edd3efa28cc2aa08c4c4eab0db903c",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.company_revenue",
       "periodEnd": "2025-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
       "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.gross_margin",
       "periodEnd": "2024-03-31",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
       "version": "409836b5e0b2451e49d3f75d0e0d2929e5edd3efa28cc2aa08c4c4eab0db903c",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.gross_margin",
       "periodEnd": "2025-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
       "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.materials_cost_share",
       "periodEnd": "2024-03-31",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
       "version": "409836b5e0b2451e49d3f75d0e0d2929e5edd3efa28cc2aa08c4c4eab0db903c",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.materials_cost_share",
       "periodEnd": "2025-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
       "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.capex",
       "periodEnd": "2024-03-31",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
       "version": "f32536071daca7c64aeb52fa5f9ed69d86211b82d0596704a47b02febac90261",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.capex",
       "periodEnd": "2025-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
       "version": "1b8d0206074c0d54fbe8ae4184ffbf66f4fbc6d73f2286f0aa6fc8d9f71b38e6",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "ENTG.company_revenue",
