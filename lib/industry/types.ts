@@ -11,7 +11,7 @@ export type MetricDefinition = {
 export type MetricObservation = {
  metricId:string; periodStart?:string; periodEnd:string; fiscalPeriod?:string; value:number|null;
  originalValue?:number; originalUnit?:string; originalCurrency?:string; filingDate?:string; publishedAt?:string|null;
- fetchedAt:string; sourceUrl:string; version:string; isEstimated:boolean; isRestated:boolean;
+ fetchedAt:string; sourceUrl:string; resolvedSourceUrl?:string; sourceDocumentVersion?:string; version:string; isEstimated:boolean; isRestated:boolean;
  formula?:string; originalItems?:Record<string,number|string>; basis?:string;
 };
 export type MetricSeries = {observations:MetricObservation[]; status:'ready'|'reviewed'|'cached'|'fetch_failed'|'pending'|'authorization_required'|'not_configured'|'no_observation'; fetchedAt?:string; lastSuccessfulAt?:string; checkedAt?:string; error?:string; nextCheckAt?:string; note?:string};

@@ -21,6 +21,10 @@ def source(url):
 @lru_cache(None)
 def source_bytes(url):
     if url in SOURCE_FAILURES:raise RuntimeError(SOURCE_FAILURES[url])
+    from industry_dell_source import is_report_url,fetch_report
+    if is_report_url(url):
+        raw,_,digest=fetch_report(url,DATA/'raw')
+        return raw,digest
     meta=DATA/'raw'/(hashlib.sha256(url.encode()).hexdigest()+'.meta.json')
     if meta.exists():
         item=json.loads(meta.read_text(encoding='utf-8'));raw=(DATA/'raw'/item['file']).read_bytes()
@@ -247,7 +251,12 @@ def run():
                     else:
                         failures.append({'metricId':d['id'],'periodEnd':p['periodEnd'],'sourceUrl':p['sourceUrl'],'version':p['version'],'error':f'{type(error).__name__}: {error}'[:600]})
                         print('FAILED',d['id'],p['periodEnd'],type(error).__name__,str(error)[:300],file=sys.stderr);continue
-            samples.append({'metricId':d['id'],'periodEnd':p['periodEnd'],'value':p['value'],'unit':d['unit'],'currency':d.get('currency'),'sourceUrl':p['sourceUrl'],'version':p['version'],'checkMode':mode,'check':method})
+            sample={'metricId':d['id'],'periodEnd':p['periodEnd'],'value':p['value'],'unit':d['unit'],'currency':d.get('currency'),'sourceUrl':p['sourceUrl'],'version':p['version'],'checkMode':mode,'check':method}
+            if d['id'].startswith('DELL.') and mode=='automatic_source_replay':
+                from industry_dell_source import source_metadata
+                meta=source_metadata(p['sourceUrl'],DATA/'raw')
+                if meta.get('resolvedUrl'):sample.update(replayedSourceUrl=meta['resolvedUrl'],replayedSourceDocumentVersion=meta['hash'])
+            samples.append(sample)
     folder=ROOT/'docs/industry';folder.mkdir(parents=True,exist_ok=True)
     if not samples and not failures:failures.append({'metricId':None,'error':'No connected observations were available for audit'})
     manual=sum(s['checkMode']=='manual_fact_ledger' for s in samples)

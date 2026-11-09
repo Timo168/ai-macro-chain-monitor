@@ -24,7 +24,7 @@ SOURCES = {
     'AMKR': ['https://ir.amkor.com/taxonomy/term/3896'],
     'ENTG': ['https://www.entegris.com/en/home/about-us/news/news-archive.html?index=7'],
     'ANET': ['https://investors.arista.com/Communications/Press-Releases-and-Events/default.aspx'],
-    'DELL': ['https://investors.delltechnologies.com/news-events/press-release'],
+    'DELL': ['https://investors.delltechnologies.com/news-events/press-releases'],
     'AMD': ['https://ir.amd.com/news-events/press-releases?category=financial'],
     'NVDA': ['https://nvidianews.nvidia.com/helper-search-news?ct=releases&page=1&q=financial%20results'],
     'HPE': ['https://investors.hpe.com/news-and-events/investor-news-library', 'https://www.hpe.com/us/en/newsroom.html'],
@@ -384,6 +384,9 @@ def _seed_prior(path):
 
 def fetch_official(url, force=False):
     """Direct background request avoids a broken desktop proxy; keep raw lineage."""
+    from industry_dell_source import is_report_url, fetch_report
+    if is_report_url(url):
+        return fetch_report(url, DATA / 'raw', force=force)
     key = hashlib.sha256(url.encode()).hexdigest()
     folder = DATA / 'raw'
     folder.mkdir(exist_ok=True)

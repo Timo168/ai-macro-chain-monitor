@@ -101,6 +101,7 @@ jobs:
           python tests/institution_sources_test.py
           python tests/industry_bootstrap_test.py
           python tests/industry_releases_test.py
+          python tests/industry_dell_source_test.py
           python tests/financial_dynamic_test.py
           python tests/oracle_hpe_dynamic_test.py
           python tests/financial_schedule_test.py
@@ -116,7 +117,7 @@ jobs:
         if: steps.frontend-proof.outputs.reusable != 'true'
         run: |
           node --test tests/reasoning-status-ui.test.mjs
-          node --test tests/chart-card-navigation.test.mjs tests/observer-workspace.test.mjs tests/observer-catalog.test.mjs tests/observer-changes.test.mjs tests/observation-events.test.mjs tests/plan-delivery.test.mjs tests/research-notebook.test.mjs
+          node --test tests/chart-card-navigation.test.mjs tests/industry-chart-selection.test.mjs tests/observer-workspace.test.mjs tests/observer-catalog.test.mjs tests/observer-changes.test.mjs tests/observation-events.test.mjs tests/plan-delivery.test.mjs tests/research-notebook.test.mjs
           npx tsc --noEmit
       - name: Persist validated cache and revisions
         run: python scripts/github-data-state.py save

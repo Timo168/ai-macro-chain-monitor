@@ -71,6 +71,11 @@ def run(entities=None):
  def add(id,name,family,entity,unit,value_type,url,end,value,stamp,version,items,fiscal=None,start=None,published=None):
   category='servers' if entity=='DELL' else 'semiconductor';d=definition(id,name,name,category,family,entity,entity+' Investor Relations',url,unit,value_type,'公司正式表格；财季期末按源表日期，期初仅在相邻财季已知时补充。保留原币种，AI服务器与传统服务器分开，不拼接口径。',frequency='monthly' if entity=='TSM' else 'quarterly');d['currency']='TWD' if entity=='TSM' else 'USD';d['aggregation']='sum' if entity=='TSM' else 'none';defs[id]=d
   points.setdefault(id,{})[end]=observation(id,end,value,url,stamp,version,start,fiscal,formula='原始百万币种 / 100 = 亿币种' if unit!='%' else '毛利额 / 收入 * 100' if value_type=='calculated' else '源表直接披露百分比',items=items,published=published);stamps[id]=stamp
+  if entity=='DELL':
+   from industry_dell_source import source_metadata
+   meta=source_metadata(url,DATA/'raw')
+   if meta.get('resolvedUrl'):
+    points[id][end].update(resolvedSourceUrl=meta['resolvedUrl'],sourceDocumentVersion=version)
  for item in targeted_sources('DELL',selected):
   url=item['url'];year=item['year'];q=item['q'];published=item.get('publishedAt')
   try:
@@ -130,6 +135,11 @@ def run(entities=None):
   if d['id'] not in result['series']:result['definitions'].append(d);result['series'][d['id']]=old['series'][d['id']] if d.get('entity') not in selected else {**old['series'][d['id']],'status':'cached','checkedAt':now(),'error':errors.get(d.get('entity'),'来源未返回可解析数据')}
  result['ingestedReleases']=merge_ingested(old.get('ingestedReleases',[]),records)
  result['sourceRuns']=[r for r in old.get('sourceRuns',[]) if r.get('entity') not in selected]+[{key:r.get(key) for key in ('entity','year','q','url','publishedAt','status','checkedAt','error')} for r in records]
+ from industry_dell_source import source_metadata
+ for source_run in result['sourceRuns']:
+  if source_run.get('entity')=='DELL' and source_run.get('status')=='ready':
+   meta=source_metadata(source_run['url'],DATA/'raw')
+   if meta.get('resolvedUrl'):source_run['resolvedUrl']=meta['resolvedUrl']
  from industry_bootstrap import restore_bootstrap
  if DATA.resolve()==(__import__('pathlib').Path(__file__).resolve().parents[1]/'data'/'industry').resolve():result=restore_bootstrap('server-history.json',result,backfill_history=True)
  persist(result,path);print('Hardware metrics',len(result['series']),'errors',errors)

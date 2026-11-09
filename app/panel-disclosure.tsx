@@ -64,8 +64,9 @@ export function PanelBody({open,id,children,className=''}:{open:boolean;id:strin
  return <div id={id} hidden={!open} className={'panel-body '+className}>{open||visited?children:null}</div>;
 }
 
-export function PanelBatchActions({scope}:{scope:string}){
+export function PanelBatchActions({scope,panelKeys}:{scope:string;panelKeys?:string[]}){
+ const changeAll=(open:boolean)=>{if(panelKeys)for(const panelKey of new Set(panelKeys))publish({panelKey,open});else publish({scope,open});};
  return <div className="panel-batch-actions" role="group" aria-label="面板阅读视图">
-  <span>阅读视图</span><button type="button" onClick={()=>publish({scope,open:false})}><ChevronUp size={14} aria-hidden="true"/>全部收起</button><button type="button" onClick={()=>publish({scope,open:true})}><ChevronDown size={14} aria-hidden="true"/>全部展开</button>
+  <span>{panelKeys?'本页图表':'阅读视图'}</span><button type="button" onClick={()=>changeAll(false)}><ChevronUp size={14} aria-hidden="true"/>{panelKeys?'本页全部收起':'全部收起'}</button><button type="button" onClick={()=>changeAll(true)}><ChevronDown size={14} aria-hidden="true"/>{panelKeys?'本页全部展开':'全部展开'}</button>
  </div>;
 }
