@@ -1,0 +1,15 @@
+import type {IndustryDataset,MetricDefinition,MetricObservation} from './types';
+export const comparisonFamilies:string[][];
+export function companyName(entity:string):string;
+export function companyColor(entity:string):string;
+export function comparisonRangePreference(value:unknown):value is string;
+export function comparisonDefinitions(data:IndustryDataset,family:string):MetricDefinition[];
+export function reportQuarter(date:string):string|null;
+export type ComparisonRow={quarter:string;values:Record<string,number|null>;originalValues:Record<string,number|null>;points:Record<string,MetricObservation|null>};
+export type ComparisonModel={family:string;mode:string;range:string;availableRanges:string[];available:MetricDefinition[];definitions:MetricDefinition[];rows:ComparisonRow[];quarters:string[];commonQuarters:string[];commonBase:string|null;latestQuarter:string|null;defaultQuarter:string|null;compatible:boolean;unit:string;coverage:{id:string;entity:string;name:string;presentQuarters:string[];missingQuarters:string[]}[]};
+export type ComparisonEntry={definition:MetricDefinition;entity:string;name:string;color:string;value:number|null;originalValue:number|null;point:MetricObservation|null;missingReason:string|null;status:string;sourceStatus:string;index:number};
+export function buildCompanyComparison(data:IndustryDataset,options?:{family?:string;entities?:string[];mode?:string;range?:string}):ComparisonModel;
+export function comparisonSnapshot(model:ComparisonModel,quarter:string|null,data:IndustryDataset):ComparisonEntry[];
+export function comparisonBarGeometry(value:number|null,values:(number|null)[]):{zero:number;start:number;width:number};
+export function coreCapexTotal(model:ComparisonModel,quarter:string|null):{quarter:string|null;unit:string;value:number|null;missingEntities:string[]}|null;
+export function quarterSummary(quarters:string[]):string;

@@ -219,9 +219,17 @@ def sources():
   for q in range(1,5):
    if y==2026 and q>2:continue
    items.append({'entity':'GOOG','year':y,'q':q,'url':f'https://s206.q4cdn.com/479360582/files/doc_financials/{y}/q{q}/{y}q{q}-alphabet-earnings-release.pdf'})
-   items.append({'entity':'AMZN','year':y,'q':q,'url':f'https://s2.q4cdn.com/299287126/files/doc_earnings/{y}/q{q}/earnings-result/AMZN-Q{q}-{y}-Earnings-Release.pdf'})
+   # Amazon moved its quarterly PDF directory after 2025 Q3. The newer
+   # doc_earnings template returns 404 for Q1-Q3 2025 and silently removes
+   # their prior-year comparative columns from 2024 history.
+   path=f'doc_financials/{y}/q{q}' if y==2025 and q<=3 else f'doc_earnings/{y}/q{q}/earnings-result'
+   items.append({'entity':'AMZN','year':y,'q':q,'url':f'https://s2.q4cdn.com/299287126/files/{path}/AMZN-Q{q}-{y}-Earnings-Release.pdf'})
    word={1:'First',2:'Second',3:'Third',4:'Fourth'}[q]
    items.append({'entity':'META','year':y,'q':q,'url':f'https://s21.q4cdn.com/399680738/files/doc_news/Meta-Reports-{word}-Quarter-{y}-Results-{y}.pdf'})
+ # Independently fetch the historical releases instead of depending solely on
+ # next year's comparative figures; keep their original publication dates.
+ for q in (1,2,3):
+  items.append({'entity':'AMZN','year':2024,'q':q,'url':f'https://s2.q4cdn.com/299287126/files/doc_financials/2024/q{q}/AMZN-Q{q}-2024-Earnings-Release.pdf'})
  for fy,q in [(fy,q) for fy in (2024,2025,2026) for q in (1,2,3,4)]+[(2027,1),(2027,2)]:
   word={1:'first',2:'second',3:'third',4:'fourth'}[q];suffix=f'{word}-quarter-'+('and-' if q==4 else '')+f'fiscal-{fy}';items.append({'entity':'NVDA','year':fy,'q':q,'url':f'https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-{suffix}'})
  return [item for entity in ('MSFT','GOOG','AMZN','META','NVDA') for item in dynamic_sources(entity,[r for r in items if r['entity']==entity])]
@@ -231,7 +239,7 @@ def load_one(item):
  old=json.loads(path.read_text(encoding='utf-8')) if path.exists() else None
  # Recheck latest and comparative releases daily; older history weekly for revisions.
  age=1 if year>=date.today().year else 7
- if not force and old and datetime.now(timezone.utc)-datetime.fromisoformat(old['checkedAt'])<timedelta(days=age) and old.get('parserVersion')=='3':
+ if not force and old and old.get('status')=='ready' and old.get('values') and datetime.now(timezone.utc)-datetime.fromisoformat(old['checkedAt'])<timedelta(days=age) and old.get('parserVersion')=='3':
   record={**old,**item}
   if not record.get('publishedAt'):
    publication=cached_publication(item,record)

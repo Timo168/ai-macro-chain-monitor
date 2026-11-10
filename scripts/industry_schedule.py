@@ -101,6 +101,44 @@ FINANCIAL_COLLECTORS={
  'MU':'industry_sector_financials.py','ETN':'industry_sector_financials.py','VRT':'industry_sector_financials.py','TSM':'industry_sector_financials.py',
 }
 
+# A targeted repair for the reviewed Amazon historical URL migration. It is
+# independent of the daily sweep and latest-release ledger: both can be fresh
+# while an older report is still missing. Values remain sourced observations;
+# only real, finite quarters with provenance satisfy the repair.
+AMAZON_HISTORY_PERIODS=('2024-03-31','2024-06-30','2024-09-30','2025-09-30')
+
+def amazon_history_gaps():
+    try:
+        import math
+        payload=json.loads((DATA/'companies.json').read_text(encoding='utf-8'))
+        good={point.get('periodEnd') for point in payload.get('series',{}).get('AMZN.capex',{}).get('observations',[])
+            if isinstance(point.get('value'),(int,float)) and not isinstance(point.get('value'),bool)
+            and math.isfinite(point['value']) and point.get('sourceUrl') and point.get('version') and point.get('fetchedAt')}
+    except (OSError,ValueError,TypeError):good=set()
+    return [period for period in AMAZON_HISTORY_PERIODS if period not in good]
+
+def repair_amazon_history(state,current,daily_collected=False):
+    repairs=state.setdefault('historyRepairs',{})
+    key='amazon-cash-purchases-2024-v1';prior=repairs.get(key,{})
+    missing=amazon_history_gaps()
+    if not missing:
+        if prior.get('status')!='ready':repairs[key]={**prior,'status':'ready','missingPeriods':[],'lastSuccessfulAt':now(),'failureCount':0}
+        return []
+    if not daily_collected and current-state_time(prior.get('lastAttemptAt'))<timedelta(minutes=retry_minutes(prior.get('failureCount',0))):
+        return ['AMZN 历史财报待补齐：'+', '.join(missing)]
+    error=None
+    if not daily_collected:
+        try:
+            result=run_background([sys.executable,str(ROOT/'scripts/industry_collect.py'),'--entity','AMZN'],cwd=ROOT,timeout=600)
+            if result.returncode:error='历史采集进程失败'
+        except Exception as exc:error=str(exc)
+    missing=amazon_history_gaps();failed=bool(missing)
+    count=int(prior.get('failureCount',0))+1 if failed else 0
+    repairs[key]={'status':'partial_cache' if failed else 'ready','lastAttemptAt':now(),
+        'lastSuccessfulAt':prior.get('lastSuccessfulAt') if failed else now(),'failureCount':count,
+        'missingPeriods':missing,'error':error,'nextCheckAt':(current+timedelta(minutes=retry_minutes(count))).isoformat() if failed else None}
+    return ['AMZN 历史财报待补齐：'+', '.join(missing)] if failed else []
+
 def release_key(release):
     return '|'.join(str(release.get(key,'')) for key in ('url','fiscalYear','quarter','publishedAt'))
 
@@ -212,6 +250,7 @@ def run(force=False,build_research=True):
                 if result.returncode:failures.append(script)
             except Exception as error:failures.append(script+': '+str(error))
         state.update({'collectorVersion':16,'lastAttemptAt':now(),'dailyFailures':failures})
+    history_failures=repair_amazon_history(state,current,daily_collected=daily_due)
     fast_next=[]
     fast_failures=[]
     for spec in FAST_COLLECTORS:
@@ -219,10 +258,11 @@ def run(force=False,build_research=True):
         if next_check:fast_next.append(state_time(next_check))
         if record.get('status')!='ready':fast_failures.append(spec['script']+': '+', '.join(record.get('failedSeries',[])))
     daily_next=last+timedelta(hours=24) if not daily_due else current+timedelta(hours=24)
+    history_next=[state_time(item['nextCheckAt']) for item in state.get('historyRepairs',{}).values() if item.get('status')!='ready' and item.get('nextCheckAt')]
     state.update({
         'collectorVersion':16,
-        'failures':(state.get('dailyFailures',[])+fast_failures+release_failures),
-        'nextCheckAt':min([daily_next,*fast_next,state_time(state['financialReleases']['nextCheckAt'])]).isoformat(),
+        'failures':(state.get('dailyFailures',[])+fast_failures+release_failures+history_failures),
+        'nextCheckAt':min([daily_next,*fast_next,*history_next,state_time(state['financialReleases']['nextCheckAt'])]).isoformat(),
     })
     atomic(path,state)
     result=run_background(['node',str(ROOT/'scripts/build-industry.mjs')],cwd=ROOT)
