@@ -1,0 +1,21 @@
+.energy-topic-frame{min-width:0;background:#fff;border:1px solid #e2eae7;border-radius:12px;overflow:hidden}
+.energy-topic-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:16px;background:#f8fbf9;border-bottom:1px solid #e7efeb}
+.energy-topic-tabs button{display:flex;flex-direction:column;gap:6px;text-align:left;border:1px solid #dfe9e4;border-radius:9px;padding:13px 15px;background:#fff;min-height:68px;color:#536d67;cursor:pointer}
+.energy-topic-tabs button strong{font-size:14px;font-weight:600;line-height:1.4}
+.energy-topic-tabs button span{font-size:12px;line-height:1.5;color:#6a8079;overflow-wrap:anywhere}
+.energy-topic-tabs button[aria-selected=true]{border-color:#97c8b7;background:#eaf5ef;box-shadow:inset 3px 0 #18826b}
+.energy-topic-tabs button[aria-selected=true] strong{color:#146c59}
+.energy-topic-tabs button:focus-visible{outline:2px solid #178a75;outline-offset:2px}
+.energy-topic-frame>[role=tabpanel]>.chart-card,.energy-topic-frame>[role=tabpanel]>.comparison-panel{border:0;border-radius:0;margin:0;box-shadow:none}
+.energy-topic-frame .regional-energy{padding-bottom:18px}
+.energy-topic-frame .regional-energy .panel-explorer-layout{grid-template-columns:minmax(0,1fr)}
+.energy-topic-frame .regional-energy .panel-explorer-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.energy-topic-frame .regional-energy .panel-explorer-select{display:none}
+.energy-topic-frame .regional-energy .panel-explorer-kicker,.energy-topic-frame .regional-energy .panel-explorer-heading p{display:none}
+.energy-topic-frame .regional-energy .panel-explorer-heading{margin-bottom:10px}
+.energy-topic-frame .regional-energy .panel-explorer-heading h2{font-size:15px}
+.energy-topic-frame .regional-energy .panel-explorer-detail>.re-series{border:0;border-radius:0;padding:16px 0 0}
+.energy-topic-frame .regional-energy .panel-explorer-directory{border:0;padding:0;background:transparent}
+.energy-topic-frame .regional-energy .panel-explorer-option-value{font-size:18px;line-height:1.35}
+.energy-topic-frame .regional-energy .panel-explorer-option-meta{font-size:11px}
+@media(max-width:650px){.energy-topic-tabs{padding:10px;gap:6px}.energy-topic-tabs button{padding:11px 10px}.energy-topic-tabs button span{font-size:11px}.energy-topic-frame .regional-energy .panel-explorer-option-value{font-size:16px}}

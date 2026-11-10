@@ -1,0 +1,12 @@
+import type {Point,Series} from './data';
+export type MineralId='COPPER'|'ALUMINUM'|'IRON_ORE'|'NICKEL'|'GOLD'|'SILVER';
+export type MineralBasis='market'|'monthly';
+export type MineralSelection={basis:MineralBasis;selected:MineralId[]};
+export const mineralIds:MineralId[];
+export const mineralAnchors:Record<string,MineralId>;
+export const dailyMinerals:Partial<Record<MineralId,string>>;
+export function mineralRoute(href:string):{basis:MineralBasis;selected:MineralId[]|null;explicit:boolean};
+export function mineralSelectionUrl(href:string,selection:MineralSelection):string;
+export function mineralNavigation(href:string,previous:MineralSelection,next:MineralSelection):{method:'replaceState'|'pushState';url:string}[];
+export type MineralEntry={id:MineralId;seriesId:string|null;points:Point[];latest:Point|null;previous:Point|null;lastObservation:Point|null;change:number|null;monthlyOnly:boolean};
+export function mineralDisplay(series:Record<string,Series>,selected:MineralId[],options?:{basis?:MineralBasis;range?:string;view?:'raw'|'normalized'}):{ids:MineralId[];entries:MineralEntry[];effectiveView:'raw'|'normalized';rows:({date:string}&Record<string,number|string|null>)[];emptyReason:string|null;common:boolean;from:string|null;to:string|null;latestFrom:string|null;latestTo:string|null};

@@ -92,3 +92,13 @@ test('saved chart links select the owning region even when the previous region d
  assert.equal(regionalNavigation(data,'?page=overview&region=pjm','#PJM_D'),null);
  assert.equal(regionalNavigation(data,'?page=materials&region=unknown','#brent'),null);
 });
+
+test('regional query cannot override another energy panel hash, and encoded leaf links still win',()=>{
+ const data={regions:[{id:'ercot',series:[{id:'EIA_ERCO_DEMAND'}]},{id:'pjm',series:[{id:'EIA_PJM_DEMAND'}]}]};
+ assert.equal(regionalNavigation(data,'?page=materials&region=pjm','#brent'),null);
+ assert.equal(regionalNavigation(data,'?page=materials&region=pjm','#electricity-us'),null);
+ assert.equal(regionalNavigation(data,'?page=materials&region=pjm','#natural-gas-daily'),null);
+ assert.deepEqual(regionalNavigation(data,'?page=materials&region=pjm',''),{regionId:'pjm',seriesId:null});
+ assert.deepEqual(regionalNavigation(data,'?page=materials&region=ercot&series=EIA_ERCO_DEMAND','#%45IA_PJM_DEMAND'),{regionId:'pjm',seriesId:'EIA_PJM_DEMAND'});
+ assert.equal(regionalNavigation(data,'?page=materials&region=pjm','#%bad'),null);
+});

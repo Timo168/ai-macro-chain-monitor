@@ -1,7 +1,8 @@
 """Official-source collector. SQLite is authoritative; JSON is an atomic display cache."""
-import argparse, calendar, csv, hashlib, io, json, os, pathlib, re, sqlite3, subprocess, time, urllib.request
+import argparse, calendar, csv, hashlib, io, json, math, os, pathlib, re, sqlite3, subprocess, time, urllib.request
 from datetime import datetime, timezone
 from urllib.parse import quote
+from zoneinfo import ZoneInfo
 from credit_conditions import EBP_URL, download_ebp, parse_ebp
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 DATA=ROOT/'data'; DATA.mkdir(exist_ok=True)
@@ -100,19 +101,54 @@ def parse_eia_us_commercial(raw):
         points.append({'date':f'{year}-{month:02}-{calendar.monthrange(year,month)[1]}','value':100*revenue/sales})
     if len(points)<13:raise ValueError('EIA-861M history too short or incomplete')
     return points
-def parse_market_chart(raw):
+def parse_market_payload(raw,expected_symbol=None,as_of=None):
+    """Keep daily bars separate from the vendor's delayed, possibly stale quote."""
+    if isinstance(raw,str):raw=raw.encode('utf-8')
     payload=json.loads(raw)
     chart=payload.get('chart',{});results=chart.get('result') or []
     if chart.get('error') or not results:raise ValueError('Yahoo Finance market chart unavailable')
-    result=results[0];timestamps=result.get('timestamp') or [];closes=(result.get('indicators',{}).get('quote') or [{}])[0].get('close') or []
+    result=results[0];meta=result.get('meta') or {}
+    if expected_symbol:
+        if meta.get('symbol')!=expected_symbol:raise ValueError('Unexpected market symbol')
+        if meta.get('currency')!='USD' or meta.get('dataGranularity')!='1d':raise ValueError('Unexpected market currency or frequency')
+        if not meta.get('exchangeTimezoneName'):raise ValueError('Missing exchange timezone')
+    exchange_zone=ZoneInfo(meta.get('exchangeTimezoneName') or 'UTC')
+    timestamps=result.get('timestamp') or [];closes=(result.get('indicators',{}).get('quote') or [{}])[0].get('close') or []
     if len(timestamps)!=len(closes) or not timestamps:raise ValueError('Yahoo Finance market chart has no usable close values')
-    points=[];seen=set()
+    dates={}
     for stamp,value in zip(timestamps,closes):
-        date=datetime.fromtimestamp(stamp,timezone.utc).date().isoformat()
-        if date in seen:continue
-        seen.add(date);points.append({'date':date,'value':float(value) if isinstance(value,(int,float)) else None})
+        if isinstance(stamp,bool) or not isinstance(stamp,(int,float)) or not math.isfinite(stamp):raise ValueError('Invalid market timestamp')
+        date=datetime.fromtimestamp(stamp,exchange_zone).date().isoformat()
+        if as_of and date>as_of.astimezone(exchange_zone).date().isoformat():raise ValueError('Future market observation')
+        if value is not None and (isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or value<=0):raise ValueError('Invalid market price')
+        # The vendor may append the live quote as another bar of the same date.
+        # Keep the latest valid sample; a null live sample cannot erase a close.
+        prior=dates.get(date)
+        if prior is None or (stamp>=prior[0] and (value is not None or prior[1] is None)):
+            dates[date]=(stamp,float(value) if value is not None else None)
+    points=[{'date':date,'value':value} for date,(_,value) in sorted(dates.items())]
     if len(points)<13:raise ValueError('Yahoo Finance market history too short')
-    return points
+    latest=next((point for point in reversed(points) if point['value'] is not None),None)
+    if latest is None:raise ValueError('Yahoo Finance market history has no valid price')
+    regular=(meta.get('currentTradingPeriod') or {}).get('regular') or {}
+    session_start=regular.get('start');session_end=regular.get('end')
+    provisional=bool(as_of and isinstance(session_start,(int,float)) and isinstance(session_end,(int,float))
+                     and session_start<=as_of.timestamp()<session_end
+                     and latest['date']==datetime.fromtimestamp(session_start,exchange_zone).date().isoformat())
+    quote_stamp=meta.get('regularMarketTime');quote_as_of=None;quote_status='unavailable'
+    if isinstance(quote_stamp,(int,float)) and math.isfinite(quote_stamp):
+        quote_time=datetime.fromtimestamp(quote_stamp,timezone.utc)
+        quote_status='stale' if quote_time.astimezone(exchange_zone).date().isoformat()<latest['date'] else 'available'
+        if as_of and quote_time>as_of:quote_status='future'
+        if quote_status=='available':quote_as_of=quote_time.isoformat()
+    market={'provider':'Yahoo Finance','symbol':meta.get('symbol') or expected_symbol,'exchange':meta.get('fullExchangeName') or meta.get('exchangeName'),
+            'exchangeTimezone':exchange_zone.key,'currency':meta.get('currency'),'contractLabel':meta.get('shortName'),
+            'priceField':'close','quoteType':'delayed','latestObservationDate':latest['date'],
+            'latestObservationKind':'session_in_progress' if provisional else 'daily_bar',
+            'quoteAsOf':quote_as_of,'quoteTimestampStatus':quote_status,'archiveSha256':hashlib.sha256(raw).hexdigest()}
+    return points,market
+def parse_market_chart(raw,expected_symbol=None,as_of=None):
+    return parse_market_payload(raw,expected_symbol,as_of)[0]
 def connect():
     conn=sqlite3.connect(DATA/'observations.sqlite');conn.execute('PRAGMA journal_mode=WAL')
     conn.executescript('''CREATE TABLE IF NOT EXISTS observations(series_id TEXT, observation_date TEXT,value REAL,source_published_at TEXT,fetched_at TEXT,revision TEXT, PRIMARY KEY(series_id,observation_date,revision));
@@ -144,7 +180,7 @@ def source_status(payload,status,at):
     payload['status']=status
     return payload
 
-def save(conn,key,points,raw,source_url,started):
+def save(conn,key,points,raw,source_url,started,market=None):
     digest=hashlib.sha256(raw).hexdigest(); version=DATA/'versions'/key;version.mkdir(parents=True,exist_ok=True)
     path=version/(digest+('.xlsx' if key in WB_IDS or key==EIA_US_COMMERCIAL else '.json' if key in MARKET_IDS else '.csv'))
     if not path.exists():path.write_bytes(raw)
@@ -160,12 +196,13 @@ def save(conn,key,points,raw,source_url,started):
              'changeTrackingStartedAt':old_payload.get('changeTrackingStartedAt',started),'lastChange':observation_change(old_payload,points,started,revision),
              **{field:old_payload[field] for field in ('statusChangedAt','statusChange') if field in old_payload}}
     source_status(payload,'ready',started)
+    if market is not None:payload['market']=market
     conn.execute('INSERT OR REPLACE INTO snapshots VALUES(?,?)',(key,json.dumps(payload,ensure_ascii=False)));conn.commit()
     return payload
 def collect(import_dir=None, selected=None):
     started=now(); conn=connect(); failures=[]; wb=None; wb_raw=None; wb_url=WB_FALLBACK
     for config in REGISTRY:
-        key=config['id'];ts=now()
+        key=config['id'];ts=now();market=None
         if selected is not None and key not in selected: continue
         try:
             if key in WB_IDS:
@@ -188,7 +225,7 @@ def collect(import_dir=None, selected=None):
             elif key in MARKET_IDS:
                 symbol,url=MARKET_QUOTES[key]
                 raw=download_market('https://query2.finance.yahoo.com/v8/finance/chart/'+quote(symbol,safe='')+'?range=5y&interval=1d')
-                points=parse_market_chart(raw)
+                points,market=parse_market_payload(raw,expected_symbol=symbol,as_of=datetime.now(timezone.utc))
             else:
                 url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+key
                 if import_dir:raw=(pathlib.Path(import_dir)/(key+'.csv')).read_bytes();points=parse_csv(raw)
@@ -206,7 +243,7 @@ def collect(import_dir=None, selected=None):
             if import_dir:
                 source_file=pathlib.Path(import_dir)/('pink-sheet-monthly.xlsx' if key in WB_IDS else 'eia-861m.xlsx' if key==EIA_US_COMMERCIAL else key+'.csv')
                 ts=datetime.fromtimestamp(source_file.stat().st_mtime,timezone.utc).isoformat()
-            save(conn,key,points,raw,url,ts);print(key,'OK',points[-1]['date'],flush=True)
+            save(conn,key,points,raw,url,ts,market=market);print(key,'OK',points[-1]['date'],flush=True)
         except Exception as exc:
             failures.append(key);old=conn.execute('SELECT payload FROM snapshots WHERE series_id=?',(key,)).fetchone()
             payload=json.loads(old[0]) if old else {'id':key,'observations':[],'fetchedAt':None,'sourcePublishedAt':None,'sourceUrl':config['release']}
