@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "status": "failed",
-  "startedAt": "2026-11-09T09:48:51.950496+00:00",
-  "completedAt": "2026-11-09T09:50:22.637901+00:00",
+  "startedAt": "2026-11-10T09:50:39.501988+00:00",
+  "completedAt": "2026-11-10T09:52:50.976008+00:00",
   "lastSuccessAt": null,
-  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/42596076949",
-  "checkedSnapshotAt": "2026-11-09T08:42:46.691Z",
+  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/42793917755",
+  "checkedSnapshotAt": "2026-11-10T02:18:12.536Z",
   "checks": [
     {
       "id": "restored_data",
@@ -13,20 +13,20 @@
     },
     {
       "id": "industry_source_replay",
-      "startedAt": "2026-11-09T09:48:52.189616+00:00",
+      "startedAt": "2026-11-10T09:50:39.663180+00:00",
       "status": "failed",
       "exitCode": 1,
       "error": "来源或计算重放未通过；失败明细见检查报告和运行日志。",
-      "completedAt": "2026-11-09T09:50:22.637879+00:00"
+      "completedAt": "2026-11-10T09:52:50.975987+00:00"
     }
   ],
   "scope": "行业公开来源抽查和计算重放；不验证投资收益，也不代表所有历史点都逐点通过。",
   "sampleCounts": {
-    "automaticSamples": 395,
-    "currentSourceReplaySamples": 318,
-    "previousSourceReplaySamples": 77,
+    "automaticSamples": 409,
+    "currentSourceReplaySamples": 340,
+    "previousSourceReplaySamples": 69,
     "manualFactLedgerSamples": 12,
-    "failedSamples": 31
+    "failedSamples": 17
   },
   "failures": [
     {
@@ -37,97 +37,6 @@
       "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
-      "metricId": "DELL.revenue",
-      "periodEnd": "2023-05-05",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2025-financial",
-      "version": "aaf6d191a7c549c7eb98a28cb0a2cb0c11d5f2f551bf631fa1a84d85da97bc25",
-      "error": "AssertionError: ('DELL.revenue', '2023-05-05', 'source operand not found', 20922)"
-    },
-    {
-      "metricId": "DELL.revenue",
-      "periodEnd": "2026-07-31",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
-      "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
-      "error": "AssertionError: ('DELL.revenue', '2026-07-31', 'source operand not found', 46971)"
-    },
-    {
-      "metricId": "DELL.gross_margin",
-      "periodEnd": "2023-05-05",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2025-financial",
-      "version": "aaf6d191a7c549c7eb98a28cb0a2cb0c11d5f2f551bf631fa1a84d85da97bc25",
-      "error": "AssertionError: ('DELL.gross_margin', '2023-05-05', 'source operand not found', 5018)"
-    },
-    {
-      "metricId": "DELL.gross_margin",
-      "periodEnd": "2026-07-31",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
-      "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
-      "error": "AssertionError: ('DELL.gross_margin', '2026-07-31', 'source operand not found', 9830)"
-    },
-    {
-      "metricId": "DELL.storage_revenue",
-      "periodEnd": "2023-05-05",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2025-financial",
-      "version": "aaf6d191a7c549c7eb98a28cb0a2cb0c11d5f2f551bf631fa1a84d85da97bc25",
-      "error": "AssertionError: ('DELL.storage_revenue', '2023-05-05', 'source operand not found', 3756)"
-    },
-    {
-      "metricId": "DELL.storage_revenue",
-      "periodEnd": "2026-07-31",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
-      "version": "c0eae7d8221f01167aa4107366ecef02b2b5a9ad3e508436705bde03b639e2c9",
-      "error": "AssertionError: ('DELL.storage_revenue', '2026-07-31', 'source operand not found', 4850)"
-    },
-    {
-      "metricId": "DELL.servers_networking_revenue",
-      "periodEnd": "2023-05-05",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2025-financial",
-      "version": "aaf6d191a7c549c7eb98a28cb0a2cb0c11d5f2f551bf631fa1a84d85da97bc25",
-      "error": "StopIteration: "
-    },
-    {
-      "metricId": "DELL.servers_networking_revenue",
-      "periodEnd": "2026-07-31",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
-      "version": "85b7aefcc57dbbdd0448604a2bb467a4e11ea9ee509fb5fbc9e1aea137d3f222",
-      "error": "StopIteration: "
-    },
-    {
-      "metricId": "DELL.inventory",
-      "periodEnd": "2024-02-02",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-third-quarter-fiscal-2025-financial",
-      "version": "e146ceefa2e286f7e3c10e535b3906e428c36e0a12e3985f5c1e67609261af10",
-      "error": "AssertionError: ('DELL.inventory', '2024-02-02', 'source operand not found', 3622)"
-    },
-    {
-      "metricId": "DELL.inventory",
-      "periodEnd": "2025-05-02",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2026-financial",
-      "version": "bcf312e95dca2764f64d106c2744571511c069d62fa98681d6548e2550d68de8",
-      "error": "AssertionError: ('DELL.inventory', '2025-05-02', 'source operand not found', 7415)"
-    },
-    {
-      "metricId": "DELL.inventory",
-      "periodEnd": "2026-07-31",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
-      "version": "44a4bc8541af1ae96952b2c7b6066bfaa398849d1388d782891a9175d93d5670",
-      "error": "AssertionError: ('DELL.inventory', '2026-07-31', 'source operand not found', 21290)"
-    },
-    {
-      "metricId": "DELL.ai_server_revenue",
-      "periodEnd": "2026-07-31",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
-      "version": "07afa28b2833feb6bf36f87667ffd1d159a5fb019fa060f61aaafcee578d36ba",
-      "error": "AssertionError: ('DELL.ai_server_revenue', '2026-07-31', 'source operand not found', 16401)"
-    },
-    {
-      "metricId": "DELL.server_revenue",
-      "periodEnd": "2026-07-31",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-second-quarter-fiscal-2027-financial",
-      "version": "8370bd0ed7166927959bc1eca1f58e0ae8c99db549473efa62ff57831f5692a0",
-      "error": "AssertionError: ('DELL.server_revenue', '2026-07-31', 'source operand not found', 10531)"
-    },
-    {
       "metricId": "AMKR.advanced_products_revenue",
       "periodEnd": "2024-03-31",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
@@ -139,7 +48,7 @@
       "periodEnd": "2025-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
       "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.company_revenue",
@@ -153,7 +62,7 @@
       "periodEnd": "2025-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
       "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.gross_margin",
@@ -167,7 +76,7 @@
       "periodEnd": "2025-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
       "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.materials_cost_share",
@@ -181,7 +90,7 @@
       "periodEnd": "2025-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
       "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "AMKR.capex",
@@ -195,13 +104,48 @@
       "periodEnd": "2025-06-30",
       "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
       "version": "1b8d0206074c0d54fbe8ae4184ffbf66f4fbc6d73f2286f0aa6fc8d9f71b38e6",
-      "error": "AssertionError: Saved observation source version differs from raw bytes"
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
       "metricId": "ENTG.company_revenue",
       "periodEnd": "2025-06-28",
       "sourceUrl": "https://investor.entegris.com/news/news-details/2025/Entegris-Reports-Results-for-Second-Quarter-of-2025/default.aspx",
       "version": "e2c032f53dcde00a60b14b121f4ae26f1617b31691842490b89facd7113fea59",
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "ENTG.company_revenue",
+      "periodEnd": "2026-09-26",
+      "sourceUrl": "https://www.entegris.com/en/home/about-us/news/entegris-reports-results-for-third-quarter-2026.html",
+      "version": "c8191915dac78f8667f3d5f5905dc742c3cd420c577676e24e246dd6dd5032ca",
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "ENTG.gross_margin",
+      "periodEnd": "2025-06-28",
+      "sourceUrl": "https://investor.entegris.com/news/news-details/2025/Entegris-Reports-Results-for-Second-Quarter-of-2025/default.aspx",
+      "version": "e2c032f53dcde00a60b14b121f4ae26f1617b31691842490b89facd7113fea59",
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "ENTG.gross_margin",
+      "periodEnd": "2026-09-26",
+      "sourceUrl": "https://www.entegris.com/en/home/about-us/news/entegris-reports-results-for-third-quarter-2026.html",
+      "version": "c8191915dac78f8667f3d5f5905dc742c3cd420c577676e24e246dd6dd5032ca",
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "ENTG.capex",
+      "periodEnd": "2025-06-28",
+      "sourceUrl": "https://investor.entegris.com/news/news-details/2025/Entegris-Reports-Results-for-Second-Quarter-of-2025/default.aspx",
+      "version": "e2c032f53dcde00a60b14b121f4ae26f1617b31691842490b89facd7113fea59",
+      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "ENTG.capex",
+      "periodEnd": "2026-09-26",
+      "sourceUrl": "https://www.entegris.com/en/home/about-us/news/entegris-reports-results-for-third-quarter-2026.html",
+      "version": "c8191915dac78f8667f3d5f5905dc742c3cd420c577676e24e246dd6dd5032ca",
       "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     }
   ],
