@@ -1,0 +1,7 @@
+.industry-controls .industry-compare-link{align-self:flex-end;white-space:nowrap;min-height:39px;gap:7px}
+.industry-metric-reading>summary{display:flex;align-items:center;gap:8px;cursor:pointer}
+.industry-metric-reading>summary::-webkit-details-marker{display:none}
+.industry-metric-reading>summary svg{transition:transform .15s ease}
+.industry-metric-reading[open]>summary svg{transform:rotate(180deg)}
+.industry-metric-reading .industry-metric-explanation{border-top:0;padding-top:4px}
+@media(max-width:600px){.industry-controls .industry-compare-link{align-self:flex-start}}

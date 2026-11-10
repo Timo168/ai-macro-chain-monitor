@@ -1,0 +1,13 @@
+import type {MetricDefinition,MetricSeries} from './types';
+export const ALL_ENTITIES:string;
+export const OTHER_ENTITY:string;
+export const METRICS_PER_PAGE:number;
+export function metricEntity(definition:MetricDefinition):string;
+export function entityLabel(entity:string):string;
+export function metricAnchor(hash:string):string;
+export function metricExplorerPreference(value:unknown):value is {entity:string;metricId:string};
+export function resolveMetricExplorer(definitions:MetricDefinition[],options:{category:string;search?:string;entity?:string;metricId?:string;anchorId?:string}):{entities:string[];categoryCount:number;entity:string;rows:MetricDefinition[];selected:MetricDefinition|null};
+export function metricPage(rows:MetricDefinition[],id:string,pageSize?:number):number;
+export function metricSelectionUrl(href:string,id:string):string;
+export function metricSelectionHistory(href:string,currentId:string,nextId:string):{method:'replaceState'|'pushState';url:string}[];
+export function metricExplorerSummary(definition:MetricDefinition,series:MetricSeries|undefined,now:string):{value:number|null;unit:string;yoy:number|null;yoyUnit:string;yoyLabel:string;period:string|null;fiscalPeriod:string|null;status:string;warning:boolean;sourceName:string;sourceUrl:string;lastSuccessAt:string|null};
