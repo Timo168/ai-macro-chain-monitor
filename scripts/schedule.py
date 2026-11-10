@@ -18,11 +18,11 @@ def configure_headless_log():
     sys.stdout=stream;sys.stderr=stream
 configure_headless_log()
 CT=ZoneInfo('America/Chicago')
-RIDS={10:['CPIAUCNS','CPILFENS','CPIAUCSL','CPILFESL'],50:['UNRATE','PAYEMS'],54:['PCEPI','PCEPILFE'],180:['ICSA'],221:['NFCI'],18:['DGS10','DFII10'],212:['DCOILBRENTEU']}
+RIDS={10:['CPIAUCNS','CPILFENS','CPIAUCSL','CPILFESL'],50:['UNRATE','PAYEMS'],54:['PCEPI','PCEPILFE'],180:['ICSA'],221:['NFCI'],18:['DGS10','DGS2','DFII10'],17:['DTWEXBGS'],212:['DCOILBRENTEU']}
 def atomic(path,data):
     tmp=path.with_suffix('.tmp.json');tmp.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':')),encoding='utf-8');os.replace(tmp,path)
 def fetch_calendar(rid,now):
-    lookback=62 if rid in (10,50,54) else 21 if rid in (180,221) else 7
+    lookback=62 if rid in (10,50,54) else 21 if rid in (17,180,221) else 7
     url='https://fred.stlouisfed.org/releases/calendar?'+urlencode({'rid':rid,'vs':(now-timedelta(days=lookback)).date().isoformat(),'ve':(now+timedelta(days=100)).date().isoformat()})
     original=url;events=[]
     for page in range(4):
@@ -45,7 +45,7 @@ def fetch_calendar(rid,now):
     return {'releaseId':rid,'status':'ok','events':events,'fetchedAt':now.isoformat(),'sourceUrl':original}
 def calendar(now):
     path=DATA/'calendar.json';old=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
-    if old.get('checkedAt') and now-datetime.fromisoformat(old['checkedAt'])<timedelta(hours=20):return old
+    if old.get('checkedAt') and now-datetime.fromisoformat(old['checkedAt'])<timedelta(hours=20) and set(RIDS).issubset({entry.get('releaseId') for entry in old.get('fred',[])}):return old
     entries=[]
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
         futures={pool.submit(fetch_calendar,rid,now):rid for rid in RIDS}
@@ -62,7 +62,7 @@ def calendar(now):
         entries=[e for e in entries if e['releaseId']!=54]+[bea]
     except Exception:pass
     result={'checkedAt':now.isoformat(),'fred':entries};atomic(path,result);return result
-def us_market_holidays(year):
+def us_market_holidays(year,include_good_friday=True):
     """Treasury observation dates: US federal holidays and Good Friday.
 
     Release times still come from the official calendar; this only estimates the
@@ -80,7 +80,7 @@ def us_market_holidays(year):
     a=year%19;b=year//100;c=year%100;d=b//4;e=b%4;f=(b+8)//25;g=(b-f+1)//3
     h=(19*a+b-d-g+15)%30;i=c//4;k=c%4;l=(32+2*e+2*i-h-k)%7;m=(a+11*h+22*l)//451
     easter=date(year,(h+l-7*m+114)//31,(h+l-7*m+114)%31+1)
-    holidays.add(easter-timedelta(days=2))
+    if include_good_friday:holidays.add(easter-timedelta(days=2))
     return holidays
 
 def previous_us_business_day(day):
@@ -95,11 +95,27 @@ def expected_date(key,event):
     if key in ('ICSA','NFCI'):
         target=5 if key=='ICSA' else 4
         return (d-timedelta(days=(d.weekday()-target)%7 or 7)).isoformat()
-    if key in ('DGS10','DFII10'):
+    if key in ('DGS10','DGS2','DFII10'):
         # H.15 publishes the prior business day's observations, not an intraday
         # quote. https://www.federalreserve.gov/releases/h15/
         return previous_us_business_day(d).isoformat()
+    if key=='DTWEXBGS':
+        # H.10 publishes the previous business week, including when Monday's
+        # release moves to Tuesday. Its FX calendar observes federal holidays;
+        # a Treasury-only market holiday does not move its target period.
+        prior_friday=d-timedelta(days=d.weekday()+3)
+        while prior_friday.weekday()>=5 or prior_friday in us_market_holidays(prior_friday.year,include_good_friday=False):
+            prior_friday-=timedelta(days=1)
+        return prior_friday.isoformat()
     return None
+
+def spread_check_plan(series,now):
+    """FRED's spread calendar gives dates without a release clock: poll hourly."""
+    checked=datetime.fromisoformat(series.get('checkedAt') or '2000-01-01T00:00:00+00:00')
+    interval=timedelta(minutes=15 if series.get('status') in ('cached','fetch_failed') else 60)
+    return now-checked>=interval,{'state':'source_check','nextCheckAt':max(now,checked+interval).isoformat(),
+                                'calendarSource':'https://fred.stlouisfed.org/releases/calendar?rid=304',
+                                'calendarStatus':'date_only','checkIntervalMinutes':int(interval.total_seconds()/60)}
 
 def cadence_metadata(now,previous,state,mode):
     target=max(1,int(os.environ.get('MACRO_CHECK_MINUTES','15')))
@@ -151,7 +167,7 @@ def release_plan(key,item,series,entry,state,now):
     if needs:state['attempts'][attempt_key]=attempt+1
     retry_at=(checked+timedelta(minutes=retry_after)).isoformat() if not_yet or catchup else None
     return needs,{'state':'delayed' if not_yet and now-due>timedelta(hours=48) else 'awaiting_source' if not_yet or catchup else 'waiting_release',
-                 'expectedObservationDate':expected,'expectedDateBasis':'previous_us_business_day' if key in ('DGS10','DFII10') else 'release_period' if expected else 'source_dependent',
+                 'expectedObservationDate':expected,'expectedDateBasis':'previous_us_business_day' if key in ('DGS10','DGS2','DFII10') else 'previous_business_week' if key=='DTWEXBGS' else 'release_period' if expected else 'source_dependent',
                  'nextReleaseAt':future[0].isoformat() if future else None,'lastScheduledReleaseAt':due.isoformat() if due else None,
                  'retryNotBeforeAt':retry_at,'calendarSource':entry.get('sourceUrl'),'calendarStatus':entry.get('status')}
 def run(force=False):
@@ -176,6 +192,16 @@ def run(force=False):
         for item in REGISTRY:
             key=item['id'];s=cached['series'].get(key,{});last=s.get('observations',[]);last_date=next((p['date'] for p in reversed(last) if p['value'] is not None),'')
             checked=datetime.fromisoformat(s.get('checkedAt') or '2000-01-01T00:00:00+00:00')
+            if key=='T10Y2Y':
+                needs,info=spread_check_plan(s,now)
+                if force or not last or needs:selected.append(key)
+                pending[key]=info;continue
+            if (force or not last) and key in ('DGS2','DTWEXBGS'):
+                selected.append(key)
+                rid=17 if key=='DTWEXBGS' else 18
+                entry=next((e for e in cal['fred'] if e['releaseId']==rid),{})
+                _,pending[key]=release_plan(key,item,s,entry,state,now)
+                continue
             if force or not last:selected.append(key);continue
             # Market-reference quotes are checked on every 15-minute scheduler
             # pass. They remain separate from the official monthly price series.

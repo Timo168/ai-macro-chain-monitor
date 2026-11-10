@@ -7,4 +7,5 @@ export function industryHistoryEndpoint(){return appBase()==='/'?'/api/industry/
 export function industryResearchEndpoint(){return appBase()==='/'?'/api/industry/research':appBase()+'data/industry-research.json'}
 export function policyRatesEndpoint(){return appBase()==='/'?'/api/policy-rates':appBase()+'data/policy-rates.json'}
 export function policyDecisionsEndpoint(){return appBase()==='/'?'/api/policy-decisions':appBase()+'data/policy-decisions.json'}
+export function researchCalendarEndpoint(){return appBase()==='/'?'/api/research-calendar':appBase()+'data/research-calendar.json'}
 export function versionedEndpoint(endpoint:string,version?:string){return version?`${endpoint}${endpoint.includes('?')?'&':'?'}v=${encodeURIComponent(version)}`:endpoint}

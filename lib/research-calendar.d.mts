@@ -1,0 +1,14 @@
+import type {PolicyCalendarEvent} from './policy-calendar';
+import type {Dataset} from './data';
+import type {IndustryDataset} from './industry/types';
+import type {ObservationItem} from './observer-types';
+import type {ResearchNote} from './research-notebook.mjs';
+export type ResearchEventCategory='policy'|'macro'|'earnings'|'review';
+export type MacroReleaseCalendar={checkedAt:string|null;status?:string;fred:{releaseId:number;status:string;fetchedAt?:string;sourceUrl?:string;events:{scheduledAt:string;calendarUrl?:string}[]}[]};
+export type ResearchCalendarEvent={id:string;category:ResearchEventCategory;title:string;entity:string;detail:string;day:string;at:string|null;timeBasis:'date_only'|'beijing';sourceUrl:string|null;sourceName:string;sourceStatus:string;checkedAt:string|null;timezone:string;relatedHref:string|null;routine?:boolean};
+export type CalendarCoverage={id:string;category:ResearchEventCategory;title:string;status:string;checkedAt:string|null;sourceUrl:string|null;note:string};
+export const RESEARCH_CALENDAR_CATEGORIES:Record<ResearchEventCategory,string>;
+export function calendarDayOffset(day:string,amount:number):string|null;
+export function buildResearchCalendar(options?:{policyEvents?:PolicyCalendarEvent[];policyCheckedAt?:string|null;macroCalendar?:MacroReleaseCalendar|null;macro?:Dataset|null;industry?:IndustryDataset|null;notes?:ResearchNote[];catalog?:ObservationItem[];now?:string}):{events:ResearchCalendarEvent[];coverage:CalendarCoverage[];byCategory:{category:ResearchEventCategory;count:number;through:string|null}[]};
+export function filterResearchCalendar(events:ResearchCalendarEvent[],options:{today:string;range?:string;categories?:ResearchEventCategory[];query?:string;includeOverdue?:boolean;includeRoutine?:boolean}):ResearchCalendarEvent[];
+export function researchCalendarIcs(events:ResearchCalendarEvent[],options?:{now?:string;reminder?:'day'|'hour'|'none'}):string;

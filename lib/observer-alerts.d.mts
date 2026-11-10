@@ -1,0 +1,14 @@
+import type {ObservationItem} from './observer-types';
+export type AlertKind='above'|'below'|'change_up'|'change_down'|'consecutive_up'|'consecutive_down'|'new_observation';
+export type AlertRule={id:string;itemId:string;kind:AlertKind;threshold:number;enabled:boolean;createdAt:string};
+export type AlertState=Record<string,{configFingerprint:string;date:string;value:number;seen:string[]}>;
+export type AlertEvaluation={ruleId:string;itemId:string;title:string;href:string;sourceUrl:string|null;state:'matched'|'unmatched'|'unavailable'|'disabled';reason:string;date:string|null;value:number|null;change:number|null;unit:string;fingerprint:string|null;newMatch:boolean};
+export type AlertEvent=AlertEvaluation&{triggeredAt:string};
+export type AlertHistory={id:string;ruleId:string;itemId:string;title:string;description:string;date:string;value:number;unit:string;triggeredAt:string;read:boolean;href:string;sourceUrl?:string|null};
+export type AlertStorage={status:'empty'|'ready'|'corrupt';rules:AlertRule[];state:AlertState;history:AlertHistory[]};
+export const ALERTS_STORAGE_KEY:string;
+export function normalizeAlertRule(value:unknown):AlertRule|null;
+export function alertRuleDescription(rule:AlertRule,item?:Pick<ObservationItem,'unit'>):string;
+export function evaluateObserverAlerts(rules:AlertRule[],items:ObservationItem[],previousState?:AlertState,checkedAt?:string):{results:AlertEvaluation[];events:AlertEvent[];nextState:AlertState};
+export function parseAlertStorage(raw:unknown):AlertStorage;
+export function serializeAlertStorage(rules:AlertRule[],state:AlertState,history?:AlertHistory[]):string;

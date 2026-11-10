@@ -10,4 +10,5 @@ export type ObservationItem={
  value:string;unit:string;period:string;status:string;warning:boolean;
  checkedAt?:string|null;nextExpectedAt?:string|null;sourceUrl?:string|null;sourceVersion?:string|null;
  points?:{date:string;value:number|null}[];
+ frequency?:string;alertEligible?:boolean;alertReason?:string;
 };

@@ -23,6 +23,16 @@ test('missing inflation bases stay missing rather than showing an index as a rat
  const data=inputs();data.macro={generatedAt:'2026-10-31',series:{PCEPILFE:series('PCEPILFE',[{date:'2026-09-01',value:103}])}};
  const item=buildObserverCatalog(data).find(row=>row.id==='macro:PCEPILFE:yoy');assert.equal(item.value,'—');assert.equal(item.status,'计算基期不足');
 });
+
+test('alert eligibility follows source state and keeps calculation frequency',()=>{
+ const data=inputs();data.macro={generatedAt:'2026-11-10',series:{DGS2:series('DGS2',[{date:'2026-11-06',value:4.51}]),DTWEXBGS:series('DTWEXBGS',[{date:'2026-11-06',value:121.88}],'cached'),PCEPILFE:series('PCEPILFE',[{date:'2025-09-01',value:100},{date:'2026-09-01',value:103}])}};
+ const catalog=buildObserverCatalog(data),byId=id=>catalog.find(item=>item.id===id);
+ assert.equal(byId('macro:DGS2').alertEligible,true);assert.equal(byId('macro:DGS2').frequency,'daily');
+ assert.equal(byId('macro:DTWEXBGS').alertEligible,false);assert.equal(byId('macro:DTWEXBGS').warning,true);
+ assert.equal(byId('macro:PCEPILFE:yoy').frequency,'monthly');assert.equal(byId('macro:PCEPILFE:yoy').value,'3.00');
+ assert.equal(byId('macro:PCEPILFE:mom').alertEligible,false);
+ assert.equal(byId('macro:GOLD').alertEligible,false);
+});
 test('an official decision is visible separately from monthly history and preserves failure state',()=>{
  const data=inputs();data.policyRates={generatedAt:'2026-10-01',checkedAt:'2026-10-31',status:'ready',series:[{id:'fed',name:'美联储',country:'美国',shortName:'FOMC',sourceTitle:'政策月末',sourceUrl:'https://example.org/history',status:'ready',observations:[{date:'2026-08-31',value:3.625}]}]};
  data.policyDecisions={generatedAt:'2026-10-31',checkedAt:'2026-10-31',status:'cached',decisions:[{bankId:'fed',bank:'美联储',country:'美国',announcementDate:'2026-09-16',effectiveDate:'2026-09-17',lower:3.75,upper:4,midpoint:3.875,statementUrl:'https://example.org/decision'}]};

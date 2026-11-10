@@ -1,6 +1,6 @@
 import { orderYieldSeries } from './yield-display.mjs';
 
-export type Group={id:string;title:string;category:number;series:string[];unit:string;frequency:string;kind?:string;read:string;impact:string;evidence:string;sectors:string[]};
+export type Group={id:string;title:string;category:number;series:string[];unit:string;frequency:string;kind?:string;changeKind?:'percent'|'point';read:string;impact:string;evidence:string;sectors:string[]};
 export const groups:Group[]=[
 {id:'claims',title:'初次申请失业救济人数',category:1,series:['ICSA'],unit:'千人',frequency:'周度',kind:'bar',read:'看一周内有多少人新申请失业救济。持续升高通常说明裁员压力增加，走低通常说明压力减轻。单周容易波动，看图优先看四周平均线，再与失业率、非农就业一起判断。',impact:'就业放缓可能缓解政策收紧压力，也可能削弱企业需求与资本开支。',evidence:'通胀趋势、非农就业、云厂商投资计划与企业订单。',sectors:['云服务','服务器','芯片']},
 {id:'unemployment',title:'美国失业率',category:1,series:['UNRATE'],unit:'%',frequency:'月度',read:'看有工作或正在找工作的人中，失业者占多少。通常越高代表就业越弱，越低代表就业越充分。看图关注连续几个月的方向；下降也可能是部分人放弃找工作，要与非农就业一起看。',impact:'需求转弱可能影响云服务收入和企业 IT 预算。',evidence:'劳动参与率、工资、就业人数与企业支出。',sectors:['云服务','服务器']},
@@ -19,5 +19,8 @@ export const groups:Group[]=[
 {id:'gold',title:'黄金',category:2,series:['GOLD'],unit:'美元／金衡盎司',frequency:'月度',read:'实际利率、美元与避险需求的交叉线索。2025-06 起基准改为现货日均价，此前为伦敦下午定盘价。',impact:'与实际利率、美元一起看，可帮助判断资金环境和市场避险情绪。',evidence:'实际收益率、美元、避险需求与流动性。',sectors:['芯片','云服务']},
 {id:'silver',title:'白银',category:2,series:['SILVER'],unit:'美元／金衡盎司',frequency:'月度',read:'白银兼有贵金属和工业用途。月度均价适合观察中长期趋势，同时关注工业需求、美元与实际利率。',impact:'工业需求和供给可能影响部分电子与电力设备材料成本，实际影响取决于用量。',evidence:'产业用途、库存、采购合同与成本占比。',sectors:['电力设备','芯片']},
 {id:'yields',title:'美国十年期国债收益率',category:3,series:orderYieldSeries(['DFII10','DGS10']),unit:'%',frequency:'日度',read:'名义收益率是市场常见的十年期美债利率；实际收益率反映扣除通胀补偿后的水平。两者上升通常意味着长期资金成本提高，实际收益率还可用于观察估值压力。',impact:'实际收益率下降可能减轻长期现金流折现压力，也可能伴随需求恶化。',evidence:'融资环境、信用利差、企业盈利和资本开支。',sectors:['云服务','芯片','数据中心']},
+{id:'yields-2y',title:'美国两年期国债收益率',category:3,series:['DGS2'],unit:'%',frequency:'日度',read:'看市场愿意以多高的利率持有两年期美债。它通常对未来一两年的政策利率预期更敏感；上升往往意味着市场预期利率会更高或维持更久，下降则相反。可与十年期收益率一起看。',impact:'较短期限利率上升，可能增加企业新借款和再融资的成本；还要结合实际借款利差、到期债务和现金储备判断。',evidence:'政策决议、通胀与就业、企业债务期限和融资利差。',sectors:['云服务','芯片','数据中心']},
+{id:'yield-curve',title:'美债长短期利差（10年－2年）',category:3,series:['T10Y2Y'],unit:'个百分点',frequency:'日度',read:'用同一天的十年期收益率减去两年期收益率。高于零说明长期利率更高，低于零称为倒挂。看图先看是否倒挂、持续多久，再查看长短端谁在变化，理解市场对增长和政策的预期。',impact:'利差变化帮助观察融资周期。短端下降可能减轻融资压力；若同时伴随就业和订单走弱，还应关注企业投资需求。',evidence:'两年期与十年期收益率、就业、银行贷款条件和企业订单。',sectors:['云服务','数据中心','电力设备']},
+{id:'dollar',title:'广义美元指数',category:3,series:['DTWEXBGS'],unit:'指数',frequency:'日度',changeKind:'percent',read:'把美元与主要贸易伙伴货币放在一起比较，并按贸易权重汇总，以2006年1月为100。指数上升代表美元整体走强，下降代表走弱。图中每天一个观测值，美联储每周集中发布上一工作周的数据。',impact:'美元走强可能影响美国云厂商海外收入折算，也会改变以美元报价的设备和原料的本币采购成本。实际影响取决于收入地区、结算货币和汇率套保。',evidence:'企业地区收入、结算货币、套保安排、商品价格和美国利率。',sectors:['云服务','芯片','服务器']},
 {id:'nfci',title:'芝加哥联储金融条件指数',category:3,series:['NFCI'],unit:'指数',frequency:'周度',read:'零以上比历史平均更紧，零以下更松。处于宽松水平与最近收紧可以同时成立。',impact:'条件收紧可能提高融资难度，影响资本密集环节的建设与扩张。',evidence:'信贷利差、融资成交、贷款标准与项目回报。',sectors:['数据中心','电力设备','云服务']}
 ];
