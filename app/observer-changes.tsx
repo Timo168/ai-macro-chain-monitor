@@ -32,7 +32,7 @@ export function ObserverChanges({onNavigate}:{onNavigate:(href:string)=>void}){
   <div className="observer-change-counts">{kinds.slice(1).map(([id,label])=><button key={id} aria-pressed={kind===id} onClick={()=>{setKind(id);setLimit(6);fold.setOpen(true)}}><strong>{events.filter(event=>event.kind===id).length}</strong><span>{label}</span></button>)}</div>
   <PanelBody open={fold.open} id={fold.contentId}>
    <div className="observer-change-controls"><div>{kinds.map(([id,label])=><button key={id} aria-pressed={kind===id} onClick={()=>{setKind(id);setLimit(6)}}>{label}</button>)}</div><button onClick={save} disabled={loading||!snapshot.scopes.length}>标记当前变化已看</button><button onClick={refresh}>核对跨模块更新</button></div>
-   <p className="observer-change-note">只比较观测数值、历史修订与来源状态。重新抓取但数据没变，不计入变化；尚未到月度发布日也不算失败。首次成功加载的模块先建立基线，不把整段历史计为新增。此处数量为变化条目数。</p>
+   <details className="observer-change-method"><summary>这些变化如何计算</summary><p className="observer-change-note">只比较观测数值、历史修订与来源状态。重新抓取但数据没变，不计入变化；尚未到月度发布日也不算失败。首次成功加载的模块先建立基线，不把整段历史计为新增。此处数量为变化条目数。</p></details>
    {loading&&<p role="status">正在核对产业、估值和央行数据…</p>}
    {storageError&&<p role="alert">浏览器暂不能保存对比基线，本次仍可查看；刷新后可能无法保留记录。</p>}
    {!!errors.length&&<p role="alert">{errors.join('；')}。未读取模块不会被算成数据消失。</p>}

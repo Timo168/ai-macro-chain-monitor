@@ -37,7 +37,12 @@ if os.name=='nt':
     WINDOWS_STARTUPINFO=subprocess.STARTUPINFO();WINDOWS_STARTUPINFO.dwFlags|=subprocess.STARTF_USESHOWWINDOW;WINDOWS_STARTUPINFO.wShowWindow=subprocess.SW_HIDE
 def now(): return datetime.now(timezone.utc).isoformat()
 def download(url):
-    result=subprocess.run(['curl.exe' if os.name=='nt' else 'curl','--fail','--location','--silent','--show-error','--max-time','65','--retry','2',url],capture_output=True,creationflags=CREATE_NO_WINDOW,startupinfo=WINDOWS_STARTUPINFO)
+    command=['curl.exe' if os.name=='nt' else 'curl','--fail','--location','--silent','--show-error','--max-time','65','--retry','2',url]
+    result=subprocess.run(command,capture_output=True,creationflags=CREATE_NO_WINDOW,startupinfo=WINDOWS_STARTUPINFO)
+    # Some official servers advertise HTTP/2 but fail its handshake (curl 16).
+    # Retry that transport error once with HTTP/1.1, preserving all validation.
+    if result.returncode==16:
+        result=subprocess.run(command[:-1]+['--http1.1',url],capture_output=True,creationflags=CREATE_NO_WINDOW,startupinfo=WINDOWS_STARTUPINFO)
     if result.returncode: raise RuntimeError('Source fetch failed: '+result.stderr.decode(errors='replace')[-180:])
     return result.stdout
 def download_market(url):

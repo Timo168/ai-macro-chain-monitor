@@ -1,6 +1,7 @@
 "use client";
 import type {IndustryDataset,IndustryResearch,ResearchSectorSignal} from '@/lib/industry/types';
 import './research-sources.css';
+import PanelExplorer from '../panel-explorer';
 import {reasoningStatus} from './reasoning-status';
 import {PanelToggle,PanelBody,usePanelDisclosure} from '../panel-disclosure';
 
@@ -35,18 +36,18 @@ export function InstitutionalSources({data,showMetric,compact=false}:{data:Indus
  const disclosure=usePanelDisclosure('research:institutional-sources',{defaultOpen:!compact,scope:'research'});
  if(!reports.length&&!catalog.length)return null;
  const cso=data.definitions.find(def=>def.id==='CSO.datacenter_electricity');
- return <section className="industry-panel institutional-sources" aria-label="权威研究与数据来源">
+ return <section id="institutional-sources" className="industry-panel institutional-sources" aria-label="权威研究与数据来源">
   <div className="industry-section-title"><div><h3>权威研究与数据来源</h3><p>{reports.length} 份报告 · {catalog.length} 项来源。实际、估算、预测分别保留；机构名称本身不提高评分。</p></div><PanelToggle open={disclosure.open} onToggle={disclosure.toggle} controls={disclosure.contentId} label="权威研究与数据来源"/></div>
   <PanelBody open={disclosure.open} id={disclosure.contentId}>
   {cso&&<button className="industry-text-button" onClick={()=>showMetric?.(cso.id)}>查看爱尔兰数据中心实际用电图表 ↗</button>}
-  <div className="institutional-report-grid">{reports.map(report=><article key={report.id}>
+  <PanelExplorer storageKey="industry:institutional-reports" title="选择研究报告" items={reports.map(report=>({id:report.id,title:report.title,eyebrow:report.publisher,summary:stateLabel[report.status]??report.status,meta:report.publishedAt?.slice(0,10)??'发布日期未提供'}))} renderPanel={id=>{const report=reports.find(item=>item.id===id);return report?<div className="institutional-report-grid industry-single-plan"><article key={report.id}>
    <div><span>{report.publisher}</span><b>{stateLabel[report.status]??report.status}</b></div>
    <h4><a href={report.sourceUrl} target="_blank" rel="noreferrer">{report.title} ↗</a></h4>
    <p>{report.scope}</p><small>来源发布 {report.publishedAt?.slice(0,10)??'未提供'} · {report.modelRole==='scenario_only'?'仅作为情景背景，不进入正式评分':'区域背景，不代表全球 AI 需求'}</small>
    <dl>{report.facts.map((fact,index)=><div key={`${fact.period}-${index}`}><dt>{fact.period} · {natureLabel[fact.nature]}</dt><dd>{fact.value==null?'未发布':fact.value.toLocaleString()} {report.unit}</dd></div>)}</dl>
    <details><summary>方法、版本与许可</summary><p>{report.methodology}</p><p>{report.licenseNote}</p><small>来源版本 {report.version?.slice(0,16)||'暂无'} · 最近成功获取 {report.fetchedAt?.slice(0,10)||'尚无成功记录'}</small><p><a href={report.licenseUrl} target="_blank" rel="noreferrer">使用许可 ↗</a></p>{report.error&&<p>{report.error}</p>}</details>
-  </article>)}</div>
-  {catalog.length>0&&<details className="institutional-catalog" open={!compact}><summary>来源接入清单 · {catalog.filter(source=>source.status==='authorization_required').length} 个来源需授权</summary><p>以下清单保留接入方向与当前原因。未获相应用途授权的报告不自动抓取、不送入推理模型、不提供 CSV。</p><div className="industry-table-wrap"><table><thead><tr><th>机构 / 数据</th><th>可补充什么</th><th>当前状态与原因</th></tr></thead><tbody>{catalog.map(source=><tr key={source.id}><td><a href={source.sourceUrl} target="_blank" rel="noreferrer">{source.publisher} ↗</a><small>{source.title}</small></td><td>{source.purpose}</td><td>{stateLabel[source.status]??source.status}<small>{source.reason}</small><a href={source.licenseUrl} target="_blank" rel="noreferrer">许可说明 ↗</a></td></tr>)}</tbody></table></div></details>}
+  </article></div>:null}}/>
+  {catalog.length>0&&<details className="institutional-catalog"><summary>来源接入清单 · {catalog.filter(source=>source.status==='authorization_required').length} 个来源需授权</summary><p>以下清单保留接入方向与当前原因。未获相应用途授权的报告不自动抓取、不送入推理模型、不提供 CSV。</p><div className="industry-table-wrap"><table><thead><tr><th>机构 / 数据</th><th>可补充什么</th><th>当前状态与原因</th></tr></thead><tbody>{catalog.map(source=><tr key={source.id}><td><a href={source.sourceUrl} target="_blank" rel="noreferrer">{source.publisher} ↗</a><small>{source.title}</small></td><td>{source.purpose}</td><td>{stateLabel[source.status]??source.status}<small>{source.reason}</small><a href={source.licenseUrl} target="_blank" rel="noreferrer">许可说明 ↗</a></td></tr>)}</tbody></table></div></details>}
   </PanelBody>
  </section>;
 }

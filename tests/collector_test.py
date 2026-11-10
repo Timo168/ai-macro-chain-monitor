@@ -4,7 +4,15 @@ sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[1]/'scripts'))
 import collect
 from schedule import expected_date
 from datetime import datetime
+from types import SimpleNamespace
 class CollectorTests(unittest.TestCase):
+    def test_official_http2_handshake_failure_retries_http1_without_visible_window(self):
+        failed=SimpleNamespace(returncode=16,stderr=b'HTTP/2 SETTINGS frame',stdout=b'')
+        success=SimpleNamespace(returncode=0,stderr=b'',stdout=b'official response')
+        with patch.object(collect.subprocess,'run',side_effect=[failed,success]) as run:
+            self.assertEqual(collect.download('https://www.rbi.org.in/Scripts/Annualpolicy.aspx'),b'official response')
+        self.assertIn('--http1.1',run.call_args_list[1].args[0])
+        self.assertEqual(run.call_args_list[1].kwargs['creationflags'],collect.CREATE_NO_WINDOW)
     def test_daily_precious_metal_market_references_are_configured(self):
         self.assertEqual(collect.MARKET_QUOTES['MKT_GOLD'][0],'GC=F')
         self.assertEqual(collect.MARKET_QUOTES['MKT_SILVER'][0],'SI=F')

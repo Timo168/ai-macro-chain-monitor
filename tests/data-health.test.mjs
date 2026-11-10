@@ -18,6 +18,16 @@ test('monthly observations remain current while waiting for the next scheduled r
   assert.equal(seriesHealth({ ...ready, publication: { state: 'awaiting_source' } }).state, 'awaiting_source');
 });
 
+test('an expired next-release calendar is visible without asserting that monthly values are wrong', () => {
+  const now = Date.parse('2026-11-10T12:00:00Z');
+  assert.equal(seriesHealth({ ...ready, publication: { state: 'waiting_release', nextReleaseAt: '2026-11-25T13:30:00Z' } }, now).state, 'ready');
+  const stale = seriesHealth({ ...ready, publication: { state: 'waiting_release', nextReleaseAt: '2026-10-08T13:30:00Z' } }, now);
+  assert.equal(stale.state, 'calendar_stale');
+  assert.equal(stale.observationDate, '2026-08-01');
+  assert.equal(stale.warning, true);
+  assert.equal(seriesHealth({ ...ready, status: 'cached', publication: { state: 'waiting_release', nextReleaseAt: '2026-10-08T13:30:00Z' } }, now).state, 'cached');
+});
+
 test('missing, unavailable and cached sources preserve separate states and valid observation dates', () => {
   assert.equal(seriesHealth(undefined).state, 'not_configured');
   assert.equal(seriesHealth({ status: 'ready', observations: [] }).state, 'not_published');
@@ -33,6 +43,14 @@ test('scheduler detects multi-hour delays without treating every missed 15-minut
   assert.equal(schedulerHealth({ mode: 'github_actions', lastRunAt: '2026-10-25T05:59:00Z' }, now).state, 'unconfirmed');
   assert.equal(schedulerHealth({ mode: 'github_actions', lastRunAt: 'invalid' }, now).state, 'unknown');
   assert.equal(schedulerHealth({ mode: 'github_actions', lastCompletedAt: '2026-10-25T05:30:00Z', failed: ['DGS10'] }, now).state, 'partial_failure');
+});
+
+test('a recently finished run does not hide irregular multi-hour scheduling', () => {
+  const now = Date.parse('2026-11-10T15:00:00Z');
+  const result = schedulerHealth({ mode: 'github_actions', lastCompletedAt: '2026-11-10T14:39:00Z', targetIntervalMinutes: 15, cadenceStatus: 'delayed' }, now);
+  assert.equal(result.state, 'irregular');
+  assert.equal(result.warning, true);
+  assert.match(result.label, /本轮已完成/);
 });
 
 test('electricity source follows its authoritative EIA registry release instead of a nonexistent FRED series', () => {

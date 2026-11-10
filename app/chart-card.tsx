@@ -8,6 +8,7 @@ import type { Group } from '@/lib/groups';
 import { yieldDisplay } from '@/lib/yield-display.mjs';
 import { metrics, selectRange } from '@/lib/calculations.mjs';
 import { seriesHealth, barDomain } from '@/lib/data-health.mjs';
+import {macroExplorerSummary} from '@/lib/macro-summary';
 import { PanelBody, PanelToggle, usePanelDisclosure } from './panel-disclosure';
 import { ChartEvents, chartEventReferenceLines, useChartEventLayer } from './chart-events';
 import {ObserverPin} from './observer-workspace';
@@ -64,6 +65,7 @@ export default function ChartCard({group,data,range:globalRange,compact=false}:{
   return()=>{removeEventListener('popstate',read);removeEventListener('hashchange',read)};
  },[group.id,group.kind,setMode,setStyle,setRange,setHidden]);
  const chart=useMemo(()=>makeChart(group,data,mode),[group,data,mode]);
+ const headline=useMemo(()=>macroExplorerSummary(group,data,mode,chart),[group,data,mode,chart]);
  const itemId=`macro:${chart.ids[0]}${group.kind==='inflation'?':'+mode:''}`;const observationItem=catalog.find(item=>item.id===itemId);
  // Brush treats a new data array as a new chart and clears its active drag.
  // Keep the input stable while the selected indices, legend or details change.
@@ -79,19 +81,19 @@ export default function ChartCard({group,data,range:globalRange,compact=false}:{
  const isZoomed=!!zoom&&((zoom.startIndex??0)>0||(zoom.endIndex??rows.length-1)<rows.length-1);
  const eventLayer=useChartEventLayer({seriesIds:chart.ids,rows:visibleRows,includePolicy:['yields','nfci','cpi','pce'].includes(group.id)});
  const isPrice=group.changeKind==='percent'||group.category===2;const unit=group.unit;const deltaUnit=isPrice?'%':group.id==='nfci'?'指数点':unit==='%'?'个百分点':unit;
- const stats=useMemo(()=>metrics(firstValues(chart.rows),isPrice),[chart.rows,isPrice]);
  const selectedStats=useMemo(()=>metrics(firstValues(visibleRows),isPrice),[visibleRows,isPrice]),digits=group.id==='claims'||group.id==='payrolls'?1:group.id==='nfci'?3:2;
  const series=chart.ids.map(id=>data.series[id]).filter(Boolean);
  const exportAllowed=chart.ids.every(id=>metadata[id]?.exportAllowed);
- const health=seriesHealth(data.series[chart.ids[0]]);
+ const previous=headline.previous;
  function exportCsv(){const rowsOut=[['观测日期',...chart.names.map(n=>n+' ('+unit+')')],...visibleRows.map((r:Record<string,unknown>)=>[r.date,...chart.names.map((_,i)=>r['s'+i]??'')]),[],['来源',...chart.ids.map(sourceLink)],['计算',group.kind!=='inflation'?(group.id==='claims'?'ICSA / 1000，连续四周均值':group.id==='payrolls'?'本月 PAYEMS - 上月 PAYEMS；连续三月均值':group.id==='yield-curve'?'FRED T10Y2Y：同日十年期减两年期收益率；单位为个百分点':'来源原始数值，未做同比转换'):mode==='yoy'?'同比 = 本期 / 上年同月 - 1；百分数':mode==='mom'?'环比 = 本期 / 上月 - 1；百分数':'原始值'],['获取时间',...series.map(s=>s.fetchedAt??'')],['版本',...series.map(s=>s.revision??'')]];
  const blob=new Blob(['\uFEFF'+rowsOut.map(r=>r.map((v:unknown)=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=group.id+'-'+effective+'-'+mode+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
- const latestText=stats.last?.date??'暂无观测';
+ const latestText=headline.date??'暂无观测';
  const publication=series[0]?.publication;
  return <section id={group.id} className={'chart-card '+(compact?'compact':'')} aria-label={group.title}>
  <div className="chart-title"><div><h3>{group.title}</h3><div className="chart-subtitle">{group.kind==='inflation'?(mode==='yoy'?'同比变化':'环比变化'):group.id==='yields'?yieldDisplay.chartSubtitle:group.id==='claims'?'季调 · 四周移动平均':group.category===2&&group.frequency==='月度'?`${metadata[group.series[0]]?.source} · ${metadata[group.series[0]]?.seasonal}`:metadata[group.series[0]]?.seasonal}</div></div><div className="panel-heading-actions"><ObserverPin itemId={itemId} title={group.title}/><span className="frequency">{group.frequency}</span><PanelToggle open={disclosure.open} onToggle={disclosure.toggle} controls={disclosure.contentId} label={group.title}/></div></div>
- <div className="stat-row"><div className="chart-stat">{format(stats.last?.value,digits)} <small>{unit}</small></div><span className={'delta '+(stats.previous===null?'neutral':stats.previous>0?'up':stats.previous<0?'down':'neutral')}>{stats.previous===null?'—':(stats.previous>0?'↑ ':stats.previous<0?'↓ ':'→ ')+deltaFormat(stats.previous,digits)+' '+deltaUnit}<small>较上期</small></span></div>
- <div className="chart-date">{chart.names[0]} · 最新有效观测 {latestText}<span className={'state-pill '+(health.warning?'warning':'')}>{health.label}</span></div>
+ <div className="stat-row"><div className="chart-stat">{headline.valueText} <small>{unit}</small></div><span className={'delta '+(previous===null?'neutral':previous>0?'up':previous<0?'down':'neutral')}>{previous===null?'—':(previous>0?'↑ ':previous<0?'↓ ':'→ ')+deltaFormat(previous,digits)+' '+deltaUnit}<small>{group.id==='policy'?'下限较上期':'较上期'}</small></span></div>
+ <div className="chart-date">{headline.name} · 最新有效观测 {latestText}<span className={'state-pill '+(headline.warning?'warning':'')}>{headline.status}</span></div>
+ {headline.note&&<div className="next-release warning-text" role="status">{headline.note}{group.kind==='inflation'&&mode==='yoy'?'；可切换环比查看当月变化。':''}</div>}
  {publication&&<div className="next-release">{publication.state==='awaiting_source'?'已到计划发布时间，等待来源更新':publication.state==='delayed'?'来源发布延迟，继续展示最后成功数据':publication.state==='calendar_unavailable'?'发布日历暂不可用，按日检查来源':publication.nextReleaseAt?'下次计划发布：'+beijing(publication.nextReleaseAt)+'（北京）':publication.nextReleaseDate?'下次计划发布日：'+publication.nextReleaseDate+'（来源日期，时刻未公布）':'按来源节奏检查，等待下一次发布'}{publication.calendarSource?.startsWith('https://')&&<a href={publication.calendarSource} target="_blank" rel="noreferrer"> · 日历 ↗</a>}</div>}
  <PanelBody open={disclosure.open} id={disclosure.contentId}>
  <div className="chart-controls"><RangeButtons value={effective} available={available} onChange={v=>{setRange(v);setZoom(null)}}/><div className="chart-actions">{isZoomed&&<Button variant="ghost" onClick={()=>setZoom(null)} aria-label={"重置"+group.title+"缩放"}>重置缩放</Button>}{group.kind==='inflation'&&<div className="mode-switch">{['yoy','mom'].map(m=><Button key={m} variant="ghost" aria-pressed={mode===m} className={mode===m?'selected':''} onClick={()=>{setMode(m);setZoom(null);setStyle(m==='mom'?'bar':'line')}}>{m==='yoy'?'同比':'环比'}</Button>)}</div>}{group.kind!=='step'&&<Button variant="ghost" size="icon-sm" aria-label={style==='line'?'切换为柱状图':'切换为折线图'} title={style==='line'?'切换为柱状图':'切换为折线图'} onClick={()=>setStyle(s=>s==='line'?'bar':'line')}>{style==='line'?<ChartColumn/>:<ChartLine/>}</Button>}<Button variant="ghost" size="icon-sm" aria-label={exportAllowed?'导出 '+group.title+' CSV':'此来源尚未开放导出'} title={exportAllowed?'导出所选区间 CSV':'NFCI 导出许可待核验'} disabled={!exportAllowed||!rows.length} onClick={exportCsv}><ArrowDownToLine/></Button></div></div>
@@ -99,7 +101,7 @@ export default function ChartCard({group,data,range:globalRange,compact=false}:{
  {observationItem&&<ObservationNoteButton item={observationItem}/>}
  <ChartEvents events={eventLayer.events} enabled={eventLayer.enabled} onChange={eventLayer.setEnabled}/>
  <div className="period-change"><span>所选区间 {selectedStats.first?.date??'—'} — {selectedStats.last?.date??'—'}</span><strong className={(selectedStats.range??0)>0?'up':(selectedStats.range??0)<0?'down':'neutral'}>{selectedStats.range==null?'—':((selectedStats.range??0)>0?'+':'')+format(selectedStats.range,digits)+' '+deltaUnit}</strong></div>
- <div className="chart-explanation"><strong>如何理解</strong><p>{group.read}</p><strong className="impact-label">对 AI 产业链的影响</strong><p>{group.impact}</p><div className="sector-tags">{group.sectors.map(s=><span key={s}>{s}</span>)}</div></div>
+ <details className="panel-detail-fold"><summary>如何理解 · 对产业的影响</summary><div className="chart-explanation"><strong>如何理解</strong><p>{group.read}</p><strong className="impact-label">对 AI 产业链的影响</strong><p>{group.impact}</p><div className="sector-tags">{group.sectors.map(s=><span key={s}>{s}</span>)}</div></div></details>
  <div className="chart-source"><a href={sourceLink(group.series[0])} target="_blank" rel="noreferrer">{metadata[group.series[0]]?.source} ↗</a><Button variant="ghost" onClick={()=>setDetails(d=>!d)} aria-expanded={details}>数据详情 <Info size={12}/></Button></div>
  <div className="fetch-timestamp">成功获取：{beijing(series[0]?.fetchedAt)}（北京）</div>{chart.ids.length>1&&<div className="chart-series-health">{chart.ids.map(id=>{const itemHealth=seriesHealth(data.series[id]);return <span key={id}>{metadata[id]?.name} · 观测 {itemHealth.observationDate??'暂无'} · <strong className={itemHealth.warning?'warning-text':''}>{itemHealth.label}</strong></span>})}</div>}
  {details&&<div className="metadata-detail">{chart.ids.map(id=>{const s=data.series[id],itemHealth=seriesHealth(s);return <div key={id}><a href={sourceLink(id)} target="_blank" rel="noreferrer">{id} · {metadata[id]?.name} <ArrowUpRight size={12}/></a><p>单位：{metadata[id]?.unit} · {metadata[id]?.seasonal} · 状态：{itemHealth.label} · 最新有效观测：{itemHealth.observationDate??'暂无'}</p><p>最近成功获取：{beijing(s?.fetchedAt)}（北京）<br/>来源发布时间：{beijing(s?.sourcePublishedAt)}<br/>修订版本：{s?.revision??'—'}</p>{metadata[id]?.license&&<p>{metadata[id].license}</p>}</div>})}<p>缺值保持为空。同比额外使用前十二个月基期；变化值以原始精度计算。</p></div>}

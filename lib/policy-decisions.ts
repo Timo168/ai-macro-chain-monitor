@@ -34,6 +34,10 @@ export type PolicyDecisionSourceCheck={
  checkedAt:string;
  status:'ready'|'fetch_failed';
  decisionStatus:'verified'|'source_checked';
+ rateVerificationStatus?:'verified'|'cached'|'not_configured'|'fetch_failed';
+ latestVerifiedAt?:string|null;
+ latestVerifiedAnnouncementDate?:string|null;
+ rateError?:string;
  error?:string;
 };
 
