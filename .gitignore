@@ -48,6 +48,7 @@ next-env.d.ts
 /data/policy-rates.json
 /data/policy-decisions.json
 /data/calendar.json
+/data/regional-energy.json
 /data/scheduler.json
 /data/*.sqlite*
 /data/*.lock

@@ -1,7 +1,7 @@
 """Restore/persist durable collector state on a separate Git branch. No force pushes."""
 import argparse, hashlib, json, os, pathlib, shutil, subprocess, sqlite3, tempfile
 ROOT=pathlib.Path(__file__).resolve().parents[1];WORK=ROOT/'.data-work';DATA=ROOT/'data'
-FILES=['latest.json','calendar.json','scheduler.json','observations.sqlite','policy-rates.json','policy-decisions.json']
+FILES=['latest.json','calendar.json','scheduler.json','observations.sqlite','policy-rates.json','policy-decisions.json','regional-energy.json']
 INDUSTRY_FILES=['latest.json','audit-status.json','audit-samples.json','research.json','research-model-calls.json','research-history.json','research-ledger.json','research-followup.json','research-market.json','research-alfred.json','companies.json','hardware.json','supply-evidence.json','packaging-evidence.json','materials-evidence.json','cross-company-evidence.json','oracle.json','costs.json','infrastructure.json','sia.json','extended.json','power-load.json','projects.json','sector-financials.json','institutions.json','release-discovery.json','reviewed-cache.json','scheduler.json']
 
 def industry_state(source,destination):

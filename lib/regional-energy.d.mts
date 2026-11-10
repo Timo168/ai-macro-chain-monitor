@@ -1,0 +1,14 @@
+export type RegionalPoint={date:string;value:number|null;gap?:boolean};
+export type RegionalSeries={id:string;name:string;kind:'wholesale_price'|'load';unit:string;frequency:'daily'|'hourly';timeZone:string;sourceName:string;sourceUrl:string|null;dataUrl?:string|null;methodology?:string;publicationFrequency?:string;license?:string;licenseNote?:string;exportAllowed:boolean;status:'available'|'cached'|'fetch_failed'|'not_published'|'not_configured';freshness?:string;lastFetchStatus?:string;fetchedAt?:string|null;lastSuccessAt?:string|null;checkedAt?:string|null;latestObservationAt?:string|null;version?:string;error?:string|null;directSourceCheck?:{status?:string;httpStatus?:number;checkedDate?:string;note?:string};observations:RegionalPoint[]};
+export type RegionalEnergyData={schemaVersion?:number|string;generatedAt?:string|null;status?:string;regions:{id:string;name:string;timeZone?:string;description?:string;series:RegionalSeries[]}[]};
+export const REGIONAL_ENERGY_STATES:Record<string,string>;
+export function regionalSourceUrl(value:unknown):string|null;
+export function parseRegionalEnergy(value:unknown):RegionalEnergyData;
+export function regionalStatus(series:RegionalSeries|undefined,readFailed?:boolean):{status:string;label:string;warning:boolean;detail:string};
+export function regionalRanges(series:RegionalSeries):{value:string;label:string;available:boolean}[];
+export function regionalWindow(series:RegionalSeries,range:string):RegionalPoint[];
+export function regionalChartRows(points:RegionalPoint[],frequency:string):RegionalPoint[];
+export function regionalStats(points:RegionalPoint[],frequency:string):{first:RegionalPoint|null;last:RegionalPoint|null;latestMissing:boolean;previousChange:number|null;rangeChange:number|null};
+export function regionalDate(date:string|null|undefined,frequency:string,timeZone?:string,short?:boolean):string;
+export function regionalNavigation(data:RegionalEnergyData|null|undefined,search:string,hash:string):{regionId:string;seriesId:string|null}|null;
+export function regionalCsv(series:RegionalSeries,points:RegionalPoint[]):string;

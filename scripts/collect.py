@@ -2,6 +2,7 @@
 import argparse, calendar, csv, hashlib, io, json, os, pathlib, re, sqlite3, subprocess, time, urllib.request
 from datetime import datetime, timezone
 from urllib.parse import quote
+from credit_conditions import EBP_URL, download_ebp, parse_ebp
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 DATA=ROOT/'data'; DATA.mkdir(exist_ok=True)
 REGISTRY=json.loads((ROOT/'lib/indicators.json').read_text(encoding='utf-8'))
@@ -175,6 +176,10 @@ def collect(import_dir=None, selected=None):
                 raw=wb_raw;points=wb[key];url=wb_url
             elif key==EIA_US_COMMERCIAL:
                 raw=download(EIA_RETAIL_URL);points=parse_eia_us_commercial(raw);url=EIA_RETAIL_URL
+            elif key=='EBP':
+                url=EBP_URL
+                raw=(pathlib.Path(import_dir)/'EBP.csv').read_bytes() if import_dir else download_ebp()
+                points=parse_ebp(raw)
             elif key in MARKET_IDS:
                 symbol,url=MARKET_QUOTES[key]
                 raw=download_market('https://query2.finance.yahoo.com/v8/finance/chart/'+quote(symbol,safe='')+'?range=5y&interval=1d')

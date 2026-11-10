@@ -110,6 +110,8 @@ jobs:
           python tests/policy_decisions_test.py
           python tests/macro_schedule_test.py
           python tests/financing_sources_test.py
+          python tests/credit_conditions_test.py
+          python tests/regional_energy_test.py
           python tests/audit_runner_test.py
           python tests/observation_changes_test.py
           node --test tests/pages-package.test.mjs
@@ -119,6 +121,7 @@ jobs:
         run: |
           node --test tests/reasoning-status-ui.test.mjs
           node --test tests/observer-alerts.test.mjs tests/research-calendar.test.mjs tests/financing-indicators.test.mjs
+          node --test tests/credit-indicators.test.mjs tests/regional-energy.test.mjs
           node --test tests/chart-card-navigation.test.mjs tests/industry-chart-selection.test.mjs tests/observer-workspace.test.mjs tests/observer-catalog.test.mjs tests/observer-changes.test.mjs tests/observation-events.test.mjs tests/plan-delivery.test.mjs tests/research-notebook.test.mjs
           npx tsc --noEmit
       - name: Persist validated cache and revisions

@@ -9,6 +9,17 @@ const financial={entity:'TSM',sourceStatus:'ready',checkedAt:now,lastSuccessfulA
 const review={id:'my-review',title:'检查需求是否变强',reviewStatus:'pending',reviewOn:'2026-11-12',updatedAt:now,snapshot:{title:'云厂商资本开支'}};
 const options={now,policyEvents:[policy],policyCheckedAt:now,macroCalendar,industry:{financialUpdates:[financial]},notes:[review]};
 
+test('quarterly lending and daily gas observations retain date-only release schedules',()=>{
+ const entries=[191,342].map(releaseId=>({releaseId,status:'ok',fetchedAt:now,sourceUrl:'https://fred.stlouisfed.org/releases/calendar?rid='+releaseId,events:[{scheduledDate:'2026-11-12'}]}));
+ const result=buildResearchCalendar({now,macroCalendar:{fred:entries},catalog:[{id:'macro:DRTSCILM',href:'/?page=financing#sloos'},{id:'macro:DHHNGSP',href:'/?page=materials#natural-gas-daily'}]});
+ assert.equal(result.events.length,2);assert.ok(result.events.every(event=>event.day==='2026-11-12'&&event.at===null));
+ assert.equal(result.events.find(event=>event.title.includes('SLOOS')).relatedHref,'/?page=financing#sloos');
+ assert.equal(result.events.find(event=>event.title.includes('Henry')).routine,true);
+ const fallback=buildResearchCalendar({now,macro:{series:{DHHNGSP:{checkedAt:now,publication:{calendarStatus:'ok',calendarSource:entries[1].sourceUrl,nextReleaseDate:'2026-11-12'}}}}});
+ assert.equal(fallback.events.length,1);assert.equal(fallback.events[0].at,null);
+ assert.match(researchCalendarIcs(fallback.events,{now}),/DTSTART;VALUE=DATE:20261112/);
+});
+
 test('merges four sources, retains official links, and sorts by calendar time',()=>{
  const result=buildResearchCalendar(options);
  assert.deepEqual([...new Set(result.events.map(row=>row.category))].sort(),['earnings','macro','policy','review']);

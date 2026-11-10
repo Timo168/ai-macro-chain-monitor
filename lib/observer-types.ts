@@ -2,8 +2,9 @@ import type {Dataset} from './data';
 import type {IndustryDataset,IndustryResearch} from './industry/types';
 import type {PolicyRatesDataset} from './policy-rates';
 import type {PolicyDecisionsDataset} from './policy-decisions';
+import type {RegionalEnergyData} from './regional-energy.mjs';
 
-export type ObserverInputs={macro:Dataset;industry:IndustryDataset|null;research:IndustryResearch|null;policyRates:PolicyRatesDataset|null;policyDecisions:PolicyDecisionsDataset|null};
+export type ObserverInputs={macro:Dataset;industry:IndustryDataset|null;research:IndustryResearch|null;policyRates:PolicyRatesDataset|null;policyDecisions:PolicyDecisionsDataset|null;regionalEnergy?:RegionalEnergyData|null};
 export type ObservationItem={
  id:string;title:string;subtitle:string;kind:'macro'|'industry'|'valuation'|'policy';
  href:string;panelKey?:string;anchorId?:string;searchTerms:string;

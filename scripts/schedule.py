@@ -8,6 +8,7 @@ from calendar_provider import CalendarParser
 from collect import ROOT, DATA, REGISTRY, WB_IDS, MARKET_IDS, collect, download
 from policy_decisions import collect_policy_decisions
 from policy_rates import collect_policy_rates
+from credit_conditions import SLOOS_IDS, source_check_plan
 
 def configure_headless_log():
     """Give pythonw scheduled runs an audit trail without opening a console."""
@@ -18,11 +19,11 @@ def configure_headless_log():
     sys.stdout=stream;sys.stderr=stream
 configure_headless_log()
 CT=ZoneInfo('America/Chicago')
-RIDS={10:['CPIAUCNS','CPILFENS','CPIAUCSL','CPILFESL'],50:['UNRATE','PAYEMS'],54:['PCEPI','PCEPILFE'],180:['ICSA'],221:['NFCI'],18:['DGS10','DGS2','DFII10'],17:['DTWEXBGS'],212:['DCOILBRENTEU']}
+RIDS={10:['CPIAUCNS','CPILFENS','CPIAUCSL','CPILFESL'],50:['UNRATE','PAYEMS'],54:['PCEPI','PCEPILFE'],180:['ICSA'],221:['NFCI'],18:['DGS10','DGS2','DFII10'],17:['DTWEXBGS'],212:['DCOILBRENTEU'],191:list(SLOOS_IDS),342:['DHHNGSP']}
 def atomic(path,data):
     tmp=path.with_suffix('.tmp.json');tmp.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':')),encoding='utf-8');os.replace(tmp,path)
 def fetch_calendar(rid,now):
-    lookback=62 if rid in (10,50,54) else 21 if rid in (17,180,221) else 7
+    lookback=130 if rid==191 else 62 if rid in (10,50,54) else 21 if rid in (17,180,221) else 7
     url='https://fred.stlouisfed.org/releases/calendar?'+urlencode({'rid':rid,'vs':(now-timedelta(days=lookback)).date().isoformat(),'ve':(now+timedelta(days=100)).date().isoformat()})
     original=url;events=[]
     for page in range(4):
@@ -30,16 +31,18 @@ def fetch_calendar(rid,now):
         if not parser.rows or 'All times are US Central Time' not in content:raise ValueError('Calendar markup or timezone changed')
         date=None
         for row in parser.rows:
-            cells=row['cells'];date_cell=next((c for c in cells if c['attrs'].get('colspan')=='2'),None)
+            cells=row['cells'];date_cell=next((c for c in cells if c['attrs'].get('colspan')=='2' and c.get('firstSpan')),None)
             if date_cell:
                 date=datetime.strptime((date_cell['firstSpan'] or date_cell['text']).strip(),'%A %B %d, %Y').date();continue
+            if date is not None and len(cells)==1 and any(a['href'].startswith('/release?rid='+str(rid)) for a in cells[0]['links']):
+                events.append({'scheduledDate':date.isoformat(),'calendarUrl':original});continue
             if date is None or len(cells)<2:continue
             if not any(a['href'].startswith('/release?rid='+str(rid)) for a in cells[1]['links']):continue
             raw=cells[0]['text'].strip()
             if not raw:continue
             clock=datetime.strptime(raw.upper(),'%I:%M %p').time();stamp=datetime.combine(date,clock,tzinfo=CT).astimezone(timezone.utc).isoformat()
             events.append({'scheduledAt':stamp,'calendarUrl':original})
-        if len([e for e in events if datetime.fromisoformat(e['scheduledAt'])>now])>=3 or not parser.next_url:break
+        if len([e for e in events if (e.get('scheduledAt') or e.get('scheduledDate',''))>now.date().isoformat()])>=3 or not parser.next_url:break
         url=urljoin(url,parser.next_url)
     if not events:raise ValueError('No usable release dates')
     return {'releaseId':rid,'status':'ok','events':events,'fetchedAt':now.isoformat(),'sourceUrl':original}
@@ -90,6 +93,10 @@ def previous_us_business_day(day):
 
 def expected_date(key,event):
     d=event.astimezone(CT).date()
+    if key in SLOOS_IDS:
+        # FRED labels the survey by its calendar quarter, not the previous
+        # quarter whose lending changes respondents discuss.
+        return d.replace(month=((d.month-1)//3)*3+1,day=1).isoformat()
     if key in ('UNRATE','PAYEMS','CPIAUCNS','CPILFENS','CPIAUCSL','CPILFESL','PCEPI','PCEPILFE'):
         return (d.replace(day=1)-timedelta(days=1)).replace(day=1).isoformat()
     if key in ('ICSA','NFCI'):
@@ -116,6 +123,25 @@ def spread_check_plan(series,now):
     return now-checked>=interval,{'state':'source_check','nextCheckAt':max(now,checked+interval).isoformat(),
                                 'calendarSource':'https://fred.stlouisfed.org/releases/calendar?rid=304',
                                 'calendarStatus':'date_only','checkIntervalMinutes':int(interval.total_seconds()/60)}
+
+def date_only_release_plan(key,series,entry,now):
+    """Keep the official calendar date; never label a guessed clock as publication."""
+    today=now.astimezone(CT).date().isoformat()
+    dates=sorted(e['scheduledDate'] for e in entry.get('events',[]) if e.get('scheduledDate'))
+    past=[d for d in dates if d<=today];future=[d for d in dates if d>today]
+    checked=datetime.fromisoformat(series.get('checkedAt') or '2000-01-01T00:00:00+00:00')
+    failed=series.get('status') in ('cached','fetch_failed')
+    due=past[-1] if past else None
+    expected=due[:5]+str(((int(due[5:7])-1)//3)*3+1).zfill(2)+'-01' if due and key in SLOOS_IDS else None
+    last=next((p['date'] for p in reversed(series.get('observations',[])) if p['value'] is not None),'')
+    awaiting=bool(expected and last<expected)
+    interval=timedelta(minutes=30 if failed else 360 if key=='DHHNGSP' or awaiting or due==today else 1440)
+    needs=now-checked>=interval or bool(due and checked.astimezone(CT).date().isoformat()<due)
+    return needs,{'state':'awaiting_source' if awaiting else 'source_check','nextCheckAt':max(now,checked+interval).isoformat(),
+                  'nextReleaseDate':future[0] if future else None,'lastScheduledReleaseDate':due,
+                  'expectedObservationDate':expected,'expectedDateBasis':'survey_calendar_quarter' if expected else 'source_dependent',
+                  'calendarSource':entry.get('sourceUrl'),'calendarStatus':entry.get('status') or 'not_configured','releasePrecision':'date',
+                  'checkIntervalMinutes':int(interval.total_seconds()/60)}
 
 def cadence_metadata(now,previous,state,mode):
     target=max(1,int(os.environ.get('MACRO_CHECK_MINUTES','15')))
@@ -192,8 +218,18 @@ def run(force=False):
         for item in REGISTRY:
             key=item['id'];s=cached['series'].get(key,{});last=s.get('observations',[]);last_date=next((p['date'] for p in reversed(last) if p['value'] is not None),'')
             checked=datetime.fromisoformat(s.get('checkedAt') or '2000-01-01T00:00:00+00:00')
-            if key=='T10Y2Y':
+            if key in ('T10Y2Y','T10YIE'):
                 needs,info=spread_check_plan(s,now)
+                if force or not last or needs:selected.append(key)
+                pending[key]=info;continue
+            if key in (*SLOOS_IDS,'DHHNGSP'):
+                rid=342 if key=='DHHNGSP' else 191
+                entry=next((e for e in cal['fred'] if e['releaseId']==rid),{})
+                needs,info=date_only_release_plan(key,s,entry,now)
+                if force or not last or needs:selected.append(key)
+                pending[key]=info;continue
+            if key=='EBP':
+                needs,info=source_check_plan(key,s,now)
                 if force or not last or needs:selected.append(key)
                 pending[key]=info;continue
             if (force or not last) and key in ('DGS2','DTWEXBGS'):
@@ -230,5 +266,7 @@ def run(force=False):
     finally:lock.unlink(missing_ok=True)
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--force',action='store_true');p.add_argument('--skip-research',action='store_true');args=p.parse_args();run(args.force)
+    from regional_energy import collect as collect_regional_energy
+    collect_regional_energy(force=args.force)
     from industry_schedule import run as run_industry
     run_industry(args.force,not args.skip_research)

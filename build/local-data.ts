@@ -13,6 +13,7 @@ const snapshots:SnapshotRoute[]=[
  {route:'/api/policy-rates',folder:'data',current:'policy-rates.json',fallback:'policy-rates.seed.json'},
  {route:'/api/policy-decisions',folder:'data',current:'policy-decisions.json',fallback:'policy-decisions.seed.json'},
  {route:'/api/research-calendar',folder:'data',current:'calendar.json',fallback:'calendar.seed.json'},
+ {route:'/api/regional-energy',folder:'data',current:'regional-energy.json',fallback:'regional-energy.seed.json'},
 ];
 
 const macroSnapshot=snapshots.find(snapshot=>snapshot.route==='/api/data')!;
@@ -21,6 +22,7 @@ const researchSnapshot=snapshots.find(snapshot=>snapshot.route==='/api/industry/
 const policyRatesSnapshot=snapshots.find(snapshot=>snapshot.route==='/api/policy-rates')!;
 const policyDecisionsSnapshot=snapshots.find(snapshot=>snapshot.route==='/api/policy-decisions')!;
 const researchCalendarSnapshot=snapshots.find(snapshot=>snapshot.route==='/api/research-calendar')!;
+const regionalEnergySnapshot=snapshots.find(snapshot=>snapshot.route==='/api/regional-energy')!;
 const version=(value:unknown)=>createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0,16);
 async function sourceAudit(){
  return readFile(resolve(process.cwd(),'data/industry/audit-status.json'),'utf8').then(raw=>JSON.parse(raw)).catch(()=>({status:'not_run',lastSuccessAt:null}));
@@ -42,11 +44,11 @@ export function localData():Plugin{
   const snapshot=snapshots.find(item=>item.route===pathname);
   try{
    if(pathname==='/api/manifest'){
-    const [macroRaw,industryRaw,researchRaw,policyRatesRaw,policyDecisionsRaw,calendarRaw]=await Promise.all([macroSnapshot,industrySnapshot,researchSnapshot,policyRatesSnapshot,policyDecisionsSnapshot,researchCalendarSnapshot].map(currentSnapshot));
-    const [macro,industry,research,policyRates,policyDecisions,researchCalendar]=[macroRaw,industryRaw,researchRaw,policyRatesRaw,policyDecisionsRaw,calendarRaw].map(raw=>JSON.parse(raw));
+    const [macroRaw,industryRaw,researchRaw,policyRatesRaw,policyDecisionsRaw,calendarRaw,regionalRaw]=await Promise.all([macroSnapshot,industrySnapshot,researchSnapshot,policyRatesSnapshot,policyDecisionsSnapshot,researchCalendarSnapshot,regionalEnergySnapshot].map(currentSnapshot));
+    const [macro,industry,research,policyRates,policyDecisions,researchCalendar,regionalEnergy]=[macroRaw,industryRaw,researchRaw,policyRatesRaw,policyDecisionsRaw,calendarRaw,regionalRaw].map(raw=>JSON.parse(raw));
     const audit=await sourceAudit();
     res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');
-    return res.end(JSON.stringify({generatedAt:new Date().toISOString(),macro:{version:version(macro),generatedAt:macro.generatedAt},sourceAudit:{version:version(audit),generatedAt:audit.completedAt??null},industry:{version:version(industry),generatedAt:industry.generatedAt},industryResearch:{version:version(research),generatedAt:research.generatedAt},policyRates:{version:version(policyRates),generatedAt:policyRates.generatedAt},policyDecisions:{version:version(policyDecisions),generatedAt:policyDecisions.generatedAt},researchCalendar:{version:version(researchCalendar),generatedAt:researchCalendar.checkedAt}}));
+    return res.end(JSON.stringify({generatedAt:new Date().toISOString(),macro:{version:version(macro),generatedAt:macro.generatedAt},sourceAudit:{version:version(audit),generatedAt:audit.completedAt??null},industry:{version:version(industry),generatedAt:industry.generatedAt},industryResearch:{version:version(research),generatedAt:research.generatedAt},policyRates:{version:version(policyRates),generatedAt:policyRates.generatedAt},policyDecisions:{version:version(policyDecisions),generatedAt:policyDecisions.generatedAt},researchCalendar:{version:version(researchCalendar),generatedAt:researchCalendar.checkedAt},regionalEnergy:{version:version(regionalEnergy),generatedAt:regionalEnergy.generatedAt}}));
    }
    if(pathname==='/api/industry/history'){
     const industry=JSON.parse(await currentSnapshot(industrySnapshot));

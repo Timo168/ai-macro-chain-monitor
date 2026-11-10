@@ -38,3 +38,19 @@ test('an official decision is visible separately from monthly history and preser
  data.policyDecisions={generatedAt:'2026-10-31',checkedAt:'2026-10-31',status:'cached',decisions:[{bankId:'fed',bank:'美联储',country:'美国',announcementDate:'2026-09-16',effectiveDate:'2026-09-17',lower:3.75,upper:4,midpoint:3.875,statementUrl:'https://example.org/decision'}]};
  const item=buildObserverCatalog(data).find(row=>row.id==='policy:fed');assert.equal(item.value,'3.75–4.00');assert.equal(item.period,'2026-09-16');assert.equal(item.sourceUrl,'https://example.org/decision');assert.equal(item.status,'获取失败 · 保留缓存');assert.deepEqual(item.points,[{date:'2026-08-31',value:3.625}]);
 });
+
+test('credit and daily gas enter search and alerts with their own frequencies and official source links',()=>{
+ const data=inputs();data.macro={generatedAt:'2026-11-10',series:{DRTSCILM:series('DRTSCILM',[{date:'2026-10-01',value:1.7}]),EBP:{...series('EBP',[{date:'2026-10-01',value:-.26}]),sourceUrl:null},DHHNGSP:series('DHHNGSP',[{date:'2026-11-03',value:2.63}])}};
+ const catalog=buildObserverCatalog(data),get=id=>catalog.find(item=>item.id===`macro:${id}`);
+ assert.equal(get('DRTSCILM').frequency,'quarterly');assert.equal(get('DRTSCILM').alertEligible,true);
+ assert.equal(get('EBP').unit,'个百分点');assert.match(get('EBP').sourceUrl,/^https:\/\/www\.federalreserve\.gov\//);
+ assert.equal(get('DHHNGSP').frequency,'daily');assert.match(get('DHHNGSP').href,/#natural-gas-daily$/);
+ assert.notEqual(get('DHHNGSP').id,get('NATGAS_US').id);
+});
+
+test('regional search links preserve region and hourly units without creating unsupported hourly alerts',()=>{
+ const data=inputs();const point={date:'2026-11-10T10:00:00Z',value:83183};
+ data.regionalEnergy={regions:[{id:'pjm',name:'PJM',series:[{id:'EIA_PJM_DEMAND',name:'PJM实际负荷',kind:'load',unit:'MW',frequency:'hourly',timeZone:'America/New_York',sourceName:'EIA',sourceUrl:'https://www.eia.gov/electricity/gridmonitor/',status:'available',exportAllowed:true,observations:[point]}]}]};
+ const [item]=buildObserverCatalog(data);assert.match(item.href,/region=pjm#EIA_PJM_DEMAND$/);assert.equal(item.unit,'MW');assert.equal(item.alertEligible,false);assert.equal(item.period,point.date);assert.equal(item.points[0].value,83183);
+ data.regionalEnergy.regions[0].series[0].status='cached';assert.equal(buildObserverCatalog(data)[0].warning,true);
+});

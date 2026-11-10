@@ -4,6 +4,8 @@ import {ArrowDown,ArrowUp,ArrowUpRight,Check,ExternalLink,Pin,Plus,Search,X} fro
 import type {ObservationItem} from '@/lib/observer-types';
 import {beijing} from '@/lib/data';
 import {appBase} from '@/lib/runtime';
+import {useObserver} from './observer-context';
+import {applyObserverReadFailures} from '@/lib/observer-read-state.mjs';
 import {defaultObserverPins,observerPinsEvent,observerPinsKey,parseObserverPins,searchObserverItems,updateObserverPins} from '@/lib/observer-preferences.mjs';
 import './observer-workspace.css';
 
@@ -36,7 +38,8 @@ function MiniTrend({item}:{item:ObservationItem}){
 function ResultList({items,onOpen}:{items:ObservationItem[];onOpen:Props['onOpen']}){
  return <ul className="observer-results">{items.map(item=><li key={item.id}><button type="button" className="observer-result-open" onClick={()=>onOpen(item)}><span className="observer-result-name"><small>{kindNames[item.kind]}</small><strong>{item.title}</strong><span>{item.subtitle}</span></span><span className="observer-result-data"><b>{item.value} <small>{item.unit}</small></b><span>{item.period}</span><small className={item.warning?'observer-warning':''}>{item.status}</small></span><ArrowUpRight size={17}/></button><ObserverPin itemId={item.id} title={item.title}/></li>)}</ul>;
 }
-export function ObserverWorkspace({items,loading,onOpen}:Props){
+export function ObserverWorkspace({items:rawItems,loading,onOpen}:Props){
+ const {errors}=useObserver();const items=useMemo(()=>applyObserverReadFailures(rawItems,errors),[rawItems,errors]);
  const {ids,update,saved}=useObserverPins();const [adding,setAdding]=useState(false),[query,setQuery]=useState(''),[visible,setVisible]=useState(12),[feedback,setFeedback]=useState('');
  const byId=useMemo(()=>new Map(items.map(item=>[item.id,item])),[items]);
  const choices=useMemo(()=>searchObserverItems(items,query).filter((item:ObservationItem)=>!ids.includes(item.id)) as ObservationItem[],[items,query,ids]);
@@ -47,7 +50,8 @@ export function ObserverWorkspace({items,loading,onOpen}:Props){
   <div className="observer-card-grid">{ids.map((id,index)=>{const item=byId.get(id);return <article className="observer-card" key={id}><div className="observer-card-header"><div><span className="observer-kicker">{item?kindNames[item.kind]:'已固定的指标'}</span><h3>{item?.title??id}</h3></div><button type="button" className="observer-icon-button" onClick={()=>{update(id,'toggle');setFeedback(`已从工作台移除${item?.title??id}。`)}} aria-label={`从工作台移除${item?.title??id}`} title="取消固定"><X size={16}/></button></div>{item?<><p className="observer-card-subtitle">{item.subtitle}</p><div className="observer-card-value"><div><strong>{item.value}</strong><small>{item.unit}</small></div><MiniTrend item={item}/></div><div className="observer-card-status"><span className={item.warning?'observer-warning':''}>{item.status}</span><span>观测 {item.period}</span></div><div className="observer-card-footer"><small>最近检查 {item.checkedAt?beijing(item.checkedAt):'尚无记录'}</small><div>{item.sourceUrl&&<a href={item.sourceUrl} target="_blank" rel="noreferrer">来源 <ExternalLink size={12}/></a>}<button type="button" className="observer-open" onClick={()=>onOpen(item)}>查看图表 <ArrowUpRight size={14}/></button></div></div></>:<div className="observer-unavailable" role="status"><p>{loading?'正在加载这张卡片…':'暂未加载此指标的数据，已保留收藏。'}</p><small>{loading?'等待完成后显示真实值。':'数据恢复后会在原位置显示；不会将缺值填为零。'}</small></div>}<div className="observer-order"><span>第 {index+1} 项</span><button type="button" disabled={index===0} onClick={()=>move(id,'up')} aria-label={`上移${item?.title??id}`}><ArrowUp size={14}/>上移</button><button type="button" disabled={index===ids.length-1} onClick={()=>move(id,'down')} aria-label={`下移${item?.title??id}`}><ArrowDown size={14}/>下移</button></div></article>})}</div>
  </section>;
 }
-export function ObserverSearch({items,loading,onOpen}:Props){
+export function ObserverSearch({items:rawItems,loading,onOpen}:Props){
+ const {errors}=useObserver();const items=useMemo(()=>applyObserverReadFailures(rawItems,errors),[rawItems,errors]);
  const dialog=useRef<HTMLDialogElement>(null),input=useRef<HTMLInputElement>(null),titleId=useId();const [query,setQuery]=useState(''),[kind,setKind]=useState('all'),[visible,setVisible]=useState(24);
  const matches=useMemo(()=>searchObserverItems(items,query,kind) as ObservationItem[],[items,query,kind]);
  function show(){dialog.current?.showModal();requestAnimationFrame(()=>input.current?.focus())}

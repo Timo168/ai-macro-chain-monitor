@@ -1,0 +1,181 @@
+{
+  "verifiedAt": "2026-11-10T11:24:09Z",
+  "price": {
+    "rows": [
+      [
+        "PJM WH Real Time Peak",
+        "2024-06-03",
+        "2024-06-04",
+        "2024-06-04",
+        46.5,
+        45,
+        45.77,
+        6.78,
+        12000,
+        15,
+        15
+      ],
+      [
+        "PJM WH Real Time Peak",
+        "2025-03-19",
+        "03/20/2025",
+        "03/20/2025",
+        53,
+        47,
+        50.65,
+        3.89,
+        "      11,200",
+        14,
+        20
+      ],
+      [
+        "PJM WH Real Time Peak",
+        "2026-10-27",
+        "2026-10-28",
+        "2026-10-28",
+        65,
+        63,
+        63.91,
+        -0.98,
+        37600,
+        46,
+        21
+      ]
+    ],
+    "sources": [
+      {
+        "year": 2024,
+        "sha256": "24c7106b9711f339e898141ce0f75f59fccd023ded50c7217fe1c60a37f806d5",
+        "url": "https://www.eia.gov/electricity/wholesale/xls/archive/ice_electric-2024final.xlsx"
+      },
+      {
+        "year": 2025,
+        "sha256": "5890d90e227ddff14e2beadf231a7a5792c6328f697466f4e2383982a600780b",
+        "url": "https://www.eia.gov/electricity/wholesale/xls/archive/ice_electric-2025final.xlsx"
+      },
+      {
+        "year": 2026,
+        "sha256": "50220f4eebf3d1ecf79d5d25eb670cc62bdb10343c0f9dd1a06d4d103e0be253",
+        "url": "https://www.eia.gov/electricity/wholesale/xls/ice_electric-2026.xlsx"
+      }
+    ]
+  },
+  "load": {
+    "ercot": {
+      "payload": [
+        {
+          "data": [
+            {
+              "RESPONDENT_ID": "ERCO",
+              "RESPONDENT_NAME": "Electric Reliability Council of Texas, Inc.",
+              "TYPE_ID": "D",
+              "TYPE_NAME": "Demand",
+              "TIME_ZONE": "UTC",
+              "FREQUENCY": "hourly",
+              "DISPLAY_ORDER": 0,
+              "VALUES": {
+                "DATES": [
+                  "08/12/2026 11:00:00",
+                  "09/26/2026 11:00:00",
+                  "11/10/2026 10:00:00"
+                ],
+                "DATA": [
+                  61033,
+                  51354,
+                  42360
+                ],
+                "DATA_REPORTED": [
+                  61033,
+                  51354,
+                  42360
+                ],
+                "DATA_IMPUTED": [
+                  null,
+                  null,
+                  null
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "expected": [
+        {
+          "date": "2026-08-12T11:00:00Z",
+          "value": 61033.0,
+          "localDateTime": "2026-08-12T06:00:00-05:00"
+        },
+        {
+          "date": "2026-09-26T11:00:00Z",
+          "value": 51354.0,
+          "localDateTime": "2026-09-26T06:00:00-05:00"
+        },
+        {
+          "date": "2026-11-10T10:00:00Z",
+          "value": 42360.0,
+          "localDateTime": "2026-11-10T04:00:00-06:00"
+        }
+      ],
+      "sourceUrl": "https://www.eia.gov/electricity/930-api/region_data/series_data?respondent%5B0%5D=ERCO&type%5B0%5D=D&start=08122026+11%3A00%3A00&end=11102026+11%3A00%3A00&frequency=hourly&timezone=UTC",
+      "sha256": "0c6d787b6058cb862d1f5f9b4cbff07e0b433aa88976ad047af4b69cf08cac6e"
+    },
+    "pjm": {
+      "payload": [
+        {
+          "data": [
+            {
+              "RESPONDENT_ID": "PJM",
+              "RESPONDENT_NAME": "PJM Interconnection, LLC",
+              "TYPE_ID": "D",
+              "TYPE_NAME": "Demand",
+              "TIME_ZONE": "UTC",
+              "FREQUENCY": "hourly",
+              "DISPLAY_ORDER": 0,
+              "VALUES": {
+                "DATES": [
+                  "08/12/2026 11:00:00",
+                  "09/26/2026 11:00:00",
+                  "11/10/2026 10:00:00"
+                ],
+                "DATA": [
+                  99106,
+                  74545,
+                  83183
+                ],
+                "DATA_REPORTED": [
+                  99106,
+                  74545,
+                  83183
+                ],
+                "DATA_IMPUTED": [
+                  null,
+                  null,
+                  null
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "expected": [
+        {
+          "date": "2026-08-12T11:00:00Z",
+          "value": 99106.0,
+          "localDateTime": "2026-08-12T07:00:00-04:00"
+        },
+        {
+          "date": "2026-09-26T11:00:00Z",
+          "value": 74545.0,
+          "localDateTime": "2026-09-26T07:00:00-04:00"
+        },
+        {
+          "date": "2026-11-10T10:00:00Z",
+          "value": 83183.0,
+          "localDateTime": "2026-11-10T05:00:00-05:00"
+        }
+      ],
+      "sourceUrl": "https://www.eia.gov/electricity/930-api/region_data/series_data?respondent%5B0%5D=PJM&type%5B0%5D=D&start=08122026+11%3A00%3A00&end=11102026+11%3A00%3A00&frequency=hourly&timezone=UTC",
+      "sha256": "f84d496a8b91e3b401530353caf21398818bd15c3cfc10cfdbdd78f032761b96"
+    }
+  }
+}

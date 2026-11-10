@@ -1,0 +1,101 @@
+{
+  "checkedAt": "2026-11-10T11:21:28.982705+00:00",
+  "series": {
+    "DRTSCILM": {
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DRTSCILM",
+      "sourceSha256": "16134e6cc6923b8fac3d02ecef12f8290fa7e6eed89e2a89e111656682b0d489",
+      "frequency": "quarterly",
+      "unit": "percent",
+      "firstObservation": "1990-04-01",
+      "lastObservation": "2026-10-01",
+      "observations": 147,
+      "samples": [
+        {
+          "date": "1990-04-01",
+          "value": 54.4
+        },
+        {
+          "date": "2020-04-01",
+          "value": 41.5
+        },
+        {
+          "date": "2026-10-01",
+          "value": 1.7
+        }
+      ],
+      "csv": "observation_date,DRTSCILM\n1990-04-01,54.4\n2020-04-01,41.5\n2026-10-01,1.7\n"
+    },
+    "DRTSCIS": {
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DRTSCIS",
+      "sourceSha256": "e9c143cc77b32083e3decedc389eeb2b1314752a5b07da277f14ac1eeeb09baa",
+      "frequency": "quarterly",
+      "unit": "percent",
+      "firstObservation": "1990-04-01",
+      "lastObservation": "2026-10-01",
+      "observations": 147,
+      "samples": [
+        {
+          "date": "1990-04-01",
+          "value": 52.7
+        },
+        {
+          "date": "2020-04-01",
+          "value": 39.7
+        },
+        {
+          "date": "2026-10-01",
+          "value": 5.1
+        }
+      ],
+      "csv": "observation_date,DRTSCIS\n1990-04-01,52.7\n2020-04-01,39.7\n2026-10-01,5.1\n"
+    },
+    "T10YIE": {
+      "sourceUrl": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10YIE",
+      "sourceSha256": "b5f410f4d2fd62c4b2abe3259aea9d2e5f2d127010cf6a9b2be6e9231250786e",
+      "frequency": "daily",
+      "unit": "percent",
+      "firstObservation": "2003-01-02",
+      "lastObservation": "2026-11-09",
+      "observations": 6223,
+      "samples": [
+        {
+          "date": "2003-01-02",
+          "value": 1.64
+        },
+        {
+          "date": "2020-04-01",
+          "value": 0.91
+        },
+        {
+          "date": "2026-11-09",
+          "value": 2.22
+        }
+      ],
+      "csv": "observation_date,T10YIE\n2003-01-02,1.64\n2020-04-01,0.91\n2026-11-09,2.22\n"
+    },
+    "EBP": {
+      "sourceUrl": "https://www.federalreserve.gov/econres/notes/feds-notes/ebp_csv.csv",
+      "sourceSha256": "caa16e0619cb5399b9c8f44433868351f01973f9594c50a4f1f87dd0856542c5",
+      "frequency": "monthly",
+      "unit": "percentage points",
+      "firstObservation": "1973-01-01",
+      "lastObservation": "2026-10-01",
+      "observations": 646,
+      "samples": [
+        {
+          "date": "1973-01-01",
+          "value": -0.04765868268656903
+        },
+        {
+          "date": "2020-04-01",
+          "value": 0.6550285809602876
+        },
+        {
+          "date": "2026-10-01",
+          "value": -0.26533114775416333
+        }
+      ],
+      "csv": "observation_date,EBP\n1973-01-01,-0.04765868268656903\n2020-04-01,0.6550285809602876\n2026-10-01,-0.26533114775416333\n"
+    }
+  }
+}

@@ -3,11 +3,11 @@ import { changeRate, monthlyDiff, movingAverage } from './calculations.mjs';
 import { sourceForSeries } from './data-health.mjs';
 import type { Group } from './groups';
 export type Point={date:string;value:number|null};
-export type Series={id:string;observations:Point[];fetchedAt:string|null;checkedAt?:string;sourcePublishedAt:string|null;sourceUrl:string;revision?:string;revisionCount?:number;status:string;error?:string|null;lastChange?:{at:string;kind:string;added?:number;revised?:number;removed?:number;firstChangedObservation?:string;lastChangedObservation?:string};statusChangedAt?:string;statusChange?:{at:string;from:string;to:string};publication?:{state:string;nextReleaseAt?:string;nextCheckAt?:string;calendarStatus?:string;calendarSource?:string}};
+export type Series={id:string;observations:Point[];fetchedAt:string|null;checkedAt?:string;sourcePublishedAt:string|null;sourceUrl:string;revision?:string;revisionCount?:number;status:string;error?:string|null;lastChange?:{at:string;kind:string;added?:number;revised?:number;removed?:number;firstChangedObservation?:string;lastChangedObservation?:string};statusChangedAt?:string;statusChange?:{at:string;from:string;to:string};publication?:{state:string;nextReleaseAt?:string;nextReleaseDate?:string;nextCheckAt?:string;calendarStatus?:string;calendarSource?:string}};
 export type Dataset={generatedAt:string;series:Record<string,Series>;storage?:string;scheduler?:{mode:string;lastRunAt?:string;lastCompletedAt?:string;targetIntervalMinutes?:number;actualIntervalMinutes?:number;failed?:string[];nextCheckAt?:string;calendarStatus?:string};sourceAudit?:{status:string;startedAt?:string;completedAt?:string;lastSuccessAt?:string;runUrl?:string;checks?:{id:string;status:string;error?:string}[];error?:string}};
 export const metadata=Object.fromEntries(registry.map(s=>[s.id,s]));
 export const colors=['#178a75','#d8a958','#6282bb','#b27b9e'];
-export const frequencyLabel:Record<string,string>={daily:'日度',weekly:'周度',monthly:'月度'};
+export const frequencyLabel:Record<string,string>={hourly:'小时',daily:'日度',weekly:'周度',monthly:'月度',quarterly:'季度',annual:'年度'};
 export function sourceLink(id:string){return sourceForSeries(id,metadata)??undefined}
 export function format(value:number|null|undefined,digits=2){return value==null||!Number.isFinite(value)?'—':value.toLocaleString('zh-CN',{maximumFractionDigits:digits,minimumFractionDigits:digits})}
 export function deltaFormat(value:number|null|undefined,digits=2){if(value==null)return '—';const sign=value<0?'-':'';if(value!==0&&Math.abs(value)<Math.pow(10,-digits))return sign+'<'+Math.pow(10,-digits).toFixed(digits);return sign+format(Math.abs(value),digits)}

@@ -5,6 +5,7 @@ import {useObserver} from './observer-context';
 import {beijing,format} from '@/lib/data';
 import type {ObservationItem} from '@/lib/observer-types';
 import {appBase} from '@/lib/runtime';
+import {applyObserverReadFailures} from '@/lib/observer-read-state.mjs';
 import {ALERTS_STORAGE_KEY,alertRuleDescription,evaluateObserverAlerts,normalizeAlertRule,parseAlertStorage,serializeAlertStorage,type AlertRule,type AlertHistory} from '@/lib/observer-alerts.mjs';
 import './observer-alert-center.css';
 
@@ -21,7 +22,7 @@ export function AlertCenterProvider({children,macroError=false}:{children:ReactN
  const [saved,setSaved]=useState<Saved>(()=>parseAlertStorage(null)),[error,setError]=useState(''),[ready,setReady]=useState(false);
  const [results,setResults]=useState<Result[]>([]);
  useEffect(()=>{const sync=()=>{try{setSaved(read());setError('');setReady(true)}catch(error){setError(errorText(error));setReady(false)}};const storage=(event:StorageEvent)=>{if(event.key===ALERTS_STORAGE_KEY||event.key===null)sync()};sync();addEventListener(CHANGE,sync);addEventListener('storage',storage);return()=>{removeEventListener(CHANGE,sync);removeEventListener('storage',storage)}},[]);
- const items=useMemo(()=>catalog.map(item=>{const blocked=item.kind==='macro'?macroError:item.kind==='industry'?errors.some(error=>error.startsWith('产业数据')):item.kind==='valuation'?errors.some(error=>error.startsWith('研究与估值')):false;return blocked?{...item,alertEligible:false,alertReason:'暂时无法读取新数据，等待恢复'}:item}),[catalog,errors,macroError]);
+ const items=useMemo(()=>applyObserverReadFailures(catalog,errors,macroError),[catalog,errors,macroError]);
  function update(change:(current:Saved)=>Saved){try{const current=read(),next=change(current);const encoded=serializeAlertStorage(next.rules,next.state,next.history);localStorage.setItem(ALERTS_STORAGE_KEY,encoded);setSaved(parseAlertStorage(encoded));setError('');dispatchEvent(new Event(CHANGE));return true}catch(error){setError(errorText(error));return false}}
  useEffect(()=>{
   if(!ready||!catalog.length)return;
@@ -47,7 +48,8 @@ export function AlertSummary({onNavigate}:{onNavigate:(href:string)=>void}){
 const kinds=[['above','数值高于'],['below','数值低于'],['change_up','较上期上升至少'],['change_down','较上期下降至少'],['consecutive_up','连续上升'],['consecutive_down','连续下降'],['new_observation','出现新一期数据']] as const;
 function thresholdUnit(kind:string,item?:ObservationItem){return kind.startsWith('consecutive')?'次变化':kind.startsWith('change')&&item?.unit==='%'?'个百分点':item?.unit??'';}
 export default function ObserverAlertCenter({onNavigate}:{onNavigate:(href:string)=>void}){
- const {saved,results,error,ready,update}=useAlerts();const {catalog,loading}=useObserver();
+ const {saved,results,error,ready,update}=useAlerts();const {catalog:rawCatalog,loading,errors}=useObserver();
+ const catalog=useMemo(()=>applyObserverReadFailures(rawCatalog,errors),[rawCatalog,errors]);
  const [query,setQuery]=useState(''),[itemId,setItemId]=useState('macro:DGS10'),[kind,setKind]=useState<AlertRule['kind']>('above'),[threshold,setThreshold]=useState('5'),[notice,setNotice]=useState(''),[filter,setFilter]=useState('unread');
  const available=useMemo(()=>catalog.filter(item=>item.kind!=='policy'),[catalog]);
  const choices=useMemo(()=>available.filter(item=>`${item.title} ${item.searchTerms}`.toLowerCase().includes(query.trim().toLowerCase())),[available,query]);
