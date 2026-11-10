@@ -1,6 +1,6 @@
 import type {ObserverInputs,ObservationItem} from './observer-types';
 import {groups} from './groups';
-import {format,makeChart,metadata,sourceLink,type Point} from './data';
+import {beijing,format,makeChart,metadata,sourceLink,type Point} from './data';
 import {seriesHealth} from './data-health.mjs';
 import {metricStats} from './industry/engine.mjs';
 import {appBase} from './runtime';
@@ -71,7 +71,7 @@ export function buildObserverCatalog(inputs:ObserverInputs):ObservationItem[]{
  for(const region of inputs.regionalEnergy?.regions??[]){
   for(const series of region.series){
    const points=series.observations,point=latest(points),health=regionalStatus(series),hourly=series.frequency==='hourly';
-   items.push({id:`regional:${series.id}`,title:series.name,subtitle:`${region.name} · ${hourly?'实际小时负荷':'交易日批发电价'} · ${series.sourceName}`,kind:'macro',href:href(`page=materials&region=${encodeURIComponent(region.id)}`,series.id),anchorId:series.id,panelKey:'macro:regional-energy',searchTerms:`${series.id} ${region.id} ${region.name} 区域 电力 电价 负荷 ERCOT PJM`,value:format(point?.value,hourly?0:2),unit:series.unit,period:point?.date??'尚无可用观测',status:health.label,warning:health.warning,frequency:series.frequency,alertEligible:!hourly&&health.status==='available'&&!!point,alertReason:hourly?'小时负荷请在区域电力图查看':health.label,checkedAt:series.checkedAt??series.lastSuccessAt??series.fetchedAt,sourceUrl:series.sourceUrl,sourceVersion:series.version,points});
+   items.push({id:`regional:${series.id}`,title:series.name,subtitle:`${region.name} · ${hourly?'实际小时负荷':'交易日批发电价'} · ${series.sourceName}`,kind:'macro',href:href(`page=materials&region=${encodeURIComponent(region.id)}`,series.id),anchorId:series.id,panelKey:'macro:regional-energy',searchTerms:`${series.id} ${region.id} ${region.name} 区域 电力 电价 负荷 ERCOT PJM`,value:format(point?.value,hourly?0:2),unit:series.unit,period:point?(hourly?beijing(point.date)+'（北京）':point.date):'尚无可用观测',status:health.label,warning:health.warning,frequency:series.frequency,alertEligible:!hourly&&health.status==='available'&&!!point,alertReason:hourly?'小时负荷请在区域电力图查看':health.label,checkedAt:series.checkedAt??series.lastSuccessAt??series.fetchedAt,sourceUrl:series.sourceUrl,sourceVersion:series.version,points});
   }
  }
  return items;

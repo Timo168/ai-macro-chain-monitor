@@ -51,6 +51,17 @@ test('credit and daily gas enter search and alerts with their own frequencies an
 test('regional search links preserve region and hourly units without creating unsupported hourly alerts',()=>{
  const data=inputs();const point={date:'2026-11-10T10:00:00Z',value:83183};
  data.regionalEnergy={regions:[{id:'pjm',name:'PJM',series:[{id:'EIA_PJM_DEMAND',name:'PJM实际负荷',kind:'load',unit:'MW',frequency:'hourly',timeZone:'America/New_York',sourceName:'EIA',sourceUrl:'https://www.eia.gov/electricity/gridmonitor/',status:'available',exportAllowed:true,observations:[point]}]}]};
- const [item]=buildObserverCatalog(data);assert.match(item.href,/region=pjm#EIA_PJM_DEMAND$/);assert.equal(item.unit,'MW');assert.equal(item.alertEligible,false);assert.equal(item.period,point.date);assert.equal(item.points[0].value,83183);
+ const [item]=buildObserverCatalog(data);assert.match(item.href,/region=pjm#EIA_PJM_DEMAND$/);assert.equal(item.unit,'MW');assert.equal(item.alertEligible,false);assert.equal(item.period,'2026/11/10 18:00（北京）');assert.equal(item.points[0].value,83183);assert.equal(item.points[0].date,point.date);
  data.regionalEnergy.regions[0].series[0].status='cached';assert.equal(buildObserverCatalog(data)[0].warning,true);
+});
+
+test('regional hourly display crosses Beijing midnight while UTC points and trade dates remain unchanged',()=>{
+ const data=inputs(),utc='2026-11-10T18:00:00.000Z',day='2026-11-10';
+ const base={name:'区域电力',timeZone:'America/New_York',sourceName:'EIA',sourceUrl:'https://www.eia.gov/electricity/gridmonitor/',status:'available',exportAllowed:true};
+ data.regionalEnergy={regions:[{id:'pjm',name:'PJM',series:[{...base,id:'LOAD',kind:'load',unit:'MW',frequency:'hourly',observations:[{date:utc,value:83183}]},{...base,id:'PRICE',kind:'wholesale_price',unit:'美元/MWh',frequency:'daily',observations:[{date:day,value:63.91}]}]}]};
+ const [load,price]=buildObserverCatalog(data);
+ assert.equal(load.period,'2026/11/11 02:00（北京）');assert.equal(load.points[0].date,utc);
+ assert.equal(price.period,day);assert.equal(price.points[0].date,day);
+ data.regionalEnergy.regions[0].series[0].observations=[];
+ assert.equal(buildObserverCatalog(data)[0].period,'尚无可用观测');
 });
