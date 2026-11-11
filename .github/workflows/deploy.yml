@@ -128,6 +128,7 @@ jobs:
           node --test tests/observer-alerts.test.mjs tests/research-calendar.test.mjs tests/financing-indicators.test.mjs
           node --test tests/credit-indicators.test.mjs tests/regional-energy.test.mjs
           node --test tests/energy-panel-navigation.test.mjs tests/mineral-display.test.mjs
+          node --test tests/industry-geography.test.mjs tests/us-state-geometry.test.mjs tests/infrastructure-map.test.mjs tests/infrastructure-map-navigation.test.mjs
           node --test tests/chart-card-navigation.test.mjs tests/industry-chart-selection.test.mjs tests/observer-workspace.test.mjs tests/observer-catalog.test.mjs tests/observer-changes.test.mjs tests/observation-events.test.mjs tests/plan-delivery.test.mjs tests/research-notebook.test.mjs
           npx tsc --noEmit
       - name: Persist validated cache and revisions

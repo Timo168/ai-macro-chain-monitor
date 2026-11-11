@@ -1,0 +1,16 @@
+import type {IndustryDataset,DataCenterProject,MetricDefinition,MetricSeries,MetricObservation} from './types';
+import type {RegionalEnergyData,RegionalSeries,RegionalPoint} from '../regional-energy.mjs';
+export const STATE_NAMES:Readonly<Record<string,string>>;
+export const PROJECT_STATUS_LABELS:Readonly<Record<string,string>>;
+export const CAPACITY_KIND_LABELS:Readonly<Record<string,string>>;
+export function projectStateCode(project:Partial<DataCenterProject>):string|null;
+export function projectSourceStatus(project:DataCenterProject,data:IndustryDataset):{status:string;label:string;lastVerifiedAt:string|null;checkedAt:string|null;error:string|null;sources:NonNullable<IndustryDataset['sources']>};
+export type GeographyMetric={metricId:string;definition:MetricDefinition|null;series:MetricSeries|null;month:string|null;observation:MetricObservation|null;latest:MetricObservation|null;value:number|null;unit:string;sourceName:string;seriesStatus:string;status:string;sourceUrl:string|null;fetchedAt:string|null;lastSuccessfulAt:string|null;checkedAt:string|null;error:string|null};
+export type GeographyRow={code:string;name:string;projects:DataCenterProject[];matchedProjects:DataCenterProject[];projectCount:number|null;statusCounts:Record<string,number>;constructionCount:number|null;operationalCount:number|null;constructionMw:number|null;operationalMw:number|null;capacityGroups:{kind:string;label:string;value:number;count:number;projectIds:string[]}[];capacityUnknownCount:number;price:GeographyMetric;sales:GeographyMetric};
+export type InfrastructureGeography={rows:GeographyRow[];months:string[];month:string|null;sector:'industrial'|'commercial';latestCommonMonth:string|null;unlocatedProjects:DataCenterProject[];summary:{projectCount:number;mappedProjectCount:number;unlocatedCount:number;stateCount:number;pricedStateCount:number;constructionCount:number;operationalCount:number;latestVerifiedAt:string|null}};
+export function buildInfrastructureGeography(data:IndustryDataset|undefined|null,options?:{sector?:'industrial'|'commercial';month?:string;statuses?:string[]}):InfrastructureGeography;
+export function regionalMarketSnapshot(data:RegionalEnergyData|undefined|null,options?:{kind?:'load'|'wholesale_price';date?:string}):{kind:'load'|'wholesale_price';date:string|null;dates:string[];commonDate:string|null;rows:{id:string;name:string;series:RegionalSeries|null;latest:RegionalPoint|null;observation:RegionalPoint|null;value:number|null;status:string}[]};
+export function heatExtent(values:(number|null|undefined)[]):{min:number;max:number;count:number}|null;
+export function heatLevel(value:number|null|undefined,values:(number|null|undefined)[],steps?:number):number|null;
+export function heatBucket(value:number|null|undefined,values:(number|null|undefined)[]):number|null;
+export function geographyHistory(points:{date:string;value:number|null}[],options:{frequency:'monthly'|'hourly'|'daily';cutoff?:string;limit?:number}):{date:string;value:number|null;gap:boolean}[];
