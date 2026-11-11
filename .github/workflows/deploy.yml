@@ -47,8 +47,9 @@ jobs:
           else
             echo 'reusable=false' >> "$GITHUB_OUTPUT"
           fi
-      - name: Install frontend dependencies for a new source version
-        if: steps.frontend-proof.outputs.reusable != 'true'
+      # Frontend assets can be reused, but tests still import React and esbuild.
+      # setup-node caches npm downloads, not an installed node_modules directory.
+      - name: Install test and frontend dependencies
         run: npm ci
       - name: Install collector dependencies
         run: python -m pip install -r scripts/requirements.txt
@@ -82,6 +83,7 @@ jobs:
           node scripts/build-investment-research.mjs
       - name: Verify calculations and collectors
         run: |
+          node --test tests/deploy-workflow.test.mjs
           node --test tests/calculations.test.mjs
           node --test tests/industry.test.mjs
           node --test tests/metric-explorer.test.mjs tests/company-comparison.test.mjs
@@ -125,7 +127,7 @@ jobs:
           node --test tests/panel-explorer.test.mjs tests/macro-explorer.test.mjs tests/industry-panel-navigation.test.mjs tests/compact-auxiliary-panels.test.mjs
           node --test tests/observer-alerts.test.mjs tests/research-calendar.test.mjs tests/financing-indicators.test.mjs
           node --test tests/credit-indicators.test.mjs tests/regional-energy.test.mjs
-            node --test tests/energy-panel-navigation.test.mjs tests/mineral-display.test.mjs
+          node --test tests/energy-panel-navigation.test.mjs tests/mineral-display.test.mjs
           node --test tests/chart-card-navigation.test.mjs tests/industry-chart-selection.test.mjs tests/observer-workspace.test.mjs tests/observer-catalog.test.mjs tests/observer-changes.test.mjs tests/observation-events.test.mjs tests/plan-delivery.test.mjs tests/research-notebook.test.mjs
           npx tsc --noEmit
       - name: Persist validated cache and revisions
