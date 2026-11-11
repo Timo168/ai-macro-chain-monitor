@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "status": "failed",
-  "startedAt": "2026-11-10T09:50:39.501988+00:00",
-  "completedAt": "2026-11-10T09:52:50.976008+00:00",
+  "startedAt": "2026-11-11T09:26:26.043888+00:00",
+  "completedAt": "2026-11-11T09:28:21.880459+00:00",
   "lastSuccessAt": null,
-  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/42793917755",
-  "checkedSnapshotAt": "2026-11-10T02:18:12.536Z",
+  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/42994961988",
+  "checkedSnapshotAt": "2026-11-11T07:14:11.142Z",
   "checks": [
     {
       "id": "restored_data",
@@ -13,22 +13,113 @@
     },
     {
       "id": "industry_source_replay",
-      "startedAt": "2026-11-10T09:50:39.663180+00:00",
+      "startedAt": "2026-11-11T09:26:26.250433+00:00",
       "status": "failed",
       "exitCode": 1,
       "error": "来源或计算重放未通过；失败明细见检查报告和运行日志。",
-      "completedAt": "2026-11-10T09:52:50.975987+00:00"
+      "completedAt": "2026-11-11T09:28:21.880437+00:00"
     }
   ],
   "scope": "行业公开来源抽查和计算重放；不验证投资收益，也不代表所有历史点都逐点通过。",
   "sampleCounts": {
-    "automaticSamples": 409,
-    "currentSourceReplaySamples": 340,
-    "previousSourceReplaySamples": 69,
+    "automaticSamples": 396,
+    "currentSourceReplaySamples": 326,
+    "previousSourceReplaySamples": 70,
     "manualFactLedgerSamples": 12,
-    "failedSamples": 17
+    "failedSamples": 30
   },
   "failures": [
+    {
+      "metricId": "DELL.revenue",
+      "periodEnd": "2023-05-05",
+      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2025-financial",
+      "version": "aaf6d191a7c549c7eb98a28cb0a2cb0c11d5f2f551bf631fa1a84d85da97bc25",
+      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
+    },
+    {
+      "metricId": "DELL.revenue",
+      "periodEnd": "2025-01-31",
+      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
+      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
+      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
+    },
+    {
+      "metricId": "DELL.gross_margin",
+      "periodEnd": "2023-05-05",
+      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2025-financial",
+      "version": "aaf6d191a7c549c7eb98a28cb0a2cb0c11d5f2f551bf631fa1a84d85da97bc25",
+      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
+    },
+    {
+      "metricId": "DELL.gross_margin",
+      "periodEnd": "2025-01-31",
+      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
+      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
+      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
+    },
+    {
+      "metricId": "DELL.storage_revenue",
+      "periodEnd": "2023-05-05",
+      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2025-financial",
+      "version": "aaf6d191a7c549c7eb98a28cb0a2cb0c11d5f2f551bf631fa1a84d85da97bc25",
+      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
+    },
+    {
+      "metricId": "DELL.storage_revenue",
+      "periodEnd": "2025-01-31",
+      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
+      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
+      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
+    },
+    {
+      "metricId": "DELL.servers_networking_revenue",
+      "periodEnd": "2023-05-05",
+      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2025-financial",
+      "version": "aaf6d191a7c549c7eb98a28cb0a2cb0c11d5f2f551bf631fa1a84d85da97bc25",
+      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
+    },
+    {
+      "metricId": "DELL.servers_networking_revenue",
+      "periodEnd": "2025-01-31",
+      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
+      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
+      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
+    },
+    {
+      "metricId": "DELL.inventory",
+      "periodEnd": "2025-05-02",
+      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2026-financial",
+      "version": "bcf312e95dca2764f64d106c2744571511c069d62fa98681d6548e2550d68de8",
+      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
+    },
+    {
+      "metricId": "DELL.ai_server_revenue",
+      "periodEnd": "2025-01-31",
+      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
+      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
+      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
+    },
+    {
+      "metricId": "DELL.ai_server_revenue",
+      "periodEnd": "2026-01-30",
+      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
+      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
+      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
+    },
+    {
+      "metricId": "DELL.server_revenue",
+      "periodEnd": "2025-01-31",
+      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
+      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
+      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
+    },
+    {
+      "metricId": "DELL.server_revenue",
+      "periodEnd": "2026-01-30",
+      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
+      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
+      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
+    },
     {
       "metricId": "TSM.revenue",
       "periodEnd": "2026-09-30",
@@ -111,41 +202,6 @@
       "periodEnd": "2025-06-28",
       "sourceUrl": "https://investor.entegris.com/news/news-details/2025/Entegris-Reports-Results-for-Second-Quarter-of-2025/default.aspx",
       "version": "e2c032f53dcde00a60b14b121f4ae26f1617b31691842490b89facd7113fea59",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "ENTG.company_revenue",
-      "periodEnd": "2026-09-26",
-      "sourceUrl": "https://www.entegris.com/en/home/about-us/news/entegris-reports-results-for-third-quarter-2026.html",
-      "version": "c8191915dac78f8667f3d5f5905dc742c3cd420c577676e24e246dd6dd5032ca",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "ENTG.gross_margin",
-      "periodEnd": "2025-06-28",
-      "sourceUrl": "https://investor.entegris.com/news/news-details/2025/Entegris-Reports-Results-for-Second-Quarter-of-2025/default.aspx",
-      "version": "e2c032f53dcde00a60b14b121f4ae26f1617b31691842490b89facd7113fea59",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "ENTG.gross_margin",
-      "periodEnd": "2026-09-26",
-      "sourceUrl": "https://www.entegris.com/en/home/about-us/news/entegris-reports-results-for-third-quarter-2026.html",
-      "version": "c8191915dac78f8667f3d5f5905dc742c3cd420c577676e24e246dd6dd5032ca",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "ENTG.capex",
-      "periodEnd": "2025-06-28",
-      "sourceUrl": "https://investor.entegris.com/news/news-details/2025/Entegris-Reports-Results-for-Second-Quarter-of-2025/default.aspx",
-      "version": "e2c032f53dcde00a60b14b121f4ae26f1617b31691842490b89facd7113fea59",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "ENTG.capex",
-      "periodEnd": "2026-09-26",
-      "sourceUrl": "https://www.entegris.com/en/home/about-us/news/entegris-reports-results-for-third-quarter-2026.html",
-      "version": "c8191915dac78f8667f3d5f5905dc742c3cd420c577676e24e246dd6dd5032ca",
       "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     }
   ],
