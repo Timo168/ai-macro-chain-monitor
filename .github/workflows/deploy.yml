@@ -96,6 +96,10 @@ jobs:
           python tests/research_state_test.py
           python tests/collector_test.py
           python tests/industry_collector_test.py
+          python tests/project_capacity_schedule_test.py
+          python tests/project_capacity_cleanview_test.py
+          python tests/project_capacity_test.py
+          node --test tests/project-capacity-merge.test.mjs
           python tests/amazon_history_test.py
           python tests/supply_evidence_test.py
           python tests/packaging_evidence_test.py

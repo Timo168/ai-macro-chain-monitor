@@ -122,9 +122,11 @@ class RevisionTests(unittest.TestCase):
    'META.US.KANSAS_CITY.OPERATIONAL':b'<p>The Kansas City Data Center is operational and serving traffic.</p>',
    'META.US.TEMPLE.OPERATIONAL':b'<p>The Temple Data Center is serving traffic for AI workloads.</p>',
    'META.US.KUNA.OPERATIONAL':b'<p>The Kuna Data Center is online and operational.</p>',
+   'META.US.LEBANON.CAPACITY':b'<p>Breaking ground for a 1GW campus in Lebanon, Indiana, with 1GW of capacity once operational.</p>',
+   'META.US.EL_PASO.CAPACITY':b'<p>Currently under construction in El Paso, Texas, with 1 gigawatt of compute capacity coming online in 2028.</p>',
   }
   by_url={spec['url']:spec for spec in SOURCES}
-  def successful_fetch(url):
+  def successful_fetch(url, force=False):
    spec=by_url[url];return source_text[spec['id']],stamp,'test-'+spec['id']
   with tempfile.TemporaryDirectory(prefix='project-adapter-') as temp:
    data_path=pathlib.Path(temp)
@@ -137,7 +139,7 @@ class RevisionTests(unittest.TestCase):
     self.assertEqual(first['series']['PROJECT.operational_capacity']['status'],'no_observation')
     self.assertEqual(first['series']['PROJECT.operational_capacity']['observations'],[])
     self.assertEqual([point['value'] for point in first['series']['PROJECT.operational_milestone_count']['observations']],[1,2,3,4,5])
-    def fail_kuna(url):
+    def fail_kuna(url, force=False):
      if by_url[url]['id']=='META.US.KUNA.OPERATIONAL':raise RuntimeError('simulated upstream failure')
      return successful_fetch(url)
     with patch.object(projects_adapter,'fetch',side_effect=fail_kuna):

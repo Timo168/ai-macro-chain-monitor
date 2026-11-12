@@ -42,6 +42,43 @@ FAST_COLLECTORS=(
     {'key':'infrastructure','script':'industry_infrastructure.py','snapshot':'infrastructure.json','intervalMinutes':60},
 )
 
+PROJECT_CAPACITY_COLLECTOR_VERSION = 1
+
+def refresh_project_capacity(state, current, daily_collected=False):
+    """Install new project-source coverage immediately and retry source outages."""
+    previous = state.get('projectCapacity', {})
+    retry_due = previous.get('status') != 'ready' and current >= state_time(previous.get('nextCheckAt'))
+    needs_version = previous.get('collectorVersion') != PROJECT_CAPACITY_COLLECTOR_VERSION
+    if not daily_collected and not (needs_version or retry_due):
+        return
+    if not daily_collected and previous.get('status') == 'cached' and current < state_time(previous.get('nextCheckAt')):
+        return
+    error = None
+    try:
+        if not daily_collected:
+            result = run_background([sys.executable, str(ROOT/'scripts'/'industry_projects.py')], cwd=ROOT, timeout=600)
+            if result.returncode:
+                raise RuntimeError('项目容量更新未成功')
+        payload = json.loads((DATA/'projects.json').read_text(encoding='utf-8'))
+        projects = payload.get('projects', [])
+        if not projects or any(not project.get('capacityAudit') for project in projects):
+            raise RuntimeError('项目容量核查记录尚未齐备')
+        failed = [source['id'] for source in payload.get('sources', []) if source.get('status') in ('fetch_failed', 'cached')]
+        if failed:
+            raise RuntimeError('部分来源待重试：'+', '.join(failed))
+    except Exception as exc:
+        error = str(exc)
+    failures = int(previous.get('failureCount', 0))+1 if error else 0
+    state['projectCapacity'] = {
+        'collectorVersion': PROJECT_CAPACITY_COLLECTOR_VERSION,
+        'status': 'cached' if error else 'ready',
+        'lastAttemptAt': current.isoformat(),
+        'lastSuccessfulAt': previous.get('lastSuccessfulAt') if error else current.isoformat(),
+        'nextCheckAt': (current+timedelta(minutes=retry_minutes(failures)) if error else current+timedelta(hours=24)).isoformat(),
+        'failureCount': failures,
+        'error': error,
+    }
+
 def state_time(value):
     try:
         parsed=datetime.fromisoformat(value)
@@ -250,6 +287,7 @@ def run(force=False,build_research=True):
                 if result.returncode:failures.append(script)
             except Exception as error:failures.append(script+': '+str(error))
         state.update({'collectorVersion':16,'lastAttemptAt':now(),'dailyFailures':failures})
+    refresh_project_capacity(state,current,daily_collected=daily_due)
     history_failures=repair_amazon_history(state,current,daily_collected=daily_due)
     fast_next=[]
     fast_failures=[]

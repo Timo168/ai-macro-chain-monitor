@@ -2,6 +2,7 @@ import {existsSync,readFileSync,writeFileSync,mkdirSync,renameSync} from 'node:f
 import {generateRecommendations,ruleReachability} from '../lib/industry/engine.mjs';
 import {pendingMetrics} from '../lib/industry/catalog.mjs';
 import {financialUpdates} from '../lib/industry/financial-updates.mjs';
+import {mergeProjectRecords} from '../lib/industry/project-merge.mjs';
 
 const folder='data/industry';
 const now=new Date().toISOString();
@@ -14,6 +15,7 @@ const sourceFiles=['companies.json','oracle.json','hardware.json','supply-eviden
 const hasValue=point=>typeof point?.value==='number'&&Number.isFinite(point.value);
 const observed=series=>(series?.observations??[]).filter(hasValue);
 const ingestedReleases=[];
+const projectRecords=[];
 
 // Source adapters must never erase an already verified chart merely because a
 // network request failed or returned an incomplete range. New observations win;
@@ -50,7 +52,7 @@ for(const file of sourceFiles){
   // not re-add superseded check-time snapshots from an older website cache.
   merged.series[id]=definition?.frequency==='event'?series:preserveLastKnownGood(series,previous);
  }
- merged.projects.push(...(payload.projects??[]));
+ projectRecords.push(...(payload.projects??[]).map(project=>({project,authoritative:file==='projects.json'})));
  merged.events.push(...(payload.events??[]));
  for(const source of payload.sources??[])merged.sources.push(source);
  merged.researchReports.push(...(payload.researchReports??[]));
@@ -60,7 +62,7 @@ for(const definition of pendingMetrics)if(!merged.definitions.some(existing=>exi
  merged.definitions.push(definition);
  merged.series[definition.id]={observations:[],status:definition.valueType==='third_party'?'authorization_required':'pending',note:definition.note};
 }
-merged.projects=[...new Map(merged.projects.map(project=>[project.id,project])).values()];
+merged.projects=mergeProjectRecords(projectRecords);
 merged.sources=[...new Map(merged.sources.map(source=>[source.id,source])).values()];
 merged.researchReports=[...new Map(merged.researchReports.map(report=>[report.id,report])).values()];
 merged.sourceCatalog=[...new Map(merged.sourceCatalog.map(source=>[source.id,source])).values()];

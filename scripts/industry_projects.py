@@ -13,6 +13,8 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 
 from industry_common import DATA, atomic, definition, fetch, now, observation, persist
+from industry_project_capacity import enrich_project_capacities
+from industry_project_capacity_cleanview import collect_cleanview
 
 
 SOURCES = [
@@ -169,6 +171,28 @@ SOURCES = [
         "requiredPatterns": [r"kuna data center", r"online and operational"],
         "eventNote": "Meta官方公告确认项目已上线并投运；未披露数据中心MW。",
     },
+    {
+        "id": "META.US.LEBANON.CAPACITY",
+        "name": "Meta Lebanon 官方建设公告",
+        "url": "https://about.fb.com/news/2026/02/metas-new-data-center-lebanon-indiana-marks-milestone-ai-investment/",
+        "publishedAt": "2026-02-11",
+        "projectIds": ["META-US-IN-LEBANON"],
+        "capacityRole": "construction",
+        "project": {"id": "META-US-IN-LEBANON", "name": "Lebanon 数据中心", "owner": "Meta", "country": "美国", "region": "Indiana", "stateCode": "IN", "city": "Lebanon", "status": "construction", "powerCapacityMw": 1000, "capacityKind": "data_center_planned_capacity", "notes": "官方披露园区建成后规划容量 1GW。"},
+        "requiredPatterns": [r"lebanon, indiana", r"1gw\s+campus", r"1gw\s+of\s+capacity\s+once\s+operational", r"breaking\s+ground"],
+        "eventNote": "Meta 官方宣布开工，园区建成后规划容量 1GW。",
+    },
+    {
+        "id": "META.US.EL_PASO.CAPACITY",
+        "name": "Meta El Paso 官方容量公告",
+        "url": "https://about.fb.com/news/2026/07/meta-announces-new-venture-with-blackrock-to-develop-data-center-in-el-paso/",
+        "publishedAt": "2026-07-28",
+        "projectIds": ["META-US-TX-EL-PASO"],
+        "capacityRole": "construction",
+        "project": {"id": "META-US-TX-EL-PASO", "name": "El Paso 数据中心", "owner": "Meta / BlackRock 合资项目", "country": "美国", "region": "Texas", "stateCode": "TX", "city": "El Paso", "status": "construction", "powerCapacityMw": 1000, "capacityKind": "compute_capacity", "expectedOperationalAt": "2028年起（计划）", "notes": "官方披露在建项目计算容量 1GW，计划 2028 年起分批上线。"},
+        "requiredPatterns": [r"currently\s+under\s+construction\s+in\s+el\s+paso", r"1\s+gigawatt\s+of\s+compute\s+capacity", r"online\s+in\s+2028"],
+        "eventNote": "Meta 官方确认项目在建，计算容量 1GW；计划 2028 年起上线。",
+    },
 ]
 
 # These are the first, already-verified facts from the same official pages in
@@ -311,12 +335,28 @@ def parse_source(spec, raw: bytes, fetched_at: str, digest: str):
 
 
 def load_previous_projects():
+    baseline_path = DATA / "public-reviewed.json"
+    baseline_by_id = {}
+    if baseline_path.exists():
+        try:
+            baseline_by_id = {project["id"]: project for project in json.loads(baseline_path.read_text(encoding="utf-8")).get("projects", []) if project.get("id") and project.get("isEstimated") is False}
+        except (OSError, ValueError):
+            pass
     for path in (DATA / "projects.json", DATA / "public-reviewed.json"):
         if path.exists():
             try:
                 payload = json.loads(path.read_text(encoding="utf-8"))
                 projects = payload.get("projects", [])
                 if projects:
+                    for project in projects:
+                        baseline = baseline_by_id.get(project.get("id"), {})
+                        original_date = baseline.get("announcedAt")
+                        # Recover only the first-announcement metadata from a
+                        # previously reviewed, shared official source. Do not
+                        # restore its obsolete capacity or lifecycle status.
+                        shared_source = set(project.get("sourceUrls", [])).intersection(baseline.get("sourceUrls", []))
+                        if shared_source and isinstance(original_date, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", original_date) and original_date <= datetime.now(timezone.utc).date().isoformat():
+                            project["announcedAt"] = min(original_date, project.get("announcedAt") or original_date)
                     return projects
             except (OSError, ValueError):
                 pass
@@ -354,6 +394,9 @@ def merge_project_history(previous, candidate):
             history.append(event)
     merged = {**(previous or {}), **candidate}
     if previous:
+        announcement_dates = [item for item in (previous.get("announcedAt"), candidate.get("announcedAt")) if isinstance(item, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", item)]
+        if announcement_dates:
+            merged["announcedAt"] = min(announcement_dates)
         merged["sourceUrls"] = list(dict.fromkeys([*(previous.get("sourceUrls", [])), *(candidate.get("sourceUrls", []))]))
         for key in ("expectedOperationalAt", "investmentValue", "investmentCurrency"):
             if candidate.get(key) is None and previous.get(key) is not None:
@@ -700,6 +743,10 @@ def build():
         }
     else:
         milestone_series = {**old_series.get("PROJECT.operational_milestone_count", {}), "status": "cached" if old_milestones else "fetch_failed", "checkedAt": checked_at, "error": f"投运状态来源本轮未全部通过核验：{', '.join(failed_source_ids)}；保留最近成功版本。"}
+    projects, capacity_sources = enrich_project_capacities(projects, sources, checked_at, fetcher=fetch)
+    projects, supplemental_sources = collect_cleanview(projects, checked_at, fetcher=fetch)
+    sources.extend(capacity_sources)
+    sources.extend(supplemental_sources)
     result = {
         "schemaVersion": "1",
         "generatedAt": checked_at,

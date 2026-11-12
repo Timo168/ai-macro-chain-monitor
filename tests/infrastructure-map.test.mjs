@@ -53,12 +53,12 @@ function energy() {
     { id: 'pjm', name: '美国中东部 · PJM', series: [loadSeries('PJM_LOAD', [{ date: '2026-11-10T10:00:00Z', value: 80000 }])] },
   ] };
 }
-async function render(initialLayer = 'construction', data = dataset(), regionalEnergy = energy(), errors = []) {
+async function render(initialLayer = 'construction', data = dataset(), regionalEnergy = energy(), errors = [], initialMeasure = 'projectCount') {
   const Component = await component();
   const previous = globalThis.__infrastructureObserver;
   globalThis.__infrastructureObserver = { inputs: { regionalEnergy }, errors, loading: false, refresh() {} };
   try {
-    const html = renderToStaticMarkup(React.createElement(Component, { data, initialLayer }));
+    const html = renderToStaticMarkup(React.createElement(Component, { data, initialLayer, initialMeasure }));
     return { html, text: html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() };
   } finally {
     if (previous === undefined) delete globalThis.__infrastructureObserver;
@@ -75,7 +75,8 @@ test('the map keeps all 51 states keyboard-selectable and exposes projects with 
   assert.match(html, /aria-label="得克萨斯州，1 项"/);
   for (const label of ['建设热度', '地区电价', '用电规模', '区域电网', '放大所选地区', '重置地图', '查看地区']) assert.ok(html.includes(label), label);
   assert.ok(text.includes('德州公开项目样本'));
-  assert.ok(text.includes('1,000 MW · 规划数据中心容量'));
+  assert.match(text, /1,000 MW/);
+  assert.match(text, /数据中心规划容量/);
   assert.ok(text.includes('2026-01-12') && text.includes('2026-10-15'));
   assert.ok(html.includes(`href="${projectUrl}"`));
   assert.ok(html.includes(`href="${eiaUrl}"`));
@@ -159,4 +160,33 @@ test('unpublished and unconfigured market sources remain distinct from fetch fai
     assert.match(text, /当前比较时点\s+—\s+MW/);
     assert.doesNotMatch(text, /获取失败/);
   }
+});
+
+function capacityDataset() {
+ const data=dataset();
+ data.projects[0]={...data.projects[0],name:'Temple',status:'operational',powerCapacityMw:null,capacityKind:undefined,capacityEvidence:[
+  {id:'epoch-temple-it',sourceType:'institutional_estimate',valueMw:178,capacityKind:'it_power',scope:'current',asOfDate:'2026-09-30',publishedAt:'2026-09-30',sourceName:'Epoch AI',sourceUrl:'https://epoch.ai/data/ai-data-centers/directory/meta-temple',status:'cached',lastSuccessfulAt:'2026-11-10T12:00:00Z',checkedAt:'2026-11-11T12:00:00Z',coverageScope:'AI 建筑 1—3',method:'卫星影像与制冷设备模型'},
+  {id:'epoch-temple-facility',sourceType:'institutional_estimate',valueMw:231,capacityKind:'facility_power',scope:'current',asOfDate:'2026-09-30',sourceName:'Epoch AI',sourceUrl:'https://epoch.ai/data/ai-data-centers/directory/meta-temple',status:'ready'},
+  {id:'epoch-temple-plan',sourceType:'institutional_estimate',valueMw:500,capacityKind:'it_power',scope:'planned',asOfDate:'2026-09-30',targetDate:'2028-Q1',sourceName:'Epoch AI',sourceUrl:'https://epoch.ai/data/ai-data-centers/directory/meta-temple',status:'ready'}
+ ]};
+ return data;
+}
+test('project cards and IT heat expose matching estimates, official absence, dates, coverage and cached state',async()=>{
+ const {html,text}=await render('construction',capacityDataset(),energy(),[],'estimatedOperationalMw');
+ assert.match(html,/aria-label="得克萨斯州，178 MW"/);
+ assert.match(text,/官方披露 容量尚未披露/);
+ assert.match(text,/约 178 MW/);assert.match(text,/Epoch AI/);assert.match(text,/展示缓存/);
+ assert.match(text,/数据截至 2026-09-30/);assert.match(text,/AI 建筑 1—3/);
+ assert.ok(text.includes('已覆盖 1 / 1 个适用项目'));
+ assert.match(text,/目标 2028-Q1/);
+ assert.doesNotMatch(html,/aria-label="得克萨斯州，(?:231|500|909) MW"/);
+});
+test('facility heat remains separately selectable while a range is displayed without becoming a point',async()=>{
+ const data=capacityDataset();
+ data.projects.push({...data.projects[0],id:'range',name:'范围样本',capacityEvidence:[{id:'range-facility',sourceType:'institutional_estimate',valueMw:null,upperBoundMw:200,valueQualifier:'less_than',capacityKind:'facility_power',scope:'current',asOfDate:'2026-11-10',sourceName:'Cleanview',sourceUrl:'https://cleanview.co/data-centers/missouri',status:'ready'}]});
+ const {html,text}=await render('construction',data,energy(),[],'estimatedFacilityMw');
+ assert.match(html,/aria-label="得克萨斯州，231 MW"/);
+ assert.match(text,/低于 200 MW/);assert.match(text,/Cleanview/);
+ assert.ok(text.includes('已覆盖 1 / 2 个适用项目'));
+ assert.doesNotMatch(html,/aria-label="得克萨斯州，431 MW"/);
 });

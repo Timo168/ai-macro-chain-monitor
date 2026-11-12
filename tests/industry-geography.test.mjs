@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {buildInfrastructureGeography,projectStateCode,projectSourceStatus,regionalMarketSnapshot,heatBucket,heatExtent,geographyHistory,STATE_NAMES} from '../lib/industry/geography.mjs';
+import {buildInfrastructureGeography,projectStateCode,projectSourceStatus,selectProjectCapacityEstimate,selectProjectCapacityRange,regionalMarketSnapshot,heatBucket,heatExtent,geographyHistory,STATE_NAMES} from '../lib/industry/geography.mjs';
 
 const project=(id,stateCode,status='construction',extra={})=>({id,name:id,country:'美国',stateCode,status,sourceUrls:[`https://energy.gov/${id}`],lastVerifiedAt:'2026-11-01T00:00:00Z',isEstimated:false,...extra});
 const point=(periodEnd,value,extra={})=>({periodEnd,value,sourceUrl:'https://www.eia.gov/data',fetchedAt:'2026-11-01T00:00:00Z',version:'v1',...extra});
@@ -56,6 +56,156 @@ test('capacity heat combines explicit comparable actual disclosures and preserve
  assert.equal(ohio.capacityGroups.find(group=>group.kind==='onsite_generation_capacity').value,15000);
  assert.equal(result.rows.find(row=>row.code==='AZ').operationalMw,null);
  assert.equal(buildInfrastructureGeography(data,{statuses:['operational']}).rows.find(row=>row.code==='OH').constructionMw,null);
+});
+
+const capacityEstimate=(valueMw,extra={})=>({id:'epoch-it-current',sourceType:'institutional_estimate',capacityKind:'it_power',scope:'current',valueMw,asOfDate:'2026-09-30',publishedAt:'2026-10-01',sourceName:'Epoch AI',sourceUrl:'https://epoch.ai/data/ai-data-centers/directory/example',status:'ready',fetchedAt:'2026-11-01T00:00:00Z',...extra});
+const capacityNow='2026-11-12T10:00:00Z';
+
+test('selects one latest institutional IT estimate per project and retains ready/cached provenance',()=>{
+ const item=project('a','TX','operational',{capacityEvidence:[
+  capacityEstimate(152,{asOfDate:'2026-02-24'}),
+  capacityEstimate(178,{status:'cached',error:'timeout',lastSuccessfulAt:'2026-11-02T00:00:00Z'}),
+  capacityEstimate(220,{scope:'planned',targetDate:'2027-12-31'}),
+  capacityEstimate(900,{capacityKind:'grid_interconnection_capacity'}),
+ ]});
+ const selected=selectProjectCapacityEstimate(item,{now:capacityNow});
+ assert.equal(selected.valueMw,178);assert.equal(selected.status,'cached');assert.equal(selected.error,'timeout');
+ assert.equal(selectProjectCapacityEstimate(item,{scope:'planned',now:capacityNow}).valueMw,220);
+ assert.equal(selectProjectCapacityEstimate({...item,capacityEvidence:[capacityEstimate(178),capacityEstimate(179,{fetchedAt:'2026-11-03T00:00:00Z'})]},{now:capacityNow}).valueMw,179);
+});
+
+test('future-current, unavailable, invalid and untraceable estimates never become map values',()=>{
+ const rejected=[
+  {asOfDate:'2027-01-01'}, {asOfDate:null}, {asOfDate:'2026-02-30'},
+  {publishedAt:'2027-01-01'}, {publishedAt:'invalid'}, {sourceType:'official'},
+  {status:'not_published'}, {status:'fetch_failed'}, {status:'not_configured'},
+  {status:'cached',fetchedAt:undefined,lastSuccessfulAt:undefined}, {status:'cached',lastSuccessfulAt:'2027-01-01'},
+  {valueMw:null}, {valueMw:-1}, {valueMw:Infinity}, {capacityKind:'compute_capacity'},
+  {sourceUrl:'javascript:alert(1)'}, {sourceName:''},
+ ];
+ for(const extra of rejected){
+  const item=project('a','TX','operational',{capacityEvidence:[capacityEstimate(100,extra)]});
+  assert.equal(selectProjectCapacityEstimate(item,{now:capacityNow}),null,JSON.stringify(extra));
+  const data=dataset();data.projects=[item];
+  assert.equal(buildInfrastructureGeography(data,{now:capacityNow}).rows.find(row=>row.code==='TX').estimatedOperationalMw,null);
+ }
+ assert.equal(selectProjectCapacityEstimate({capacityEvidence:[capacityEstimate(100,{scope:'planned',asOfDate:'2027-01-01',publishedAt:'2027-01-01'})]},{scope:'planned',now:capacityNow}),null);
+ assert.equal(selectProjectCapacityEstimate({capacityEvidence:[capacityEstimate(100,{scope:'planned',asOfDate:'2027-01-01'})]},{scope:'planned',now:capacityNow}),null);
+ assert.equal(selectProjectCapacityEstimate({capacityEvidence:[capacityEstimate(100,{scope:'planned',targetDate:'2028-Q1'})]},{scope:'planned',now:capacityNow}).targetDate,'2028-Q1');
+ assert.equal(selectProjectCapacityEstimate({capacityEvidence:[capacityEstimate(100)]},{now:'invalid'}),null);
+});
+
+test('capacity heat keeps official, current IT estimates, and future IT plans in independent totals',()=>{
+ const data=dataset();data.projects=[
+  project('operating','TX','operational',{powerCapacityMw:200,capacityKind:'operational_data_center_capacity',capacityEvidence:[capacityEstimate(152,{asOfDate:'2026-02-24'}),capacityEstimate(178,{status:'cached'}),capacityEstimate(250,{scope:'planned',targetDate:'2027-01-01'})]}),
+  project('partial','TX','partially_operational',{capacityEvidence:[capacityEstimate(50)]}),
+  project('construction','TX','construction',{powerCapacityMw:1000,capacityKind:'data_center_planned_capacity',capacityEvidence:[capacityEstimate(30),capacityEstimate(400,{scope:'planned',targetDate:'2028-Q1'})]}),
+  project('cancelled','TX','cancelled',{capacityEvidence:[capacityEstimate(70),capacityEstimate(700,{scope:'planned',targetDate:'2027-01-01'})]}),
+  project('missing','TX','operational'),
+ ];
+ const before=JSON.stringify(data),row=buildInfrastructureGeography(data,{now:capacityNow}).rows.find(row=>row.code==='TX');
+ assert.equal(row.operationalMw,200);assert.equal(row.constructionMw,1000);
+ assert.equal(row.estimatedOperationalMw,228);assert.equal(row.estimatedPlannedMw,650);
+ assert.deepEqual({count:row.estimatedOperational.count,eligible:row.estimatedOperational.eligibleProjectCount,missing:row.estimatedOperational.missingCount,cached:row.estimatedOperational.cachedCount},{count:2,eligible:3,missing:1,cached:1});
+ assert.deepEqual(row.estimatedOperational.items.map(item=>item.projectId),['operating','partial']);
+ assert.deepEqual(row.estimatedOperational.sourceNames,['Epoch AI']);
+ assert.equal(row.estimatedOperational.oldestAsOfDate,'2026-09-30');assert.equal(row.estimatedOperational.newestAsOfDate,'2026-09-30');
+ assert.equal(JSON.stringify(data),before);
+ assert.equal(buildInfrastructureGeography(data,{statuses:['construction'],now:capacityNow}).rows.find(row=>row.code==='TX').estimatedOperationalMw,null);
+});
+
+test('institution capacity heat preserves zero, missing, source dates and project identity',()=>{
+ const data=dataset();data.projects=[
+  project('meta-mesa','AZ','operational',{owner:'Meta',city:'Mesa'}),
+  project('google-mesa','AZ','operational',{owner:'Google',city:'Mesa',capacityEvidence:[capacityEstimate(183,{asOfDate:'2026-06-30'})]}),
+  project('zero','AZ','operational',{capacityEvidence:[capacityEstimate(0,{asOfDate:'2026-09-30'})]}),
+  project('undisclosed','ID','operational'),
+ ];
+ const rows=buildInfrastructureGeography(data,{now:capacityNow}).rows,az=rows.find(row=>row.code==='AZ');
+ assert.equal(selectProjectCapacityEstimate(data.projects[0],{now:capacityNow}),null);
+ assert.equal(az.estimatedOperationalMw,183);assert.equal(az.estimatedOperational.count,2);
+ assert.equal(az.estimatedOperational.missingCount,1);
+ assert.equal(az.estimatedOperational.oldestAsOfDate,'2026-06-30');assert.equal(az.estimatedOperational.newestAsOfDate,'2026-09-30');
+ assert.equal(rows.find(row=>row.code==='ID').estimatedOperationalMw,null);
+ assert.equal(rows.find(row=>row.code==='CA').estimatedOperationalMw,null);
+ assert.equal(selectProjectCapacityEstimate(data.projects[2],{now:capacityNow}).valueMw,0);
+});
+
+test('institution source readiness never changes the separately sourced official project status',()=>{
+ const data=dataset(),item=project('a','TX','operational',{capacityEvidence:[capacityEstimate(178)]});
+ data.sources=[{url:item.sourceUrls[0],status:'fetch_failed',error:'official source unreachable'},{url:item.capacityEvidence[0].sourceUrl,status:'ready'}];
+ assert.equal(projectSourceStatus(item,data).status,'cached');
+ assert.equal(projectSourceStatus(item,data).sources.length,1);
+ assert.equal(selectProjectCapacityEstimate(item,{now:capacityNow}).status,'ready');
+});
+
+test('facility estimates remain independent from IT power and official MW, including source revisions',()=>{
+ const data=dataset();data.projects=[
+  project('temple','TX','operational',{powerCapacityMw:300,capacityKind:'operational_data_center_capacity',capacityEvidence:[
+   capacityEstimate(178),capacityEstimate(198,{id:'facility-old',capacityKind:'facility_power',asOfDate:'2026-02-24'}),
+   capacityEstimate(231,{id:'facility-current',capacityKind:'facility_power',status:'cached'}),
+   capacityEstimate(350,{id:'facility-planned',capacityKind:'facility_power',scope:'planned',targetDate:'2028-Q1'}),
+  ]}),
+  project('mesa','AZ','operational',{capacityEvidence:[capacityEstimate(240,{capacityKind:'facility_power',sourceName:'Cleanview'})]}),
+  project('future','AZ','construction',{capacityEvidence:[capacityEstimate(900,{capacityKind:'facility_power'})]}),
+ ];
+ const rows=buildInfrastructureGeography(data,{now:capacityNow}).rows,tx=rows.find(row=>row.code==='TX'),az=rows.find(row=>row.code==='AZ');
+ assert.equal(tx.operationalMw,300);assert.equal(tx.estimatedOperationalMw,178);assert.equal(tx.estimatedFacilityMw,231);
+ assert.equal(tx.estimatedFacility.count,1);assert.equal(tx.estimatedFacility.cachedCount,1);
+ assert.equal(tx.estimatedPlannedMw,null);
+ assert.equal(az.estimatedFacilityMw,240);assert.equal(az.estimatedOperationalMw,null);
+ assert.deepEqual(az.estimatedFacility.sourceNames,['Cleanview']);
+ assert.equal(selectProjectCapacityEstimate(data.projects[0],{capacityKind:'facility_power',now:capacityNow}).id,'facility-current');
+ assert.equal(selectProjectCapacityEstimate(data.projects[0],{capacityKind:'facility_power',scope:'planned',now:capacityNow}).targetDate,'2028-Q1');
+ assert.throws(()=>selectProjectCapacityEstimate(data.projects[0],{capacityKind:'grid_interconnection_capacity',now:capacityNow}));
+});
+
+test('capacity ranges remain visible evidence without becoming exact facility heat-map values',()=>{
+ const data=dataset();data.projects=[project('kansas','MO','operational',{capacityEvidence:[capacityEstimate(null,{capacityKind:'facility_power',upperBoundMw:200,valueQualifier:'less_than',note:'机构报告的上限'})]})];
+ const row=buildInfrastructureGeography(data,{now:capacityNow}).rows.find(item=>item.code==='MO');
+ assert.equal(row.estimatedFacilityMw,null);assert.equal(row.estimatedFacility.count,0);assert.equal(row.estimatedFacility.missingCount,1);
+ assert.equal(data.projects[0].capacityEvidence[0].upperBoundMw,200);
+ assert.equal(selectProjectCapacityEstimate(data.projects[0],{capacityKind:'facility_power',now:capacityNow}),null);
+ assert.equal(selectProjectCapacityRange(data.projects[0],{now:capacityNow}).upperBoundMw,200);
+});
+
+test('range selection uses the newest comparable bound and does not mix scopes or capacity kinds',()=>{
+ const bound=extra=>capacityEstimate(null,{id:'range',capacityKind:'facility_power',upperBoundMw:200,valueQualifier:'less_than',...extra});
+ const item=project('kansas','MO','operational',{capacityEvidence:[bound({asOfDate:'2026-06-30',upperBoundMw:300}),bound({status:'cached',lastSuccessfulAt:'2026-11-02'}),bound({capacityKind:'it_power',upperBoundMw:150}),bound({scope:'planned',upperBoundMw:400,targetDate:'2028-Q1'})]});
+ const before=JSON.stringify(item),selected=selectProjectCapacityRange(item,{now:capacityNow});
+ assert.equal(selected.upperBoundMw,200);assert.equal(selected.status,'cached');
+ assert.equal(selectProjectCapacityRange(item,{capacityKind:'it_power',now:capacityNow}).upperBoundMw,150);
+ assert.equal(selectProjectCapacityRange(item,{scope:'planned',now:capacityNow}).targetDate,'2028-Q1');
+ assert.equal(selectProjectCapacityRange({...item,capacityEvidence:[bound({}),bound({upperBoundMw:190,fetchedAt:'2026-11-03'})]},{now:capacityNow}).upperBoundMw,190);
+ assert.equal(JSON.stringify(item),before);
+});
+
+test('range evidence cannot bypass publication, source, cache or numeric-bound validation',()=>{
+ const rejected=[{asOfDate:'2027-01-01'},{asOfDate:null},{asOfDate:'2026-02-30'},{publishedAt:'2027-01-01'},
+  {sourceUrl:'javascript:alert(1)'},{sourceName:''},{sourceType:'official'},
+  {status:'fetch_failed'},{status:'not_published'},{status:'not_configured'},
+  {status:'cached',fetchedAt:undefined,lastSuccessfulAt:undefined},{status:'cached',lastSuccessfulAt:'2027-01-01'},
+  {upperBoundMw:null},{upperBoundMw:0},{upperBoundMw:-1},{upperBoundMw:Infinity},{valueQualifier:'approximately'},{valueMw:150}];
+ for(const extra of rejected){
+  const item=project('a','MO','operational',{capacityEvidence:[capacityEstimate(null,{capacityKind:'facility_power',upperBoundMw:200,valueQualifier:'less_than',...extra})]});
+  assert.equal(selectProjectCapacityRange(item,{now:capacityNow}),null,JSON.stringify(extra));
+ }
+ assert.equal(selectProjectCapacityRange({capacityEvidence:[]},{now:'invalid'}),null);
+});
+
+test('official construction compute capacity is mapped separately from DOE planning capacity and estimates',()=>{
+ const data=dataset();data.projects=[
+  project('hyperion','LA','construction',{powerCapacityMw:5000,capacityKind:'compute_capacity',capacityEvidence:[capacityEstimate(1632,{scope:'planned',targetDate:'2028-Q1'})]}),
+  project('el-paso','TX','construction',{powerCapacityMw:1000,capacityKind:'compute_capacity'}),
+  project('planning','TX','planning',{powerCapacityMw:2000,capacityKind:'compute_capacity'}),
+  project('estimate','TX','construction',{powerCapacityMw:300,capacityKind:'compute_capacity',isEstimated:true}),
+  project('portsmouth','OH','construction',{powerCapacityMw:10000,capacityKind:'data_center_planned_capacity'}),
+ ];
+ const rows=buildInfrastructureGeography(data,{now:capacityNow}).rows,la=rows.find(row=>row.code==='LA'),tx=rows.find(row=>row.code==='TX'),oh=rows.find(row=>row.code==='OH');
+ assert.equal(la.officialComputeMw,5000);assert.equal(tx.officialComputeMw,1000);
+ assert.equal(la.estimatedPlannedMw,1632);assert.equal(la.constructionMw,null);
+ assert.equal(oh.constructionMw,10000);assert.equal(oh.officialComputeMw,null);
+ assert.equal(buildInfrastructureGeography(data,{statuses:['operational'],now:capacityNow}).rows.find(row=>row.code==='LA').officialComputeMw,null);
 });
 
 test('state heat prices use one exact month, do not carry latest values backward or forward',()=>{
