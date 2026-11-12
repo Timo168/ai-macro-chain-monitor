@@ -1,0 +1,1 @@
+{"url":"https://www.eia.gov/electricity/930-api/region_data/series_data?respondent%5B0%5D=PJM&type%5B0%5D=D&start=11052026+04%3A00%3A00&end=11122026+04%3A00%3A00&frequency=hourly&timezone=UTC","sha256":"345236a7e89aa4aa75689b0c987209f9589759e6e7bf7991023cd9b7027f20c6","firstFetchedAt":"2026-11-12T04:23:21Z","fetchedAt":"2026-11-12T04:23:21Z"}
