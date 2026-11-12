@@ -55,6 +55,7 @@ export default function InfrastructureMap({data,initialLayer='construction',init
  const unit=layer==='price'?'美分/kWh':layer==='sales'?'MWh':layer==='markets'?(marketKind==='load'?'MW':'美元/MWh'):measure==='projectCount'?'项':'MW';
  const metricTitle=layer==='construction'?measureNames[measure]:layer==='price'?`${sector==='industrial'?'工业':'商业'}平均零售电价`:layer==='sales'?`${sector==='industrial'?'工业':'商业'}售电量`:marketKind==='load'?'实际小时负荷':'交易日批发电价';
  const projectCountLayer=layer==='construction'&&measure==='projectCount';
+ const capacityLayer=layer==='construction'&&!projectCountLayer;
  const showProjectCounts=projectCountLayer&&showProjects;
  const estimateLayer=layer==='construction'&&['estimatedOperationalMw','estimatedPlannedMw','estimatedFacilityMw'].includes(measure);
  const estimateKey=measure==='estimatedPlannedMw'?'estimatedPlanned':measure==='estimatedFacilityMw'?'estimatedFacility':'estimatedOperational';
@@ -97,7 +98,20 @@ export default function InfrastructureMap({data,initialLayer='construction',init
       <svg viewBox={viewBox} className="infra-svg" role="group" aria-label="美国州级数据热力地图">
        <defs><pattern id={maskId} width="7" height="7" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="#eef1ef"/><path d="M-1 1L1-1M0 7L7 0M6 8L8 6" stroke="#dfe6e2" strokeWidth="1"/></pattern></defs>
        {geometry.states.map(shape=>{const row=byCode.get(shape.code),value=row&&layer!=='markets'?stateValue(row):null;const description=`${STATE_NAMES[shape.code]}，${value==null?'暂无可比数据':shortNumber(value)+' '+unit}`;return <path key={shape.code} d={shape.path} fill={layer==='markets'?'#e8efec':colorFor(value)} className={`infra-state ${selected===shape.code&&layer!=='markets'?'is-selected':''}`} role={layer==='markets'?'presentation':'button'} tabIndex={layer==='markets'?undefined:0} aria-label={layer==='markets'?undefined:description} aria-pressed={layer==='markets'?undefined:selected===shape.code} onPointerEnter={()=>layer!=='markets'&&setHover(shape.code)} onPointerLeave={()=>setHover(null)} onFocus={()=>layer!=='markets'&&setHover(shape.code)} onBlur={()=>setHover(null)} onClick={()=>{if(layer!=='markets')selectState(shape.code)}} onKeyDown={event=>{if(layer!=='markets'&&(event.key==='Enter'||event.key===' ')){event.preventDefault();selectState(shape.code)}}}><title>{description}</title></path>})}
-       {geometry.states.map(shape=>{const row=byCode.get(shape.code);if(layer==='markets'||!row||(!row.projects.length&&stateValue(row)==null))return null;const showCount=showProjectCounts&&row.projectCount!=null;return <g key={shape.code} pointerEvents="none" className="infra-map-label" transform={`translate(${shape.centroid[0]},${shape.centroid[1]})`}><text y={showCount?19:4}>{shape.code}</text>{showCount&&<><circle r={12} cy={-4}/><text className="infra-bubble-number" y={0}>{row.projectCount}</text></>}</g>})}
+       {geometry.states.map(shape=>{
+        const row=byCode.get(shape.code);if(layer==='markets'||!row)return null;
+        const value=stateValue(row);
+        if(capacityLayer&&!validNumber(value))return null;
+        if(!row.projects.length&&value==null)return null;
+        const showCount=showProjectCounts&&row.projectCount!=null;
+        // Separate the neighboring Indiana/Ohio labels while keeping each on its state.
+        const offset=capacityLayer?(shape.code==='IN'?[-14,14]:shape.code==='OH'?[14,-14]:[0,0]):[0,0];
+        return <g key={shape.code} pointerEvents="none" className={`infra-map-label${capacityLayer?' infra-capacity-label':''}`} transform={`translate(${shape.centroid[0]+offset[0]},${shape.centroid[1]+offset[1]})`}>
+         <text y={capacityLayer?-17:showCount?19:4}>{shape.code}</text>
+         {capacityLayer&&<text className="infra-capacity-value" y={8}>{shortNumber(value)}<tspan className="infra-capacity-unit"> MW</tspan></text>}
+         {showCount&&<><circle r={12} cy={-4}/><text className="infra-bubble-number" y={0}>{row.projectCount}</text></>}
+        </g>;
+       })}
        {layer==='markets'&&markets.rows.map(row=>{const shape=geometry.states.find(item=>item.code===marketAnchor[row.id]);return shape?<g key={row.id} className={`infra-market-point ${selectedMarket?.id===row.id?'is-selected':''}`} role="button" tabIndex={0} aria-label={`${row.name}，${shortNumber(row.value)} ${unit}`} aria-pressed={selectedMarket?.id===row.id} transform={`translate(${shape.centroid[0]},${shape.centroid[1]})`} onClick={()=>setMarket(row.id)} onKeyDown={event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();setMarket(row.id)}}}><circle r={36} className="infra-market-halo"/><circle r={23} fill={colorFor(row.value)}/><text y={46}>{row.id.toUpperCase()}</text><title>{`${row.name} · ${shortNumber(row.value)} ${unit}`}</title></g>:null})}
       </svg>
       {hovered&&<div className="infra-tooltip" role="status"><strong>{hovered.name} · {hovered.code}</strong><b>{shortNumber(stateValue(hovered))} <small>{unit}</small></b><span>{metricTitle} · {layer==='construction'?'当前样本':model.month}</span>{estimateLayer&&<span>覆盖 {hovered[estimateKey].count} / {hovered[estimateKey].eligibleProjectCount} 个适用项目{hovered[estimateKey].cachedCount?' · 含缓存':''}</span>}<span>公开项目 {hovered.projects.length?hovered.projects.length+' 项':'尚无样本'} · 点击查看</span></div>}
@@ -115,7 +129,7 @@ export default function InfrastructureMap({data,initialLayer='construction',init
     {(active.price.value!=null||active.sales.value!=null)&&<MiniHistory rows={(data.series[layer==='sales'?active.sales.metricId:active.price.metricId]?.observations??[]).map(point=>({date:point.periodEnd,value:point.value}))} unit={layer==='sales'?'MWh':'美分/kWh'} color={layer==='sales'?salesTones[3]:priceTones[3]} cutoff={model.month??undefined}/>}
     <div className="infra-source-line">{active.price.sourceUrl&&<a href={active.price.sourceUrl} target="_blank" rel="noreferrer">EIA 电力统计<ExternalLink size={12}/></a>}<span>成功获取 {dateText(active.price.lastSuccessfulAt)}</span></div>{(active.price.error||active.sales.error)&&<p className="infra-data-warning">来源检查未成功，本图保留已有观测。{active.price.error||active.sales.error}</p>}{data.definitions.some(def=>def.id===active.price.metricId)&&<a className="infra-detail-link" href={mapLink(active.price.metricId)}>查看历史、计算口径与版本<ChevronRight size={14}/></a>}
    </div></div></div>}
-   <details className="infra-method"><summary><Layers3 size={14}/>地图口径与数据覆盖</summary><p>建设热度统计当前已收录的公开项目，按来源披露的州定位。“公开项目数”模式的圆点数字和州颜色均对应所选建设阶段；容量、电价和用电规模模式只显示对应热度与州缩写。没有可比数据的地区显示斜纹。</p><p>电价和售电量使用 EIA 州级月度统计，默认最近共同月份。区域市场保留小时负荷、交易日批发价各自的时间和单位。全国及公司整体指标可在“指标详情”中继续查看。</p><p>地图底图来自美国人口普查局边界，经 us-atlas 简化；阿拉斯加、夏威夷为插图。市场点按所在区域示意定位。<a href="https://github.com/topojson/us-atlas" target="_blank" rel="noreferrer">底图来源 ↗</a></p><p>产业数据获取 {dateText(data.generatedAt)} · 区域电力获取 {dateText(inputs.regionalEnergy?.generatedAt)}</p>{model.unlocatedProjects.length>0&&<p>尚未定位 {model.unlocatedProjects.length} 个项目：{model.unlocatedProjects.map(project=>project.name).join('、')}。</p>}</details>
+   <details className="infra-method"><summary><Layers3 size={14}/>地图口径与数据覆盖</summary><p>建设热度统计当前已收录的公开项目，按来源披露的州定位。“公开项目数”模式的圆点数字和州颜色均对应所选建设阶段；容量模式直接标注对应数值与 MW 单位，无容量数据的州不显示数值。电价和用电规模模式显示对应热度与州缩写。没有可比数据的地区显示斜纹。</p><p>电价和售电量使用 EIA 州级月度统计，默认最近共同月份。区域市场保留小时负荷、交易日批发价各自的时间和单位。全国及公司整体指标可在“指标详情”中继续查看。</p><p>地图底图来自美国人口普查局边界，经 us-atlas 简化；阿拉斯加、夏威夷为插图。市场点按所在区域示意定位。<a href="https://github.com/topojson/us-atlas" target="_blank" rel="noreferrer">底图来源 ↗</a></p><p>产业数据获取 {dateText(data.generatedAt)} · 区域电力获取 {dateText(inputs.regionalEnergy?.generatedAt)}</p>{model.unlocatedProjects.length>0&&<p>尚未定位 {model.unlocatedProjects.length} 个项目：{model.unlocatedProjects.map(project=>project.name).join('、')}。</p>}</details>
   </PanelBody>
  </section>;
 }
