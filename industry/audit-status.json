@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "status": "partial",
-  "startedAt": "2026-11-14T13:41:38.289492+00:00",
-  "completedAt": "2026-11-14T13:43:56.836169+00:00",
+  "startedAt": "2026-11-14T13:52:52.273427+00:00",
+  "completedAt": "2026-11-14T13:55:16.035445+00:00",
   "lastSuccessAt": null,
-  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/43600719505",
-  "checkedSnapshotAt": "2026-11-14T13:38:40.269Z",
+  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/43601643804",
+  "checkedSnapshotAt": "2026-11-14T13:49:43.043Z",
   "checks": [
     {
       "id": "restored_data",
@@ -13,17 +13,17 @@
     },
     {
       "id": "industry_source_replay",
-      "startedAt": "2026-11-14T13:41:38.579058+00:00",
+      "startedAt": "2026-11-14T13:52:52.489729+00:00",
       "status": "partial",
       "exitCode": 0,
-      "completedAt": "2026-11-14T13:43:56.836151+00:00"
+      "completedAt": "2026-11-14T13:55:16.035423+00:00"
     }
   ],
   "scope": "行业公开来源抽查和计算重放；不验证投资收益，也不代表所有历史点都逐点通过。",
   "sampleCounts": {
     "automaticSamples": 413,
-    "currentSourceReplaySamples": 344,
-    "previousSourceReplaySamples": 69,
+    "currentSourceReplaySamples": 340,
+    "previousSourceReplaySamples": 73,
     "manualFactLedgerSamples": 24,
     "failedSamples": 0,
     "unavailableSamples": 1
@@ -31,10 +31,10 @@
   "failures": [],
   "unavailableSources": [
     {
-      "metricId": "AMKR.capex",
-      "periodEnd": "2026-06-30",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2026",
-      "version": "e4d415007a6d2cd34789e94c3748709280f9574e00c24e7f521b135e1586889c",
+      "metricId": "TSM.revenue",
+      "periodEnd": "2023-12-31",
+      "sourceUrl": "https://investor.tsmc.com/english/monthly-revenue/2023",
+      "version": "988426fdf7cb0faca69acbcf4e74fb8459ed6c928a441acf5e5be69e34181a72",
       "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     }
   ],
