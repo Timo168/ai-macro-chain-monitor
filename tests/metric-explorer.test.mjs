@@ -87,8 +87,10 @@ async function loadExplorer(){
 test('a large catalog renders only six summaries and one complete chart',async()=>{
  const Component=await loadExplorer(),calls=[];
  const definitions=Array.from({length:24},(_,index)=>def('MSFT.metric'+index,'MSFT','capex',{nameZh:'指标 '+index}));
- const data={definitions,series:{}};
+ const readIds=[];
+ const data={definitions,series:new Proxy({},{get(_series,id){readIds.push(id);return undefined;}})};
  const html=renderToStaticMarkup(React.createElement(Component,{data,category:'capex',search:'',now:'2026-11-10',renderMetric:definition=>{calls.push(definition.id);return React.createElement('article',{'data-rendered-metric':definition.id},'full chart');}}));
+ assert.deepEqual(readIds,definitions.slice(0,6).map(definition=>definition.id));
  assert.deepEqual(calls,['MSFT.metric0']);assert.equal((html.match(/aria-pressed="(?:true|false)"/g)??[]).length,6);assert.match(html,/24 项/);assert.match(html,/下一页指标/);assert.match(html,/收起图表/);
 });
 test('empty search renders no unrelated chart and offers clearing the filters',async()=>{

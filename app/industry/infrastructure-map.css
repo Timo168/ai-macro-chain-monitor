@@ -12,3 +12,31 @@
 @media(max-width:720px){.infra-map{padding:16px;border-radius:10px}.infra-heading h2{font-size:21px}.infra-layers{gap:7px;margin:18px 0}.infra-layers button{padding:10px}.infra-layers span{font-size:12px}.infra-layers small{font-size:9px;line-height:1.5}.infra-map-layout{grid-template-columns:1fr;gap:12px}.infra-rank-list{max-height:185px;display:grid;grid-template-columns:1fr 1fr}.infra-rank-list button{padding:11px 12px}.infra-ranking>header{padding:11px 12px}.infra-ranking>footer{padding:8px 12px}.infra-context{align-items:flex-start;flex-direction:column;gap:5px}.infra-detail-grid{grid-template-columns:1fr}.infra-price-cards{grid-template-columns:1fr 1fr}.infra-map-caption{font-size:9px;bottom:6px;text-align:left}.infra-region-detail>header,.infra-market-detail>header{align-items:flex-start;flex-wrap:wrap}.infra-market-stats{grid-template-columns:1fr 1fr}.infra-market-stats>div:last-child{grid-column:1/-1}.infra-filters{gap:10px}.infra-filters label{flex:1;min-width:120px}.infra-filters select{max-width:none;width:100%;font-size:11px}.infra-filters label.infra-check{flex:0 0 auto;min-width:0}.infra-tooltip{top:5px;left:5px;padding:8px 10px;max-width:210px}.infra-tooltip b{font-size:18px}.infra-tooltip span{font-size:9px}.infra-map-tools{right:6px;top:6px}.infra-map-tools button{width:28px;height:28px}.infra-heading-actions .infra-scope{font-size:9px}.infra-heading-actions .industry-button,.infra-heading-actions .panel-toggle{font-size:10px}}
 @media(max-width:420px){.infra-layers{grid-template-columns:1fr 1fr}.infra-map{padding:12px}.infra-heading p{font-size:11px}.infra-ranking .infra-rank-content>span:first-child{font-size:10px}.infra-rank-list button{gap:6px;padding:10px 8px}.infra-rank-content strong{font-size:11px}.infra-scale i{width:18px}.infra-legend{font-size:9px}.infra-price-cards b{font-size:17px}.infra-state{stroke-width:.8}}
 @media(max-width:720px){.infra-map-label.infra-capacity-label>text{font-size:16px}.infra-map-label.infra-capacity-label>text.infra-capacity-value{font-size:25px}.infra-capacity-value .infra-capacity-unit{font-size:17px}}
+
+.infra-map-camera {
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+
+.infra-rank-bar > i {
+  transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .infra-map-camera {
+    transition: transform 260ms cubic-bezier(.22, .68, .25, 1);
+  }
+
+  .infra-rank-bar > i {
+    transition: transform 180ms ease-out, background-color 180ms ease-out;
+  }
+
+  .infra-state {
+    transition: fill 180ms ease-out, stroke 130ms ease-out;
+  }
+
+  .infra-layers button,
+  .infra-rank-list button {
+    transition: background-color 140ms ease-out, border-color 140ms ease-out, box-shadow 140ms ease-out;
+  }
+}

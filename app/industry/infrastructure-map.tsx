@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect,useId,useMemo,useState} from 'react';
+import {useEffect,useId,useMemo,useState,type ReactNode} from 'react';
 import {ArrowUpRight,Building2,ChevronRight,ExternalLink,Layers3,MapPin,Minus,Plus,RefreshCw,RotateCcw,Zap} from 'lucide-react';
 import {CartesianGrid,Line,LineChart,ResponsiveContainer,Tooltip,XAxis,YAxis} from 'recharts';
 import type {DataCenterProject,IndustryDataset} from '@/lib/industry/types';
@@ -35,11 +35,37 @@ const validNumber=(value:unknown):value is number=>typeof value==='number'&&Numb
 const shortNumber=(value:number|null|undefined)=>value==null?'—':format(value,Number.isInteger(value)?0:2);
 const dateText=(value?:string|null)=>value?(value.length<=10?value:beijing(value)):'暂无记录';
 
+function MapCanvas({children, tooltip, scope}: {
+ children: ReactNode;
+ tooltip: (stateCode: string) => ReactNode;
+ scope: string;
+}){
+ const [hover, setHover] = useState<{code: string; scope: string} | null>(null);
+ function inspect(target: EventTarget | null) {
+  const code = target instanceof SVGElement ? target.closest<SVGElement>('[data-state-code]')?.dataset.stateCode : undefined;
+  if (!code) {
+   setHover(null);
+   return;
+  }
+  setHover(previous => previous?.code === code && previous.scope === scope ? previous : {code, scope});
+ }
+ return <div className="infra-canvas"
+  onPointerOver={event => { if (event.pointerType !== 'touch') inspect(event.target); }}
+  onPointerLeave={() => setHover(null)}
+  onFocusCapture={event => inspect(event.target)}
+  onBlurCapture={event => inspect(event.relatedTarget)}
+  onClickCapture={() => setHover(null)}
+  onKeyDownCapture={event => { if (['Escape','Enter',' '].includes(event.key)) setHover(null); }}>
+  {children}
+  {hover?.scope === scope && tooltip(hover.code)}
+ </div>;
+}
+
 export default function InfrastructureMap({data,initialLayer='construction',initialMeasure='projectCount'}:{data:IndustryDataset;initialLayer?:Layer;initialMeasure?:ConstructionMeasure}){
  const {inputs,errors,loading,refresh}=useObserver();
  const disclosure=usePanelDisclosure('industry:infrastructure-map',{anchorId:'infrastructure-map',scope:'industry'});
  const [layer,setLayer]=useState<Layer>(initialLayer),[sector,setSector]=useState<'industrial'|'commercial'>('industrial'),[month,setMonth]=useState(''),[stage,setStage]=useState('all'),[measure,setMeasure]=useState<ConstructionMeasure>(initialMeasure);
- const [selected,setSelected]=useState('TX'),[market,setMarket]=useState('ercot'),[marketKind,setMarketKind]=useState<'load'|'wholesale_price'>('load'),[marketDate,setMarketDate]=useState(''),[hover,setHover]=useState<string|null>(null),[showProjects,setShowProjects]=useState(true),[zoom,setZoom]=useState(1);
+ const [selected,setSelected]=useState('TX'),[market,setMarket]=useState('ercot'),[marketKind,setMarketKind]=useState<'load'|'wholesale_price'>('load'),[marketDate,setMarketDate]=useState(''),[showProjects,setShowProjects]=useState(true),[zoom,setZoom]=useState(1);
  const maskId='infra-empty-'+useId().replaceAll(':','');
  const model=useMemo(()=>buildInfrastructureGeography(data,{sector,month:month||undefined,statuses:stage==='all'?undefined:[stage]}),[data,sector,month,stage]);
  const markets=useMemo(()=>regionalMarketSnapshot(inputs.regionalEnergy,{kind:marketKind,date:marketDate||undefined}),[inputs.regionalEnergy,marketKind,marketDate]);
@@ -64,19 +90,28 @@ export default function InfrastructureMap({data,initialLayer='construction',init
  const estimateEligible=estimateRows.reduce((sum,row)=>sum+row.eligibleProjectCount,0);
  const estimateCached=estimateRows.reduce((sum,row)=>sum+row.cachedCount,0);
  const estimateDates=estimateRows.flatMap(row=>[row.oldestAsOfDate,row.newestAsOfDate]).filter((date):date is string=>!!date).sort();
- const hovered=hover?byCode.get(hover):null;
- const focusShape=geometry.states.find(row=>row.code===selected);
- const width=geometry.width/zoom,height=geometry.height/zoom;
- const center=zoom===1?[geometry.width/2,geometry.height/2]:focusShape?.centroid??[geometry.width/2,geometry.height/2];
- const viewBox=`${Math.max(0,Math.min(geometry.width-width,center[0]-width/2))} ${Math.max(0,Math.min(geometry.height-height,center[1]-height/2))} ${width} ${height}`;
+ const focusCode = layer === 'markets' ? marketAnchor[selectedMarket?.id ?? ''] : selected;
+ const center = geometry.states.find(shape => shape.code === focusCode)?.centroid ?? [geometry.width / 2, geometry.height / 2];
+ const offsetX = Math.min(0, Math.max(geometry.width * (1 - zoom), geometry.width / 2 - center[0] * zoom));
+ const offsetY = Math.min(0, Math.max(geometry.height * (1 - zoom), geometry.height / 2 - center[1] * zoom));
  const sampleCount=model.rows.reduce((sum,row)=>sum+row.projects.length,0);
  const sampleStates=model.rows.filter(row=>row.projects.length).length;
  const dataPeriod=layer==='markets'?(markets.date?regionalDate(markets.date,marketKind==='load'?'hourly':'daily','Asia/Shanghai'):'暂无共同观测'):layer==='construction'?'项目最近披露状态':`${model.month||'暂无观测'} · 同月比较`;
  useEffect(()=>{setLayer(initialLayer)},[initialLayer]);
- useEffect(()=>{setHover(null)},[layer,month,sector,stage,measure]);
- function selectState(code:string){setSelected(code);setHover(null)}
- function changeLayer(next:Layer){setLayer(next);setZoom(1);setHover(null)}
+ function selectState(code:string){setSelected(code)}
+ function changeLayer(next:Layer){setLayer(next);setZoom(1)}
  const rangeMin=values.length?Math.min(...values):null,rangeMax=values.length?Math.max(...values):null;
+ function stateTooltip(code: string) {
+  const row = byCode.get(code);
+  if (!row || layer === 'markets') return null;
+  return <div className="infra-tooltip" role="status">
+   <strong>{row.name} · {row.code}</strong>
+   <b>{shortNumber(stateValue(row))} <small>{unit}</small></b>
+   <span>{metricTitle} · {layer === 'construction' ? '当前样本' : model.month}</span>
+   {estimateLayer && <span>覆盖 {row[estimateKey].count} / {row[estimateKey].eligibleProjectCount} 个适用项目{row[estimateKey].cachedCount ? ' · 含缓存' : ''}</span>}
+   <span>公开项目 {row.projects.length ? row.projects.length + ' 项' : '尚无样本'} · 点击查看</span>
+  </div>;
+ }
  return <section className="infra-map" id="infrastructure-map" aria-label="数据中心与电力地图">
   <header className="infra-heading"><div><span className="infra-eyebrow"><MapPin size={14}/> INFRASTRUCTURE ATLAS</span><h2>数据中心与电力地图</h2><p>在同一张地图上，看项目建在哪里、当地用电成本和需求有多大。</p></div><div className="infra-heading-actions"><span className="infra-scope">美国 · 州级 / 区域市场</span><button type="button" className="industry-button" onClick={()=>{refresh();window.dispatchEvent(new Event('industry:refresh'))}} disabled={loading}><RefreshCw size={14} className={loading?'spinning':''}/>{loading?'检查中':'检查更新'}</button><PanelToggle open={disclosure.open} onToggle={disclosure.toggle} controls={disclosure.contentId} label="数据中心与电力地图"/></div></header>
   {!disclosure.open&&<p className="infra-collapsed">{sampleCount} 个公开项目 · {sampleStates} 个项目州 · {model.rows.filter(row=>row.price.value!=null).length} 个州有本月电价</p>}
@@ -89,15 +124,16 @@ export default function InfrastructureMap({data,initialLayer='construction',init
     <label className="infra-state-select">查看地区<select value={layer==='markets'?(selectedMarket?.id??''):selected} onChange={event=>layer==='markets'?setMarket(event.target.value):selectState(event.target.value)}>{layer==='markets'?markets.rows.map(row=><option key={row.id} value={row.id}>{row.name}</option>):geometry.states.map(row=><option key={row.code} value={row.code}>{STATE_NAMES[row.code]} · {row.code}</option>)}</select></label>
     {projectCountLayer&&<label className="infra-check"><input type="checkbox" checked={showProjects} onChange={event=>setShowProjects(event.target.checked)}/>显示项目数量</label>}
    </div>
-   <div className="infra-context"><span><b>{metricTitle}</b> · {dataPeriod}{layer==='markets'&&marketKind==='load'?'（北京）':''}</span><span>{layer==='markets'?`${markets.rows.filter(row=>row.value!=null).length} / ${markets.rows.length} 个区域有该时点观测`:`${sampleCount} 个公开项目 · ${sampleStates} 个项目州`}</span></div>
+   <div className="infra-context"><span><b>{metricTitle}</b> · {capacityLayer ? '州内已收录项目容量合计' : dataPeriod}{layer==='markets'&&marketKind==='load'?'（北京）':''}</span><span>{layer==='markets'?`${markets.rows.filter(row=>row.value!=null).length} / ${markets.rows.length} 个区域有该时点观测`:`${sampleCount} 个公开项目 · ${sampleStates} 个项目州`}</span></div>
    {estimateLayer&&<div className="infra-estimate-coverage"><span><strong>机构估算</strong> · 已覆盖 {estimateCount} / {estimateEligible} 个适用项目</span><span>数据截至 {estimateDates.length?`${estimateDates[0]} — ${estimateDates.at(-1)}`:'暂无可用记录'}</span>{estimateCached>0&&<span>其中 {estimateCached} 项展示最近成功缓存</span>}<span>来源：{[...new Set(estimateRows.flatMap(row=>row.sourceNames))].join('、')||'待接入'}</span></div>}
    <div className="infra-map-layout">
     <div className="infra-map-main">
-     <div className="infra-canvas">
+     <MapCanvas scope={[layer,measure,model.month,sector,stage,selected,zoom].join('|')} tooltip={stateTooltip}>
       <div className="infra-map-tools" role="group" aria-label="地图缩放"><button type="button" onClick={()=>setZoom(value=>Math.min(3,value+.5))} disabled={zoom>=3} aria-label="放大所选地区"><Plus size={16}/></button><button type="button" onClick={()=>setZoom(value=>Math.max(1,value-.5))} disabled={zoom<=1} aria-label="缩小地图"><Minus size={16}/></button><button type="button" onClick={()=>setZoom(1)} aria-label="重置地图"><RotateCcw size={15}/></button></div>
-      <svg viewBox={viewBox} className="infra-svg" role="group" aria-label="美国州级数据热力地图">
+      <svg viewBox={geometry.viewBox} className="infra-svg" role="group" aria-label="美国州级数据热力地图">
        <defs><pattern id={maskId} width="7" height="7" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="#eef1ef"/><path d="M-1 1L1-1M0 7L7 0M6 8L8 6" stroke="#dfe6e2" strokeWidth="1"/></pattern></defs>
-       {geometry.states.map(shape=>{const row=byCode.get(shape.code),value=row&&layer!=='markets'?stateValue(row):null;const description=`${STATE_NAMES[shape.code]}，${value==null?'暂无可比数据':shortNumber(value)+' '+unit}`;return <path key={shape.code} d={shape.path} fill={layer==='markets'?'#e8efec':colorFor(value)} className={`infra-state ${selected===shape.code&&layer!=='markets'?'is-selected':''}`} role={layer==='markets'?'presentation':'button'} tabIndex={layer==='markets'?undefined:0} aria-label={layer==='markets'?undefined:description} aria-pressed={layer==='markets'?undefined:selected===shape.code} onPointerEnter={()=>layer!=='markets'&&setHover(shape.code)} onPointerLeave={()=>setHover(null)} onFocus={()=>layer!=='markets'&&setHover(shape.code)} onBlur={()=>setHover(null)} onClick={()=>{if(layer!=='markets')selectState(shape.code)}} onKeyDown={event=>{if(layer!=='markets'&&(event.key==='Enter'||event.key===' ')){event.preventDefault();selectState(shape.code)}}}><title>{description}</title></path>})}
+       <g className="infra-map-camera" style={{transform: `translate(${offsetX}px, ${offsetY}px) scale(${zoom})`}}>
+       {geometry.states.map(shape=>{const row=byCode.get(shape.code),value=row&&layer!=='markets'?stateValue(row):null;const description=`${STATE_NAMES[shape.code]}，${value==null?'暂无可比数据':shortNumber(value)+' '+unit}`;return <path key={shape.code} d={shape.path} fill={layer==='markets'?'#e8efec':colorFor(value)} className={`infra-state ${selected===shape.code&&layer!=='markets'?'is-selected':''}`} role={layer==='markets'?'presentation':'button'} tabIndex={layer==='markets'?undefined:0} data-state-code={layer==='markets'?undefined:shape.code} aria-label={layer==='markets'?undefined:description} aria-pressed={layer==='markets'?undefined:selected===shape.code} onClick={()=>{if(layer!=='markets')selectState(shape.code)}} onKeyDown={event=>{if(layer!=='markets'&&(event.key==='Enter'||event.key===' ')){event.preventDefault();selectState(shape.code)}}}><title>{description}</title></path>})}
        {geometry.states.map(shape=>{
         const row=byCode.get(shape.code);if(layer==='markets'||!row)return null;
         const value=stateValue(row);
@@ -113,15 +149,25 @@ export default function InfrastructureMap({data,initialLayer='construction',init
         </g>;
        })}
        {layer==='markets'&&markets.rows.map(row=>{const shape=geometry.states.find(item=>item.code===marketAnchor[row.id]);return shape?<g key={row.id} className={`infra-market-point ${selectedMarket?.id===row.id?'is-selected':''}`} role="button" tabIndex={0} aria-label={`${row.name}，${shortNumber(row.value)} ${unit}`} aria-pressed={selectedMarket?.id===row.id} transform={`translate(${shape.centroid[0]},${shape.centroid[1]})`} onClick={()=>setMarket(row.id)} onKeyDown={event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();setMarket(row.id)}}}><circle r={36} className="infra-market-halo"/><circle r={23} fill={colorFor(row.value)}/><text y={46}>{row.id.toUpperCase()}</text><title>{`${row.name} · ${shortNumber(row.value)} ${unit}`}</title></g>:null})}
+       </g>
       </svg>
-      {hovered&&<div className="infra-tooltip" role="status"><strong>{hovered.name} · {hovered.code}</strong><b>{shortNumber(stateValue(hovered))} <small>{unit}</small></b><span>{metricTitle} · {layer==='construction'?'当前样本':model.month}</span>{estimateLayer&&<span>覆盖 {hovered[estimateKey].count} / {hovered[estimateKey].eligibleProjectCount} 个适用项目{hovered[estimateKey].cachedCount?' · 含缓存':''}</span>}<span>公开项目 {hovered.projects.length?hovered.projects.length+' 项':'尚无样本'} · 点击查看</span></div>}
       <div className="infra-map-caption">{layer==='markets'?'圆点为区域市场入口，点击查看负荷与批发价。':'点击州或选择右侧地区，查看项目和电力数据。'}</div>
-     </div>
+     </MapCanvas>
      <div className="infra-legend"><div><span className="infra-swatch infra-no-data"/> {layer==='construction'?'暂无样本 / 暂无可比容量':'暂无该期数据'}</div><div className="infra-color-key"><span>{shortNumber(rangeMin)}</span><span className="infra-scale">{palette.map(tone=><i key={tone} style={{background:tone}}/>)}</span><span>{shortNumber(rangeMax)} {unit}</span></div>{showProjectCounts&&<div><span className="infra-bubble-key">2</span>州内项目数</div>}</div>
      <p className="infra-map-note">{layer==='construction'?measureNotes[measure]:layer==='price'?'颜色越深，当月平均零售电价越高；可切换工业、商业口径。':layer==='sales'?'颜色越深，当月售电量越大。它反映地区整体用电规模。':'同一时间比较区域市场。圆点用于定位入口；市场覆盖多个地区，负荷反映整个电网规模。'}</p>
     </div>
     <aside className="infra-ranking" aria-label="地区对比"><header><span>{layer==='markets'?'区域市场':'同口径地区对比'}</span><small>{layer==='markets'?markets.rows.length:rank.length} 个地区</small></header><div className="infra-rank-list">
-     {layer==='markets'?markets.rows.map(row=><button type="button" key={row.id} aria-pressed={selectedMarket?.id===row.id} onClick={()=>setMarket(row.id)}><span><b>{row.name}</b><small>{regionalStatus(row.series??undefined,regionReadFailed).label}</small></span><strong>{shortNumber(row.value)}<small>{unit}</small></strong></button>):rank.length?rank.map((row,index)=><button type="button" key={row.code} aria-pressed={selected===row.code} onClick={()=>selectState(row.code)}><span className="infra-rank-number">{index+1}</span><span className="infra-rank-content"><span><b>{row.name}</b><strong>{shortNumber(stateValue(row))}</strong></span><span className="infra-rank-bar"><i style={{width:`${rangeMax&&rangeMax>0?Math.max(3,((stateValue(row)??0)/rangeMax)*100):3}%`,background:colorFor(stateValue(row))}}/></span></span></button>):<div className="infra-empty">当前口径暂无可比较数据，可切换建设阶段、容量口径或月份。</div>}
+     {layer==='markets'?markets.rows.map(row=><button type="button" key={row.id} aria-pressed={selectedMarket?.id===row.id} onClick={()=>setMarket(row.id)}><span><b>{row.name}</b><small>{regionalStatus(row.series??undefined,regionReadFailed).label}</small></span><strong>{shortNumber(row.value)}<small>{unit}</small></strong></button>):rank.length?rank.map((row,index)=>{
+      const value = stateValue(row) ?? 0;
+      const fraction = rangeMax && rangeMax > 0 ? Math.max(.03, value / rangeMax) : .03;
+      return <button type="button" key={row.code} aria-pressed={selected===row.code} onClick={()=>selectState(row.code)}>
+       <span className="infra-rank-number">{index+1}</span>
+       <span className="infra-rank-content">
+        <span><b>{row.name}</b><strong>{shortNumber(value)}</strong></span>
+        <span className="infra-rank-bar"><i style={{transform:`scaleX(${fraction})`,background:colorFor(value)}}/></span>
+       </span>
+      </button>;
+     }):<div className="infra-empty">当前口径暂无可比较数据，可切换建设阶段、容量口径或月份。</div>}
     </div><footer>{layer==='construction'?(projectCountLayer?'按所选建设阶段的项目数排序。':'按所选容量（MW）排序。'):layer==='markets'?'未取得共同观测的市场保留为空。':'按同月数值排序，缺值不参与排列。'}</footer></aside>
    </div>
    {layer==='markets'?<div className="infra-market-detail">{selectedMarket?<><header><div><span className="infra-eyebrow">REGIONAL GRID</span><h3>{selectedMarket.name}</h3></div><a className="industry-button" href={appBase()+`?page=materials&region=${encodeURIComponent(selectedMarket.id)}#${selectedMarket.series?.id??'regional-energy'}`}>查看完整电力图表<ArrowUpRight size={14}/></a></header><div className="infra-market-stats"><div><small>{metricTitle} · 当前比较时点</small><strong>{shortNumber(selectedMarket.value)} <small>{unit}</small></strong><span>{dataPeriod}</span></div><div><small>最近有效观测</small><strong>{shortNumber(selectedMarket.latest?.value)} <small>{unit}</small></strong><span>{selectedMarket.latest?regionalDate(selectedMarket.latest.date,marketKind==='load'?'hourly':'daily','Asia/Shanghai'):'尚无观测'}</span></div><div><small>数据状态</small><strong className="infra-status-text">{regionalStatus(selectedMarket.series??undefined,regionReadFailed).label}</strong><span>{regionalStatus(selectedMarket.series??undefined,regionReadFailed).detail}</span></div></div>{selectedMarket.series&&<><MiniHistory rows={selectedMarket.series.observations.map(point=>({date:point.date,value:point.value}))} unit={unit} color={salesTones[3]} frequency={marketKind==='load'?'hourly':'daily'} cutoff={markets.date??undefined}/><div className="infra-source-line"><a href={selectedMarket.series.sourceUrl??undefined} target="_blank" rel="noreferrer">{selectedMarket.series.sourceName}<ExternalLink size={12}/></a><span>最近成功获取 {dateText(selectedMarket.series.lastSuccessAt??selectedMarket.series.fetchedAt)}</span></div></>}</>:<p className="infra-empty">{loading?'正在读取区域电力数据…':'区域电力数据尚未取得。可检查更新后重试。'}</p>}</div>:

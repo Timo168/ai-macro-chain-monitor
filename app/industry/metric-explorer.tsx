@@ -1,5 +1,5 @@
 "use client";
-import {useEffect,useId,useMemo,useRef,useState,type ReactNode} from 'react';
+import {useEffect,useId,useMemo,useState,type ReactNode} from 'react';
 import {ChevronDown,ChevronLeft,ChevronRight,ChevronUp,ChartNoAxesCombined} from 'lucide-react';
 import type {IndustryDataset,MetricDefinition} from '@/lib/industry/types';
 import {ALL_ENTITIES,METRICS_PER_PAGE,entityLabel,metricAnchor,metricEntity,metricExplorerPreference,metricExplorerSummary,metricPage,metricSelectionHistory,resolveMetricExplorer} from '@/lib/industry/metric-explorer.mjs';
@@ -17,18 +17,22 @@ export default function MetricExplorer({data,category,search,now,renderMetric,on
  const [saved,setSaved]=useSavedView('industry:explorer:'+category,initialSelection,metricExplorerPreference);
  const [detailOpen,setDetailOpen]=useSavedView('industry:explorer:'+category+':detail',true,booleanPreference);
  const [anchor,setAnchor]=useState(()=>typeof window==='undefined'?'':metricAnchor(location.hash));
- const [routeSequence,setRouteSequence]=useState(0);
- const pendingAnchor=useRef(anchor);
  const [page,setPage]=useState(0);
  const detailId='metric-explorer-detail-'+useId().replaceAll(':','');
  const view=useMemo(()=>resolveMetricExplorer(data.definitions,{category,search,...saved,anchorId:anchor}),[data.definitions,category,search,saved,anchor]);
  const pages=Math.max(1,Math.ceil(view.rows.length/METRICS_PER_PAGE));
  const safePage=Math.min(page,pages-1);
- const summaries=useMemo(()=>new Map(view.rows.map(definition=>[definition.id,metricExplorerSummary(definition,data.series[definition.id],now)])),[view.rows,data.series,now]);
+ const pageSummaries=useMemo(()=>{
+  const start=safePage*METRICS_PER_PAGE;
+  return view.rows.slice(start,start+METRICS_PER_PAGE).map(definition=>({
+   definition,
+   summary:metricExplorerSummary(definition,data.series[definition.id],now),
+  }));
+ },[view.rows,safePage,data.series,now]);
  const selectedId=view.selected?.id??'';
 
  useEffect(()=>{
-  const read=()=>{const id=metricAnchor(location.hash);pendingAnchor.current=id;setAnchor(id);setRouteSequence(sequence=>sequence+1);if(id)setDetailOpen(true);};
+  const read=()=>{const id=metricAnchor(location.hash);setAnchor(id);if(id)setDetailOpen(true);};
   read();window.addEventListener('hashchange',read);window.addEventListener('popstate',read);
   return()=>{window.removeEventListener('hashchange',read);window.removeEventListener('popstate',read);};
  },[category,setDetailOpen]);
@@ -38,11 +42,6 @@ export default function MetricExplorer({data,category,search,now,renderMetric,on
   // Page changes alone must not jump back to the selected row.
  },[category,search,view.entity,selectedId]);
  useEffect(()=>{if(view.selected)onSelect?.(view.selected);},[selectedId,onSelect]);
- useEffect(()=>{
-  if(!selectedId||pendingAnchor.current!==selectedId)return;
-  const frame=requestAnimationFrame(()=>{document.getElementById(selectedId)?.scrollIntoView({block:'start'});pendingAnchor.current='';});
-  return()=>cancelAnimationFrame(frame);
- },[selectedId,anchor,routeSequence]);
  // Store a resolved deep link only after its definition has arrived.
  useEffect(()=>{
   if(anchor&&view.selected?.id===anchor&&(saved.metricId!==anchor||saved.entity!==view.entity))setSaved({entity:view.entity,metricId:anchor});
@@ -50,7 +49,6 @@ export default function MetricExplorer({data,category,search,now,renderMetric,on
 
  function writeSelection(definition:MetricDefinition|null,entity:string){
   const id=definition?.id??'';
-  pendingAnchor.current='';
   if(id)revealPanel('industry:metric:'+id);
   setSaved({entity,metricId:id});setAnchor(id);setDetailOpen(true);
   for(const step of metricSelectionHistory(location.href,selectedId,id))history[step.method](history.state,'',step.url);
@@ -72,10 +70,10 @@ export default function MetricExplorer({data,category,search,now,renderMetric,on
    <div className="metric-explorer-directory">
     <div className="metric-explorer-directory-title"><strong>指标速览</strong><span>{view.rows.length} 项{search.trim()?' · 搜索结果':''}</span></div>
     {view.rows.length===0?<div className="metric-explorer-empty"><p>{view.categoryCount?'没有符合当前筛选的指标。':'该环节尚未接入指标。'}</p>{view.categoryCount>0&&<button type="button" className="industry-button" onClick={clearFilters}>清除筛选</button>}</div>:<>
-     <div className="metric-explorer-list" aria-label="选择要查看的指标">{view.rows.slice(safePage*METRICS_PER_PAGE,(safePage+1)*METRICS_PER_PAGE).map(definition=>{
-      const summary=summaries.get(definition.id)!;const active=definition.id===selectedId;
+     <div className="metric-explorer-list" aria-label="选择要查看的指标">{pageSummaries.map(({definition,summary})=>{
+      const active=definition.id===selectedId;
       return <button type="button" className={'metric-explorer-row'+(active?' is-selected':'')} key={definition.id} aria-pressed={active} onClick={()=>writeSelection(definition,view.entity)}>
-       <span className="metric-explorer-row-title"><span><small>{entityLabel(metricEntity(definition))}</small><strong>{definition.nameZh}</strong></span>{active&&<ChartNoAxesCombined size={16} aria-hidden="true"/>}</span>
+       <span className="metric-explorer-row-title"><span><small>{entityLabel(metricEntity(definition))}</small><strong>{definition.nameZh}</strong></span><ChartNoAxesCombined size={16} aria-hidden="true"/></span>
        <span className="metric-explorer-row-number"><b>{format(summary.value)}</b><span>{summary.unit}</span></span>
        <span className="metric-explorer-row-meta"><span>{summary.yoyLabel} {summary.yoy==null?'—':`${summary.yoy>0?'↑ ':summary.yoy<0?'↓ ':'→ '}${format(Math.abs(summary.yoy))} ${summary.yoyUnit}`}</span><span>{summary.period??'暂无观测期'}</span></span>
        <span className={'metric-explorer-row-state'+(summary.warning?' is-warning':'')}>{summary.status}</span>

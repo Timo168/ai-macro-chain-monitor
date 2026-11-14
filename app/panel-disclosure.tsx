@@ -1,6 +1,6 @@
 "use client";
 
-import {useCallback,useEffect,useId,useState,type ReactNode} from 'react';
+import {useCallback,useEffect,useId,useLayoutEffect,useRef,useState,type ReactNode} from 'react';
 import {ChevronDown,ChevronUp} from 'lucide-react';
 import './panel-disclosure.css';
 
@@ -52,16 +52,51 @@ export function usePanelDisclosure(panelKey:string,{defaultOpen=true,anchorId,sc
 }
 
 export function PanelToggle({open,onToggle,controls,label}:{open:boolean;onToggle:()=>void;controls:string;label:string}){
- return <button type="button" className="panel-toggle" aria-expanded={open} aria-controls={controls} aria-label={`${open?'收起':'展开'}${label}`} onClick={onToggle}>
-  {open?<ChevronUp size={15} aria-hidden="true"/>:<ChevronDown size={15} aria-hidden="true"/>}<span>{open?'收起':'展开'}</span>
+ return <button type="button" className="panel-toggle" aria-expanded={open} aria-controls={controls} aria-label={`${open?'收起':'展开'}${label}`} onClick={event=>{
+  const body=event.currentTarget.ownerDocument.getElementById(controls);
+  if(body?.classList.contains('panel-body')&&typeof body.animate==='function'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+   toggleHeights.set(body,body.offsetHeight);
+  }
+  onToggle();
+ }}>
+  <ChevronDown size={15} aria-hidden="true"/><span>{open?'收起':'展开'}</span>
  </button>;
 }
+
+// Capture only a direct toggle. Restoring preferences, jumping to an anchor,
+// and expanding a whole dashboard should all lay out immediately.
+const toggleHeights=new WeakMap<HTMLElement,number>();
 
 /** Keep visited content mounted so filters, chart windows and inputs survive folding. */
 export function PanelBody({open,id,children,className=''}:{open:boolean;id:string;children:ReactNode;className?:string}){
  const [visited,setVisited]=useState(open);
+ const bodyRef=useRef<HTMLDivElement>(null);
  useEffect(()=>{if(open)setVisited(true);},[open]);
- return <div id={id} hidden={!open} className={'panel-body '+className}>{open||visited?children:null}</div>;
+ useLayoutEffect(()=>{
+  const body=bodyRef.current;
+  if(!body)return;
+  const from=toggleHeights.get(body);
+  toggleHeights.delete(body);
+  body.hidden=!open;
+  if(from===undefined)return;
+
+  // A second toggle starts at the visible height of the interrupted animation.
+  body.hidden=false;
+  const to=open?body.offsetHeight:0;
+  if(Math.abs(from-to)<1){body.hidden=!open;return;}
+  body.dataset.folding='';
+  const animation=body.animate([{height:`${from}px`},{height:`${to}px`}],{
+   duration:180,easing:'cubic-bezier(.2,.75,.25,1)',fill:'both',
+  });
+  const clear=()=>{
+   animation.onfinish=null;
+   animation.cancel();
+   delete body.dataset.folding;
+  };
+  animation.onfinish=()=>{body.hidden=!open;clear();};
+  return clear;
+ },[open]);
+ return <div ref={bodyRef} id={id} hidden={!open} inert={!open} className={'panel-body '+className}>{open||visited?children:null}</div>;
 }
 
 export function PanelBatchActions({scope,panelKeys}:{scope:string;panelKeys?:string[]}){
