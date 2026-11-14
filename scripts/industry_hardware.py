@@ -4,6 +4,8 @@ from datetime import date,datetime,timedelta
 from bs4 import BeautifulSoup
 from industry_common import DATA,now,definition,observation,persist
 from industry_releases import fetch_official as fetch
+from industry_common import fetch as fetch_twse
+from industry_tsm_monthly import fill_latest
 from industry_collect import html_tables,row_numbers,dynamic_sources,validate_fiscal_end,merge_ingested,source_publication
 FORCE='--force' in sys.argv
 DATE=re.compile(r'([A-Z][a-z]+ \d{1,2}\s*,?\s*20\d\d)')
@@ -65,7 +67,7 @@ def parse_amd_release(raw):
  if len(periods)!=3 or dates(pnl)[:3]!=periods or any(len(values)<3 for values in [revenue,center,profit,margin]):
   raise ValueError('AMD dated three-quarter segment and GAAP columns do not agree')
  return [{'periodEnd':end,'fiscalPeriod':f'FY{end[:4]} Q{(int(end[5:7])+2)//3}','datacenter_revenue':center[i],'revenue':revenue[i],'datacenter_profit':profit[i],'gross_margin':margin[i]} for i,end in enumerate(periods)]
-def run(entities=None):
+def run(entities=None,latest_tsm_only=False):
  selected=set(entities or ('DELL','AMD','TSM'))
  path=DATA/'hardware.json';old=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {};defs={};points={};errors={};stamps={};records=[]
  def add(id,name,family,entity,unit,value_type,url,end,value,stamp,version,items,fiscal=None,start=None,published=None):
@@ -112,7 +114,7 @@ def run(entities=None):
    records.append({**item,'publishedAt':published,'end':rows[0]['periodEnd'],'values':rows[0],'fetchedAt':stamp,'parsedAt':now(),'version':version,'status':'ready','checkedAt':now()})
    errors.pop('AMD',None)
   except Exception as e:errors['AMD']=str(e);records.append({**item,'values':{},'status':'fetch_failed','checkedAt':now(),'error':str(e)})
- for year in range(2021,date.today().year+1) if 'TSM' in selected else []:
+ for year in range(2021,date.today().year+1) if 'TSM' in selected and not latest_tsm_only else []:
   url=f'https://investor.tsmc.com/english/monthly-revenue/{year}'
   try:
    raw,stamp,version=fetch(url,force=FORCE and year==date.today().year);soup,tables=html_tables(raw);table=next(t for t in tables if any('Net Revenue' in ' '.join(r) for r in t));text=soup.get_text(' ',strip=True)
@@ -132,7 +134,15 @@ def run(entities=None):
     if i and 75<=(date.fromisoformat(obs['periodEnd'])-date.fromisoformat(observations[i-1]['periodEnd'])).days<=105:obs['periodStart']=(date.fromisoformat(observations[i-1]['periodEnd'])+timedelta(days=1)).isoformat()
   result['series'][id]={'observations':observations,'status':'cached' if id.split('.')[0] in errors else 'ready','fetchedAt':observations[-1]['fetchedAt'],'checkedAt':now(),'error':errors.get(id.split('.')[0])}
  for d in old.get('definitions',[]):
-  if d['id'] not in result['series']:result['definitions'].append(d);result['series'][d['id']]=old['series'][d['id']] if d.get('entity') not in selected else {**old['series'][d['id']],'status':'cached','checkedAt':now(),'error':errors.get(d.get('entity'),'来源未返回可解析数据')}
+  if d['id'] not in result['series']:result['definitions'].append(d);result['series'][d['id']]=old['series'][d['id']] if d.get('entity') not in selected or latest_tsm_only else {**old['series'][d['id']],'status':'cached','checkedAt':now(),'error':errors.get(d.get('entity'),'来源未返回可解析数据')}
+ if 'TSM' in selected and result['series'].get('TSM.revenue'):
+  try:
+   if fill_latest(result,date.today(),fetch_twse):errors.pop('TSM',None)
+  except Exception as e:
+   # Before the next month is published the annual table may still be current.
+   # Retain its real observation and its original status in that case.
+   if latest_tsm_only or 'TSM' in errors:
+    errors['TSM']=str(e);result['series']['TSM.revenue'].update(status='cached',checkedAt=now(),error=str(e))
  result['ingestedReleases']=merge_ingested(old.get('ingestedReleases',[]),records)
  result['sourceRuns']=[r for r in old.get('sourceRuns',[]) if r.get('entity') not in selected]+[{key:r.get(key) for key in ('entity','year','q','url','publishedAt','status','checkedAt','error')} for r in records]
  from industry_dell_source import source_metadata
@@ -144,4 +154,4 @@ def run(entities=None):
  if DATA.resolve()==(__import__('pathlib').Path(__file__).resolve().parents[1]/'data'/'industry').resolve():result=restore_bootstrap('server-history.json',result,backfill_history=True)
  persist(result,path);print('Hardware metrics',len(result['series']),'errors',errors)
 if __name__=='__main__':
- cli=argparse.ArgumentParser();cli.add_argument('--force',action='store_true');cli.add_argument('--entity',action='append',choices=('DELL','AMD','TSM'));args=cli.parse_args();run(args.entity)
+ cli=argparse.ArgumentParser();cli.add_argument('--force',action='store_true');cli.add_argument('--entity',action='append',choices=('DELL','AMD','TSM'));cli.add_argument('--latest-tsm-only',action='store_true');args=cli.parse_args();run(['TSM'] if args.latest_tsm_only else args.entity,args.latest_tsm_only)

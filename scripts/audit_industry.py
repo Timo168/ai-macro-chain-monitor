@@ -63,8 +63,26 @@ def tsm_revenue(d,p):
     from urllib.parse import urlsplit
     end=date.fromisoformat(p['periodEnd'])
     url=p['sourceUrl']
-    assert urlsplit(url).hostname=='investor.tsmc.com' and urlsplit(url).path==f'/english/monthly-revenue/{end.year}'
     assert end.day==calendar.monthrange(end.year,end.month)[1] and d['currency']=='TWD' and d['unit']=='亿新台币'
+    if urlsplit(url).hostname=='mopsov.twse.com.tw':
+        assert url==f'https://mopsov.twse.com.tw/nas/t21/sii/t21sc03_{end.year-1911}_{end.month}_0.html'
+        soup=BeautifulSoup(versioned_bytes(url,p.get('sourceDocumentVersion')).decode('cp950'),'html.parser')
+        assert re.search(rf'上市公司\s*{end.year-1911}年\s*{end.month}月份',soup.get_text(' ',strip=True))
+        rows=[row for row in soup.select('tr') if row.find('td',recursive=False) and row.find('td',recursive=False).get_text(strip=True)=='2330']
+        assert len(rows)==1
+        cells=[c.get_text(strip=True) for c in rows[0].find_all('td',recursive=False)]
+        table=rows[0].find_parent('table')
+        assert table.find_previous(string=re.compile(r'單位[：:]\s*千元')) and cells[1]=='台積電'
+        header=next(r for r in table.select('tr') if '當月營收' in [c.get_text(strip=True) for c in r.find_all('th',recursive=False)])
+        index=[c.get_text(strip=True) for c in header.find_all('th',recursive=False)].index('當月營收')
+        thousand=int(cells[index].replace(',',''))
+        from decimal import Decimal,ROUND_HALF_UP
+        million=int((Decimal(thousand)/1000).quantize(Decimal(1),rounding=ROUND_HALF_UP))
+        assert p['originalUnit']=='TWD thousand' and p['originalCurrency']=='TWD' and p['originalValue']==thousand
+        assert p['originalItems']=={'companyCode':'2330','reportedThousandTwd':thousand,'reportedMillionTwd':million}
+        assert million/100==p['value']
+        return 'matched TWSE monthly archive, issuer 2330, dated current revenue in TWD thousands, rounded to issuer annual-table precision'
+    assert urlsplit(url).hostname=='investor.tsmc.com' and urlsplit(url).path==f'/english/monthly-revenue/{end.year}'
     raw=versioned_bytes(url,p.get('version'))
     def amount(raw):
         soup=BeautifulSoup(raw,'html.parser')

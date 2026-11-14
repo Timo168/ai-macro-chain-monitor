@@ -90,6 +90,31 @@ def retry_minutes(failures):
     """Back off 15, 30, 60, then 120 minutes after an upstream failure."""
     return min(120,15*2**min(max(int(failures or 0)-1,0),3))
 
+def retry_monthly_revenue(state,current,daily_collected):
+    # The daily sweep checks all sources. Retry only this cached series if
+    # a closed reporting month is missing, with the same bounded backoff.
+    if daily_collected:return
+    previous=state.get('tsmMonthlyRetry',{})
+    if current<state_time(previous.get('nextCheckAt')):return
+    path=DATA/'hardware.json'
+    if not path.exists():return
+    series=json.loads(path.read_text(encoding='utf-8')).get('series',{}).get('TSM.revenue',{})
+    if series.get('status')!='cached' or not series.get('observations'):
+        state.pop('tsmMonthlyRetry',None);return
+    from industry_tsm_monthly import last_closed_month
+    target=last_closed_month(current.date()).isoformat()
+    if any(p.get('periodEnd','')>=target and p.get('value') is not None for p in series['observations']):
+        state.pop('tsmMonthlyRetry',None);return
+    count=int(previous.get('failureCount',0))+1
+    try:
+        result=run_background([sys.executable,str(ROOT/'scripts'/'industry_hardware.py'),'--latest-tsm-only'],cwd=ROOT,timeout=90)
+        series=json.loads(path.read_text(encoding='utf-8'))['series']['TSM.revenue']
+        if result.returncode==0 and any(p['periodEnd']==target and p.get('value') is not None for p in series['observations']):
+            state.pop('tsmMonthlyRetry',None);return
+    except (OSError,ValueError,KeyError,subprocess.TimeoutExpired):
+        pass
+    state['tsmMonthlyRetry']={'periodEnd':target,'failureCount':count,'nextCheckAt':(current+timedelta(minutes=retry_minutes(count))).isoformat()}
+
 def source_snapshot_health(snapshot):
     """Treat cached and fetch_failed source states as retryable failures."""
     try:
@@ -287,6 +312,7 @@ def run(force=False,build_research=True):
                 if result.returncode:failures.append(script)
             except Exception as error:failures.append(script+': '+str(error))
         state.update({'collectorVersion':16,'lastAttemptAt':now(),'dailyFailures':failures})
+    retry_monthly_revenue(state,current,daily_due)
     refresh_project_capacity(state,current,daily_collected=daily_due)
     history_failures=repair_amazon_history(state,current,daily_collected=daily_due)
     fast_next=[]
@@ -297,6 +323,8 @@ def run(force=False,build_research=True):
         if record.get('status')!='ready':fast_failures.append(spec['script']+': '+', '.join(record.get('failedSeries',[])))
     daily_next=last+timedelta(hours=24) if not daily_due else current+timedelta(hours=24)
     history_next=[state_time(item['nextCheckAt']) for item in state.get('historyRepairs',{}).values() if item.get('status')!='ready' and item.get('nextCheckAt')]
+    tsm_check=state_time(state.get('tsmMonthlyRetry',{}).get('nextCheckAt'))
+    if tsm_check>current:history_next.append(tsm_check)
     state.update({
         'collectorVersion':16,
         'failures':(state.get('dailyFailures',[])+fast_failures+release_failures+history_failures),

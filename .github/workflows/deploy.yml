@@ -110,6 +110,7 @@ jobs:
           python tests/industry_bootstrap_test.py
           python tests/industry_releases_test.py
           python tests/industry_dell_source_test.py
+          python tests/tsm_monthly_test.py
           python tests/financial_dynamic_test.py
           python tests/oracle_hpe_dynamic_test.py
           python tests/financial_schedule_test.py
