@@ -296,7 +296,7 @@ def daily_collector(script):
 def local_daily_sweep(path,state,current,deadline):
     # A process exit is the checkpoint. A source can still report cached values.
     digest=hashlib.sha256(b'local-daily-v1:16')
-    for name in ('industry_common.py','industry_releases.py',*DAILY_SCRIPTS):
+    for name in ('industry_schedule.py','industry_common.py','industry_releases.py',*DAILY_SCRIPTS):
         digest.update((ROOT/'scripts'/name).read_bytes())
     version=digest.hexdigest()
     steps=('discovery',*DAILY_SCRIPTS)
@@ -344,7 +344,14 @@ def run(force=False,build_research=True,local_deadline=None):
             definitions=[d for d in initial['definitions'] if d.get('sourceAdapter')=='power-load' and initial['series'][d['id']]['observations']]
             if definitions:atomic(target,{'definitions':definitions,'series':{d['id']:initial['series'][d['id']] for d in definitions},'projects':[],'events':[]})
     path=DATA/'scheduler.json'
-    state=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+    try:
+        state=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+        if not isinstance(state,dict):
+            raise ValueError('industry scheduler state must be an object')
+    except (ValueError,UnicodeError) as error:
+        if local_deadline is None:raise
+        print(f'Industry scheduler state could not be read; starting a new daily sweep: {error}',flush=True)
+        state={}
     current=datetime.now(timezone.utc)
     last=state_time(state.get('lastAttemptAt'))
     daily_due=force or current-last>=timedelta(hours=24) or state.get('collectorVersion')!=16

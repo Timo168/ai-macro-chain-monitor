@@ -81,6 +81,17 @@ class LocalDailySweepTests(unittest.TestCase):
                 self.assertTrue(self.run_sweep({'localDailySweep':{**record,**changes}},[0,1,2,3]))
                 self.assertEqual([call.args[0] for call in self.collect.call_args_list],list(self.scripts))
 
+    def test_unreadable_local_state_restarts_without_marking_any_collector_done(self):
+        for bad_state in ['{','[]']:
+            with self.subTest(bad_state=bad_state):
+                self.path.write_text(bad_state,encoding='utf-8')
+                with patch.object(schedule,'DATA',self.path.parent),patch.object(schedule.time,'monotonic',return_value=101):
+                    schedule.run(build_research=False,local_deadline=100)
+                recovered=self.restore()
+                self.assertNotIn('lastAttemptAt',recovered)
+                self.assertEqual(recovered['localDailySweep']['finished'],{})
+                self.collect.assert_not_called()
+
 
 if __name__=='__main__':
     unittest.main()
