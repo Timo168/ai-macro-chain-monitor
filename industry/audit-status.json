@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "status": "failed",
-  "startedAt": "2026-11-14T08:59:12.512787+00:00",
-  "completedAt": "2026-11-14T09:01:22.076990+00:00",
+  "status": "partial",
+  "startedAt": "2026-11-14T13:41:38.289492+00:00",
+  "completedAt": "2026-11-14T13:43:56.836169+00:00",
   "lastSuccessAt": null,
-  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/43578249928",
-  "checkedSnapshotAt": "2026-11-14T02:33:41.527Z",
+  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/43600719505",
+  "checkedSnapshotAt": "2026-11-14T13:38:40.269Z",
   "checks": [
     {
       "id": "restored_data",
@@ -13,197 +13,30 @@
     },
     {
       "id": "industry_source_replay",
-      "startedAt": "2026-11-14T08:59:12.710815+00:00",
-      "status": "failed",
-      "exitCode": 1,
-      "error": "来源或计算重放未通过；失败明细见检查报告和运行日志。",
-      "completedAt": "2026-11-14T09:01:22.076966+00:00"
+      "startedAt": "2026-11-14T13:41:38.579058+00:00",
+      "status": "partial",
+      "exitCode": 0,
+      "completedAt": "2026-11-14T13:43:56.836151+00:00"
     }
   ],
   "scope": "行业公开来源抽查和计算重放；不验证投资收益，也不代表所有历史点都逐点通过。",
   "sampleCounts": {
-    "automaticSamples": 396,
-    "currentSourceReplaySamples": 326,
-    "previousSourceReplaySamples": 70,
-    "manualFactLedgerSamples": 12,
-    "failedSamples": 30
+    "automaticSamples": 413,
+    "currentSourceReplaySamples": 344,
+    "previousSourceReplaySamples": 69,
+    "manualFactLedgerSamples": 24,
+    "failedSamples": 0,
+    "unavailableSamples": 1
   },
-  "failures": [
-    {
-      "metricId": "DELL.revenue",
-      "periodEnd": "2023-05-05",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2025-financial",
-      "version": "aaf6d191a7c549c7eb98a28cb0a2cb0c11d5f2f551bf631fa1a84d85da97bc25",
-      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
-    },
-    {
-      "metricId": "DELL.revenue",
-      "periodEnd": "2025-01-31",
-      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
-      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
-      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
-    },
-    {
-      "metricId": "DELL.gross_margin",
-      "periodEnd": "2023-05-05",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2025-financial",
-      "version": "aaf6d191a7c549c7eb98a28cb0a2cb0c11d5f2f551bf631fa1a84d85da97bc25",
-      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
-    },
-    {
-      "metricId": "DELL.gross_margin",
-      "periodEnd": "2025-01-31",
-      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
-      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
-      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
-    },
-    {
-      "metricId": "DELL.storage_revenue",
-      "periodEnd": "2023-05-05",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2025-financial",
-      "version": "aaf6d191a7c549c7eb98a28cb0a2cb0c11d5f2f551bf631fa1a84d85da97bc25",
-      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
-    },
-    {
-      "metricId": "DELL.storage_revenue",
-      "periodEnd": "2025-01-31",
-      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
-      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
-      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
-    },
-    {
-      "metricId": "DELL.servers_networking_revenue",
-      "periodEnd": "2023-05-05",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2025-financial",
-      "version": "aaf6d191a7c549c7eb98a28cb0a2cb0c11d5f2f551bf631fa1a84d85da97bc25",
-      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
-    },
-    {
-      "metricId": "DELL.servers_networking_revenue",
-      "periodEnd": "2025-01-31",
-      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
-      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
-      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
-    },
-    {
-      "metricId": "DELL.inventory",
-      "periodEnd": "2025-05-02",
-      "sourceUrl": "https://investors.delltechnologies.com/news-releases/news-release-details/dell-technologies-delivers-first-quarter-fiscal-2026-financial",
-      "version": "bcf312e95dca2764f64d106c2744571511c069d62fa98681d6548e2550d68de8",
-      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
-    },
-    {
-      "metricId": "DELL.ai_server_revenue",
-      "periodEnd": "2025-01-31",
-      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
-      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
-      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
-    },
-    {
-      "metricId": "DELL.ai_server_revenue",
-      "periodEnd": "2026-01-30",
-      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
-      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
-      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
-    },
-    {
-      "metricId": "DELL.server_revenue",
-      "periodEnd": "2025-01-31",
-      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
-      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
-      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
-    },
-    {
-      "metricId": "DELL.server_revenue",
-      "periodEnd": "2026-01-30",
-      "sourceUrl": "https://investors.delltechnologies.com/node/19176",
-      "version": "4df93821e77e6522811244bbaf9e7e53982da236f3b13186609e76b8bb80eedc",
-      "error": "ValueError: Dell 官方索引未找到唯一的同财政期财报"
-    },
-    {
-      "metricId": "TSM.revenue",
-      "periodEnd": "2026-09-30",
-      "sourceUrl": "https://investor.tsmc.com/english/monthly-revenue/2026",
-      "version": "5321b6811792ce37ba36b3ccf363a1eb7e1a993ce98b135af804b4f6f134ff89",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "AMKR.advanced_products_revenue",
-      "periodEnd": "2024-03-31",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
-      "version": "409836b5e0b2451e49d3f75d0e0d2929e5edd3efa28cc2aa08c4c4eab0db903c",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "AMKR.advanced_products_revenue",
-      "periodEnd": "2025-06-30",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
-      "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "AMKR.company_revenue",
-      "periodEnd": "2024-03-31",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
-      "version": "409836b5e0b2451e49d3f75d0e0d2929e5edd3efa28cc2aa08c4c4eab0db903c",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "AMKR.company_revenue",
-      "periodEnd": "2025-06-30",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
-      "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "AMKR.gross_margin",
-      "periodEnd": "2024-03-31",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
-      "version": "409836b5e0b2451e49d3f75d0e0d2929e5edd3efa28cc2aa08c4c4eab0db903c",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "AMKR.gross_margin",
-      "periodEnd": "2025-06-30",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
-      "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "AMKR.materials_cost_share",
-      "periodEnd": "2024-03-31",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
-      "version": "409836b5e0b2451e49d3f75d0e0d2929e5edd3efa28cc2aa08c4c4eab0db903c",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "AMKR.materials_cost_share",
-      "periodEnd": "2025-06-30",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
-      "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
+  "failures": [],
+  "unavailableSources": [
     {
       "metricId": "AMKR.capex",
-      "periodEnd": "2024-03-31",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
-      "version": "f32536071daca7c64aeb52fa5f9ed69d86211b82d0596704a47b02febac90261",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "AMKR.capex",
-      "periodEnd": "2025-06-30",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
-      "version": "1b8d0206074c0d54fbe8ae4184ffbf66f4fbc6d73f2286f0aa6fc8d9f71b38e6",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "ENTG.company_revenue",
-      "periodEnd": "2025-06-28",
-      "sourceUrl": "https://investor.entegris.com/news/news-details/2025/Entegris-Reports-Results-for-Second-Quarter-of-2025/default.aspx",
-      "version": "e2c032f53dcde00a60b14b121f4ae26f1617b31691842490b89facd7113fea59",
-      "error": "RuntimeError: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+      "periodEnd": "2026-06-30",
+      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2026",
+      "version": "e4d415007a6d2cd34789e94c3748709280f9574e00c24e7f521b135e1586889c",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     }
   ],
-  "error": "本次检查未全部通过，详见逐项结果；这不代表所有数据均不可用。"
+  "error": "部分官方来源暂时无法访问，待下次复核。"
 }
