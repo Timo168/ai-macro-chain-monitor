@@ -1,5 +1,5 @@
 """Independent daily industry refresh; browser requests only read the snapshot."""
-import json,subprocess,sys
+import hashlib,json,subprocess,sys,time
 from datetime import datetime,timezone,timedelta
 from industry_common import DATA,ROOT,atomic,now
 from industry_reviewed import materialize
@@ -279,7 +279,53 @@ def refresh_research():
     result=run_background(['node',str(ROOT/'scripts/build-investment-research.mjs')],cwd=ROOT)
     if result.returncode:raise RuntimeError('Investment research build failed; last successful snapshot retained')
 
-def run(force=False,build_research=True):
+DAILY_SCRIPTS=(
+    'industry_collect.py','industry_hardware.py','industry_supply_evidence.py','industry_packaging.py',
+    'industry_materials.py','industry_cross_company.py','industry_costs.py','industry_oracle.py',
+    'industry_sia.py','industry_extended.py','industry_power_load.py','industry_projects.py',
+    'industry_sector_financials.py','industry_institutions.py',
+)
+
+def daily_collector(script):
+    try:
+        result=run_background([sys.executable,str(ROOT/'scripts'/script)],cwd=ROOT,timeout=600)
+        return script if result.returncode else None
+    except Exception as error:
+        return script+': '+str(error)
+
+def local_daily_sweep(path,state,current,deadline):
+    # A process exit is the checkpoint. A source can still report cached values.
+    digest=hashlib.sha256(b'local-daily-v1:16')
+    for name in ('industry_common.py','industry_releases.py',*DAILY_SCRIPTS):
+        digest.update((ROOT/'scripts'/name).read_bytes())
+    version=digest.hexdigest()
+    steps=('discovery',*DAILY_SCRIPTS)
+    record=state.get('localDailySweep')
+    valid=(isinstance(record,dict) and record.get('version')==version
+           and timedelta()<=current-state_time(record.get('startedAt'))<=timedelta(days=2)
+           and isinstance(record.get('finished'),dict)
+           and tuple(record['finished'])==steps[:len(record['finished'])]
+           and all(key in steps and isinstance(val,list) and all(isinstance(e,str) for e in val)
+                   for key,val in record['finished'].items()))
+    if not valid:
+        record=state['localDailySweep']={'version':version,'startedAt':current.isoformat(),'finished':{}}
+        atomic(path,state)
+    finished=record['finished']
+    for step in steps:
+        if step in finished:continue
+        if time.monotonic()>=deadline:
+            print(f'Industry daily sweep: {len(finished)}/{len(steps)} steps checked. Resume at {step}.',flush=True)
+            return False
+        if step=='discovery':
+            errors=financial_release_checks(state,current,True,set(FINANCIAL_COLLECTORS.values()))
+        else:
+            error=daily_collector(step)
+            errors=[error] if error else []
+        finished[step]=errors
+        atomic(path,state)
+    return True
+
+def run(force=False,build_research=True,local_deadline=None):
     reviewed=DATA/'public-reviewed.json'
     if reviewed.exists():materialize()
     # Bootstrap normalized history so a first-run source outage cannot erase the reviewed seed.
@@ -303,15 +349,24 @@ def run(force=False,build_research=True):
     last=state_time(state.get('lastAttemptAt'))
     daily_due=force or current-last>=timedelta(hours=24) or state.get('collectorVersion')!=16
     # Discover actual official URLs before any adapter attempts a new quarter.
-    release_failures=financial_release_checks(state,current,force or daily_due,set(FINANCIAL_COLLECTORS.values()) if daily_due else ())
+    if daily_due and local_deadline is not None:
+        if not local_daily_sweep(path,state,current,local_deadline):return
+        finished=state['localDailySweep']['finished']
+        release_failures=finished['discovery']
+        failures=[error for key in DAILY_SCRIPTS for error in finished[key]]
+    else:
+        release_failures=financial_release_checks(state,current,force or daily_due,set(FINANCIAL_COLLECTORS.values()) if daily_due else ())
+        if daily_due:failures=[error for script in DAILY_SCRIPTS if (error:=daily_collector(script))]
     if daily_due:
-        failures=[]
-        for script in ['industry_collect.py','industry_hardware.py','industry_supply_evidence.py','industry_packaging.py','industry_materials.py','industry_cross_company.py','industry_costs.py','industry_oracle.py','industry_sia.py','industry_extended.py','industry_power_load.py','industry_projects.py','industry_sector_financials.py','industry_institutions.py']:
-            try:
-                result=run_background([sys.executable,str(ROOT/'scripts'/script)],cwd=ROOT,timeout=600)
-                if result.returncode:failures.append(script)
-            except Exception as error:failures.append(script+': '+str(error))
         state.update({'collectorVersion':16,'lastAttemptAt':now(),'dailyFailures':failures})
+        state.pop('localDailySweep',None)
+        if local_deadline is not None:
+            # The costly daily sweep stays complete even if a later auxiliary task is interrupted.
+            state['failures']=release_failures+failures
+            atomic(path,state)
+            if time.monotonic()>=local_deadline:
+                print('Industry daily sweep finished; auxiliary checks will continue on the next run.',flush=True)
+                return
     retry_monthly_revenue(state,current,daily_due)
     refresh_project_capacity(state,current,daily_collected=daily_due)
     history_failures=repair_amazon_history(state,current,daily_collected=daily_due)

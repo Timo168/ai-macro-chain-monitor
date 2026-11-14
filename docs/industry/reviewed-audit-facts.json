@@ -184,6 +184,70 @@
           "evidenceKey": "54de09190d3f6c0277bb0d255fc118fcaa0576469f0162fed5654ec94f5ccf05"
         }
       ]
+    },
+    {
+      "periodEnd": "2021-01-31",
+      "fiscalPeriod": null,
+      "observationSourceUrl": "https://investor.tsmc.com/english/monthly-revenue/2021",
+      "reviewedSourceUrl": "https://mopsov.twse.com.tw/nas/t21/sii/t21sc03_110_1_0.html",
+      "reviewedDocumentSha256": "18d1f14efc0ba8d381bcd927e7a07420311bda8806fb8dd7379f237ca8d255e6",
+      "facts": [
+        {
+          "metricId": "TSM.revenue",
+          "row": "2330 台積電 / 當月營收",
+          "current": 126749152,
+          "sourceUnit": "TWD thousand",
+          "evidenceKey": "b287515157c786f1f6da49c489897d6d35324af506fad224d1f718d2de9d5e8d"
+        }
+      ]
+    },
+    {
+      "periodEnd": "2023-11-30",
+      "fiscalPeriod": null,
+      "observationSourceUrl": "https://investor.tsmc.com/english/monthly-revenue/2023",
+      "reviewedSourceUrl": "https://mopsov.twse.com.tw/nas/t21/sii/t21sc03_112_11_0.html",
+      "reviewedDocumentSha256": "ee02076b04bc76fc29b23b08b8a3e38de5142008409249edad68f3abc5fde0c0",
+      "facts": [
+        {
+          "metricId": "TSM.revenue",
+          "row": "2330 台積電 / 當月營收",
+          "current": 206026179,
+          "sourceUnit": "TWD thousand",
+          "evidenceKey": "519347d6eb68cdb8f0f6610e988ca9221563bd1bb88a2f854678f1a1154faa02"
+        }
+      ]
+    },
+    {
+      "periodEnd": "2023-12-31",
+      "fiscalPeriod": null,
+      "observationSourceUrl": "https://investor.tsmc.com/english/monthly-revenue/2023",
+      "reviewedSourceUrl": "https://mopsov.twse.com.tw/nas/t21/sii/t21sc03_112_12_0.html",
+      "reviewedDocumentSha256": "0ef4bdbe4b68fc2c5dbef28bacad5ad38d74e9a7c9c0014ce24ff8610482f04e",
+      "facts": [
+        {
+          "metricId": "TSM.revenue",
+          "row": "2330 台積電 / 當月營收",
+          "current": 176299866,
+          "sourceUnit": "TWD thousand",
+          "evidenceKey": "8f999ad45ae65f0aa97bf1ed34f288ee4fc097b43f143b759a191b3cd57aac6a"
+        }
+      ]
+    },
+    {
+      "periodEnd": "2026-10-31",
+      "fiscalPeriod": null,
+      "observationSourceUrl": "https://mopsov.twse.com.tw/nas/t21/sii/t21sc03_115_10_0.html",
+      "reviewedSourceUrl": "https://mopsov.twse.com.tw/nas/t21/sii/t21sc03_115_10_0.html",
+      "reviewedDocumentSha256": "ea025f66919f165bbb3a264fd28f282766e3f5445a199b98940e3afe8c50e4a1",
+      "facts": [
+        {
+          "metricId": "TSM.revenue",
+          "row": "2330 台積電 / 當月營收",
+          "current": 586890319,
+          "sourceUnit": "TWD thousand",
+          "evidenceKey": "b816a200db299b1a11da2f99e6dd48e6bb6b31bf412b9cdbcd47821dbdedd1a8"
+        }
+      ]
     }
   ]
 }

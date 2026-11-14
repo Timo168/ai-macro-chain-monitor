@@ -13,6 +13,9 @@ def configure_headless_log():
     stream=open(log_dir/'scheduler.log','a',encoding='utf-8',buffering=1)
     sys.stdout=stream;sys.stderr=stream
 configure_headless_log()
+local_task = (__name__ == '__main__' and sys.platform == 'win32'
+              and not os.environ.get('GITHUB_ACTIONS') and pathlib.Path(sys.executable).stem.lower() == 'pythonw')
+task_start = time.monotonic()
 if __name__=='__main__' and '--check-pages' in sys.argv and not os.environ.get('GITHUB_ACTIONS'):
     # Cloud recovery and its logs are available even if a local collector import fails.
     from pages_watchdog import check
@@ -277,4 +280,4 @@ if __name__=='__main__':
     from regional_energy import collect as collect_regional_energy
     collect_regional_energy(force=args.force)
     from industry_schedule import run as run_industry
-    run_industry(args.force,not args.skip_research)
+    run_industry(args.force,not args.skip_research,local_deadline=task_start+12*60 if local_task else None)

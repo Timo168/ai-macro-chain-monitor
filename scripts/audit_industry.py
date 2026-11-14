@@ -61,12 +61,12 @@ def versioned_bytes(url,expected_hash=None):
 
 def tsm_revenue(d,p):
     from urllib.parse import urlsplit
+    from industry_tsm_monthly import report_url
     end=date.fromisoformat(p['periodEnd'])
     url=p['sourceUrl']
     assert end.day==calendar.monthrange(end.year,end.month)[1] and d['currency']=='TWD' and d['unit']=='亿新台币'
-    if urlsplit(url).hostname=='mopsov.twse.com.tw':
-        assert url==f'https://mopsov.twse.com.tw/nas/t21/sii/t21sc03_{end.year-1911}_{end.month}_0.html'
-        soup=BeautifulSoup(versioned_bytes(url,p.get('sourceDocumentVersion')).decode('cp950'),'html.parser')
+    def exchange_replay(raw,original):
+        soup=BeautifulSoup(raw.decode('cp950'),'html.parser')
         assert re.search(rf'上市公司\s*{end.year-1911}年\s*{end.month}月份',soup.get_text(' ',strip=True))
         rows=[row for row in soup.select('tr') if row.find('td',recursive=False) and row.find('td',recursive=False).get_text(strip=True)=='2330']
         assert len(rows)==1
@@ -78,12 +78,18 @@ def tsm_revenue(d,p):
         thousand=int(cells[index].replace(',',''))
         from decimal import Decimal,ROUND_HALF_UP
         million=int((Decimal(thousand)/1000).quantize(Decimal(1),rounding=ROUND_HALF_UP))
-        assert p['originalUnit']=='TWD thousand' and p['originalCurrency']=='TWD' and p['originalValue']==thousand
-        assert p['originalItems']=={'companyCode':'2330','reportedThousandTwd':thousand,'reportedMillionTwd':million}
+        if original:
+            assert p['originalUnit']=='TWD thousand' and p['originalCurrency']=='TWD' and p['originalValue']==thousand
+            assert p['originalItems']=={'companyCode':'2330','reportedThousandTwd':thousand,'reportedMillionTwd':million}
+        else:
+            assert p['originalItems']['Net Revenue NT$ million']==million,'Official monthly revenue differs at the issuer precision'
         assert million/100==p['value']
-        return 'matched TWSE monthly archive, issuer 2330, dated current revenue in TWD thousands, rounded to issuer annual-table precision'
-    assert urlsplit(url).hostname=='investor.tsmc.com' and urlsplit(url).path==f'/english/monthly-revenue/{end.year}'
-    raw=versioned_bytes(url,p.get('version'))
+        return {'check':'matched TWSE monthly archive, issuer 2330, dated current revenue in TWD thousands, rounded to issuer annual-table precision',
+                'replayedSourceUrl':report_url(end),'replayedSourceDocumentVersion':hashlib.sha256(raw).hexdigest()}
+    if urlsplit(url).hostname=='mopsov.twse.com.tw':
+        assert url==report_url(end)
+        return exchange_replay(versioned_bytes(url,p.get('sourceDocumentVersion')),True)
+    assert url==f'https://investor.tsmc.com/english/monthly-revenue/{end.year}'
     def amount(raw):
         soup=BeautifulSoup(raw,'html.parser')
         assert re.search(r'\b'+str(end.year)+r'\b',soup.title.get_text())
@@ -95,15 +101,13 @@ def tsm_revenue(d,p):
                 if len(cells)>1 and cells[1]:return int(cells[1].replace(',',''))
                 return None
         raise AssertionError('Monthly fiscal row missing from the source table')
-    reported=amount(raw)
+    try:reported=amount(versioned_bytes(url,p.get('version')))
+    except SourceUnavailable:reported=None
     if reported is None:
-        # This annual page can be cached before the selected month is released.
-        try:raw,_,_=fetch(url,force=True)
-        except RuntimeError as error:
-            if '来源请求失败' not in str(error):raise
-            raise SourceUnavailable(str(error)) from error
-        reported=amount(raw)
-    assert reported is not None and reported==p['originalItems']['Net Revenue NT$ million']
+        # A prior copy of a rolling annual table may predate the month. Verify
+        # the immutable monthly filing, keeping both source identities.
+        return exchange_replay(source_bytes(report_url(end))[0],False)
+    assert reported==p['originalItems']['Net Revenue NT$ million']
     assert reported/100==p['value']
     return 'matched TSMC annual table, exact monthly TWD revenue column and million-to-100-million conversion'
 
@@ -343,7 +347,10 @@ def run():
                 bucket.append({'metricId':d['id'],'periodEnd':p['periodEnd'],'sourceUrl':p['sourceUrl'],'version':p['version'],'error':f'{type(error).__name__}: {error}'[:600]})
                 print('PENDING' if bucket is pending else 'FAILED',d['id'],p['periodEnd'],str(error)[:300],file=sys.stderr)
                 continue
-            sample={'metricId':d['id'],'periodEnd':p['periodEnd'],'value':p['value'],'unit':d['unit'],'currency':d.get('currency'),'sourceUrl':p['sourceUrl'],'version':p['version'],'checkMode':mode,'check':method,'evidenceKey':evidence_key(d,p)}
+            details=method if isinstance(method,dict) else {'check':method}
+            if mode=='previous_verified_source_replay' and old:
+                details.update({key:old[key] for key in ('replayedSourceUrl','replayedSourceDocumentVersion') if old.get(key)})
+            sample={'metricId':d['id'],'periodEnd':p['periodEnd'],'value':p['value'],'unit':d['unit'],'currency':d.get('currency'),'sourceUrl':p['sourceUrl'],'version':p['version'],'checkMode':mode,'evidenceKey':evidence_key(d,p),**details}
             if d['id'].startswith('DELL.') and mode=='automatic_source_replay' and d['id'] not in ('DELL.inventory_days','DELL.backlog'):
                 from industry_dell_source import source_metadata
                 digest=hashlib.sha256(versioned_bytes(p['sourceUrl'],p.get('sourceDocumentVersion') or p.get('version'))).hexdigest()

@@ -59,6 +59,8 @@ Get-ScheduledTaskInfo -TaskName 'AI-Macro-Observatory-Data-Sync'
 
 若要由这台电脑补查线上更新，安装时加上 `-CheckPages`，并在同一 Windows 账户中登录有权运行该仓库 Actions 的 GitHub CLI。后台只向 GitHub 发送工作流启动请求，线上采集仍使用云端数据。电脑在线时，原计划任务会读取网站公布的后台完成时间。超过 30 分钟且云端没有正在处理的任务时，它会请求一次补查。网络或登录失败后，重试间隔逐步延长到 2 小时。最近一次补查状态保存在 `.logs/pages-watchdog.json`。
 
+本机行业日检可以跨多轮完成。每个采集步骤结束后，后台将结果写入 `data/industry/scheduler.json`，并保留来源错误。任务接近运行时限时会先让出时间，下次从上次中断处继续。日检完成时间在全部步骤执行完后更新。
+
 移除任务：`./scripts/remove-scheduler.ps1`。手动检查一次：`python scripts/schedule.py`；强制采集：`python scripts/schedule.py --force`。
 
 Windows 的计划任务只使用 `pythonw.exe`；找不到它时安装会停止，而不会回退到会弹窗的 `python.exe`。任务隐藏运行、不等待电脑空闲，采集中的 `curl`、Python 和 Node 子进程也会静默运行；定时更新不会弹出黑色命令窗口。无窗口任务的运行记录写入 `.logs/scheduler.log`。手动在终端执行上述命令时，输出仍会留在当前终端，便于排查问题。

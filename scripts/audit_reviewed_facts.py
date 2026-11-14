@@ -32,6 +32,20 @@ def reviewed_fact(definition, point):
         return None
     assert point['sourceUrl'] == report['observationSourceUrl']
     assert point.get('fiscalPeriod') == report.get('fiscalPeriod')
+    if definition['id']=='TSM.revenue' and fact['sourceUnit']=='TWD thousand':
+        from datetime import date
+        from industry_tsm_monthly import report_url
+        assert report['reviewedSourceUrl']==report_url(date.fromisoformat(point['periodEnd']))
+        assert definition['currency']=='TWD' and definition['unit']=='亿新台币'
+        million=(fact['current']+500)//1000
+        if point['sourceUrl']==report['reviewedSourceUrl']:
+            assert point['originalItems']=={'companyCode':'2330','reportedThousandTwd':fact['current'],'reportedMillionTwd':million}
+            assert point['originalUnit']=='TWD thousand' and point['originalValue']==fact['current']
+        else:
+            assert point['originalItems']['Net Revenue NT$ million']==million
+        assert million/100==point['value']
+        return {'check':'reviewed official TWSE monthly revenue, issuer 2330, rounded to million TWD',
+                'replayedSourceUrl':report['reviewedSourceUrl'],'replayedSourceDocumentVersion':report['reviewedDocumentSha256']}
     if fact['sourceUnit'] == '%':
         expected = fact['current']
         assert definition['unit'] == '%' and definition.get('currency') is None
