@@ -40,6 +40,22 @@ class DellMigrationTests(unittest.TestCase):
         self.assertEqual(dell.resolve_report(NEW, request), (REPORT, NEW))
         self.assertEqual(calls, [NEW])
 
+    def test_missing_news_entry_uses_the_exact_archived_earnings_release(self):
+        other = NEW.replace('second-quarter', 'third-quarter')
+        archive = f'<a href="{other}">Earnings Release HTML</a><a href="{NEW}">Earnings Release Q2 2027 HTML</a>'.encode()
+        def request(url):
+            if url == INDEX:
+                return b'<h1>Press Releases</h1>', INDEX
+            if url == dell.RESULTS:
+                return archive, dell.RESULTS
+            return migrated_request(url)
+        self.assertEqual(dell.resolve_report(OLD, request), (REPORT, NEW))
+
+    def test_archive_rejects_other_quarters_and_non_release_links(self):
+        archive = f'<a href="{NEW}">Webcast transcript</a>'.encode()
+        with self.assertRaisesRegex(ValueError, '同财政期'):
+            dell.resolve_report(OLD, lambda url: (archive, dell.RESULTS) if url == dell.RESULTS else (b'no releases', dell.INDEX))
+
     def test_old_404_can_resolve_from_index(self):
         def request(url):
             if url == OLD:

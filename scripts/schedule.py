@@ -4,20 +4,28 @@ from datetime import date, datetime, timedelta, timezone
 from statistics import median
 from urllib.parse import urlencode, urljoin
 from zoneinfo import ZoneInfo
-from calendar_provider import CalendarParser
-from collect import ROOT, DATA, REGISTRY, WB_IDS, MARKET_IDS, collect, download
-from policy_decisions import collect_policy_decisions
-from policy_rates import collect_policy_rates
-from credit_conditions import SLOOS_IDS, source_check_plan
 
 def configure_headless_log():
     """Give pythonw scheduled runs an audit trail without opening a console."""
     if sys.stdout is not None:
         return
-    log_dir=ROOT/'.logs';log_dir.mkdir(exist_ok=True)
+    log_dir=pathlib.Path(__file__).resolve().parents[1]/'.logs';log_dir.mkdir(exist_ok=True)
     stream=open(log_dir/'scheduler.log','a',encoding='utf-8',buffering=1)
     sys.stdout=stream;sys.stderr=stream
 configure_headless_log()
+if __name__=='__main__' and '--check-pages' in sys.argv and not os.environ.get('GITHUB_ACTIONS'):
+    # Cloud recovery and its logs are available even if a local collector import fails.
+    from pages_watchdog import check
+    try:
+        print('Pages watchdog:', check(pathlib.Path(__file__).resolve().parents[1]/'.logs'))
+    except (OSError,ValueError,KeyError,TypeError) as error:
+        print('Pages watchdog unavailable:',error)
+
+from calendar_provider import CalendarParser
+from collect import ROOT, DATA, REGISTRY, WB_IDS, MARKET_IDS, collect, download
+from policy_decisions import collect_policy_decisions
+from policy_rates import collect_policy_rates
+from credit_conditions import SLOOS_IDS, source_check_plan
 CT=ZoneInfo('America/Chicago')
 RIDS={10:['CPIAUCNS','CPILFENS','CPIAUCSL','CPILFESL'],50:['UNRATE','PAYEMS'],54:['PCEPI','PCEPILFE'],180:['ICSA'],221:['NFCI'],18:['DGS10','DGS2','DFII10'],17:['DTWEXBGS'],212:['DCOILBRENTEU'],191:list(SLOOS_IDS),342:['DHHNGSP']}
 def atomic(path,data):
@@ -265,7 +273,7 @@ def run(force=False):
         print(json.dumps({'checkedAt':now.isoformat(),'selected':selected,'calendarStatus':result['scheduler']['calendarStatus']},ensure_ascii=False))
     finally:lock.unlink(missing_ok=True)
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--force',action='store_true');p.add_argument('--skip-research',action='store_true');args=p.parse_args();run(args.force)
+    p=argparse.ArgumentParser();p.add_argument('--force',action='store_true');p.add_argument('--skip-research',action='store_true');p.add_argument('--check-pages',action='store_true',help='Recover delayed GitHub Pages checks using the local gh login');args=p.parse_args();run(args.force)
     from regional_energy import collect as collect_regional_energy
     collect_regional_energy(force=args.force)
     from industry_schedule import run as run_industry

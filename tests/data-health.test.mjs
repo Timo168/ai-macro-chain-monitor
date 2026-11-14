@@ -45,12 +45,15 @@ test('scheduler detects multi-hour delays without treating every missed 15-minut
   assert.equal(schedulerHealth({ mode: 'github_actions', lastCompletedAt: '2026-10-25T05:30:00Z', failed: ['DGS10'] }, now).state, 'partial_failure');
 });
 
-test('a recently finished run does not hide irregular multi-hour scheduling', () => {
+test('a recovered schedule keeps the preceding gap in details and uses the actual completion for the next alert', () => {
   const now = Date.parse('2026-11-10T15:00:00Z');
-  const result = schedulerHealth({ mode: 'github_actions', lastCompletedAt: '2026-11-10T14:39:00Z', targetIntervalMinutes: 15, cadenceStatus: 'delayed' }, now);
-  assert.equal(result.state, 'irregular');
-  assert.equal(result.warning, true);
-  assert.match(result.label, /本轮已完成/);
+  const recovered = { mode: 'github_actions', lastCompletedAt: '2026-11-10T14:39:00Z', actualIntervalMinutes: 393.6, targetIntervalMinutes: 15, cadenceStatus: 'delayed', nextCheckAt: '2026-11-10T18:00:00Z' };
+  const result = schedulerHealth(recovered, now);
+  assert.equal(result.state, 'current');
+  assert.equal(result.warning, false);
+  assert.equal(result.previousIntervalLate, true);
+  assert.equal(schedulerHealth(recovered, Date.parse('2026-11-10T15:40:00Z')).state, 'delayed');
+  assert.equal(schedulerHealth({...recovered, failed: ['NFCI']}, now).state, 'partial_failure');
 });
 
 test('electricity source follows its authoritative EIA registry release instead of a nonexistent FRED series', () => {
@@ -82,4 +85,34 @@ test('audit has explicit missing, failed and outdated passed states', () => {
   assert.equal(auditHealth({ status: 'failed', completedAt: '2026-10-25T05:00:00Z' }, now).warning, true);
   assert.equal(auditHealth({ status: 'passed', completedAt: '2026-10-25T05:00:00Z' }, now).warning, false);
   assert.equal(auditHealth({ status: 'passed', completedAt: '2026-10-22T05:00:00Z' }, now).stale, true);
+});
+
+test('audit source outages, confirmed failures, and full recovery have distinct states and counts', () => {
+  const completedAt = '2026-11-14T09:00:00Z', now = Date.parse(completedAt);
+  const counts = { automaticSamples:396, currentSourceReplaySamples:326, previousSourceReplaySamples:70, manualFactLedgerSamples:12, failedSamples:0, unavailableSamples:30 };
+  const partial = auditHealth({ status:'partial', completedAt, sampleCounts:counts }, now);
+  assert.equal(partial.state,'partial');
+  assert.equal(partial.verifiedSamples,408);
+  assert.equal(partial.unavailableSamples,30);
+  assert.equal(partial.warning,true);
+  assert.match(partial.label,/30 个样本待复核/);
+  const failed = auditHealth({ status:'failed', completedAt, sampleCounts:{...counts, failedSamples:2} }, now);
+  assert.equal(failed.state,'failed');
+  assert.match(failed.label,/2 个样本未通过/);
+  const legacy = auditHealth({ status:'failed', completedAt }, now);
+  assert.equal(legacy.unavailableSamples,null);
+  assert.equal(legacy.verifiedSamples,null);
+  assert.equal(legacy.warning,true);
+  assert.equal(auditHealth({status:'passed', completedAt, sampleCounts:{...counts,unavailableSamples:0}}, now).state,'passed');
+  assert.notEqual(auditHealth({status:'passed', completedAt, sampleCounts:counts}, now).state,'passed');
+});
+
+test('an initial, unfinished, timed out or unfamiliar audit never invents a sample failure or a successful check', () => {
+  const now = Date.parse('2026-11-14T09:02:00Z'), startedAt = '2026-11-14T09:00:00Z';
+  assert.equal(auditHealth({status:'not_run'},now).state,'missing');
+  assert.equal(auditHealth({status:'running',startedAt},now).state,'running');
+  assert.equal(auditHealth({status:'running',startedAt},now + 30*60_000).state,'unconfirmed');
+  assert.equal(auditHealth({status:'passed'},now).state,'unconfirmed');
+  assert.equal(auditHealth({status:'other',completedAt:startedAt},now).state,'unconfirmed');
+  assert.equal(auditHealth({status:'failed',startedAt},now).state,'failed');
 });

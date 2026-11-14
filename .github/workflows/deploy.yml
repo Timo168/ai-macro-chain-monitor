@@ -117,6 +117,7 @@ jobs:
           python tests/policy_rates_test.py
           python tests/policy_decisions_test.py
           python tests/macro_schedule_test.py
+          python tests/pages_watchdog_test.py
           python tests/financing_sources_test.py
           python tests/credit_conditions_test.py
           python tests/regional_energy_test.py

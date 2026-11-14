@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 
 HOST = 'investors.delltechnologies.com'
 INDEX = f'https://{HOST}/news-events/press-releases'
+RESULTS = f'https://{HOST}/financial-information/financial-results'
 WORDS = {'first': 1, 'second': 2, 'third': 3, 'fourth': 4}
 # These numeric legacy addresses are the repository's existing fiscal sources.
 LEGACY_NODES = {'/node/19176': (2026, 4), '/node/19036': (2026, 3)}
@@ -102,6 +103,17 @@ def resolve_report(url, request=request_official):
                 and re.search(r'Dell Technologies (?:Delivers|Announces)', title, re.I)
                 and fiscal_period(title) == expected and fiscal_period(target) == expected):
             candidates.add(target)
+    if not candidates:
+        # Historical releases leave the paginated news feed. The financial
+        # results archive links the original earnings release for each quarter.
+        archive, actual_archive = request(RESULTS)
+        if not official(actual_archive) or urlparse(actual_archive).path.rstrip('/') != urlparse(RESULTS).path:
+            raise ValueError('Dell 官方财报档案未找到同财政期报告')
+        for anchor in BeautifulSoup(archive, 'html.parser').select('a[href]'):
+            target = urljoin(actual_archive, anchor['href'])
+            if (is_report_url(target) and fiscal_period(target) == expected
+                    and re.search(r'\bEarnings\s+Release\b', anchor.get_text(' ', strip=True), re.I)):
+                candidates.add(target)
     if len(candidates) != 1:
         raise ValueError('Dell 官方索引未找到唯一的同财政期财报')
     raw, actual = request(candidates.pop())

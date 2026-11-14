@@ -74,7 +74,31 @@ function ObserverSearchAccess({onNavigate}:{onNavigate:(href:string)=>void}){con
 function ObserverPages({active,onNavigate}:{active:number;onNavigate:(href:string)=>void}){const {catalog,inputs,loading,errors}=useObserver();const open=(item:ObservationItem)=>{if(item.panelKey)revealPanel(item.panelKey);onNavigate(item.href)};return <>{errors.length>0&&<div className="notice" role="status">{errors.join('；')}</div>}{active===7?<ObserverWorkspace items={catalog} loading={loading} onOpen={open}/>:<ResearchNotebook items={catalog} inputs={inputs}/>}</>}
 function DataHealthBanner({data,now}:{data:Dataset;now:number}){
  const scheduler=schedulerHealth(data.scheduler,now),audit=auditHealth(data.sourceAudit,now);
- return <details className="data-health-fold"><summary><strong className={scheduler.warning?"health-warning":""}>{scheduler.label}</strong><span className={audit.warning?"health-warning":""}>{audit.label}</span><span>最近宏观检查 {scheduler.lastCompletedAt?beijing(scheduler.lastCompletedAt):"待确认"}</span><small>查看更新详情 ⌄</small></summary><section className="data-health-banner" aria-label="数据更新与审计状态"><div className={scheduler.warning?'health-warning':''}><strong>{scheduler.label}</strong><p>目标每 {scheduler.targetMinutes} 分钟检查，实际运行可能延迟。{scheduler.lastCompletedAt?`最近宏观检查完成 ${beijing(scheduler.lastCompletedAt)}（北京）`:scheduler.lastRunAt?`最近启动 ${beijing(scheduler.lastRunAt)}（北京）；完成时间尚未记录`:'尚未取得后台运行时间'}{Number.isFinite(data.scheduler?.actualIntervalMinutes)&&`；最近两次启动间隔 ${Math.round(data.scheduler!.actualIntervalMinutes!)} 分钟`}</p>{scheduler.state==='delayed'&&<p>距最近完成或启动已超过 {scheduler.overdueMinutes} 分钟。各指标观测日期与来源状态见下方。</p>}</div><div className={audit.warning?'health-warning':''}><strong>{audit.label}</strong><p>{data.sourceAudit?.completedAt?`检查完成 ${beijing(data.sourceAudit.completedAt)}（北京）`:'尚未取得行业数据源审计报告。'}{data.sourceAudit?.runUrl?.startsWith('https://github.com/')&&<a href={data.sourceAudit.runUrl} target="_blank" rel="noreferrer">查看检查记录 ↗</a>}</p>{data.sourceAudit?.status==='failed'&&<p>部分来源检查未通过，具体失败项见检查记录。</p>}</div></section></details>
+ const report=data.sourceAudit,job=data.scheduler;
+ const samples=report?.sampleCounts;
+ const affected=Array.from(new Set(report?.failures?.map(item=>item.metricId?.split('.')[0]).filter(Boolean)));
+ return <details className="data-health-fold">
+  <summary><strong className={scheduler.warning?'health-warning':''}>{scheduler.label}</strong>
+   <span className={audit.warning?'health-warning':''}>{audit.label}</span>
+   <span>最近宏观检查 {scheduler.lastCompletedAt?beijing(scheduler.lastCompletedAt):'待确认'}</span><small>查看更新详情 ⌄</small>
+  </summary>
+  <section className="data-health-banner" aria-label="数据更新与审计状态">
+   <div className={scheduler.warning?'health-warning':''}><strong>宏观数据更新</strong>
+    <p>{scheduler.lastCompletedAt?`最近完成于 ${beijing(scheduler.lastCompletedAt)}（北京）`:scheduler.lastRunAt?`最近启动于 ${beijing(scheduler.lastRunAt)}（北京），等待完成记录。`:'等待后台运行记录。'}</p>
+    {scheduler.state==='delayed'&&<p>已约 {Math.round(scheduler.ageMinutes??0)} 分钟未收到新的完成记录。图表保留最近一次取得的数据。</p>}
+    {job?.failed?.length ? <p>待重新获取的指标：{job.failed.join('、')}。</p> : null}
+    {job && job.mode!=='snapshot'&&<p>计划每 {scheduler.targetMinutes} 分钟检查{typeof job.actualIntervalMinutes==='number' && Number.isFinite(job.actualIntervalMinutes)?`，上两次启动相隔 ${Math.round(job.actualIntervalMinutes)} 分钟`:''}。
+     {job?.workflowUrl?.startsWith('https://github.com/')&&<a href={job.workflowUrl} target="_blank" rel="noreferrer">查看后台任务 ↗</a>}</p>}
+   </div>
+   <div className={audit.warning?'health-warning':''}><strong>行业数据来源抽查</strong>
+    <p>{report?.completedAt?`最近完成于 ${beijing(report.completedAt)}（北京）`:audit.label}
+     {report?.runUrl?.startsWith('https://github.com/')&&<a href={report.runUrl} target="_blank" rel="noreferrer">查看抽查记录 ↗</a>}</p>
+    {audit.verifiedSamples!=null&&<p>已核验 {audit.verifiedSamples} 个样本{samples?.previousSourceReplaySamples?`，其中 ${samples.previousSourceReplaySamples} 个沿用同版本历史核验`:''}。</p>}
+    {Boolean(audit.unavailableSamples)&&<p>{audit.unavailableSamples} 个样本的来源暂时无法取得，等待重新核验。</p>}
+    {audit.state==='failed'&&<p>{audit.failedSamples?`${audit.failedSamples} 个样本未通过${affected.length?'，报告中涉及 '+affected.join('、'):''}。`:(report?.checks?.find(c=>c.status==='failed')?.error??'本轮抽查未完成，详见运行记录。')}</p>}
+   </div>
+  </section>
+ </details>
 }
 function InfoBadge(){return <ShieldCheck size={19}/>}
 function Sparkline({points}:{points:{date:string;value:number|null}[]}){const p=points.filter(p=>p.value!==null);if(p.length<2)return null;const low=Math.min(...p.map(p=>p.value!)),high=Math.max(...p.map(p=>p.value!));const coordinates=p.map((p,i)=>`${i/(points.length-1)*80},${27-(p.value!-low)/(high-low||1)*24}`).join(' ');return <svg aria-hidden="true" viewBox="0 0 80 32" className="sparkline"><polyline points={coordinates} fill="none" stroke="#6aa997" strokeWidth="1.6"/></svg>}

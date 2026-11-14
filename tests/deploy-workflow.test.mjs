@@ -112,8 +112,9 @@ test('the real data-only entry point publishes fresh snapshots without rebuildin
  const manifest=readJson(join(output,'data/manifest.json'));
  assert.equal(manifest.macro.version,version(value.macro));
  assert.equal(manifest.macro.generatedAt,value.macro.generatedAt);
+ assert.equal(manifest.macro.lastCompletedAt,null);
  for(const section of ['industry','industryResearch','policyRates','policyDecisions','researchCalendar','regionalEnergy','sourceAudit'])assert.match(manifest[section].version,/^[a-f0-9]{16}$/);
- const newer={...value.macro,generatedAt:'2026-11-11T01:15:00Z',series:{TEST:{observations:[...value.macro.series.TEST.observations,{date:'2026-11-11',value:4.2}]}}};
+ const newer={...value.macro,generatedAt:'2026-11-11T01:15:00Z',scheduler:{lastCompletedAt:'2026-11-11T01:17:00Z'},series:{TEST:{observations:[...value.macro.series.TEST.observations,{date:'2026-11-11',value:4.2}]}}};
  writeJson(join(value.folder,'data/latest.json'),newer);
  result=runPackager(value,'--data-only');
  assert.equal(result.status,0,result.stderr);
@@ -122,6 +123,7 @@ test('the real data-only entry point publishes fresh snapshots without rebuildin
  assert.equal(updated.macro.version,version(newer));
  assert.notEqual(updated.macro.version,manifest.macro.version);
  assert.equal(updated.macro.generatedAt,newer.generatedAt);
+ assert.equal(updated.macro.lastCompletedAt,newer.scheduler.lastCompletedAt);
  assert.deepEqual(verifyFrontend(output,value.identity),value.proof);
 });
 
