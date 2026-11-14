@@ -94,6 +94,25 @@
       ]
     },
     {
+      "periodEnd": "2026-06-30",
+      "fiscalPeriod": "FY2026 Q2",
+      "observationSourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2026",
+      "reviewedSourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2026",
+      "reviewedDocumentSha256": "063b48a1f4cf702d770f95a6a73ec69dc93a5778e9e80deab4a80c8e1603c111",
+      "facts": [
+        {
+          "metricId": "AMKR.capex",
+          "row": "Payments for property, plant and equipment (YTD cash outflow, absolute amount)",
+          "current": 688425,
+          "sourceUnit": "USD thousand",
+          "evidenceKey": "955c1b1c9111a9666516f9b1631637173e108954318c57fc03d013514d4026e8",
+          "base": 224605,
+          "baseSourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2026",
+          "baseDocumentSha256": "4e0acd93dc8d8fc5b35918f82e2accffae4baf113e4ab5979868c4b32afa3328"
+        }
+      ]
+    },
+    {
       "periodEnd": "2025-06-28",
       "fiscalPeriod": "FY2025 Q2",
       "observationSourceUrl": "https://investor.entegris.com/news/news-details/2025/Entegris-Reports-Results-for-Second-Quarter-of-2025/default.aspx",
