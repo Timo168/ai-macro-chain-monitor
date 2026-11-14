@@ -10,6 +10,7 @@ import { metrics, selectRange } from '@/lib/calculations.mjs';
 import { seriesHealth, barDomain } from '@/lib/data-health.mjs';
 import {macroExplorerSummary} from '@/lib/macro-summary';
 import { PanelBody, PanelToggle, usePanelDisclosure } from './panel-disclosure';
+import { SegmentedNavigation } from './segmented-navigation';
 import { ChartEvents, chartEventReferenceLines, useChartEventLayer } from './chart-events';
 import {ObserverPin} from './observer-workspace';
 import {ObservationNoteButton} from './research-notebook';
@@ -34,7 +35,11 @@ export function chartNavigationIntent(group:Group,currentMode:string,search:stri
  const chartRange=query.get('chartRange');
  return {mode,range:rangePreference(chartRange)?chartRange:null,revealIndex:index>=0?index:null};
 }
-export function RangeButtons({value,onChange,available=['1','3','5','all']}:{value:string;onChange:(value:string)=>void;available?:string[]}){return <div className="range-selector">{[['1','近一年'],['3','三年'],['5','五年'],['all','全部']].map(([id,label])=><Button key={id} variant="ghost" aria-pressed={value===id} className={value===id?'selected':''} disabled={!available.includes(id)} onClick={()=>onChange(id)}>{label}</Button>)}</div>}
+export function RangeButtons({value,onChange,available=['1','3','5','all']}:{value:string;onChange:(value:string)=>void;available?:string[]}){
+ return <SegmentedNavigation as="div" label="观察区间" value={value} variant="pill" className="range-selector">
+  {[['1','近一年'],['3','三年'],['5','五年'],['all','全部']].map(([id,label])=><Button key={id} variant="ghost" aria-pressed={value===id} className={value===id?'selected':''} disabled={!available.includes(id)} onClick={()=>onChange(id)}>{label}</Button>)}
+ </SegmentedNavigation>;
+}
 export default function ChartCard({group,data,range:globalRange,compact=false}:{group:Group;data:Dataset;range:string;compact?:boolean}){
  const disclosure=usePanelDisclosure(`macro:chart:${group.id}`,{anchorId:group.id,scope:'macro'});
  const [range,setRange]=useSavedView(`chart:${group.id}:range`,globalRange,rangePreference);

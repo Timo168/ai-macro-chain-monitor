@@ -1,11 +1,12 @@
 "use client";
 import {useEffect,useId,useMemo,useState,type ReactNode} from 'react';
-import {ChevronDown,ChevronLeft,ChevronRight,ChevronUp,ChartNoAxesCombined} from 'lucide-react';
+import {ChevronLeft,ChevronRight,ChartNoAxesCombined} from 'lucide-react';
 import type {IndustryDataset,MetricDefinition} from '@/lib/industry/types';
 import {ALL_ENTITIES,METRICS_PER_PAGE,entityLabel,metricAnchor,metricEntity,metricExplorerPreference,metricExplorerSummary,metricPage,metricSelectionHistory,resolveMetricExplorer} from '@/lib/industry/metric-explorer.mjs';
 import {format} from '@/lib/data';
 import {rememberReadingView} from '@/lib/reading-view.mjs';
-import {revealPanel} from '../panel-disclosure';
+import {PanelBody,PanelToggle,revealPanel} from '../panel-disclosure';
+import {useReadingTransition} from '../use-reading-transition';
 import {useSavedView} from '../use-saved-view';
 import './metric-explorer.css';
 
@@ -30,6 +31,7 @@ export default function MetricExplorer({data,category,search,now,renderMetric,on
   }));
  },[view.rows,safePage,data.series,now]);
  const selectedId=view.selected?.id??'';
+ const titleRef=useReadingTransition<HTMLDivElement>(selectedId);
 
  useEffect(()=>{
   const read=()=>{const id=metricAnchor(location.hash);setAnchor(id);if(id)setDetailOpen(true);};
@@ -83,9 +85,11 @@ export default function MetricExplorer({data,category,search,now,renderMetric,on
     </>}
    </div>
    <div className="metric-explorer-detail">
-    {view.selected?<><div className="metric-explorer-detail-heading"><div><span>当前查看</span><strong>{entityLabel(metricEntity(view.selected))} · {view.selected.nameZh}</strong></div><button type="button" className="industry-button" aria-expanded={detailOpen} aria-controls={detailId} onClick={()=>setDetailOpen(!detailOpen)}>{detailOpen?<ChevronUp size={15}/>:<ChevronDown size={15}/>}<span>{detailOpen?'收起图表':'展开图表'}</span></button></div>
+    {view.selected?<><div className="metric-explorer-detail-heading"><div ref={titleRef}><span>当前查看</span><strong>{entityLabel(metricEntity(view.selected))} · {view.selected.nameZh}</strong></div>
+     <PanelToggle label="图表" showLabel open={detailOpen} controls={detailId} onToggle={()=>setDetailOpen(!detailOpen)}/>
+     </div>
      {!detailOpen&&<p className="metric-explorer-collapsed">图表已收起，仍可在指标速览中查看最新数据。</p>}
-     <div id={detailId} hidden={!detailOpen}>{renderMetric(view.selected)}</div>
+     <PanelBody id={detailId} open={detailOpen}>{renderMetric(view.selected)}</PanelBody>
     </>:<div className="metric-explorer-no-selection"><ChartNoAxesCombined size={26}/><p>选择一个指标，查看历史趋势与来源。</p></div>}
    </div>
   </div>

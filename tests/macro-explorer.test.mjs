@@ -19,6 +19,25 @@ const policy=group('policy',['DFEDTARL','DFEDTARU'],{kind:'step',frequency:'æ—¥å
 const series=(id,points,extra={})=>({id,status:'ready',observations:points.map(([date,value])=>({date,value})),...extra});
 const dataset=entries=>({generatedAt:'2026-11-10T00:00:00Z',series:Object.fromEntries(entries.map(item=>[item.id,item]))});
 
+test('revisiting an overview reuses its snapshot and a revised observation replaces the cached headline',async()=>{
+ const built=await build({entryPoints:['lib/overview-snapshot.ts'],bundle:true,write:false,platform:'node',format:'cjs'});
+ const module={exports:{}};
+ new Function('require','module','exports',built.outputFiles[0].text)(createRequire(import.meta.url),module,module.exports);
+ const {getOverviewSnapshot}=module.exports;
+ const snapshot=dataset([series('NFCI',[['2026-10-02',-.6],['2026-10-16',-.3],['2026-10-30',-.2]])]);
+ const original=getOverviewSnapshot(snapshot);
+ assert.equal(getOverviewSnapshot(snapshot),original);
+ const row=original.byId.get('nfci');
+ assert.equal(row.m.last.value,-.2);
+ assert.equal(row.priorWeek,undefined);
+ assert.equal(row.four.value,-.6);
+ const revision=dataset([series('NFCI',[['2026-10-30',-.4]])]);
+ const next=getOverviewSnapshot(revision);
+ assert.notEqual(next,original);
+ assert.equal(next.changes[0].m.last.value,-.4);
+ assert.equal(original.byId.get('nfci').m.last.value,-.2);
+});
+
 test('a new CPI raw value with missing year-earlier base labels the older valid rate explicitly',async()=>{
  const summary=(await load())(cpi,dataset([series('CPIAUCNS',[['2025-09-01',324.8],['2025-10-01',null],['2026-09-01',336.94],['2026-10-01',337.511]])]));
  assert.equal(summary.valueText,'3.74');assert.equal(summary.date,'2026-09-01');

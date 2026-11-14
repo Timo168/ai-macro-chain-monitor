@@ -1,5 +1,5 @@
 "use client";
-import {useEffect,useId,useMemo,useRef,useState} from 'react';
+import {useCallback,useEffect,useId,useMemo,useRef,useState} from 'react';
 import {ArrowDown,ArrowUp,ArrowUpRight,Check,ExternalLink,Pin,Plus,Search,X} from 'lucide-react';
 import type {ObservationItem} from '@/lib/observer-types';
 import {beijing} from '@/lib/data';
@@ -55,18 +55,31 @@ export function ObserverSearch({items:rawItems,loading,onOpen}:Props){
  const {errors}=useObserver();const items=useMemo(()=>applyObserverReadFailures(rawItems,errors),[rawItems,errors]);
  const dialog=useRef<HTMLDialogElement>(null),input=useRef<HTMLInputElement>(null),titleId=useId();const [query,setQuery]=useState(''),[kind,setKind]=useState('all'),[visible,setVisible]=useState(24);
  const matches=useMemo(()=>searchObserverItems(items,query,kind) as ObservationItem[],[items,query,kind]);
- function show(){dialog.current?.showModal();requestAnimationFrame(()=>input.current?.focus())}
- useEffect(()=>{const key=(event:KeyboardEvent)=>{if(event.key.toLowerCase()==='k'&&(event.ctrlKey||event.metaKey)&&!event.isComposing){event.preventDefault();dialog.current?.showModal();input.current?.focus()}};addEventListener('keydown',key);return()=>removeEventListener('keydown',key)},[]);
+ const show=useCallback(()=>{
+  const surface=dialog.current;
+  if(!surface)return;
+  if(!surface.open)surface.showModal();
+  input.current?.focus({preventScroll:true});
+ },[]);
+ useEffect(()=>{
+  const key=(event:KeyboardEvent)=>{
+   if(event.key.toLowerCase()!=='k'||!(event.ctrlKey||event.metaKey)||event.isComposing)return;
+   event.preventDefault();
+   show();
+  };
+  window.addEventListener('keydown',key);
+  return()=>window.removeEventListener('keydown',key);
+ },[show]);
  function open(item:ObservationItem){dialog.current?.close();onOpen(item)}
  const shortcuts=[['changes','结论变化'],['validation','效果检验'],['robustness','结论稳健性'],['valuation','公司估值']];
  function openShortcut(section:string,title:string){open({id:'navigation:'+section,title,subtitle:'研究工具',kind:'industry',href:`${appBase()}?page=impact&industry=conclusions&research=${section}#research-progress`,anchorId:'research-progress',panelKey:'research:progress',searchTerms:'',value:'',unit:'',period:'',status:'',warning:false})}
  return <>
-  <button type="button" className="observer-search-trigger" onClick={show}><Search size={17}/><span>搜索指标、公司、央行</span><kbd>Ctrl K</kbd></button>
-  <dialog className="observer-search-dialog" ref={dialog} aria-labelledby={titleId} onClick={event=>{if(event.target===event.currentTarget)dialog.current?.close()}}>
+  <button type="button" className="observer-search-trigger" aria-haspopup="dialog" aria-controls={titleId+'-dialog'} onClick={show}><Search size={17}/><span>搜索指标、公司、央行</span><kbd>Ctrl K</kbd></button>
+  <dialog id={titleId+'-dialog'} className="observer-search-dialog" ref={dialog} aria-labelledby={titleId} onClick={event=>{if(event.target===event.currentTarget)dialog.current?.close()}}>
    <div className="observer-search-shell">
     <div className="observer-search-heading"><h2 id={titleId}>全站搜索</h2><button type="button" className="observer-icon-button" onClick={()=>dialog.current?.close()} aria-label="关闭全站搜索"><X size={20}/></button></div>
     <label className="observer-search-input"><Search size={19}/><input ref={input} autoFocus type="search" value={query} onChange={event=>{setQuery(event.target.value);setVisible(24)}} placeholder="输入中文名称、公司英文名或指标代码" aria-label="搜索全站指标"/></label>
-    <div className="observer-search-kinds" aria-label="搜索范围">{Object.entries(kindNames).map(([id,name])=><button type="button" key={id} aria-pressed={kind===id} onClick={()=>{setKind(id);setVisible(24)}}>{kind===id&&<Check size={12}/>} {name}</button>)}</div>
+    <div className="observer-search-kinds" aria-label="搜索范围">{Object.entries(kindNames).map(([id,name])=><button type="button" key={id} aria-pressed={kind===id} onClick={()=>{setKind(id);setVisible(24)}}><Check size={12} aria-hidden="true"/>{name}</button>)}</div>
     {!query&&<div className="observer-search-shortcuts"><span>研究快捷入口</span>{shortcuts.map(([section,title])=><button type="button" key={section} onClick={()=>openShortcut(section,title)}>{title} <ArrowUpRight size={11}/></button>)}</div>}
     <p className="observer-search-count" role="status">{loading?'正在加载更多目录；':''}{query?`找到 ${matches.length} 个匹配项`:`已加载 ${items.length} 个可查看指标`} · 点击结果跳转并展开对应面板</p>
     <div className="observer-search-content"><ResultList items={matches.slice(0,visible)} onOpen={open}/>{matches.length>visible&&<button type="button" className="observer-action" onClick={()=>setVisible(value=>value+24)}>再显示 24 项（剩余 {matches.length-visible}）</button>}{!matches.length&&<div className="observer-empty"><Search size={24}/><p>{loading?'数据目录正在加载，请稍候。':'没有找到匹配项。试试“黄金”“MSFT”或“日本”。'}</p></div>}</div>

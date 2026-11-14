@@ -51,15 +51,15 @@ export function usePanelDisclosure(panelKey:string,{defaultOpen=true,anchorId,sc
  return {open,setOpen,toggle:()=>setOpen(!open),contentId};
 }
 
-export function PanelToggle({open,onToggle,controls,label}:{open:boolean;onToggle:()=>void;controls:string;label:string}){
- return <button type="button" className="panel-toggle" aria-expanded={open} aria-controls={controls} aria-label={`${open?'收起':'展开'}${label}`} onClick={event=>{
+export function PanelToggle({open,onToggle,controls,label,showLabel=false}:{open:boolean;onToggle:()=>void;controls:string;label:string;showLabel?:boolean}){
+ return <button type="button" className="panel-toggle" data-disclosure-toggle="" aria-expanded={open} aria-controls={controls} aria-label={`${open?'收起':'展开'}${label}`} onClick={event=>{
   const body=event.currentTarget.ownerDocument.getElementById(controls);
   if(body?.classList.contains('panel-body')&&typeof body.animate==='function'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
    toggleHeights.set(body,body.offsetHeight);
   }
   onToggle();
  }}>
-  <ChevronDown size={15} aria-hidden="true"/><span>{open?'收起':'展开'}</span>
+  <ChevronDown size={15} aria-hidden="true"/><span>{open?'收起':'展开'}{showLabel?label:''}</span>
  </button>;
 }
 

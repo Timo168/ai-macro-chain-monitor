@@ -4,7 +4,7 @@
 
 .industry-two-col{align-items:start}
 .panel-body[data-folding]{overflow:clip}
-.panel-toggle[aria-expanded=true]>svg{transform:rotate(180deg)}
+[data-disclosure-toggle][aria-expanded=true]>svg{transform:rotate(180deg)}
 @media(prefers-reduced-motion:no-preference){
  .panel-toggle>svg{transition:transform 180ms cubic-bezier(.2,.75,.25,1)}
  .panel-toggle{transition:background-color 120ms ease,border-color 120ms ease}
