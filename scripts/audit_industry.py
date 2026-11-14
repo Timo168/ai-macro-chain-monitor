@@ -1,15 +1,30 @@
 """Three observations per connected metric: provenance and independent arithmetic audit.
 Report documents its scope: this does not certify completeness or source redistribution rights.
 """
-import io,json,math,sys,re,hashlib
-from datetime import datetime,timezone
+import calendar,io,json,math,sys,re,hashlib
+from datetime import date,datetime,timezone
 from functools import lru_cache
 from pathlib import Path
+from urllib.error import URLError
+from requests.exceptions import RequestException
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 from industry_common import DATA,ROOT,fetch
 from industry_costs import parse_wb,parse_eia
+from audit_reviewed_facts import evidence_key,reviewed_fact
 SOURCE_FAILURES={}
+
+class SourceUnavailable(RuntimeError):
+    """Request could not obtain the source. Never used for failed validations."""
+
+def read_source(url):
+    from industry_dell_source import is_report_url,fetch_report
+    if is_report_url(url):
+        return fetch_report(url,DATA/'raw')
+    if url.startswith('https://data.sec.gov/'):
+        from industry_sector_financials import fetch_source
+        return fetch_source(url)
+    return fetch(url)
 
 @lru_cache(None)
 def source(url):
@@ -20,23 +35,19 @@ def source(url):
 
 @lru_cache(None)
 def source_bytes(url):
-    if url in SOURCE_FAILURES:raise RuntimeError(SOURCE_FAILURES[url])
-    from industry_dell_source import is_report_url,fetch_report
-    if is_report_url(url):
-        raw,_,digest=fetch_report(url,DATA/'raw')
-        return raw,digest
+    if url in SOURCE_FAILURES:raise SourceUnavailable(SOURCE_FAILURES[url])
+    from industry_dell_source import is_report_url
     meta=DATA/'raw'/(hashlib.sha256(url.encode()).hexdigest()+'.meta.json')
-    if meta.exists():
+    if meta.exists() and not is_report_url(url):
         item=json.loads(meta.read_text(encoding='utf-8'));raw=(DATA/'raw'/item['file']).read_bytes()
         assert hashlib.sha256(raw).hexdigest()==item['hash']
         return raw,item['hash']
     try:
-        if url.startswith('https://data.sec.gov/'):
-            from industry_sector_financials import fetch_source
-            raw,_,digest=fetch_source(url)
-        else:raw,_,digest=fetch(url)
-    except Exception as exc:
-        SOURCE_FAILURES[url]=str(exc);raise
+        raw,_,digest=read_source(url)
+    except (URLError,RequestException,TimeoutError,ConnectionError,RuntimeError) as exc:
+        if isinstance(exc,RuntimeError) and '来源请求失败' not in str(exc):raise
+        SOURCE_FAILURES[url]=str(exc)
+        raise SourceUnavailable(str(exc)) from exc
     return raw,digest
 
 def versioned_bytes(url,expected_hash=None):
@@ -47,6 +58,36 @@ def versioned_bytes(url,expected_hash=None):
             assert hashlib.sha256(raw).hexdigest()==expected_hash,'Archived observation source checksum changed'
             return raw
     return source_bytes(url)[0]
+
+def tsm_revenue(d,p):
+    from urllib.parse import urlsplit
+    end=date.fromisoformat(p['periodEnd'])
+    url=p['sourceUrl']
+    assert urlsplit(url).hostname=='investor.tsmc.com' and urlsplit(url).path==f'/english/monthly-revenue/{end.year}'
+    assert end.day==calendar.monthrange(end.year,end.month)[1] and d['currency']=='TWD' and d['unit']=='亿新台币'
+    raw=versioned_bytes(url,p.get('version'))
+    def amount(raw):
+        soup=BeautifulSoup(raw,'html.parser')
+        assert re.search(r'\b'+str(end.year)+r'\b',soup.title.get_text())
+        assert re.search(r'millions? of New Taiwan Dollars',soup.get_text(' ',strip=True),re.I)
+        table=next(t for t in soup.find_all('table') if 'Net Revenue' in t.get_text(' ',strip=True))
+        for row in table.find_all('tr'):
+            cells=[c.get_text(' ',strip=True) for c in row.find_all(['td','th'],recursive=False)]
+            if cells and cells[0][:3].lower()==calendar.month_abbr[end.month].lower():
+                if len(cells)>1 and cells[1]:return int(cells[1].replace(',',''))
+                return None
+        raise AssertionError('Monthly fiscal row missing from the source table')
+    reported=amount(raw)
+    if reported is None:
+        # This annual page can be cached before the selected month is released.
+        try:raw,_,_=fetch(url,force=True)
+        except RuntimeError as error:
+            if '来源请求失败' not in str(error):raise
+            raise SourceUnavailable(str(error)) from error
+        reported=amount(raw)
+    assert reported is not None and reported==p['originalItems']['Net Revenue NT$ million']
+    assert reported/100==p['value']
+    return 'matched TSMC annual table, exact monthly TWD revenue column and million-to-100-million conversion'
 
 @lru_cache(None)
 def fujimi_report(url,fy,quarter,published):
@@ -77,6 +118,7 @@ def electricity_prices(url):
 
 def check(d,p,data):
     items=p.get('originalItems',{});f=d['family'];value=p['value'];id=d['id']
+    if id=='TSM.revenue':return tsm_revenue(d,p)
     if d.get('sourceAdapter')=='public-reviewed':
         ledger=json.loads((DATA/'public-source-facts.json').read_text(encoding='utf-8'))
         fact=next(x for x in ledger['facts'] if x['metricId']==id and x['periodEnd']==p['periodEnd'])
@@ -89,7 +131,11 @@ def check(d,p,data):
         else:raise AssertionError('Missing independent reviewed formula for '+id)
         assert math.isclose(value,expected)
         return 'matched separate manual official-source fact ledger and independently recomputed units/formula; source document retrieval is not automated'
-    if id=='DELL.servers_networking_revenue' or d.get('sourceAdapter')=='supply-evidence':
+    if id.startswith('DELL.') and id not in ('DELL.inventory_days','DELL.backlog'):
+        from audit_dell_facts import verify
+        raw=versioned_bytes(p['sourceUrl'],p.get('sourceDocumentVersion') or p.get('version'))
+        return verify(d,p,raw)
+    if d.get('sourceAdapter')=='supply-evidence':
         from audit_supply_evidence import source_value
         expected,rule=source_value(id,p,source_bytes(p['sourceUrl'])[0])
         assert math.isclose(value,expected,rel_tol=1e-8,abs_tol=1e-8),(id,p['periodEnd'],value,expected)
@@ -97,9 +143,24 @@ def check(d,p,data):
     if d.get('sourceAdapter') in ('packaging-operating','materials-evidence'):
         from audit_operating_samples import amkor,entg,source_bytes as operating_source
         loader=lambda url:versioned_bytes(url,p.get('sourceDocumentVersion') if url==p['sourceUrl'] else items.get('baseVersion') if url==items.get('baseUrl') else None)
-        soup,_=operating_source(p['sourceUrl'],p.get('sourceDocumentVersion'),loader)
-        expected,rule,_=amkor(id,p,soup,loader) if id.startswith('AMKR.') else entg(id,p,soup)
-        assert math.isclose(value,expected,rel_tol=1e-8,abs_tol=1e-8),(id,p['periodEnd'],value,expected)
+        raw=loader(p['sourceUrl'])
+        digest=hashlib.sha256(raw).hexdigest()
+        saved=p.get('sourceDocumentVersion')
+        approved=reviewed_fact(d,p)
+        if saved and saved!=digest:
+            # A live IR page may have changed its markup. Only these explicitly
+            # reviewed fiscal tables may substitute, after re-reading their rows.
+            assert approved,'Saved observation source version differs from raw bytes'
+            soup=BeautifulSoup(raw,'html.parser')
+        else:
+            soup,_=operating_source(p['sourceUrl'],saved,lambda _:raw)
+        replay_point=p
+        if approved and id=='AMKR.capex' and items.get('baseUrl'):
+            # The reviewer pinned both YTD amounts. Still verify the fiscal
+            # span, unit and first-column cash outflow in the available base file.
+            replay_point={**p,'originalItems':{**items,'baseVersion':None}}
+        expected,rule,_=amkor(id,replay_point,soup,loader) if id.startswith('AMKR.') else entg(id,p,soup)
+        assert value==expected,(id,p['periodEnd'],value,expected)
         return 'independent operating-source replay: '+rule
     if d.get('sourceAdapter') in ('sector-financials','institutions'):
         from audit_research_sources import verify_financial,verify_cso
@@ -168,7 +229,6 @@ def check(d,p,data):
         assert items['newProjectIds']==expected['originalItems']['newProjectIds']
         assert not d['recommendationEligible'] and d['scoringTier']=='leading_only'
         return 'replayed official operator status pages and deduplicated project milestones; no MW inferred'
-    raw,digest=source(p['sourceUrl'])
     if id=='DELL.inventory_days':
         from industry_collect import html_tables,row_numbers
         from industry_hardware import dates
@@ -185,6 +245,7 @@ def check(d,p,data):
         expected=(items['begin_inventory_million']+items['end_inventory_million'])/2/items['quarter_cost_million']*days
         assert days==items['quarter_days'] and math.isclose(value,expected)
         return 'matched dated beginning/end inventory tables and quarterly GAAP cost; independently counted fiscal days'
+    raw,digest=source(p['sourceUrl'])
     if id=='POWER.equipment_price':
         from collect import parse_csv
         content,_=source_bytes(p['sourceUrl'])
@@ -214,16 +275,37 @@ def check(d,p,data):
         # NVIDIA headline is in billions while normalized original item is in millions.
         candidates=[v,v/1000] if id=='NVDA.datacenter_revenue' else [v]
         assert any(re.search(r'(?<![\d.])'+re.escape(format(abs(x),'.12g'))+r'(?:\.0+)?(?![\d.])',raw) for x in candidates),(id,p['periodEnd'],'source operand not found',v)
-    if id=='DELL.gross_margin':expected=items['Gross profit USD million']/items['Revenue USD million']*100
-    elif d['unit']=='%':expected=operands[0]
+    if d['unit']=='%':expected=operands[0]
     elif id.startswith('SIA.'):expected=items['reported_billion_USD']*10
     elif 'reported_billion_usd' in items:expected=items['reported_billion_usd']*10
     else:expected=abs(operands[0])/100 if f in ('capex','finance_lease_payments') else operands[0]/100
     assert math.isclose(value,expected,abs_tol=1e-8,rel_tol=1e-8),(id,p['periodEnd'],value,expected)
     return 'raw numeric operands present in official report; unit/formula independently recomputed'
 
+def same_replay(old,d,p):
+    if not old or not all(old.get(key)==value for key,value in {
+        'metricId':d['id'],'periodEnd':p['periodEnd'],'version':p['version'],
+        'sourceUrl':p['sourceUrl'],'unit':d['unit'],'currency':d.get('currency'),'value':p['value'],
+    }.items()):
+        return False
+    return not old.get('evidenceKey') or old['evidenceKey']==evidence_key(d,p)
+
+def audit_point(d,p,data,old):
+    series=data['series'][d['id']]
+    if same_replay(old,d,p) and series.get('status')=='cached' and series.get('error'):
+        return 'previous_verified_source_replay','collector reports a current source failure; matched previously verified source and observation'
+    try:
+        mode='manual_fact_ledger' if d.get('sourceAdapter')=='public-reviewed' else 'automatic_source_replay'
+        return mode,check(d,p,data)
+    except SourceUnavailable:
+        if same_replay(old,d,p):
+            return 'previous_verified_source_replay','source retrieval unavailable; matched previously verified source and observation'
+        method=reviewed_fact(d,p)
+        if method is None:raise
+        return 'manual_fact_ledger',method
+
 def run():
-    data=json.loads((DATA/'latest.json').read_text(encoding='utf-8'));samples=[];failures=[];unavailable=[]
+    data=json.loads((DATA/'latest.json').read_text(encoding='utf-8'));samples=[];failures=[];unavailable=[];pending=[]
     prior_path=DATA/'audit-samples.json'
     if not prior_path.exists():prior_path=ROOT/'docs/industry/verification.json'
     prior=json.loads(prior_path.read_text(encoding='utf-8')) if prior_path.exists() else {'samples':[]}
@@ -236,34 +318,32 @@ def run():
         if len(points)<3 or len({p['periodEnd'] for p in points})!=len(points):
             failures.append({'metricId':d['id'],'error':'Fewer than three historical points or duplicate observation periods'});continue
         for p in [points[0],points[len(points)//2],points[-1]]:
-            mode='manual_fact_ledger' if d.get('sourceAdapter')=='public-reviewed' else 'automatic_source_replay'
             old=prior_samples.get((d['id'],p['periodEnd'],p['version']))
-            series=data['series'][d['id']]
-            if old is not None and math.isclose(old['value'],p['value']) and series.get('status')=='cached' and series.get('error'):
-                mode='previous_verified_source_replay';method='collector reports a current source failure; identical observation version passed the prior archived-source replay'
-                print('Reused prior source audit for cached',d['id'],p['periodEnd'],file=sys.stderr)
-            else:
-                try:method=check(d,p,data)
-                except Exception as error:
-                    if isinstance(error,RuntimeError) and '来源请求失败' in str(error) and old is not None and math.isclose(old['value'],p['value']):
-                        mode='previous_verified_source_replay';method='current source retrieval unavailable; identical observation version passed the prior archived-source replay'
-                        print('Reused prior source audit for',d['id'],p['periodEnd'],file=sys.stderr)
-                    else:
-                        failures.append({'metricId':d['id'],'periodEnd':p['periodEnd'],'sourceUrl':p['sourceUrl'],'version':p['version'],'error':f'{type(error).__name__}: {error}'[:600]})
-                        print('FAILED',d['id'],p['periodEnd'],type(error).__name__,str(error)[:300],file=sys.stderr);continue
-            sample={'metricId':d['id'],'periodEnd':p['periodEnd'],'value':p['value'],'unit':d['unit'],'currency':d.get('currency'),'sourceUrl':p['sourceUrl'],'version':p['version'],'checkMode':mode,'check':method}
-            if d['id'].startswith('DELL.') and mode=='automatic_source_replay':
+            try:mode,method=audit_point(d,p,data,old)
+            except Exception as error:
+                bucket=pending if isinstance(error,SourceUnavailable) else failures
+                bucket.append({'metricId':d['id'],'periodEnd':p['periodEnd'],'sourceUrl':p['sourceUrl'],'version':p['version'],'error':f'{type(error).__name__}: {error}'[:600]})
+                print('PENDING' if bucket is pending else 'FAILED',d['id'],p['periodEnd'],str(error)[:300],file=sys.stderr)
+                continue
+            sample={'metricId':d['id'],'periodEnd':p['periodEnd'],'value':p['value'],'unit':d['unit'],'currency':d.get('currency'),'sourceUrl':p['sourceUrl'],'version':p['version'],'checkMode':mode,'check':method,'evidenceKey':evidence_key(d,p)}
+            if d['id'].startswith('DELL.') and mode=='automatic_source_replay' and d['id'] not in ('DELL.inventory_days','DELL.backlog'):
                 from industry_dell_source import source_metadata
+                digest=hashlib.sha256(versioned_bytes(p['sourceUrl'],p.get('sourceDocumentVersion') or p.get('version'))).hexdigest()
                 meta=source_metadata(p['sourceUrl'],DATA/'raw')
-                if meta.get('resolvedUrl'):sample.update(replayedSourceUrl=meta['resolvedUrl'],replayedSourceDocumentVersion=meta['hash'])
+                sample['replayedSourceDocumentVersion']=digest
+                if meta.get('hash')==digest and meta.get('resolvedUrl'):
+                    sample['replayedSourceUrl']=meta['resolvedUrl']
+                elif p.get('sourceDocumentVersion')==digest and p.get('resolvedSourceUrl'):
+                    sample['replayedSourceUrl']=p['resolvedSourceUrl']
             samples.append(sample)
     folder=ROOT/'docs/industry';folder.mkdir(parents=True,exist_ok=True)
-    if not samples and not failures:failures.append({'metricId':None,'error':'No connected observations were available for audit'})
+    if not samples and not failures and not pending:failures.append({'metricId':None,'error':'No connected observations were available for audit'})
     manual=sum(s['checkMode']=='manual_fact_ledger' for s in samples)
     previous=sum(s['checkMode']=='previous_verified_source_replay' for s in samples);automatic=len(samples)-manual
     current=automatic-previous
     checked_at=datetime.now(timezone.utc).isoformat()
-    (folder/'verification.json').write_text(json.dumps({'checkedAt':checked_at,'passed':not failures,'scope':'3 periods per connected metric; current or previously recorded archived-source replay where supported, plus a separately tracked manual fact ledger for blocked sources; identical metric, period, value and version are required to reuse a prior replay; arithmetic only, not a license or causal audit','automaticSamples':automatic,'currentSourceReplaySamples':current,'previousSourceReplaySamples':previous,'manualFactLedgerSamples':manual,'failedSamples':len(failures),'failures':failures,'unavailableMetrics':unavailable,'samples':samples},ensure_ascii=False,indent=2),encoding='utf-8')
+    status='failed' if failures or not samples else 'partial' if pending else 'passed'
+    (folder/'verification.json').write_text(json.dumps({'checkedAt':checked_at,'passed':status=='passed','status':status,'scope':'3 periods per connected metric; current or previously recorded source replay, or separately recorded reviewed source facts. Source unavailability and evidence mismatches have separate counts.','automaticSamples':automatic,'currentSourceReplaySamples':current,'previousSourceReplaySamples':previous,'manualFactLedgerSamples':manual,'unavailableSamples':len(pending),'unavailableSources':pending,'failedSamples':len(failures),'failures':failures,'unavailableMetrics':unavailable,'samples':samples},ensure_ascii=False,indent=2),encoding='utf-8')
     # Durable successful replays survive both a fresh CI checkout and a later
     # failed audit. Value participates in identity so a prior result is never
     # silently replaced if the same observation version arrives with new facts.
@@ -272,5 +352,5 @@ def run():
     atomic(DATA/'audit-samples.json',{'schemaVersion':1,'lastAuditAt':checked_at,'samples':list(archived.values())})
     print('Verified transformations for',len(samples),'historical samples across',len(samples)//3,'metrics;',current,'current source replays,',previous,'prior identical-version replays,',manual,'manual fact-ledger samples')
     if failures:print('Failed source replays:',len(failures),file=sys.stderr)
-    return not failures
+    return status!='failed'
 if __name__=='__main__':sys.exit(0 if run() else 1)

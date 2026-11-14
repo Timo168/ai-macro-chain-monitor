@@ -76,7 +76,8 @@ function DataHealthBanner({data,now}:{data:Dataset;now:number}){
  const scheduler=schedulerHealth(data.scheduler,now),audit=auditHealth(data.sourceAudit,now);
  const report=data.sourceAudit,job=data.scheduler;
  const samples=report?.sampleCounts;
- const affected=Array.from(new Set(report?.failures?.map(item=>item.metricId?.split('.')[0]).filter(Boolean)));
+ const companies=(items?:{metricId?:string}[])=>Array.from(new Set(items?.map(item=>item.metricId?.split('.')[0]).filter(Boolean))).join('、');
+ const failedCompanies=companies(report?.failures), pendingCompanies=companies(report?.unavailableSources);
  return <details className="data-health-fold">
   <summary><strong className={scheduler.warning?'health-warning':''}>{scheduler.label}</strong>
    <span className={audit.warning?'health-warning':''}>{audit.label}</span>
@@ -94,8 +95,8 @@ function DataHealthBanner({data,now}:{data:Dataset;now:number}){
     <p>{report?.completedAt?`最近完成于 ${beijing(report.completedAt)}（北京）`:audit.label}
      {report?.runUrl?.startsWith('https://github.com/')&&<a href={report.runUrl} target="_blank" rel="noreferrer">查看抽查记录 ↗</a>}</p>
     {audit.verifiedSamples!=null&&<p>已核验 {audit.verifiedSamples} 个样本{samples?.previousSourceReplaySamples?`，其中 ${samples.previousSourceReplaySamples} 个沿用同版本历史核验`:''}。</p>}
-    {Boolean(audit.unavailableSamples)&&<p>{audit.unavailableSamples} 个样本的来源暂时无法取得，等待重新核验。</p>}
-    {audit.state==='failed'&&<p>{audit.failedSamples?`${audit.failedSamples} 个样本未通过${affected.length?'，报告中涉及 '+affected.join('、'):''}。`:(report?.checks?.find(c=>c.status==='failed')?.error??'本轮抽查未完成，详见运行记录。')}</p>}
+    {Boolean(audit.unavailableSamples)&&<p>{audit.unavailableSamples} 个样本的来源暂时无法取得{pendingCompanies && `（${pendingCompanies}）`}，等待重新核验。</p>}
+    {audit.state==='failed'&&<p>{audit.failedSamples?`${audit.failedSamples} 个样本未通过${failedCompanies?'，涉及 '+failedCompanies:''}。`:(report?.checks?.find(c=>c.status==='failed')?.error??'本轮抽查未完成，详见运行记录。')}</p>}
    </div>
   </section>
  </details>

@@ -54,18 +54,31 @@ def run_checks(data=DATA,root=ROOT,runner=subprocess.run):
     result['completedAt']=timestamp()
     result['status']='passed' if checks and all(c['status']=='passed' for c in checks) else 'failed'
     report_path=root/'docs'/'industry'/'verification.json'
-    if any(c['id']=='industry_source_replay' for c in checks) and report_path.exists():
+    if any(c['id']=='industry_source_replay' and c.get('exitCode') is not None for c in checks):
         try:
             report=json.loads(report_path.read_text(encoding='utf-8'))
-            if report.get('checkedAt','')>=started:
-                result['sampleCounts']={name:report.get(name,0) for name in ['automaticSamples','currentSourceReplaySamples','previousSourceReplaySamples','manualFactLedgerSamples','failedSamples']}
+            if report.get('checkedAt','')<started:
+                raise ValueError('本次运行未生成新的抽查报告')
+            else:
+                counts={name:report.get(name,0) for name in ['automaticSamples','currentSourceReplaySamples','previousSourceReplaySamples','manualFactLedgerSamples','failedSamples','unavailableSamples']}
+                result['sampleCounts']=counts
                 result['failures']=report.get('failures',[])[:25]
+                result['unavailableSources']=report.get('unavailableSources',[])[:25]
+                verified=counts['automaticSamples']+counts['manualFactLedgerSamples']
+                if counts['failedSamples'] or not verified or report.get('status')=='failed':
+                    result['status']='failed'
+                elif result['status']=='passed' and counts['unavailableSamples']>0:
+                    result['status']='partial'
+                    checks[-1]['status']='partial'
+                elif result['status']=='passed' and report.get('passed') is not True:
+                    result['status']='failed'
         except (OSError,ValueError) as exc:
             result['status']='failed';checks.append({'id':'audit_report','status':'failed','error':f'{type(exc).__name__}: {exc}'[:600]})
     if result['status']=='passed':result['lastSuccessAt']=result['completedAt']
-    else:result['error']='本次检查未全部通过，详见逐项结果；这不代表所有数据均不可用。'
+    elif result['status']=='partial':result['error']='部分官方来源暂时无法访问，待下次复核。'
+    else:result['error']='本次核验未通过，详见逐项结果。'
     atomic(path,result)
     print(json.dumps(result,ensure_ascii=False))
-    return 0 if result['status']=='passed' else 1
+    return 1 if result['status']=='failed' else 0
 
 if __name__=='__main__':sys.exit(run_checks())

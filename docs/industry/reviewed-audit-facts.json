@@ -1,0 +1,170 @@
+{
+  "reviewedOn": "2026-11-14",
+  "scope": "Numeric excerpts from dated issuer tables. Manual evidence applies only to the exact observation identity. Amkor cash purchases are fiscal YTD and Entegris cash purchases are single-quarter.",
+  "reports": [
+    {
+      "periodEnd": "2024-03-31",
+      "fiscalPeriod": "FY2024 Q1",
+      "observationSourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
+      "reviewedSourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2024",
+      "reviewedDocumentSha256": "25670841469703eb8b100337c67dcdcea860e7fcd1fe75c4c8be19c23a7a42e8",
+      "facts": [
+        {
+          "metricId": "AMKR.advanced_products_revenue",
+          "row": "Advanced products (1)",
+          "current": 1070,
+          "sourceUnit": "USD million",
+          "evidenceKey": "898f4ffd0de57002644bd5844b7adda10abc7d8cbb42faf7100eedd166fa9dd9"
+        },
+        {
+          "metricId": "AMKR.company_revenue",
+          "row": "Total net sales",
+          "current": 1366,
+          "sourceUnit": "USD million",
+          "evidenceKey": "736e384fed2753ef1a1afc5fc8200e59e17f1be8a317f430d4538b03d20b3e2c"
+        },
+        {
+          "metricId": "AMKR.gross_margin",
+          "row": "Gross margin",
+          "current": 14.8,
+          "sourceUnit": "%",
+          "evidenceKey": "2658ed619dad054c4095be9f0a27c2605c9dfbb4f9139754063a73393c213040"
+        },
+        {
+          "metricId": "AMKR.materials_cost_share",
+          "row": "Materials",
+          "current": 51.9,
+          "sourceUnit": "%",
+          "evidenceKey": "461c71f7b3af7c0a8cfd59d3b20cb6ceb3156aed69fd00296fd69c5f28dbf164"
+        },
+        {
+          "metricId": "AMKR.capex",
+          "row": "Payments for property, plant and equipment (YTD cash outflow, absolute amount)",
+          "current": 96169,
+          "sourceUnit": "USD thousand",
+          "evidenceKey": "2bfad4aa30a383da94a91c9cd3c1d31776283e6e2c98ffec270e7593f0d84152"
+        }
+      ]
+    },
+    {
+      "periodEnd": "2025-06-30",
+      "fiscalPeriod": "FY2025 Q2",
+      "observationSourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
+      "reviewedSourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
+      "reviewedDocumentSha256": "c80fbd2308b0231f3dd8e57a623b894c4b1534c679210e59233c7600d7ea30ee",
+      "facts": [
+        {
+          "metricId": "AMKR.advanced_products_revenue",
+          "row": "Advanced products (1)",
+          "current": 1228,
+          "sourceUnit": "USD million",
+          "evidenceKey": "50e90f721da1801526c731601f2623a2e70ffe88e625821397059876747c5185"
+        },
+        {
+          "metricId": "AMKR.company_revenue",
+          "row": "Total net sales",
+          "current": 1511,
+          "sourceUnit": "USD million",
+          "evidenceKey": "5550ba8890ea47f725a00e3f782e8b7a0aa496f19dd1ef0b09fe6ee5606b8ea7"
+        },
+        {
+          "metricId": "AMKR.gross_margin",
+          "row": "Gross margin",
+          "current": 12.0,
+          "sourceUnit": "%",
+          "evidenceKey": "c2080f38107e9792266bdeea8da39171c587c89f63505e44d3dfb330c2aa57ad"
+        },
+        {
+          "metricId": "AMKR.materials_cost_share",
+          "row": "Materials",
+          "current": 52.9,
+          "sourceUnit": "%",
+          "evidenceKey": "56ef5147a2356e55975f14888cf0cfee07ccf9f097983615a085a41a179fae8d"
+        },
+        {
+          "metricId": "AMKR.capex",
+          "row": "Payments for property, plant and equipment (YTD cash outflow, absolute amount)",
+          "current": 226086,
+          "sourceUnit": "USD thousand",
+          "evidenceKey": "3eddd154a035bf473e2f6bbc546338996a9b7f843f732ca7dd56aec1ff3b7cef",
+          "base": 79897,
+          "baseSourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-first-quarter-2025",
+          "baseDocumentSha256": "698bfa2694dc205380abd3a9b006ca5c071a458ab5b5a7aa22b5caf5bd34a9f2"
+        }
+      ]
+    },
+    {
+      "periodEnd": "2025-06-28",
+      "fiscalPeriod": "FY2025 Q2",
+      "observationSourceUrl": "https://investor.entegris.com/news/news-details/2025/Entegris-Reports-Results-for-Second-Quarter-of-2025/default.aspx",
+      "reviewedSourceUrl": "https://investor.entegris.com/news/news-details/2025/Entegris-Reports-Results-for-Second-Quarter-of-2025/default.aspx",
+      "facts": [
+        {
+          "metricId": "ENTG.company_revenue",
+          "row": "Net sales",
+          "current": 792.4,
+          "sourceUnit": "USD million",
+          "evidenceKey": "015cc06c092df831a00ef195d59811f78dc54b0ce126a848be08cfd8e0f470fb"
+        },
+        {
+          "metricId": "ENTG.gross_margin",
+          "row": "Gross margin - as a % of net sales",
+          "current": 44.4,
+          "sourceUnit": "%",
+          "evidenceKey": "c01d385c5bbc612d642407ef25cdc6823282cc648d4a25673034552d6e97817e"
+        },
+        {
+          "metricId": "ENTG.capex",
+          "row": "Acquisition of property, plant and equipment",
+          "current": -66.5,
+          "sourceUnit": "USD million",
+          "evidenceKey": "849b999702358204dbe8554d8b1595d7c54dbdf65e77ee00276e507c15c39c00"
+        }
+      ]
+    },
+    {
+      "periodEnd": "2026-09-26",
+      "fiscalPeriod": "FY2026 Q3",
+      "observationSourceUrl": "https://www.entegris.com/en/home/about-us/news/entegris-reports-results-for-third-quarter-2026.html",
+      "reviewedSourceUrl": "https://investor.entegris.com/news/news-details/2026/Entegris-Reports-Results-for-Third-Quarter-of-2026/default.aspx",
+      "facts": [
+        {
+          "metricId": "ENTG.company_revenue",
+          "row": "Net sales",
+          "current": 1005.7,
+          "sourceUnit": "USD million",
+          "evidenceKey": "009d39c47665c476bee5557edc2ac7d72d90d56b794b5cc108deff2e9914c121"
+        },
+        {
+          "metricId": "ENTG.gross_margin",
+          "row": "Gross margin - as a % of net sales",
+          "current": 49.7,
+          "sourceUnit": "%",
+          "evidenceKey": "db204ffaa32ebf66ac92dc2884e1abb63fce5e22b843d138c8e1a818eb618310"
+        },
+        {
+          "metricId": "ENTG.capex",
+          "row": "Acquisition of property, plant and equipment",
+          "current": -43.2,
+          "sourceUnit": "USD million",
+          "evidenceKey": "8d3dbb952c8e223884db89028eceedda6b1115da9e6e75262f4a90b7f075fa6c"
+        }
+      ]
+    },
+    {
+      "periodEnd": "2026-09-30",
+      "fiscalPeriod": null,
+      "observationSourceUrl": "https://investor.tsmc.com/english/monthly-revenue/2026",
+      "reviewedSourceUrl": "https://investor.tsmc.com/english/monthly-revenue/2026",
+      "facts": [
+        {
+          "metricId": "TSM.revenue",
+          "row": "Monthly net revenue: September",
+          "current": 511857,
+          "sourceUnit": "TWD million",
+          "evidenceKey": "54de09190d3f6c0277bb0d255fc118fcaa0576469f0162fed5654ec94f5ccf05"
+        }
+      ]
+    }
+  ]
+}

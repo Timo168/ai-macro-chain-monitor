@@ -29,6 +29,22 @@ def migrated_request(url):
 
 
 class DellMigrationTests(unittest.TestCase):
+    def test_fiscal_fact_replay_uses_prior_quarter_not_same_end_full_year(self):
+        from audit_dell_facts import verify
+        raw = b'''<h1>Dell Technologies Delivers Second Quarter Fiscal 2027 Financial Results</h1>
+          <table><tr><td>Three Months Ended (in millions)</td></tr>
+          <tr><td>July 31, 2026</td><td>August 1, 2025</td><td>July 31, 2026</td><td>August 1, 2025</td></tr>
+          <tr><td>Total net revenue</td><td>120</td><td>100</td><td>500</td><td>400</td></tr>
+          <tr><td>Gross margin</td><td>42</td><td>32</td><td>160</td><td>145</td></tr></table>'''
+        definition = {'id':'DELL.gross_margin', 'unit':'%'}
+        point = {'sourceUrl':OLD, 'fiscalPeriod':'FY2026 Q2', 'periodEnd':'2025-08-01',
+                 'value':32, 'originalItems':{'Gross profit USD million':32,'Revenue USD million':100}}
+        self.assertTrue(verify(definition, point, raw))
+        for bad in [dict(point, fiscalPeriod='FY2027 Q2'), dict(point, value=35),
+                    dict(point, originalItems={'Gross profit USD million':145, 'Revenue USD million':400})]:
+            with self.assertRaises(AssertionError):
+                verify(definition, bad, raw)
+
     def test_resolves_same_fiscal_quarter_from_official_index(self):
         self.assertEqual(dell.resolve_report(OLD, migrated_request), (REPORT, NEW))
 
