@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "status": "passed",
-  "startedAt": "2026-11-14T14:06:41.892061+00:00",
-  "completedAt": "2026-11-14T14:09:41.156805+00:00",
-  "lastSuccessAt": "2026-11-14T14:09:41.156805+00:00",
-  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/43602701650",
-  "checkedSnapshotAt": "2026-11-14T14:03:25.836Z",
+  "startedAt": "2026-11-15T09:26:21.531693+00:00",
+  "completedAt": "2026-11-15T09:28:46.866673+00:00",
+  "lastSuccessAt": "2026-11-15T09:28:46.866673+00:00",
+  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/43699132895",
+  "checkedSnapshotAt": "2026-11-15T08:50:12.244Z",
   "checks": [
     {
       "id": "restored_data",
@@ -13,17 +13,17 @@
     },
     {
       "id": "industry_source_replay",
-      "startedAt": "2026-11-14T14:06:42.072854+00:00",
+      "startedAt": "2026-11-15T09:26:21.703672+00:00",
       "status": "passed",
       "exitCode": 0,
-      "completedAt": "2026-11-14T14:09:41.156779+00:00"
+      "completedAt": "2026-11-15T09:28:46.866654+00:00"
     }
   ],
   "scope": "行业公开来源抽查和计算重放；不验证投资收益，也不代表所有历史点都逐点通过。",
   "sampleCounts": {
     "automaticSamples": 414,
-    "currentSourceReplaySamples": 341,
-    "previousSourceReplaySamples": 73,
+    "currentSourceReplaySamples": 342,
+    "previousSourceReplaySamples": 72,
     "manualFactLedgerSamples": 24,
     "failedSamples": 0,
     "unavailableSamples": 0
