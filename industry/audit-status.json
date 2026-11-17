@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "status": "passed",
-  "startedAt": "2026-11-16T09:43:39.347582+00:00",
-  "completedAt": "2026-11-16T09:46:48.686831+00:00",
+  "status": "partial",
+  "startedAt": "2026-11-17T10:44:34.525190+00:00",
+  "completedAt": "2026-11-17T10:47:50.031688+00:00",
   "lastSuccessAt": "2026-11-16T09:46:48.686831+00:00",
-  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/43842085001",
-  "checkedSnapshotAt": "2026-11-16T03:04:28.522Z",
+  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/44067390245",
+  "checkedSnapshotAt": "2026-11-17T10:25:28.310Z",
   "checks": [
     {
       "id": "restored_data",
@@ -13,21 +13,93 @@
     },
     {
       "id": "industry_source_replay",
-      "startedAt": "2026-11-16T09:43:39.547311+00:00",
-      "status": "passed",
+      "startedAt": "2026-11-17T10:44:35.040198+00:00",
+      "status": "partial",
       "exitCode": 0,
-      "completedAt": "2026-11-16T09:46:48.686813+00:00"
+      "completedAt": "2026-11-17T10:47:50.031668+00:00"
     }
   ],
   "scope": "行业公开来源抽查和计算重放；不验证投资收益，也不代表所有历史点都逐点通过。",
   "sampleCounts": {
-    "automaticSamples": 415,
-    "currentSourceReplaySamples": 343,
-    "previousSourceReplaySamples": 72,
-    "manualFactLedgerSamples": 23,
+    "automaticSamples": 410,
+    "currentSourceReplaySamples": 342,
+    "previousSourceReplaySamples": 68,
+    "manualFactLedgerSamples": 18,
     "failedSamples": 0,
-    "unavailableSamples": 0
+    "unavailableSamples": 10
   },
   "failures": [],
-  "unavailableSources": []
+  "unavailableSources": [
+    {
+      "metricId": "AMKR.advanced_products_revenue",
+      "periodEnd": "2025-06-30",
+      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
+      "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "AMKR.advanced_products_revenue",
+      "periodEnd": "2026-09-30",
+      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-third-quarter-2026",
+      "version": "f0a2e5b62a6f35338f363779745cb8daf31f6dc524e70def0eed4c7a4bdb7605",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "AMKR.company_revenue",
+      "periodEnd": "2025-06-30",
+      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
+      "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "AMKR.company_revenue",
+      "periodEnd": "2026-09-30",
+      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-third-quarter-2026",
+      "version": "f0a2e5b62a6f35338f363779745cb8daf31f6dc524e70def0eed4c7a4bdb7605",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "AMKR.gross_margin",
+      "periodEnd": "2025-06-30",
+      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
+      "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "AMKR.gross_margin",
+      "periodEnd": "2026-09-30",
+      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-third-quarter-2026",
+      "version": "f0a2e5b62a6f35338f363779745cb8daf31f6dc524e70def0eed4c7a4bdb7605",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "AMKR.materials_cost_share",
+      "periodEnd": "2025-06-30",
+      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
+      "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "AMKR.materials_cost_share",
+      "periodEnd": "2026-09-30",
+      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-third-quarter-2026",
+      "version": "f0a2e5b62a6f35338f363779745cb8daf31f6dc524e70def0eed4c7a4bdb7605",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "AMKR.capex",
+      "periodEnd": "2025-06-30",
+      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
+      "version": "44c9a0b2585b9eabc54920fd5694925b97ba811ae8b52d6147f742329862968c",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "AMKR.capex",
+      "periodEnd": "2026-09-30",
+      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-third-quarter-2026",
+      "version": "710060d2827c6785689485f221277c9743daa61ce430b1fe9cf2f1dbf97a6a70",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    }
+  ],
+  "error": "部分官方来源暂时无法访问，待下次复核。"
 }
