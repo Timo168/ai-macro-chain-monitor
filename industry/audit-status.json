@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "status": "partial",
-  "startedAt": "2026-11-20T10:02:50.383550+00:00",
-  "completedAt": "2026-11-20T10:05:06.221083+00:00",
+  "startedAt": "2026-11-21T09:55:16.330328+00:00",
+  "completedAt": "2026-11-21T09:57:24.437154+00:00",
   "lastSuccessAt": "2026-11-16T09:46:48.686831+00:00",
-  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/44715473895",
-  "checkedSnapshotAt": "2026-11-20T09:50:48.137Z",
+  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/44891401247",
+  "checkedSnapshotAt": "2026-11-21T09:51:24.434Z",
   "checks": [
     {
       "id": "restored_data",
@@ -13,30 +13,23 @@
     },
     {
       "id": "industry_source_replay",
-      "startedAt": "2026-11-20T10:02:50.555697+00:00",
+      "startedAt": "2026-11-21T09:55:16.540668+00:00",
       "status": "partial",
       "exitCode": 0,
-      "completedAt": "2026-11-20T10:05:06.221061+00:00"
+      "completedAt": "2026-11-21T09:57:24.437135+00:00"
     }
   ],
   "scope": "行业公开来源抽查和计算重放；不验证投资收益，也不代表所有历史点都逐点通过。",
   "sampleCounts": {
-    "automaticSamples": 413,
-    "currentSourceReplaySamples": 334,
-    "previousSourceReplaySamples": 79,
+    "automaticSamples": 414,
+    "currentSourceReplaySamples": 333,
+    "previousSourceReplaySamples": 81,
     "manualFactLedgerSamples": 18,
     "failedSamples": 0,
-    "unavailableSamples": 7
+    "unavailableSamples": 6
   },
   "failures": [],
   "unavailableSources": [
-    {
-      "metricId": "TSM.revenue",
-      "periodEnd": "2026-10-31",
-      "sourceUrl": "https://mopsov.twse.com.tw/nas/t21/sii/t21sc03_115_10_0.html",
-      "version": "ea025f66919f165bbb3a264fd28f282766e3f5445a199b98940e3afe8c50e4a1",
-      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
     {
       "metricId": "AMKR.advanced_products_revenue",
       "periodEnd": "2025-06-30",
