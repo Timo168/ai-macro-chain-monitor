@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "status": "partial",
-  "startedAt": "2026-11-21T09:55:16.330328+00:00",
-  "completedAt": "2026-11-21T09:57:24.437154+00:00",
+  "startedAt": "2026-11-22T09:48:05.068083+00:00",
+  "completedAt": "2026-11-22T09:50:35.559487+00:00",
   "lastSuccessAt": "2026-11-16T09:46:48.686831+00:00",
-  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/44891401247",
-  "checkedSnapshotAt": "2026-11-21T09:51:24.434Z",
+  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/45009116787",
+  "checkedSnapshotAt": "2026-11-22T06:34:47.728Z",
   "checks": [
     {
       "id": "restored_data",
@@ -13,51 +13,23 @@
     },
     {
       "id": "industry_source_replay",
-      "startedAt": "2026-11-21T09:55:16.540668+00:00",
+      "startedAt": "2026-11-22T09:48:05.324970+00:00",
       "status": "partial",
       "exitCode": 0,
-      "completedAt": "2026-11-21T09:57:24.437135+00:00"
+      "completedAt": "2026-11-22T09:50:35.559465+00:00"
     }
   ],
   "scope": "行业公开来源抽查和计算重放；不验证投资收益，也不代表所有历史点都逐点通过。",
   "sampleCounts": {
-    "automaticSamples": 414,
-    "currentSourceReplaySamples": 333,
-    "previousSourceReplaySamples": 81,
+    "automaticSamples": 418,
+    "currentSourceReplaySamples": 340,
+    "previousSourceReplaySamples": 78,
     "manualFactLedgerSamples": 18,
     "failedSamples": 0,
-    "unavailableSamples": 6
+    "unavailableSamples": 2
   },
   "failures": [],
   "unavailableSources": [
-    {
-      "metricId": "AMKR.advanced_products_revenue",
-      "periodEnd": "2025-06-30",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
-      "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "AMKR.company_revenue",
-      "periodEnd": "2025-06-30",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
-      "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "AMKR.gross_margin",
-      "periodEnd": "2025-06-30",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
-      "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
-    {
-      "metricId": "AMKR.materials_cost_share",
-      "periodEnd": "2025-06-30",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
-      "version": "49bf8414505c9fb1af892a83b0fa57005b98eda948de89b42101442df526d0a6",
-      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
-    },
     {
       "metricId": "AMKR.capex",
       "periodEnd": "2025-06-30",
