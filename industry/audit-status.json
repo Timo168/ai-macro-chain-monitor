@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "status": "partial",
-  "startedAt": "2026-11-22T09:48:05.068083+00:00",
-  "completedAt": "2026-11-22T09:50:35.559487+00:00",
+  "startedAt": "2026-11-23T10:47:40.589877+00:00",
+  "completedAt": "2026-11-23T10:49:48.199936+00:00",
   "lastSuccessAt": "2026-11-16T09:46:48.686831+00:00",
-  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/45009116787",
-  "checkedSnapshotAt": "2026-11-22T06:34:47.728Z",
+  "runUrl": "https://github.com/Timo168/ai-macro-chain-monitor/actions/runs/45158986039",
+  "checkedSnapshotAt": "2026-11-23T09:16:10.434Z",
   "checks": [
     {
       "id": "restored_data",
@@ -13,35 +13,84 @@
     },
     {
       "id": "industry_source_replay",
-      "startedAt": "2026-11-22T09:48:05.324970+00:00",
+      "startedAt": "2026-11-23T10:47:40.682890+00:00",
       "status": "partial",
       "exitCode": 0,
-      "completedAt": "2026-11-22T09:50:35.559465+00:00"
+      "completedAt": "2026-11-23T10:49:48.199916+00:00"
     }
   ],
   "scope": "行业公开来源抽查和计算重放；不验证投资收益，也不代表所有历史点都逐点通过。",
   "sampleCounts": {
-    "automaticSamples": 418,
-    "currentSourceReplaySamples": 340,
-    "previousSourceReplaySamples": 78,
+    "automaticSamples": 411,
+    "currentSourceReplaySamples": 329,
+    "previousSourceReplaySamples": 82,
     "manualFactLedgerSamples": 18,
     "failedSamples": 0,
-    "unavailableSamples": 2
+    "unavailableSamples": 9
   },
   "failures": [],
   "unavailableSources": [
     {
-      "metricId": "AMKR.capex",
-      "periodEnd": "2025-06-30",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-second-quarter-2025",
-      "version": "3516ac153ac44fbfa0fbd1e9bca627a7bc3737190a05624e2446dfcdd8d51718",
+      "metricId": "ASE.atm_revenue",
+      "periodEnd": "2024-03-31",
+      "sourceUrl": "https://www.prnewswire.com/news-releases/ase-technology-holding-co-ltd-reports-its-unaudited-consolidated-financial-results-for-the-first-quarter-of-2024-302126939.html",
+      "version": "7bf7e0e3955e4abe6d0f11914282aa0b3286f6687a80bde26dc783b4ca3631bd",
       "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     },
     {
-      "metricId": "AMKR.capex",
+      "metricId": "ASE.atm_revenue",
+      "periodEnd": "2025-06-30",
+      "sourceUrl": "https://www.prnewswire.com/news-releases/ase-technology-holding-co-ltd-reports-its-unaudited-consolidated-financial-results-for-the-second-quarter-of-2025-302518315.html",
+      "version": "22af26ec785a611d0ab27745088277b6372f6ae671c2a74a0c53cd4a8e7b886e",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "ASE.atm_revenue",
       "periodEnd": "2026-09-30",
-      "sourceUrl": "https://ir.amkor.com/news-releases/news-release-details/amkor-technology-reports-financial-results-third-quarter-2026",
-      "version": "710060d2827c6785689485f221277c9743daa61ce430b1fe9cf2f1dbf97a6a70",
+      "sourceUrl": "https://www.prnewswire.com/news-releases/ase-technology-holding-co-ltd-reports-its-unaudited-consolidated-financial-results-for-the-third-quarter-of-2026-302923021.html",
+      "version": "a8b309e5c42f63378fa871ba7131ea3479085d9c1d9887f068e4330ff0771501",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "ASE.company_revenue",
+      "periodEnd": "2024-03-31",
+      "sourceUrl": "https://www.prnewswire.com/news-releases/ase-technology-holding-co-ltd-reports-its-unaudited-consolidated-financial-results-for-the-first-quarter-of-2024-302126939.html",
+      "version": "6ae1b84177163a5b9202cb1d4c512b3773adfdc985a0a40be5669e41371ef296",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "ASE.company_revenue",
+      "periodEnd": "2025-06-30",
+      "sourceUrl": "https://www.prnewswire.com/news-releases/ase-technology-holding-co-ltd-reports-its-unaudited-consolidated-financial-results-for-the-second-quarter-of-2025-302518315.html",
+      "version": "35c55e5390f3b03bc18106ea31755eb40e4138e95a696f43e4bd13d7b64558d1",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "ASE.company_revenue",
+      "periodEnd": "2026-09-30",
+      "sourceUrl": "https://www.prnewswire.com/news-releases/ase-technology-holding-co-ltd-reports-its-unaudited-consolidated-financial-results-for-the-third-quarter-of-2026-302923021.html",
+      "version": "f29d8cbdbcdaa1b88feef326905385a0edf4d1fee41bcfba3e26649b03c4e5ef",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "ASE.atm_margin",
+      "periodEnd": "2024-03-31",
+      "sourceUrl": "https://www.prnewswire.com/news-releases/ase-technology-holding-co-ltd-reports-its-unaudited-consolidated-financial-results-for-the-first-quarter-of-2024-302126939.html",
+      "version": "a29d1b6514adf399b56b19f918494d7a5e0518b1b8fed7d9761bbfb8599e1075",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "ASE.atm_margin",
+      "periodEnd": "2025-06-30",
+      "sourceUrl": "https://www.prnewswire.com/news-releases/ase-technology-holding-co-ltd-reports-its-unaudited-consolidated-financial-results-for-the-second-quarter-of-2025-302518315.html",
+      "version": "f1309b482c0f35ba83e18803593fb494d336a1a73ffbc540b7b147ca689cc97a",
+      "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
+    },
+    {
+      "metricId": "ASE.atm_margin",
+      "periodEnd": "2026-09-30",
+      "sourceUrl": "https://www.prnewswire.com/news-releases/ase-technology-holding-co-ltd-reports-its-unaudited-consolidated-financial-results-for-the-third-quarter-of-2026-302923021.html",
+      "version": "6994a8353acb06a07ad3033b1062cc6e9c5c73cf0a9907b74146db38d29b16db",
       "error": "SourceUnavailable: 来源请求失败 HTTP/网络错误；保留上次成功版本"
     }
   ],
