@@ -1,0 +1,1 @@
+{"url":"https://www.eia.gov/electricity/930-api/region_data/series_data?respondent%5B0%5D=ERCO&type%5B0%5D=D&start=11162026+21%3A00%3A00&end=11232026+21%3A00%3A00&frequency=hourly&timezone=UTC","sha256":"f0e5bc27f0b140200efe30b447a9e622a92239347e8bd3a4232650c6e38e924a","firstFetchedAt":"2026-11-23T21:32:57Z","fetchedAt":"2026-11-23T21:32:57Z"}
